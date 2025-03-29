@@ -8,7 +8,7 @@ for (const dir of dirs) {
   for await (const dirent of Deno.readDir(dir)) {
     await Deno.symlink(
       path.relative(
-        path.join(config.dir.config, dirent.name),
+        config.dir.config,
         path.join(dir, dirent.name),
       ),
       path.join(config.dir.config, dirent.name),
@@ -58,7 +58,8 @@ for (const rcFile of [".bashrc"]) {
       before +
         `${markerCommentStart}
 ${buildInjectedScriptLines(config)}
-${markerCommentEnd}` + after,
+${markerCommentEnd}
+` + after,
     );
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) {
