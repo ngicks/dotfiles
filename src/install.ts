@@ -16,8 +16,8 @@ for (const dir of dirs) {
   }
 }
 
-const markerCommentStart = "# MYDOTFILE INJECTION START";
-const markerCommentEnd = "# MYDOTFILE INJECTION END";
+const markerCommentStart = "# MYDOTFILE INJECTION START\n";
+const markerCommentEnd = "# MYDOTFILE INJECTION END\n";
 function buildInjectedScriptLines(conf: typeof config): string {
   const relativeConfDir = path.relative(conf.dir.home, conf.dir.config);
   return `
@@ -53,13 +53,13 @@ for (const rcFile of [".bashrc"]) {
       before = content.substring(0, startOff);
       after = content.substring(endOff);
     }
+
     await Deno.writeTextFile(
       filename,
       before +
         `${markerCommentStart}
 ${buildInjectedScriptLines(config)}
-${markerCommentEnd}
-` + after,
+${markerCommentEnd}` + after,
     );
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) {
