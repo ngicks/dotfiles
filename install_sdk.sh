@@ -30,6 +30,15 @@ case ${arch} in
     arch="arm64";;
 esac
 
+
+mkdir ~/.config/env -p
+if [[ ! -f ~/.config/env/path.sh ]]; then
+  echo "#!/bin/bash" >> ~/.config/env/path.sh
+  echo "" >> ~/.config/env/path.sh
+  echo "" >> ~/.config/env/path.sh
+  chmod +x ~/.config/env/path.sh
+fi
+
 # actually it does not suport other than linux_amd64.
 # I don't have mac. thus, I can not build for it.
 ./ngpkgmgr/prebuilt/${os}-${arch}/ngpkgmgr --dir ./ngpkgmgr/preset/sdk install

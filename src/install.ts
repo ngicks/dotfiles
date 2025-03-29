@@ -16,23 +16,6 @@ for (const dir of dirs) {
   }
 }
 
-const pathEnvFileaname = path.join(config.dir.config, "env", "path.sh");
-if (
-  !(await Deno.stat(pathEnvFileaname).then(
-    () => true,
-    () => false,
-  ))
-) {
-  await Deno.mkdir(path.dirname(pathEnvFileaname), { recursive: true });
-  await Deno.writeTextFile(
-    pathEnvFileaname,
-    `#!/bin/bash
-
-`,
-    { mode: 0o744 },
-  );
-}
-
 const markerCommentStart = "# MYDOTFILE INJECTION START";
 const markerCommentEnd = "# MYDOTFILE INJECTION END";
 function buildInjectedScriptLines(conf: typeof config): string {
