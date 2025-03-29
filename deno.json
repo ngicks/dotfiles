@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "install": "deno run ./src/install.ts"
+    "jdk:install": "deno run ./src/jdk.ts install",
+    "jdk:dotenv": "deno run --allow-env=HOME -R=$HOME/.local/openjdk ./src/jdk.ts dotenv",
+  },
+  "imports": {
+    "#/": "./src/",
+    "@std/assert": "jsr:@std/assert@1"
+  }
+}

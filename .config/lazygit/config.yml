@@ -1,0 +1,2 @@
+os:
+  copyToClipboardCmd: echo {{text}} | xsel -bi
