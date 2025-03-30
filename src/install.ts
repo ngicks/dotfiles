@@ -39,7 +39,8 @@ function buildInjectedScriptLines(conf: typeof config): string {
   for f in $HOME/${relativeConfDir}/*.sh; do
     . $f
   done
-fi`;
+fi
+`;
 }
 
 for (const rcFile of [".bashrc"]) {
