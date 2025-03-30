@@ -44,9 +44,9 @@ esac
 mkdir -p ~/.local
 mkdir -p ~/.config/env
 if [[ ! -f ~/.config/env/path.sh ]]; then
-  echo "#!/bin/bash" >> ~/.config/env/path.sh
-  echo "" >> ~/.config/env/path.sh
-  chmod +x ~/.config/env/path.sh
+  echo "#!/bin/bash" >> ~/.config/env/00_path.sh
+  echo "" >> ~/.config/env/00_path.sh
+  chmod +x ~/.config/env/00_path.sh
 fi
 
 mkdir -p ~/bin
