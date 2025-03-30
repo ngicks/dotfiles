@@ -3,6 +3,11 @@
     "install": "deno run ./src/install.ts"
     "jdk:install": "deno run ./src/jdk.ts install",
     "jdk:dotenv": "deno run --allow-env=HOME -R=$HOME/.local/openjdk ./src/jdk.ts dotenv",
+    "sdk:update": "./install_sdk.sh sdk update",
+    "basetool:install": "./install_sdk.sh basetool install",
+    "basetool:update": "./install_sdk.sh basetool update",
+    "gotools:install": "./install_sdk.sh gopkg install",
+    "gotools:update": "./install_sdk.sh gopkg update",
   },
   "imports": {
     "#/": "./src/",

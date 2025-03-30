@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+taret=sdk
+action=install
+
+if [ -z "$1" ]; then
+  target=$1
+fi
+
+if [ -z "$2" ]; then
+  action=$2
+fi
+
 git submodule update --init --recursive
 
 os=$(uname -s)
@@ -40,4 +51,4 @@ fi
 
 # actually it does not suport other than linux_amd64.
 # I don't have mac. thus, I can not build for it.
-./ngpkgmgr/prebuilt/${os}-${arch}/ngpkgmgr --dir ./ngpkgmgr/preset/sdk install
+./ngpkgmgr/prebuilt/${os}-${arch}/ngpkgmgr --dir ./ngpkgmgr/preset/$target $action
