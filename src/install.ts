@@ -6,13 +6,19 @@ const dirs = ["./.config"];
 
 for (const dir of dirs) {
   for await (const dirent of Deno.readDir(dir)) {
-    await Deno.symlink(
-      path.relative(
-        config.dir.config,
-        path.join(dir, dirent.name),
-      ),
-      path.join(config.dir.config, dirent.name),
-    );
+    try {
+      await Deno.symlink(
+        path.relative(
+          config.dir.config,
+          path.join(dir, dirent.name),
+        ),
+        path.join(config.dir.config, dirent.name),
+      );
+    } catch (err) {
+      if (!(err instanceof Deno.errors.AlreadyExists)) {
+        throw err;
+      }
+    }
   }
 }
 
