@@ -19,20 +19,21 @@ for (const dir of dirs) {
 const markerCommentStart = "# MYDOTFILE INJECTION START\n";
 const markerCommentEnd = "# MYDOTFILE INJECTION END\n";
 function buildInjectedScriptLines(conf: typeof config): string {
-  const relativeConfDir = path.relative(conf.dir.home, conf.dir.config);
-  return `
-if [ -d ./${relativeConfDir}/env ]; then
-  for f in ./${relativeConfDir}/env/*.env; do
+  let relativeConfDir = path.relative(conf.dir.home, conf.dir.config);
+  if (relativeConfDir.startsWith("./")) {
+    relativeConfDir = relativeConfDir.substring("./".length);
+  }
+  return `if [[ -d "$HOME/${relativeConfDir}" ]]; then
+  for f in $HOME/${relativeConfDir}/*.env; do
     set -a            
     . $f
     set +a
   done
 
-  for f in ./${relativeConfDir}/env/*.sh; do 
+  for f in $HOME/${relativeConfDir}/*.sh; do
     . $f
   done
-fi
-`;
+fi`;
 }
 
 for (const rcFile of [".bashrc"]) {
