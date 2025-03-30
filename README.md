@@ -9,7 +9,7 @@ Some scripts have swtich statements for `windows`, `darwin`, and arch other than
 ## isntall prerequisites
 
 ```
-sudo apt update && sudo apt install -y make build-essential gcc clang xsel p7zip-full jq
+sudo apt update && sudo apt install -y make build-essential gcc clang xsel p7zip-full jq tmux
 
 # dasel is also used in sdk installation. maybe I'll later remove this dependency.
 mkdir -p ~/bin

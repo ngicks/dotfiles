@@ -49,6 +49,6 @@ if [[ ! -f ~/.config/env/path.sh ]]; then
   chmod +x ~/.config/env/path.sh
 fi
 
-# actually it does not suport other than linux_amd64.
-# I don't have mac. thus, I can not build for it.
-./ngpkgmgr/prebuilt/${os}-${arch}/ngpkgmgr --dir ./ngpkgmgr/preset/$target $action
+mkdir -p ~/bin
+cp ./ngpkgmgr/prebuilt/${os}-${arch}/* ~/bin
+~/bin/ngpkgmgr --dir ./ngpkgmgr/preset/$target $action
