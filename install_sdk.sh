@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-taret=sdk
+target=sdk
 action=install
 
 if [ -n "$1" ]; then
