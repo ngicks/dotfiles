@@ -3,11 +3,11 @@
 taret=sdk
 action=install
 
-if [ -z "$1" ]; then
+if [ -n "$1" ]; then
   target=$1
 fi
 
-if [ -z "$2" ]; then
+if [ -n "$2" ]; then
   action=$2
 fi
 
