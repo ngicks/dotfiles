@@ -1,5 +1,25 @@
 # dotfiles
 
+## env
+
+Only intended for `linux/amd64` and when it have `/bin/bash`.
+
+Some scripts have swtich statements for `windows`, `darwin`, and arch other than `amd64`.
+
+## isntall prerequisites
+
+```
+sudo apt update && sudo apt install -y make build-essential gcc clang xsel p7zip-full jq
+
+# dasel is also used in sdk installation. maybe I'll later remove this dependency.
+mkdir -p ~/bin
+pushd ~/bin
+curl -L https://github.com/TomWright/dasel/releases/download/v2.8.1/dasel_linux_amd64.gz -o dasel.gz
+gzip -d ./dasel.gz
+chmod +x dasel
+popd
+```
+
 ## install SDK
 
 First, install SDKs by `./install_sdk.sh`
@@ -8,16 +28,50 @@ All other scripts are intended run by `deno`.
 
 All SDKs are installed under `$HOME`
 
-## env
+## install dotfiles
 
-Only intended for `linux/amd64`.
+After installation of SDKs, call `install` tasks.
 
-Some scripts have swtich statements for `windows`, `darwin`, and arch other than `amd64`.
+At this point, PATH is not modified so call deno directly.
 
-## Dependency
+```
+~/.deno/bin/deno task install
+```
 
-- `xsel`
-- `fzf`: https://github.com/junegunn/fzf
+## source .bashrc again
+
+```
+. ~/.bashrc
+```
+
+## install jdk(OPTIONAL)
+
+download and places opnenjdk distributions.
+
+All JDKs are installed under `~/.local/openjdk`
+
+```
+deno task jdk:install
+```
+
+The task `jdk:dotenv` prints `JAVA9_HOME=/path/to/that/version`
+
+```
+deno task jdk:dotenv >> ~/.config/env/jdk.env
+```
+
+Later create of modify `~/.config/env/jdk.sh`
+
+All `*.sh` files are loaded after `*.env` files so you can safely use.
+
+```
+#!/bin/bash
+
+export JAVA_HOME=$JAVA24_HOME
+export PATH=$JAVA_HOME/bin:$PATH
+export GRADLE_USER_HOME=$HOME/.cache/gradle
+
+```
 
 ## About each config
 
@@ -53,4 +107,3 @@ Say thanks to https://nvchad.com/
 - vim like copy mode.
 - nvim like pane move: prefix+{h,j,k,l} to move around
 - nvim like pane split: prefix+s to split horizontally, prefix+v to virtically
-
