@@ -1,16 +1,25 @@
 local M = {}
 
-local make_opts = function(defaults)
+local function string_starts(String, Start)
+  return string.sub(String, 1, string.len(Start)) == Start
+end
+
+local function find_root()
+  -- jdt://contents/foobar.jar/baz/qux/quux.class
+  local source = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
+  if string_starts(source, "jdt://contents/") then
+    local index = string.find(source, "/", string.len "jdt://contents/" + 1)
+    if index ~= nil and index > 0 then
+      return string.sub(source, 0, index)
+    end
+  end
   -- use this function notation to build some variables
   local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle", ".project" }
-  local root_dir = require("jdtls.setup").find_root(root_markers)
-  -- local next_up = root_dir
-  -- while next_up ~= nil and next_up ~= "" and next_up ~= "/" do
-  --   next_up = vim.fs.root(vim.fs.dirname(root_dir), root_markers)
-  --   if next_up ~= nil and next_up ~= "" then
-  --     root_dir = next_up
-  --   end
-  -- end
+  return require("jdtls.setup").find_root(root_markers)
+end
+
+local make_opts = function(defaults)
+  local root_dir = find_root()
 
   -- calculate workspace dir
   local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
@@ -43,60 +52,18 @@ local make_opts = function(defaults)
   local launcher_path = vim.split(vim.fn.glob(jdtls_home .. "/plugins/org.eclipse.equinox.launcher_*.jar"), "\n")[1]
   return {
     cmd = {
-      vim.fn.expand "$HOME/.local/jdk-21.0.2/bin/java",
-      -- params are basically stolen from https://github.com/redhat-developer/vscode-java
+      vim.fn.expand "$JAVA_HOME/bin/java",
+      "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+      "-Dosgi.bundles.defaultStartLevel=4",
+      "-Declipse.product=org.eclipse.jdt.ls.core.product",
+      "-Dlog.protocol=true",
+      "-Dlog.level=ALL",
+      "-Xmx1g",
       "--add-modules=ALL-SYSTEM",
       "--add-opens",
       "java.base/java.util=ALL-UNNAMED",
       "--add-opens",
       "java.base/java.lang=ALL-UNNAMED",
-      -- See https://github.com/redhat-developer/vscode-java/issues/2264
-      -- It requires the internal API sun.nio.fs.WindowsFileAttributes.isDirectoryLink() to check if a Windows directory is symlink.
-      "--add-opens",
-      "java.base/sun.nio.fs=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.javadoc/jdk.javadoc.internal.doclets.formats.html.taglets.snippet=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.javadoc/jdk.javadoc.internal.doclets.formats.html.taglets=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.platform=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.resources=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
-      "--add-opens",
-      "jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED",
-      "--add-opens",
-      "java.compiler/javax.tools=ALL-UNNAMED",
-      "--add-opens",
-      "java.base/java.nio.channels=ALL-UNNAMED",
-      "--add-opens",
-      "java.base/sun.nio.ch=ALL-UNNAMED",
-      "-DICompilationUnitResolver=org.eclipse.jdt.core.dom.JavacCompilationUnitResolver",
-      "-DCompilationUnit.DOM_BASED_OPERATIONS=true",
-      "-DAbstractImageBuilder.compilerFactory=org.eclipse.jdt.internal.javac.JavacCompilerFactory",
-      -- '-DCompilationUnit.codeComplete.DOM_BASED_OPERATIONS=true',
-      "-Declipse.application=org.eclipse.jdt.ls.core.id1",
-      "-Dosgi.bundles.defaultStartLevel=4",
-      "-Declipse.product=org.eclipse.jdt.ls.core.product",
-      "-Dlog.level=ALL",
-      "-Dfile.encoding=utf8",
       "-jar",
       launcher_path,
       "-configuration",
@@ -108,15 +75,15 @@ local make_opts = function(defaults)
     root_dir = root_dir,
     settings = {
       java = {
-        home = vim.fn.expand "$HOME/.local/jdk-21.0.2",
+        home = vim.fn.expand "$JAVA17_HOME",
         runtimes = {
-          { name = "JavaSE-11", path = vim.fn.expand "$HOME/.local/jdk-11.0.2" },
-          { name = "JavaSE-12", path = vim.fn.expand "$HOME/.local/jdk-12.0.2" },
-          { name = "JavaSE-17", path = vim.fn.expand "$HOME/.local/jdk-17.0.2" },
-          { name = "JavaSE-21", path = vim.fn.expand "$HOME/.local/jdk-21.0.2" },
-          { name = "JavaSE-22", path = vim.fn.expand "$HOME/.local/jdk-22.0.2" },
-          { name = "JavaSE-23", path = vim.fn.expand "$HOME/.local/jdk-23.0.2" },
-          { name = "JavaSE-24", path = vim.fn.expand "$HOME/.local/jdk-24" },
+          { name = "JavaSE-11", path = vim.fn.expand "$HOME/.local/openjdk/jdk-11.0.2" },
+          { name = "JavaSE-12", path = vim.fn.expand "$HOME/.local/openjdk/jdk-12.0.2" },
+          { name = "JavaSE-17", path = vim.fn.expand "$HOME/.local/openjdk/jdk-17.0.2" },
+          { name = "JavaSE-21", path = vim.fn.expand "$HOME/.local/openjdk/jdk-21.0.2" },
+          { name = "JavaSE-22", path = vim.fn.expand "$HOME/.local/openjdk/jdk-22.0.2" },
+          { name = "JavaSE-23", path = vim.fn.expand "$HOME/.local/openjdk/jdk-23.0.2" },
+          { name = "JavaSE-24", path = vim.fn.expand "$HOME/.local/openjdk/jdk-24" },
         },
         eclipse = { downloadSources = true },
         configuration = { updateBuildConfiguration = "interactive" },
@@ -130,8 +97,7 @@ local make_opts = function(defaults)
             -- arguments = { "localDistro" },
             enabled = true,
             java = {
-              --  home = vim.fn.expand "$HOME/.local/jdk-17.0.2",
-              -- home =  vim.fn.expand "$JAVA_HOME",
+              home = vim.fn.expand "$JAVA17_HOME",
             },
             jvmArguments = {
               -- "-Xlint:unchecked",
@@ -141,6 +107,7 @@ local make_opts = function(defaults)
             },
             wrapper = {
               enabled = true,
+              checksums = { "41c8aa7a337a44af18d8cda0d632ebba469aef34f3041827624ef5c1a4e4419d" },
             },
           },
         },
@@ -164,7 +131,10 @@ local make_opts = function(defaults)
       },
     },
     init_options = {
-      bundles = {},
+      bundles = vim.split(
+        vim.fn.glob(vim.fn.expand "$HOME" .. "/.local/jdtls/vscode-pde-0.8.0/extension/server/*.jar"),
+        "\n"
+      ),
     },
     handlers = {
       ["$/progress"] = function() end, -- disable progress updates.
