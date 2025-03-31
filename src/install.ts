@@ -29,14 +29,14 @@ function buildInjectedScriptLines(conf: typeof config): string {
   if (relativeConfDir.startsWith("./")) {
     relativeConfDir = relativeConfDir.substring("./".length);
   }
-  return `if [[ -d "$HOME/${relativeConfDir}" ]]; then
-  for f in $HOME/${relativeConfDir}/*.env; do
+  return `if [[ -d "$HOME/${relativeConfDir}/env" ]]; then
+  for f in $HOME/${relativeConfDir}/env/*.env; do
     set -a            
     . $f
     set +a
   done
 
-  for f in $HOME/${relativeConfDir}/*.sh; do
+  for f in $HOME/${relativeConfDir}/env/*.sh; do
     . $f
   done
 fi
