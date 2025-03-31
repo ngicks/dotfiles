@@ -16,7 +16,7 @@ M.config = function()
   local conf_path = dir .. "/config.toml"
 
   if vim.fn.filereadable(conf_path) == 0 then
-    require "plugins.config.glidenote-memolist_vim" -- ensure g setup
+    require "plugins.config.glidenote.memolist_vim" -- ensure g setup
     local conf_content = {
       'memodir = "' .. vim.g.memolist_path .. '"',
       'editor = "nvim"',
