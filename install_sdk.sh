@@ -43,7 +43,7 @@ esac
 
 mkdir -p ~/.local
 mkdir -p ~/.config/env
-if [[ ! -f ~/.config/env/path.sh ]]; then
+if [[ ! -f ~/.config/env/00_path.sh ]]; then
   echo "#!/bin/bash" >> ~/.config/env/00_path.sh
   echo "" >> ~/.config/env/00_path.sh
   chmod +x ~/.config/env/00_path.sh
