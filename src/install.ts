@@ -6,17 +6,25 @@ const dirs = ["./.config"];
 
 for (const dir of dirs) {
   for await (const dirent of Deno.readDir(dir)) {
+    const src = path.join(dir, dirent.name);
+    const dst = path.join(config.dir.config, dirent.name);
     try {
       await Deno.symlink(
         path.relative(
           config.dir.config,
-          path.join(dir, dirent.name),
+          src,
         ),
-        path.join(config.dir.config, dirent.name),
+        dst,
       );
     } catch (err) {
       if (!(err instanceof Deno.errors.AlreadyExists)) {
         throw err;
+      }
+      const s = await Deno.lstat(dst);
+      if (s.isSymlink) {
+        console.log(`skipped linking: ${dst}`);
+      } else {
+        console.warn(`not a link: ${dst}`);
       }
     }
   }
