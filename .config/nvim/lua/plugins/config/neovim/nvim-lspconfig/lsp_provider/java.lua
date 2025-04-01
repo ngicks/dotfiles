@@ -15,7 +15,19 @@ local function find_root()
   end
   -- use this function notation to build some variables
   local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle", ".project" }
-  return require("jdtls.setup").find_root(root_markers)
+  local root_dir = vim.fs.root(vim.fs.dirname(source), root_markers)
+
+  -- jdtls looks for "gradle/wrapper/gradle-wrapper.properties"
+  -- some project only holds wrapper only on top directory while there's many sub-gradle projects
+  local next_up = root_dir
+  while next_up ~= nil and next_up ~= "" and next_up ~= "/" do
+    next_up = vim.fs.root(vim.fs.dirname(next_up), root_markers)
+    if next_up ~= nil and next_up ~= "" then
+      root_dir = next_up
+    end
+  end
+
+  return root_dir
 end
 
 local make_opts = function(defaults)
@@ -52,7 +64,7 @@ local make_opts = function(defaults)
   local launcher_path = vim.split(vim.fn.glob(jdtls_home .. "/plugins/org.eclipse.equinox.launcher_*.jar"), "\n")[1]
   return {
     cmd = {
-      vim.fn.expand "$JAVA_HOME/bin/java",
+      vim.fn.expand "$JAVA24_HOME/bin/java",
       "-Declipse.application=org.eclipse.jdt.ls.core.id1",
       "-Dosgi.bundles.defaultStartLevel=4",
       "-Declipse.product=org.eclipse.jdt.ls.core.product",
