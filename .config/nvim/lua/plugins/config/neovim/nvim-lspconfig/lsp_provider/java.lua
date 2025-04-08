@@ -1,19 +1,7 @@
 local M = {}
 
-local function string_starts(String, Start)
-  return string.sub(String, 1, string.len(Start)) == Start
-end
-
 local function find_root()
-  -- jdt://contents/foobar.jar/baz/qux/quux.class
   local source = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-  if string_starts(source, "jdt://contents/") then
-    local index = string.find(source, "/", string.len "jdt://contents/" + 1)
-    if index ~= nil and index > 0 then
-      return string.sub(source, 0, index)
-    end
-  end
-  -- use this function notation to build some variables
   local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle", ".project" }
   local root_dir = vim.fs.root(vim.fs.dirname(source), root_markers)
 
@@ -21,10 +9,12 @@ local function find_root()
   -- some project only holds wrapper only on top directory while there's many sub-gradle projects
   local next_up = root_dir
   while next_up ~= nil and next_up ~= "" and next_up ~= "/" do
-    next_up = vim.fs.root(vim.fs.dirname(next_up), root_markers)
-    if next_up ~= nil and next_up ~= "" then
+    local s = vim.uv.fs_stat(next_up .. "/gradle/wrapper/gradle-wrapper.properties")
+    if s ~= nil then
       root_dir = next_up
+      break
     end
+    next_up = vim.fs.root(vim.fs.dirname(next_up), root_markers)
   end
 
   return root_dir
@@ -59,23 +49,29 @@ local make_opts = function(defaults)
   -- end
   local config_name = "config" .. suf
 
-  local jdtls_home = vim.fn.expand "$HOME/.local/eclipse.jdt.ls"
+  local jdtls_home = vim.fn.expand "$HOME/.local/jdtls/eclipse.jdt.ls"
   local config_path = jdtls_home .. "/" .. config_name
   local launcher_path = vim.split(vim.fn.glob(jdtls_home .. "/plugins/org.eclipse.equinox.launcher_*.jar"), "\n")[1]
   return {
     cmd = {
-      vim.fn.expand "$JAVA24_HOME/bin/java",
+      vim.fn.expand "$JAVA21_HOME/bin/java",
       "-Declipse.application=org.eclipse.jdt.ls.core.id1",
       "-Dosgi.bundles.defaultStartLevel=4",
       "-Declipse.product=org.eclipse.jdt.ls.core.product",
       "-Dlog.protocol=true",
       "-Dlog.level=ALL",
-      "-Xmx1g",
+      "-XX:+UseParallelGC",
+      "-XX:GCTimeRatio=4",
+      "-XX:AdaptiveSizePolicyWeight=90",
+      "-Dsun.zip.disableMemoryMapping=true",
+      "-Xmx4G",
+      "-Xms100m",
       "--add-modules=ALL-SYSTEM",
       "--add-opens",
       "java.base/java.util=ALL-UNNAMED",
       "--add-opens",
       "java.base/java.lang=ALL-UNNAMED",
+      -- "--enable-native-access=ALL-UNNAMED",
       "-jar",
       launcher_path,
       "-configuration",
@@ -87,7 +83,7 @@ local make_opts = function(defaults)
     root_dir = root_dir,
     settings = {
       java = {
-        home = vim.fn.expand "$JAVA17_HOME",
+        home = vim.fn.expand "$JAVA21_HOME",
         runtimes = {
           { name = "JavaSE-11", path = vim.fn.expand "$HOME/.local/openjdk/jdk-11.0.2" },
           { name = "JavaSE-12", path = vim.fn.expand "$HOME/.local/openjdk/jdk-12.0.2" },
@@ -106,20 +102,24 @@ local make_opts = function(defaults)
         signatureHelp = { enabled = true },
         import = {
           gradle = {
-            -- arguments = { "localDistro" },
+            annotationProcessing = { enabled = true },
+            -- arguments = {},
             enabled = true,
             java = {
-              home = vim.fn.expand "$JAVA17_HOME",
+              home = vim.fn.expand "$JAVA21_HOME",
             },
-            jvmArguments = {
-              -- "-Xlint:unchecked",
-              -- "-Xmx4g",
-              -- "-XX:MaxMetaspaceSize=2g",
-              -- "-Dkotlin.daemon.jvm.options=-Xmx1500m",
-            },
+            jvmArguments = {},
             wrapper = {
               enabled = true,
-              checksums = { "41c8aa7a337a44af18d8cda0d632ebba469aef34f3041827624ef5c1a4e4419d" },
+            },
+          },
+        },
+        imports = {
+          gradle = {
+            wrapper = {
+              checksums = {
+                { sha256 = "41c8aa7a337a44af18d8cda0d632ebba469aef34f3041827624ef5c1a4e4419d", allowed = true },
+              },
             },
           },
         },
