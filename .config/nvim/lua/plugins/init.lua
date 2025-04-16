@@ -86,6 +86,10 @@ local plugins = {
   },
   -- visual helper
   {
+    "nvim-tree/nvim-tree.lua",
+    cmd = { "NvimTreeOpen", "NvimTreeToggle", "NvimTreeFocus" },
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPre", "BufNewFile" },
   },
