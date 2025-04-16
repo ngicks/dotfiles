@@ -108,7 +108,10 @@ local make_opts = function(defaults)
             java = {
               home = vim.fn.expand "$JAVA21_HOME",
             },
-            jvmArguments = {},
+            jvmArguments = {
+              "-Xmx4G",
+              "-Xms100m",
+            },
             wrapper = {
               enabled = true,
             },
