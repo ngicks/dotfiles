@@ -24,7 +24,7 @@ return {
     lazy = false,
   },
   -- lsp
-  {
+  { -- just sit there!
     "neovim/nvim-lspconfig",
   },
   {
@@ -46,13 +46,6 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
     event = { "VeryLazy" },
-  },
-  { -- java
-    "mfussenegger/nvim-jdtls",
-    ft = { "java" },
-    dependencies = {
-      "williamboman/mason-lspconfig.nvim",
-    },
   },
   { -- format file types where lsp is not available.
     "stevearc/conform.nvim",
