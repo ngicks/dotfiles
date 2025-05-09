@@ -26,6 +26,11 @@ M.find_deno_root_dir = function(bufnr)
   if vim.fs.root(fname, { "package.json", "package.jsonc" }) then
     return nil
   end
+  -- maybe we'd want only an instance per a git repository to run.
+  local git = vim.fs.root(fname, { ".git" })
+  if git ~= nil then
+    return git
+  end
   return vim.fn.getcwd() -- Use the current working directory
 end
 
