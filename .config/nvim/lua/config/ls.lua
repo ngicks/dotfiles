@@ -6,7 +6,6 @@ local nonCustomizedServers = {
   "pyright",
   "clangd",
   "rust_analyzer",
-  "golangci_lint_ls",
 }
 
 local servers = {}
