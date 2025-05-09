@@ -1,5 +1,6 @@
 -- let neovim/lsp-config configure them.
 local nonCustomizedServers = {
+  "lua_ls",
   "html",
   "cssls",
   "marksman",
