@@ -60,10 +60,6 @@ return {
     event = { "LspAttach" },
     cmd = "Trouble",
   },
-  { -- list symbols in the current buffer in floating window. search and jump
-    "bassamsdata/namu.nvim",
-    event = { "LspAttach" },
-  },
   -- telescope
   {
     "nvim-telescope/telescope.nvim",
