@@ -1,7 +1,9 @@
 -- General rule:
 --
 -- lists every plugins
--- opts, configs, inits may be stored in separate lua scripts under ./config.
+-- init, opts, config, main and build get often big and fat.
+-- init.lua creates separate config for each plugin under ./config
+-- and merges functons of same name for listed plugins.
 --
 -- orders are
 --  - SPEC LOADING
@@ -27,18 +29,9 @@ return {
   { -- just sit there!
     "neovim/nvim-lspconfig",
   },
+  -- mason misc
   {
     "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    event = { "VeryLazy" },
-  },
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = { "williamboman/mason.nvim" },
-    event = { "LspAttach" },
-  },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
     dependencies = { "williamboman/mason.nvim" },
     event = { "VeryLazy" },
   },
@@ -47,13 +40,30 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     event = { "VeryLazy" },
   },
+  -- dap
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = { "williamboman/mason.nvim" },
+    event = { "LspAttach" },
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    event = { "LspAttach" },
+  },
+  {
+    "theHamsta/nvim-dap-virtual-text",
+    dependencies = { "mfussenegger/nvim-dap" },
+    event = { "LspAttach" },
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    event = { "VeryLazy" },
+  },
   { -- format file types where lsp is not available.
     "stevearc/conform.nvim",
     event = "BufWritePre",
-  },
-  { -- inject non-lsp tools as lsp client
-    "mfussenegger/nvim-lint",
-    event = "BufWritePost",
   },
   { -- display lsp symbols, diagnoses
     "folke/trouble.nvim",
@@ -142,5 +152,9 @@ return {
   -- debug
   { -- gets buffer content then eval in nvim as lua script.
     "bfredl/nvim-luadev",
+  },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
   },
 }
