@@ -23,9 +23,10 @@ for _, lsName in ipairs(enabled) do
 end
 
 -- not really sure why tho,
--- Once ls is activated, it is kept enabled even when I remove lines which enables it.
+-- Once ls is activated, it is kept enabled even when I remove lines which enable it.
 -- I don't like it, but -- For a desparate maesure, I'm putting this empty root_dir func.
--- If a config does not have root_dir, then it will NEVER enabled (and seemingly most of configs in neovim/nvim-lspconfig does not have it.)
+-- If a config does not have root_dir, then it will NEVER be enabled
+-- (and seemingly most of configs in neovim/nvim-lspconfig does not have it.)
 vim.lsp.config("*", {
   root_dir = function() end,
 })
