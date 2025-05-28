@@ -14,11 +14,12 @@ STATUS_LEFT_VIEW=${STATUS_LEFT_MODE_VIEW}${STATUS_LEFT_PREFIX}${STATUS_LEFT_SESS
 STATUS_LEFT_COPY=${STATUS_LEFT_MODE_COPY}${STATUS_LEFT_PREFIX}${STATUS_LEFT_SESSION}
 
 
-STATUS_LEFT="if -F \"#{m/r:copy-mode,#{pane_mode}}\"\
+STATUS_LEFT="if -F \"#{==:copy-mode,#{pane_mode}}\"\
   \"set-option -p status-left \\\"${STATUS_LEFT_COPY}\\\"\"\
   \"set-option -p status-left \\\"${STATUS_LEFT_VIEW}\\\"\"\
 "
 
+tmux set-option -g status-left-length 100
 tmux set-option -g status-left "${STATUS_LEFT_VIEW}"
 tmux set-hook -g session-changed "${STATUS_LEFT}"
 tmux set-hook -g session-window-changed "${STATUS_LEFT}"
