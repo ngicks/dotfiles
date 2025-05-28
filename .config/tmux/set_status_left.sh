@@ -1,5 +1,5 @@
 # display mode
-STATUS_LEFT_MODE_VIEW="#[fg=#ebffe8,bg=#65ab5b] VIEW "
+STATUS_LEFT_MODE_VIEW="#[fg=#cdeccd,bg=#5fab5b] VIEW "
 STATUS_LEFT_MODE_COPY="#[fg=#bdc1ee,bg=#5b62ab] COPY "
 
 # prefix key is pressed or not
@@ -14,7 +14,7 @@ STATUS_LEFT_VIEW=${STATUS_LEFT_MODE_VIEW}${STATUS_LEFT_PREFIX}${STATUS_LEFT_SESS
 STATUS_LEFT_COPY=${STATUS_LEFT_MODE_COPY}${STATUS_LEFT_PREFIX}${STATUS_LEFT_SESSION}
 
 
-STATUS_LEFT="if -F \"#{m/r:(copy|view)-mode,#{pane_mode}}\"\
+STATUS_LEFT="if -F \"#{m/r:copy-mode,#{pane_mode}}\"\
   \"set-option -p status-left \\\"${STATUS_LEFT_COPY}\\\"\"\
   \"set-option -p status-left \\\"${STATUS_LEFT_VIEW}\\\"\"\
 "
