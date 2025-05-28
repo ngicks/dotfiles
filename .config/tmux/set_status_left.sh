@@ -19,7 +19,7 @@ STATUS_LEFT="if -F \"#{m/r:copy-mode,#{pane_mode}}\"\
   \"set-option -p status-left \\\"${STATUS_LEFT_VIEW}\\\"\"\
 "
 
-tmux set-option -g status-left "${STATUS_LEFT}"
+tmux set-option -g status-left "${STATUS_LEFT_VIEW}"
 tmux set-hook -g session-changed "${STATUS_LEFT}"
 tmux set-hook -g session-window-changed "${STATUS_LEFT}"
 tmux set-hook -g window-pane-changed "${STATUS_LEFT}"
