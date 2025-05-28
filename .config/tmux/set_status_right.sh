@@ -1,5 +1,3 @@
-#!/bin/bash
-
 HOST_COLOR="$(uname -n | sha256sum | awk '{print substr($1, 1, 6)}')"
 
 r=0x${HOST_COLOR:0:2}
@@ -13,4 +11,5 @@ if [ $brightness -gt 128 ]; then
 fi
 HOST_BG_COLOR=$HOST_COLOR
 
+tmux set-option -g status-right-length 100
 tmux set-option -g status-right "#[fg=${HOST_FG_COLOR},bg=#${HOST_BG_COLOR}] #H #[fg=colour254,bg=colour241]| %Y-%m-%dT%H:%M:%S #[default]"
