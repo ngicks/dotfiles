@@ -1,6 +1,7 @@
 {
   "tasks": {
     "install": "deno run -R=./.config,$HOME/.config -W=$HOME/.config/ -E=HOME,USERPROFILE ./src/install.ts"
+    "update:daily": "deno run -R=./.config,$HOME/.cache -W=$HOME/.cache/ -E=HOME,USERPROFILE --allow-run=git ./src/update_daily.ts",
     "jdk:install": "deno run -R=$HOME/.config,$HOME/.local/openjdk,/tmp -W=$HOME/.local/openjdk,/tmp -N=download.java.net -E=HOME,USERPROFILE --allow-run=tar ./src/jdk.ts install",
     "jdk:dotenv": "deno run -R=$HOME/.local/openjdk -E=HOME,USERPROFILE ./src/jdk.ts dotenv",
     "sdk:update": "./install_sdk.sh sdk update",

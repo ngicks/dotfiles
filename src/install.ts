@@ -1,6 +1,7 @@
 import path from "node:path";
 
 import { config } from "#/config.ts";
+import { denoRootDir } from "./root.ts";
 
 const dirs = ["./.config"];
 
@@ -32,7 +33,10 @@ for (const dir of dirs) {
 
 const markerCommentStart = "# MYDOTFILE INJECTION START\n";
 const markerCommentEnd = "# MYDOTFILE INJECTION END\n";
-function buildInjectedScriptLines(conf: typeof config): string {
+async function buildInjectedScriptLines(conf: typeof config): Promise<string> {
+  const rootDir = await denoRootDir(new URL(import.meta.url).pathname);
+  const relativeDotEnvDir = path.relative(conf.dir.home, rootDir);
+
   let relativeConfDir = path.relative(conf.dir.home, conf.dir.config);
   if (relativeConfDir.startsWith("./")) {
     relativeConfDir = relativeConfDir.substring("./".length);
@@ -48,6 +52,10 @@ function buildInjectedScriptLines(conf: typeof config): string {
     . $f
   done
 fi
+
+pushd $HOME/${relativeDotEnvDir}
+deno task update:daily
+popd
 `;
 }
 
@@ -74,7 +82,7 @@ for (const rcFile of [".bashrc"]) {
       filename,
       before +
         `${markerCommentStart}
-${buildInjectedScriptLines(config)}
+${await buildInjectedScriptLines(config)}
 ${markerCommentEnd}` + after,
     );
   } catch (err) {

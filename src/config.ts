@@ -11,6 +11,7 @@ export const config = {
   dir: {
     home,
     config: path.join(home, ".config"),
+    cache: path.join(home, ".cache"),
     openjdkDir: path.join(home, ".local", "openjdk"),
   },
 };
