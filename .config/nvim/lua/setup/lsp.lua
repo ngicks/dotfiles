@@ -4,7 +4,7 @@ if vim.lsp.inlay_hint then
   vim.lsp.inlay_hint.enable(true)
 end
 
-local enabled = require "config.ls"
+local enabled = require("config.ls").lsp
 
 for _, lsName in ipairs(enabled) do
   local config = vim.lsp.config[lsName]

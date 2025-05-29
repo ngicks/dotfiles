@@ -9,18 +9,35 @@ local nonCustomizedServers = {
   "rust_analyzer",
 }
 
-local servers = {}
+local function get_servers()
+  local servers = {}
 
-local scan = require("plenary.scandir").scan_dir
+  local scan = require("plenary.scandir").scan_dir
 
-local files = scan(vim.fn.stdpath "config" .. "/after/lsp", { depth = 1, add_dirs = false })
+  local files = scan(vim.fn.stdpath "config" .. "/after/lsp", { depth = 1, add_dirs = false })
 
-for _, fileName in ipairs(files) do
-  local name = vim.fs.basename(fileName)
-  local serverName, occurence = name:gsub("%.lua", "")
-  if occurence == 1 then -- Could there be .lua.lua files?
-    table.insert(servers, serverName)
+  for _, fileName in ipairs(files) do
+    local name = vim.fs.basename(fileName)
+    local serverName, occurence = name:gsub("%.lua", "")
+    if occurence == 1 then -- Could there be .lua.lua files?
+      table.insert(servers, serverName)
+    end
   end
+
+  return vim.list_extend(servers, nonCustomizedServers)
 end
 
-return vim.list_extend(servers, nonCustomizedServers)
+local function get_tools()
+  local merge = require("func.table").insert_unique
+  local tools = {}
+  local loaded = require("func.scan_conf_dir").load_local_dir("config/ls-tools", true)
+  for _, ent in ipairs(loaded) do
+    tools = merge(tools, ent)
+  end
+  return tools
+end
+
+return {
+  lsp = get_servers(),
+  tools = get_tools(),
+}
