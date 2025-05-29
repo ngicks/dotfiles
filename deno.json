@@ -9,6 +9,10 @@
     "basetool:update": "./install_sdk.sh basetool update",
     "gotools:install": "./install_sdk.sh gopkg install",
     "gotools:update": "./install_sdk.sh gopkg update",
+    "update:all": {
+      "command": "deno eval \"console.log(\\\"updated\\\")\"",
+      "dependencies": ["sdk:update", "basetool:update", "gotools:update"]
+    },
   },
   "imports": {
     "#/": "./src/",
