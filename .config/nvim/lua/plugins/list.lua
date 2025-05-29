@@ -25,6 +25,12 @@ return {
     "rmagatti/auto-session",
     lazy = false,
   },
+  -- AI integration
+  {
+    "greggh/claude-code.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = { "VeryLazy" },
+  },
   -- lsp
   { -- just sit there!
     "neovim/nvim-lspconfig",
