@@ -32,7 +32,9 @@ async function main() {
       return;
   }
 
-  const out = await new Deno.Command("git", { args: ["pull"] }).output();
+  const out = await new Deno.Command("git", {
+    args: ["pull", "--recurse-submodules"],
+  }).output();
   console.log(new TextDecoder().decode(out.stdout));
   await Deno.utime(timestampFilePath, current, current);
 }
