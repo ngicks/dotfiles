@@ -1,3 +1,5 @@
+import { mergeReadableStreams } from "jsr:@std/streams";
+
 import path from "node:path";
 
 import { config } from "#/config.ts";
@@ -17,25 +19,32 @@ async function main() {
   const current = new Date();
   switch (true) {
     case (s instanceof Deno.errors.NotFound):
-      await Deno.open(timestampFilePath, { create: true, write: true });
       break;
     case (s instanceof Error):
       throw s;
     case ((current.getTime() -
       ((<Deno.FileInfo> s).mtime?.getTime() ?? 0)) <=
       minimumInterval):
-      console.log(
-        `next update occurrs after ${new Date(
-          ((<Deno.FileInfo> s).mtime?.getTime() ?? 0) + minimumInterval,
-        )}`,
+      await Deno.stderr.write(
+        new TextEncoder().encode(
+          `next update occurrs after ${new Date(
+            ((<Deno.FileInfo> s).mtime?.getTime() ?? 0) + minimumInterval,
+          )}
+`,
+        ),
       );
       return;
   }
 
-  const out = await new Deno.Command("git", {
+  const cmd = new Deno.Command("git", {
     args: ["pull", "--recurse-submodules"],
-  }).output();
-  console.log(new TextDecoder().decode(out.stdout));
+    stdout: "piped",
+    stderr: "piped",
+  }).spawn();
+  const merged = mergeReadableStreams(cmd.stdout, cmd.stderr);
+  await merged.pipeTo(Deno.stderr.writable);
+  await cmd.status;
+  await Deno.open(timestampFilePath, { create: true, write: true });
   await Deno.utime(timestampFilePath, current, current);
 }
 

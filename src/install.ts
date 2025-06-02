@@ -53,9 +53,9 @@ async function buildInjectedScriptLines(conf: typeof config): Promise<string> {
   done
 fi
 
-pushd $HOME/${relativeDotEnvDir}
-deno task update:daily
-popd
+pushd $HOME/${relativeDotEnvDir} > /dev/null
+deno task update:daily > /dev/null
+popd > /dev/null
 `;
 }
 
