@@ -35,7 +35,8 @@ map("n", "<leader>fw", function()
 end, { desc = "telescope live grep args" })
 
 -- trouble
-
+-- remove builtin LSP diagnose location list
+unmap("n", "<leader>ds")
 map("n", "<leader>tt", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
 map("n", "<leader>tT", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", { desc = "Buffer Diagnostics (Trouble)" })
 map("n", "<leader>ts", "<cmd>Trouble symbols toggle focus=false<cr>", { desc = "Symbols (Trouble)" })
@@ -47,12 +48,6 @@ map(
 )
 map("n", "<leader>tL", "<cmd>Trouble loclist toggle<cr>", { desc = "Location List (Trouble)" })
 map("n", "<leader>tQ", "<cmd>Trouble qflist toggle<cr>", { desc = "Quickfix List (Trouble)" })
-
--- -- Namu
-map("n", "<leader>ss", "<cmd>Namu symbols<cr>", {
-  desc = "List and jump to LSP symbols",
-  silent = true,
-})
 
 -- dropbar
 map("n", "<Leader>;", function()
@@ -104,3 +99,49 @@ end, { desc = "eval whole current buffer as lua script" })
 -- claude code
 
 vim.keymap.set("n", "<leader>ac", "<cmd>ClaudeCode<CR>", { desc = "Toggle Claude Code" })
+
+-- DAP (Debug Adapter Protocol) keybindings
+map("n", "<F5>", function()
+  require("dap").continue()
+end, { desc = "DAP Continue" })
+map("n", "<F10>", function()
+  require("dap").step_over()
+end, { desc = "DAP Step Over" })
+map("n", "<F12>", function()
+  require("dap").step_into()
+end, { desc = "DAP Step Into" })
+map("n", "<F24>", function()
+  require("dap").step_out()
+end, { desc = "DAP Step Out" })
+map("n", "<F9>", function()
+  require("dap").toggle_breakpoint()
+end, { desc = "DAP Toggle Breakpoint" })
+map("n", "<leader>dB", function()
+  require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
+end, { desc = "DAP Set Conditional Breakpoint" })
+map("n", "<leader>dp", function()
+  require("dap").set_breakpoint(nil, nil, vim.fn.input "Log point message: ")
+end, { desc = "DAP Set Log Point" })
+map("n", "<leader>dr", function()
+  require("dap").repl.open()
+end, { desc = "DAP Open REPL" })
+map("n", "<leader>dl", function()
+  require("dap").run_last()
+end, { desc = "DAP Run Last" })
+map("n", "<leader>dt", function()
+  require("dap").terminate()
+end, { desc = "DAP Terminate" })
+
+-- DAP UI keybindings
+map("n", "<leader>du", function()
+  require("dapui").toggle()
+end, { desc = "DAP UI Toggle" })
+map("n", "<leader>de", function()
+  require("dapui").eval()
+end, { desc = "DAP UI Eval" })
+map("v", "<leader>de", function()
+  require("dapui").eval()
+end, { desc = "DAP UI Eval Selection" })
+
+-- DAP Virtual Text keybindings
+map("n", "<leader>dv", "<cmd>DapVirtualTextToggle<cr>", { desc = "DAP Virtual Text Toggle" })

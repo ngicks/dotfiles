@@ -65,7 +65,7 @@ return {
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = { "williamboman/mason.nvim" },
-    event = { "VeryLazy" },
+    event = { "LspAttach" },
   },
   { -- format file types where lsp is not available.
     "stevearc/conform.nvim",

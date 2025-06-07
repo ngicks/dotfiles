@@ -32,7 +32,7 @@ local function get_tools()
   local tools = {}
   local loaded = require("func.scan_conf_dir").load_local_dir("config/ls-tools", true)
   for _, ent in ipairs(loaded) do
-    tools = merge(tools, ent)
+    tools = merge(tools, ent.tool)
   end
   return tools
 end

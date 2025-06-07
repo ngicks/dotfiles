@@ -8,4 +8,5 @@ M.opts = {
     end,
   },
 }
+
 return M
