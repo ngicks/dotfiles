@@ -6,8 +6,8 @@
 local M = {}
 
 M.base46 = {
-  theme = "chadracula-evondev",
-  theme_toggle = { "chadracula-evondev", "rosepine-dawn" },
+  theme = "chadracula",
+  theme_toggle = { "chadracula", "rosepine-dawn" },
 }
 
 M.term = {
