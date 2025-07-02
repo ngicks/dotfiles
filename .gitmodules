@@ -4,3 +4,6 @@
 [submodule "nggitmgr"]
 	path = nggitmgr
 	url = https://github.com/ngicks/nggitmgr
+[submodule "build_podman_static/podman-static"]
+	path = build_podman_static/podman-static
+	url = https://github.com/mgoltzsche/podman-static.git
