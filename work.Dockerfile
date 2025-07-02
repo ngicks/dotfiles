@@ -22,12 +22,12 @@ WORKDIR /root/bin
 RUN curl -L https://github.com/TomWright/dasel/releases/download/v2.8.1/dasel_linux_amd64.gz -o dasel.gz &&\
     gzip -d ./dasel.gz &&\
     chmod +x dasel
-
 WORKDIR /root
 RUN git clone https://github.com/ngicks/dotfiles.git /root/.dotfiles
 WORKDIR /root/.dotfiles
-RUN ./install_sdk.sh
+RUN PATH=$HOME/bin:$PATH ./install_sdk.sh
 RUN ~/.deno/bin/deno task install
-RUN . ~/.bashrc && ./update_twice.sh
+RUN . ~/.bashrc
+RUN PATH=$HOME/bin:$PATH . ~/.bashrc && ./update_twice.sh
 # claude code knows it.
 RUN cargo install ripgrep
