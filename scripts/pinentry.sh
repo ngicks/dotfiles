@@ -18,11 +18,11 @@ case "${PINENTRY_USER_DATA-}" in
   tempdir=$(mktemp -d)
   fifo="$tempdir/fifo"
   mkfifo $fifo
-  tmux popup -e parent_fiio=$fifo -E "echo \$(tty) >> \${parent_fiio} && $SHELL"
+  tmux popup -e parent_fiio=$fifo -E "echo \$(tty) >> \${parent_fiio} && $SHELL" &
   read -r popup_tty < $fifo
   dir=$(dirname $0)
   swapper="$dir/pattern_swap.sh"
-  swapper "^OPTION ttyname=.*" "OPTION ttyname=${popup_tty}" pinentry-curses "$@"
+  $swapper "^OPTION ttyname=.*" "OPTION ttyname=${popup_tty}" pinentry-curses "$@"
   exit
 	;;
 esac
