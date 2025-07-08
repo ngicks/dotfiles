@@ -75,3 +75,4 @@ EOF
 ENV CLAUDE_CONFIG_DIR=/root/.config/claude 
 
 WORKDIR /root
+
