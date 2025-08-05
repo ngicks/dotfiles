@@ -6,7 +6,7 @@ git submodule update --init --recursive
 
 dir=$(dirname $0)/podman-static
 pushd $dir
-sudo make sudo make singlearch-tar
+sudo make singlearch-tar
 uid=$(id -u)
 gid=$(id -g)
 sudo chown ${uid}:${gid} -R ./build
