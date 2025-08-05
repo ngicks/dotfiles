@@ -62,14 +62,15 @@ RUN <<EOF
 EOF
 
 WORKDIR /root
-# claude code knows it.
-RUN $HOME/.cargo/bin/cargo install ripgrep
 
+# tools
 WORKDIR /root/.dotfiles
 RUN <<EOF
   export PATH=$HOME/bin:$PATH
   . ~/.config/env/00_path.sh
   npm install -g @anthropic-ai/claude-code
+  npm install -g @google/gemini-cli
+  uv tool install git+https://github.com/oraios/serena
 EOF
 
 ENV CLAUDE_CONFIG_DIR=/root/.config/claude 
