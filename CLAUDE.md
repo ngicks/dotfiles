@@ -8,7 +8,7 @@ This is a dotfiles repository that manages development environments and tools in
 
 - **Deno-based TypeScript scripts** for configuration management (`src/`)
 - **Go-based package managers** (`ngpkgmgr/`, `nggitmgr/`) for SDK and tool installation
-- **Configuration files** for nvim, tmux, lazygit (`.config/`)
+- **Configuration files** for nvim, tmux, lazygit, wezterm (`.config/`)
 - **Shell scripts** for SDK installation and system setup
 
 ## Key Commands
@@ -38,8 +38,11 @@ deno task sdk:update
 deno task basetool:update  
 deno task gotools:update
 
-# Daily update (pulls git changes, rate-limited to 16hr intervals)
+# Daily update (pulls git changes, syncs wezterm config to host, rate-limited to 16hr intervals)
 deno task update:daily
+
+# Manually sync wezterm config to Windows host (WSL only)
+deno task wezterm:sync
 
 # Install/manage JDK versions
 deno task jdk:install
@@ -87,4 +90,16 @@ cd nggitmgr && go build
 - **Go modules**: `ngpkgmgr/go.mod`, `nggitmgr/go.mod`
 - **SDK presets**: `ngpkgmgr/preset/sdk/` - installation scripts for development tools
 - **Tool presets**: `ngpkgmgr/preset/basetool/`, `ngpkgmgr/preset/gopkg/`
-- **Config templates**: `.config/nvim/`, `.config/tmux/`, `.config/lazygit/`
+- **Config templates**: `.config/nvim/`, `.config/tmux/`, `.config/lazygit/`, `.config/wezterm/`
+
+## Serena Memory System
+
+The project uses a `.serena` memory system to store important context and information. Available memories include:
+
+- **project_overview**: High-level description of the repository purpose and components
+- **architecture_details**: Detailed technical architecture and implementation patterns
+- **code_style_conventions**: Project-specific coding standards and patterns
+- **suggested_commands**: Commonly used commands for development and maintenance
+- **task_completion_checklist**: Standard checks to perform when completing tasks
+
+These memories can be accessed to provide consistent context across sessions and ensure adherence to project patterns.
