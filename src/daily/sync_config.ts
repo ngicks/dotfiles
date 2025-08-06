@@ -1,9 +1,6 @@
 import path from "node:path";
 import fs from "node:fs";
 
-import { basePaths } from "#/lib/config.ts";
-import { dir } from "node:console";
-
 const syncPairs = [
   {
     name: "wezterm",

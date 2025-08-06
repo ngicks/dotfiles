@@ -4,6 +4,7 @@ import { interval, markerFilePath } from "./config.ts";
 
 export async function doDaily(
   tasks: { name: string; task: () => Promise<void> }[],
+  opts?: { force?: boolean },
 ): Promise<{ done: boolean; next: Date }> {
   await Deno.mkdir(path.dirname(markerFilePath), { recursive: true });
 
@@ -15,7 +16,7 @@ export async function doDaily(
       break;
     case (s instanceof Error):
       throw s;
-    case ((current.getTime() -
+    case !opts?.force && ((current.getTime() -
       ((<Deno.FileInfo> s).mtime?.getTime() ?? 0)) <=
       interval):
       return {
