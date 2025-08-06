@@ -59,7 +59,7 @@ popd > /dev/null
 `;
 }
 
-for (const rcFile of [".bashrc"]) {
+for (const rcFile of [".bashrc", ".zshrc"]) {
   const filename = path.join(basePaths.home, rcFile);
   try {
     const content = await Deno.readTextFile(filename);
