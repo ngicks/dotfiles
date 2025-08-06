@@ -4,20 +4,31 @@
 
 Only intended for `linux/amd64` and when it have `/bin/bash`.
 
-Some scripts have swtich statements for `windows`, `darwin`, and arch other than `amd64`.
+Some scripts have swtich statements for `windows`, `darwin`, and arch other than `amd64` but they are totally WIP stubs.
+Currently no other platforms are supported.
 
 ## isntall prerequisites
 
-```
-sudo apt update && sudo apt install -y make build-essential gcc clang xsel p7zip-full jq tmux libyaml-dev zlib1g-dev
+### Nerd fonts
 
-# dasel is also used in sdk installation. maybe I'll later remove this dependency.
-mkdir -p ~/bin
-pushd ~/bin
-curl -L https://github.com/TomWright/dasel/releases/download/v2.8.1/dasel_linux_amd64.gz -o dasel.gz
-gzip -d ./dasel.gz
-chmod +x dasel
-popd
+You must download nerd-fonts if your terminal emulator doesn't support it natively.
+
+```
+cd /path/to/you/want/to/store/nerdfont/repo
+git clone https://github.com/ryanoasis/nerd-fonts .
+
+# read the script carefully before executing it.
+
+# On windows
+.\install.ps1
+# On unix-like
+./install.sh
+```
+
+### libs
+
+```
+./install_dependencies.sh
 ```
 
 ## install SDK
@@ -38,10 +49,20 @@ At this point, PATH is not modified so call deno directly.
 ~/.deno/bin/deno task install
 ```
 
+## set up configs under ~/.config/env
+
+```shell
+export ZSH_THEME="obraun"
+```
+
 ## source .bashrc again
 
 ```
 . ~/.bashrc
+
+# or
+
+. ~/.zshrc
 ```
 
 ## install jdk(OPTIONAL)
@@ -77,7 +98,7 @@ export GRADLE_USER_HOME=$HOME/.cache/gradle
 
 ### nvim
 
-#### Use with `BlexMono Nerd Font`
+#### Use with `BitstromWera Nerd Font Mono`
 
 #### It's based on NvChad
 
