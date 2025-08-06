@@ -8,6 +8,7 @@ M.opts = {
     markdown = { "prettier" },
     json = { "prettier" },
     jsonc = { "prettier" },
+    xml = { "xmlformatter" },
   },
   default_format_opts = {
     lsp_format = "fallback",
