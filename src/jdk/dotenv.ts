@@ -1,4 +1,4 @@
-import { scanDir } from "#/jdk/scan_dir.ts";
+import { scanDir } from "./scan_dir.ts";
 
 export async function dotenv(): Promise<string> {
   const vers = await scanDir();

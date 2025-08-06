@@ -1,18 +1,18 @@
 import path from "node:path";
 
-import { config } from "#/config.ts";
-import { denoRootDir } from "./root.ts";
+import { BasePaths, basePaths } from "#/lib/config.ts";
+import { denoRootDir } from "#/lib/root.ts";
 
 const dirs = ["./.config"];
 
 for (const dir of dirs) {
   for await (const dirent of Deno.readDir(dir)) {
     const src = path.join(dir, dirent.name);
-    const dst = path.join(config.dir.config, dirent.name);
+    const dst = path.join(basePaths.config, dirent.name);
     try {
       await Deno.symlink(
         path.relative(
-          config.dir.config,
+          basePaths.config,
           src,
         ),
         dst,
@@ -33,11 +33,11 @@ for (const dir of dirs) {
 
 const markerCommentStart = "# MYDOTFILE INJECTION START\n";
 const markerCommentEnd = "# MYDOTFILE INJECTION END\n";
-async function buildInjectedScriptLines(conf: typeof config): Promise<string> {
+async function buildInjectedScriptLines(basePaths: BasePaths): Promise<string> {
   const rootDir = await denoRootDir(new URL(import.meta.url).pathname);
-  const relativeDotEnvDir = path.relative(conf.dir.home, rootDir);
+  const relativeDotEnvDir = path.relative(basePaths.home, rootDir);
 
-  let relativeConfDir = path.relative(conf.dir.home, conf.dir.config);
+  let relativeConfDir = path.relative(basePaths.home, basePaths.config);
   if (relativeConfDir.startsWith("./")) {
     relativeConfDir = relativeConfDir.substring("./".length);
   }
@@ -60,7 +60,7 @@ popd > /dev/null
 }
 
 for (const rcFile of [".bashrc"]) {
-  const filename = path.join(config.dir.home, rcFile);
+  const filename = path.join(basePaths.home, rcFile);
   try {
     const content = await Deno.readTextFile(filename);
     let before = content;
@@ -82,7 +82,7 @@ for (const rcFile of [".bashrc"]) {
       filename,
       before +
         `${markerCommentStart}
-${await buildInjectedScriptLines(config)}
+${await buildInjectedScriptLines(basePaths)}
 ${markerCommentEnd}` + after,
     );
   } catch (err) {

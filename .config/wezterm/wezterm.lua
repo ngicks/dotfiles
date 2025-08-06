@@ -1,5 +1,5 @@
 -- Pull in the wezterm API
-local wezterm = require 'wezterm'
+local wezterm = require("wezterm")
 
 -- This table will hold the configuration.
 local config = {}
@@ -7,17 +7,18 @@ local config = {}
 -- In newer versions of wezterm, use the config_builder which will
 -- help provide clearer error messages
 if wezterm.config_builder then
-  config = wezterm.config_builder()
+	config = wezterm.config_builder()
 end
 
+if #(wezterm.default_wsl_domains()) > 0 then
+	config.default_domain = wezterm.default_wsl_domains()[1].name
+end
 
-config.default_domain = 'WSL:Ubuntu-24.04'
-
-config.font = wezterm.font 'BitstromWera Nerd Font Mono'
+config.font = wezterm.font("BitstromWera Nerd Font Mono")
 config.font_size = 11
 
 -- For example, changing the color scheme:
-config.color_scheme = 'Tokyo Night'
+config.color_scheme = "Tokyo Night"
 
 -- and finally, return the configuration to wezterm
 return config
