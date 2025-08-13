@@ -1,0 +1,11 @@
+[Unit]
+Description=BTRFS Snapshot Timer
+Requires=mnt-btrfs_home-snapshot.service
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=4h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

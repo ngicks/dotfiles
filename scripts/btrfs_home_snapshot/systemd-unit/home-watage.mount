@@ -1,0 +1,15 @@
+[Unit]
+Description=Mount /usr/local/etc/btrfs_home/${USER}/home.img, subvolume `current` to /home/${USER}
+DefaultDependencies=no
+Conflicts=umount.target
+Before=local-fs.target umount.target systemd-user-sessions.service
+After=swap.target
+
+[Mount]
+What=/usr/local/etc/btrfs_home/${USER}/home.img
+Where=/home/${USER}
+Type=btrfs
+Options=loop,subvol=current,noatime,space_cache=v2,autodefrag
+
+[Install]
+WantedBy=multi-user.target

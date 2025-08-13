@@ -1,0 +1,14 @@
+[Unit]
+Description=Mount an image file to `/mnt/btrfs_home/watage`
+DefaultDependencies=no
+After=home-watage.mount
+Before=local-fs.target umount.target systemd-user-sessions.service
+
+[Mount]
+What=/usr/local/etc/btrfs_home/watage/home.img
+Where=/mnt/btrfs_home/watage
+Type=btrfs
+Options=loop,noatime,space_cache=v2,autodefrag
+
+[Install]
+WantedBy=multi-user.target

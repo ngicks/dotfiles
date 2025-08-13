@@ -1,0 +1,9 @@
+[Unit]
+Description=BTRFS Snapshot Service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/mnt-btrfs_home-snapshot.sh
+
+[Install]
+WantedBy=multi-user.target
