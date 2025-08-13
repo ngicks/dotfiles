@@ -1,5 +1,3 @@
-set -Ceu
-
 shell_base=$(basename $SHELL)
 case "${shell_base}" in
 *bash*)
