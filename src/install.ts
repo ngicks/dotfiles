@@ -42,15 +42,19 @@ async function buildInjectedScriptLines(basePaths: BasePaths): Promise<string> {
     relativeConfDir = relativeConfDir.substring("./".length);
   }
   return `if [[ -d "$HOME/${relativeConfDir}/env" ]]; then
-  for f in $HOME/${relativeConfDir}/env/*.env; do
-    set -a            
-    . $f
-    set +a
-  done
+  if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\.env' > /dev/null 2>&1; then
+    for f in $HOME/${relativeConfDir}/env/*.env; do
+      set -a
+      . $f
+      set +a
+    done
+  fi
 
-  for f in $HOME/${relativeConfDir}/env/*.sh; do
-    . $f
-  done
+  if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\.sh' > /dev/null 2>&1; then
+    for f in $HOME/${relativeConfDir}/env/*.sh; do
+      . $f
+    done
+  fi
 fi
 
 pushd $HOME/${relativeDotEnvDir} > /dev/null
