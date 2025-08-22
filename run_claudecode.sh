@@ -6,6 +6,7 @@ fi
 
 podman run -it --rm --init\
   --mount type=volume,src=claude-config,dst=/root/.config/claude\
+  --mount type=bind,src=$HOME/.gemini,dst=/root/.gemini\
   --mount type=bind,src=.,dst=$(pwd)\
   --workdir $(pwd)\
   devenv:latest
