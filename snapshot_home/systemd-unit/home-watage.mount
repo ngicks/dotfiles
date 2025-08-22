@@ -1,5 +1,5 @@
 [Unit]
-Description=Mount /usr/local/etc/btrfs_home/${USER}/home.img, subvolume `current` to /home/${USER}
+Description=Mount /usr/local/etc/home_image/${USER}/home.img, subvolume `current` to /home/${USER}
 DefaultDependencies=no
 Conflicts=umount.target
 Before=local-fs.target umount.target systemd-user-sessions.service
