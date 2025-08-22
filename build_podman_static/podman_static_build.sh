@@ -1,16 +1,25 @@
 #!/bin/bash
 
+set -Cue
+
 sudo apt install -y uidmap
 
 git submodule update --init --recursive
 
 dir=$(dirname $0)/podman-static
 pushd $dir
-sudo make
-sudo make singlearch-tar
-uid=$(id -u)
-gid=$(id -g)
-sudo chown ${uid}:${gid} -R ./build
+
+if docker info | grep rootless > /dev/null 2>&1; then
+  make
+  make singlearch-tar
+else
+  sudo make
+  sudo make singlearch-tar
+  uid=$(id -u)
+  gid=$(id -g)
+  sudo chown ${uid}:${gid} -R ./build
+fi
+
 cp -r ./build/asset/podman-linux-amd64/usr/local/ ~/.local/containers/
 popd
 

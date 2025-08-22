@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { config } from "#/config.ts";
+import { basePaths } from "#/lib/config.ts";
 
 async function main(args: string[]) {
   if (args.length == 0) {
@@ -19,7 +19,7 @@ async function main(args: string[]) {
       if (!l.startsWith("helper_binaries_dir")) {
         return l;
       }
-      return l.replaceAll("$HOME", config.dir.home);
+      return l.replaceAll("$HOME", basePaths.home);
     }).join("\n"),
   );
 
@@ -33,7 +33,7 @@ async function main(args: string[]) {
       if (!l.startsWith("mount_program")) {
         return l;
       }
-      return l.replaceAll("$HOME", config.dir.home);
+      return l.replaceAll("$HOME", basePaths.home);
     }).join("\n"),
   );
 }
