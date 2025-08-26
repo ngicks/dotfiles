@@ -68,9 +68,13 @@ WORKDIR /root/.dotfiles
 RUN <<EOF
   export PATH=$HOME/bin:$PATH
   . ~/.config/env/00_path.sh
+  # cli agents
   npm install -g @anthropic-ai/claude-code
   npm install -g @google/gemini-cli
+  npm install -g @openai/codex
+  # MCP tools
   uv tool install git+https://github.com/oraios/serena
+  npm install -g @upstash/context7-mcp
 EOF
 
 ENV CLAUDE_CONFIG_DIR=/root/.config/claude 
