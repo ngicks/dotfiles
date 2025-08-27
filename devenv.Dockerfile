@@ -59,6 +59,8 @@ RUN <<EOF
   # if an update includes deno's (almost impossible), 
   # update may fails because a deno executable got swapped
   deno task update:all || deno task update:all
+  # cache modules
+  deno task update:daily
 EOF
 
 WORKDIR /root
