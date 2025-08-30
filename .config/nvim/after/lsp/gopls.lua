@@ -44,12 +44,13 @@ return {
   settings = {
     gopls = { -- https://github.com/golang/tools/blob/master/gopls/doc/settings.md
       analyses = {
-        ST1003 = true,
+        -- https://staticcheck.dev/docs/checks
+        ST1003 = false,
         fieldalignment = false,
         fillreturns = true,
         nilness = true,
         nonewvars = true,
-        shadow = true,
+        shadow = false,
         undeclaredname = true,
         unreachable = true,
         unusedparams = true,
