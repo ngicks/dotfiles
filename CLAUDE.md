@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Using Serena MCP Tool
+
+This project has been onboarded with the Serena MCP tool. Use `mcp__serena__` commands to access and store project information. The serena memories complement the documentation in the `./doc` directory.
+
+- You must use serena tools where possible.
+- You'll have to read/update serena memory.
+- You must not use built-in read / write tool
+- You must not use bash to search lines, symbols. Just update serena memory and use serena tools.
+
 ## Repository Overview
 
 This is a dotfiles repository that manages development environments and tools installation across Linux/macOS systems. The codebase includes:
@@ -14,6 +23,7 @@ This is a dotfiles repository that manages development environments and tools in
 ## Key Commands
 
 ### Installation & Setup
+
 ```bash
 # Install prerequisites (run once)
 sudo apt update && sudo apt install -y make build-essential gcc clang xsel p7zip-full jq tmux
@@ -29,13 +39,14 @@ sudo apt update && sudo apt install -y make build-essential gcc clang xsel p7zip
 ```
 
 ### Development Tasks
+
 ```bash
 # Update all SDKs and tools
 deno task update:all
 
 # Update individual components
 deno task sdk:update
-deno task basetool:update  
+deno task basetool:update
 deno task gotools:update
 
 # Daily update (pulls git changes, syncs wezterm config to host, rate-limited to 16hr intervals)
@@ -50,6 +61,7 @@ deno task jdk:dotenv >> ~/.config/env/jdk.env
 ```
 
 ### Go Projects (ngpkgmgr, nggitmgr)
+
 ```bash
 # Build Go binaries
 cd ngpkgmgr && go build
@@ -62,23 +74,27 @@ cd nggitmgr && go build
 ## Architecture
 
 ### Configuration Management
+
 - **Environment Loading**: `~/.config/env/*.env` files loaded automatically, followed by `*.sh` files
 - **Symlink Strategy**: Dotfiles are symlinked from `.config/` to `~/.config/` via `src/install.ts`
 - **PATH Management**: Tools installed to `~/bin/` and `~/.local/*/bin/`, managed via `~/.config/env/00_path.sh`
 
 ### Package Management System
+
 - **ngpkgmgr**: Meta package manager that executes shell scripts for install/update operations
   - Presets in `ngpkgmgr/preset/` define installation procedures for SDKs and tools
   - Cross-platform support (Linux, Darwin, Windows) with architecture detection
 - **nggitmgr**: Simple git repository manager for cloning and organizing repos
 
 ### SDK Installation Flow
+
 1. `install_sdk.sh` detects OS/architecture and copies prebuilt binaries to `~/bin/`
 2. `ngpkgmgr` reads JSON preset files and executes corresponding shell scripts
 3. SDKs installed to `~/.local/` with version management
 4. Environment variables configured in `~/.config/env/`
 
 ### Neovim Configuration
+
 - Based on NvChad with custom modifications
 - Structure: `configs/` (eager), `plugins/` (lazy.nvim), `setup/` (auto-loaded)
 - Plugin configs auto-injected from directory structure
@@ -92,14 +108,3 @@ cd nggitmgr && go build
 - **Tool presets**: `ngpkgmgr/preset/basetool/`, `ngpkgmgr/preset/gopkg/`
 - **Config templates**: `.config/nvim/`, `.config/tmux/`, `.config/lazygit/`, `.config/wezterm/`
 
-## Serena Memory System
-
-The project uses a `.serena` memory system to store important context and information. Available memories include:
-
-- **project_overview**: High-level description of the repository purpose and components
-- **architecture_details**: Detailed technical architecture and implementation patterns
-- **code_style_conventions**: Project-specific coding standards and patterns
-- **suggested_commands**: Commonly used commands for development and maintenance
-- **task_completion_checklist**: Standard checks to perform when completing tasks
-
-These memories can be accessed to provide consistent context across sessions and ensure adherence to project patterns.
