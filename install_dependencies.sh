@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt update 
-sudo apt install -y make build-essential gcc clang xsel p7zip-full jq tmux libyaml-dev zlib1g-dev zsh
+sudo apt install -y make build-essential gcc clang xsel p7zip-full jq tmux libyaml-dev zlib1g-dev zsh ffmpeg poppler-data fd-find
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
