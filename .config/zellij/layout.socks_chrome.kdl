@@ -1,0 +1,17 @@
+// Project layout: SOCKS proxy + dev panes + Chrome via proxy
+layout {
+  tab name="dev" {
+    pane name="proxy" {
+      command "bash"
+      args "-lc" "if [ -n \"$PROXY_SSH_TARGET\" ]; then echo 'Starting SOCKS on localhost:1080 via' \"$PROXY_SSH_TARGET\"; ssh -N -D 1080 \"$PROXY_SSH_TARGET\"; else echo 'Set PROXY_SSH_TARGET (e.g., export PROXY_SSH_TARGET=user@host) to start the tunnel'; exec bash; fi"
+    }
+    pane name="nvim" { command "nvim" }
+    pane name="watch" { command "bash" }
+  }
+  tab name="web" {
+    pane name="chrome" {
+      command "bash"
+      args "-lc" "if command -v google-chrome >/dev/null 2>&1; then google-chrome --proxy-server=socks5://localhost:1080 --new-window about:blank; else google-chrome-stable --proxy-server=socks5://localhost:1080 --new-window about:blank; fi"
+    }
+  }
+}

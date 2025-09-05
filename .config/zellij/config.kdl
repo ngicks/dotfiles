@@ -1,0 +1,34 @@
+// Zellij config tailored to tmux-like workflow and Neovim friendliness
+// - Leader: Ctrl-Space to enter pane mode
+// - Splits: v (right), s (down)
+// - Moves: h/j/k/l
+// - Copy: '[' to enter scroll mode, y or Enter to copy (xsel)
+
+copy_command "xsel -bi"
+
+keybinds {
+  normal {
+    bind "Ctrl: Space" { SwitchToMode "pane" }
+    bind "[" { SwitchToMode "scroll" }
+  }
+  pane {
+    bind "h" { MoveFocus "Left"; SwitchToMode "normal" }
+    bind "j" { MoveFocus "Down"; SwitchToMode "normal" }
+    bind "k" { MoveFocus "Up"; SwitchToMode "normal" }
+    bind "l" { MoveFocus "Right"; SwitchToMode "normal" }
+
+    bind "v" { NewPane "Right"; SwitchToMode "normal" }
+    bind "s" { NewPane "Down"; SwitchToMode "normal" }
+
+    bind "[" { SwitchToMode "scroll" }
+    bind "Esc" { SwitchToMode "normal" }
+  }
+  scroll {
+    bind "y" { Copy }
+    bind "Enter" { Copy }
+    bind "g" { GoToTop }
+    bind "G" { GoToBottom }
+    bind "Esc" { SwitchToMode "normal" }
+    bind "Ctrl: c" { SwitchToMode "normal" }
+  }
+}
