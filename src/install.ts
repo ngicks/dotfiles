@@ -41,7 +41,15 @@ async function buildInjectedScriptLines(basePaths: BasePaths): Promise<string> {
   if (relativeConfDir.startsWith("./")) {
     relativeConfDir = relativeConfDir.substring("./".length);
   }
-  return `if [[ -d "$HOME/${relativeConfDir}/env" ]]; then
+  return `if [[ -d "$HOME/${relativeConfDir}/initial_path" ]]; then
+  for f in $HOME/${relativeConfDir}/initial_path/*.sh; do
+    . $f
+  done
+fi
+
+
+
+if [[ -d "$HOME/${relativeConfDir}/env" ]]; then
   if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\.env' > /dev/null 2>&1; then
     for f in $HOME/${relativeConfDir}/env/*.env; do
       set -a

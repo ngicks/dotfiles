@@ -1,32 +1,32 @@
 [settings]
-# Enable experimental features for better tool management
 experimental = true
-# Always keep tools up to date
-always_keep_download = true
-# Use system certificate store
-use_system_ca_store = true
+auto_install = true
 
 [tools]
+# core
 deno = "latest"
-volta = "latest"
-node = "lts"      # Managed through volta
+node = "lts"
 uv = "latest"
-python = "latest" # Managed through uv
+python = "latest"
 ruby = "latest"
-rust = "stable"
+rust = { version = "stable" }
 go = "latest"
 
-# Go tools (installed via go install)
-"go:github.com/jesseduffield/lazygit" = "latest"
-"go:github.com/junegunn/fzf" = "latest"
-"go:golang.org/x/tools/gopls" = "latest"
-"go:golang.org/x/tools/cmd/goimports" = "latest"
-"go:mvdan.cc/gofumpt" = "latest"
-"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "latest"
-"go:github.com/goreleaser/goreleaser" = "latest"
-"go:github.com/go-delve/delve/cmd/dlv" = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
+"npm:@google/gemini-cli" = "latest"
+"npm:@openai/codex" = "latest"
+"npm:@upstash/context7-mcp" = "latest"
 
-# Cargo tools (installed via cargo install --locked)
+"pipx:oraios/serena" = { version = "latest" }
+
+"go:github.com/jesseduffield/lazygit" = { version = "latest" }
+"go:github.com/junegunn/fzf" = { version = "latest" }
+"go:golang.org/x/tools/gopls" = { version = "latest" }
+"go:golang.org/x/tools/cmd/goimports" = { version = "latest" }
+"go:mvdan.cc/gofumpt" = { version = "latest" }
+"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = { version = "latest" }
+"go:github.com/go-delve/delve/cmd/dlv" = { version = "latest" }
+
 "cargo:yazi-fm" = "latest"   # yazi file manager
 "cargo:yazi-cli" = "latest"  # yazi CLI companion
 "cargo:ripgrep" = "latest"   # rg - fast grep
@@ -44,22 +44,8 @@ go = "latest"
 "cargo:tokei" = "latest"     # code statistics
 "cargo:git-delta" = "latest" # better git diff
 
-# Additional tools
+"github:neovim/neovim" = "latest"
 
 [env]
-# Go environment
-GOPATH = "~/.local/go"
-GOBIN = "~/.local/go/bin"
-
-# Rust environment
-CARGO_HOME = "~/.cargo"
-RUSTUP_HOME = "~/.rustup"
-
-# Python environment (for uv)
-UV_CACHE_DIR = "~/.cache/uv"
-UV_TOOL_DIR = "~/.local/share/uv/tools"
-
-# Volta environment
-VOLTA_HOME = "~/.volta"
 
 [alias]

@@ -1,6 +1,3 @@
-[submodule "ngpkgmgr"]
-	path = ngpkgmgr
-	url = https://github.com/ngicks/ngpkgmgr
 [submodule "nggitmgr"]
 	path = nggitmgr
 	url = https://github.com/ngicks/nggitmgr

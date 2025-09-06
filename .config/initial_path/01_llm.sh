@@ -1,2 +1,2 @@
-export PATH=$HOME/.config/claude/local:$PATH
+# claude
 export CLAUDE_CONFIG_DIR="$HOME/.config/claude"

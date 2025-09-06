@@ -2,81 +2,32 @@
 
 FROM ubuntu:noble-20250619
 
-WORKDIR /root
-
 RUN <<EOF
   apt-get update
   apt-get install -y --no-install-recommends\
       ca-certificates \
       git \
       curl \
-      make \
-      build-essential \
-      gcc \
-      clang \
-      xsel \
-      p7zip-full \
-      unzip \
-      jq \
-      tmux \
-      libyaml-dev \
-      zlib1g-dev
-EOF
-
-WORKDIR /root/bin
-
-RUN <<EOF
-  curl -L https://github.com/TomWright/dasel/releases/download/v2.8.1/dasel_linux_amd64.gz -o dasel.gz
-  gzip -d ./dasel.gz
-  chmod +x dasel
+      sudo
 EOF
 
 WORKDIR /root/.dotfiles
+
 RUN <<EOF
   git clone https://github.com/ngicks/dotfiles.git .
-
   git submodule update --init --recursive
-  cp ./ngpkgmgr/prebuilt/linux-amd64/* ~/bin
-
-  # ruby installation stuck. Do it twice
-  export PATH=$HOME/bin:$PATH
-  ./install_sdk.sh
-  . ~/.config/env/00_path.sh
-  export PATH=$HOME/.local/rbenv/shims/ruby:$HOME/bin:$PATH
-  ./install_sdk.sh
-
-  ~/.deno/bin/deno task install
-
-  . ~/.config/env/00_path.sh
-  deno task basetool:install 
-  deno task gotools:install 
+  ./install_dependencies.sh
 EOF
 
-WORKDIR /root/.dotfiles
 RUN <<EOF
-  export PATH=$HOME/bin:$PATH
-  . ~/.config/env/00_path.sh
-  # if an update includes deno's (almost impossible), 
-  # update may fails because a deno executable got swapped
-  deno task update:all || deno task update:all
-  # cache modules
-  deno task update:daily
+  ~/.local/bin/mise trust "~/.config/mise"
+  ~/.local/bin/mise exec deno@latest -- deno task install
 EOF
 
-WORKDIR /root
-
-# tools
-WORKDIR /root/.dotfiles
 RUN <<EOF
-  export PATH=$HOME/bin:$PATH
-  . ~/.config/env/00_path.sh
-  # cli agents
-  npm install -g @anthropic-ai/claude-code
-  npm install -g @google/gemini-cli
-  npm install -g @openai/codex
-  # MCP tools
-  uv tool install git+https://github.com/oraios/serena
-  npm install -g @upstash/context7-mcp
+  . ~/.bashrc
+  eval "$($HOME/.local/bin/mise activate bash)"
+  mise install
 EOF
 
 ENV CLAUDE_CONFIG_DIR=/root/.config/claude 
