@@ -1,3 +1,5 @@
+export MISE_TRUSTED_CONFIG_PATHS="$HOME/.config/mise/config.toml"
+
 shell_base=$(basename $SHELL)
 case "${shell_base}" in
 *bash*)
