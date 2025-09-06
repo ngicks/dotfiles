@@ -3,7 +3,8 @@ local nonCustomizedServers = {
   "lua_ls",
   "html",
   "cssls",
-  "marksman",
+  "marksman", -- markdown
+  "taplo", -- toml
   "pyright",
   "clangd",
   "rust_analyzer",
