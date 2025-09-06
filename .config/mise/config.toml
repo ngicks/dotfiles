@@ -1,0 +1,65 @@
+[settings]
+# Enable experimental features for better tool management
+experimental = true
+# Always keep tools up to date
+always_keep_download = true
+# Use system certificate store
+use_system_ca_store = true
+
+[tools]
+deno = "latest"
+volta = "latest"
+node = "lts"      # Managed through volta
+uv = "latest"
+python = "latest" # Managed through uv
+ruby = "latest"
+rust = "stable"
+go = "latest"
+
+# Go tools (installed via go install)
+"go:github.com/jesseduffield/lazygit" = "latest"
+"go:github.com/junegunn/fzf" = "latest"
+"go:golang.org/x/tools/gopls" = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
+"go:mvdan.cc/gofumpt" = "latest"
+"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "latest"
+"go:github.com/goreleaser/goreleaser" = "latest"
+"go:github.com/go-delve/delve/cmd/dlv" = "latest"
+
+# Cargo tools (installed via cargo install --locked)
+"cargo:yazi-fm" = "latest"   # yazi file manager
+"cargo:yazi-cli" = "latest"  # yazi CLI companion
+"cargo:ripgrep" = "latest"   # rg - fast grep
+"cargo:zellij" = "latest"    # terminal multiplexer
+"cargo:bat" = "latest"       # better cat
+"cargo:exa" = "latest"       # better ls
+"cargo:fd-find" = "latest"   # better find
+"cargo:zoxide" = "latest"    # better cd
+"cargo:starship" = "latest"  # prompt
+"cargo:bottom" = "latest"    # system monitor (btm)
+"cargo:du-dust" = "latest"   # disk usage
+"cargo:procs" = "latest"     # better ps
+"cargo:sd" = "latest"        # better sed
+"cargo:hyperfine" = "latest" # benchmarking tool
+"cargo:tokei" = "latest"     # code statistics
+"cargo:git-delta" = "latest" # better git diff
+
+# Additional tools
+
+[env]
+# Go environment
+GOPATH = "~/.local/go"
+GOBIN = "~/.local/go/bin"
+
+# Rust environment
+CARGO_HOME = "~/.cargo"
+RUSTUP_HOME = "~/.rustup"
+
+# Python environment (for uv)
+UV_CACHE_DIR = "~/.cache/uv"
+UV_TOOL_DIR = "~/.local/share/uv/tools"
+
+# Volta environment
+VOLTA_HOME = "~/.volta"
+
+[alias]
