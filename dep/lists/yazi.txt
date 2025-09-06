@@ -1,0 +1,3 @@
+# Media processing tools
+apt:fd-find, ffmpeg, poppler-data
+brew:fd, ffmpeg, poppler

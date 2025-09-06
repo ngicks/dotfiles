@@ -1,13 +1,48 @@
 #!/bin/bash
 
-sudo apt update 
-sudo apt install -y make build-essential gcc clang xsel p7zip-full jq tmux libyaml-dev zlib1g-dev zsh ffmpeg poppler-data fd-find
+set -e
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# Detect package manager
+if command -v apt &> /dev/null; then
+    PKG_MANAGER="apt"
+elif command -v brew &> /dev/null; then
+    PKG_MANAGER="brew"
+elif command -v yum &> /dev/null; then
+    PKG_MANAGER="yum"
+elif command -v dnf &> /dev/null; then
+    PKG_MANAGER="dnf"
+elif command -v pacman &> /dev/null; then
+    PKG_MANAGER="pacman"
+else
+    PKG_MANAGER="unknown"
+fi
 
-mkdir -p ~/bin
-pushd ~/bin
-curl -L https://github.com/TomWright/dasel/releases/download/v2.8.1/dasel_linux_amd64.gz -o dasel.gz
-gzip -d ./dasel.gz
-chmod +x dasel
-popd
+echo "Detected package manager: $PKG_MANAGER"
+
+# Handle package manager
+case "$PKG_MANAGER" in
+    apt)
+        echo "Starting installation for apt-based system..."
+        for f in ./dep/apt/*.sh; do
+          . $f
+        done
+        for f in ./dep/common/*.sh; do
+          . $f
+        done
+        ;;
+    brew)
+        echo "Starting installation for brew-based system..."
+        for f in ./dep/brew/*.sh; do
+          . $f
+        done
+        for f in ./dep/common/*.sh; do
+          . $f
+        done
+        ;;
+    *)
+        echo "Error: package manager $PKG_MANAGER is not supported"
+        exit 1
+        ;;
+esac
+
+echo "Installation completed successfully!"

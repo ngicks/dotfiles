@@ -1,0 +1,3 @@
+# Essential
+apt:gpg, sudo, wget, git, curl, make, build-essential, gcc, clang 
+brew:git, curl, make, gcc, llvm
