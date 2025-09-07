@@ -7,7 +7,10 @@ local nonCustomizedServers = {
   "taplo", -- toml
   "pyright",
   "clangd",
-  "rust_analyzer",
+}
+
+local serverIndependentTools = {
+  "kdlfmt",
 }
 
 local function get_servers()
@@ -31,6 +34,7 @@ end
 local function get_tools()
   local merge = require("func.table").insert_unique
   local tools = {}
+  tools = merge(tools, serverIndependentTools)
   local loaded = require("func.scan_conf_dir").load_local_dir("config/ls-tools", true)
   for _, ent in ipairs(loaded) do
     tools = merge(tools, ent.tool)

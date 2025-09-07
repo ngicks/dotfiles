@@ -28,7 +28,10 @@ end
 -- If a config does not have root_dir, then it will NEVER be enabled
 -- (and seemingly most of configs in neovim/nvim-lspconfig does not have it.)
 vim.lsp.config("*", {
-  root_dir = function() end,
+  root_dir = function(bufnr)
+    local fname = vim.api.nvim_buf_get_name(bufnr)
+    vim.notify("catch-all root_dir is called for " .. fname, vim.log.levels.WARN)
+  end,
 })
 
 vim.lsp.enable(enabled)

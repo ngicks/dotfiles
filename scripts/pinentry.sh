@@ -9,6 +9,8 @@ case "${PINENTRY_USER_DATA-}" in
 *TMUX_POPUP*)
   exec $HOME/.local/bin/tmux-popup-pinentry-curses "$@"
   ;;
+*ZELLIJ_POPUP*)
+  exec $HOME/.local/bin/zellij-popup-pinentry-curses "$@"
 esac
 
 exec pinentry-qt "$@"

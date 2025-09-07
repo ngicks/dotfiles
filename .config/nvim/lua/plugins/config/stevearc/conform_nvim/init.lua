@@ -9,6 +9,7 @@ M.opts = {
     json = { "prettier" },
     jsonc = { "prettier" },
     xml = { "xmlformatter" },
+    kdl = { "kdlfmt", "format" },
   },
   default_format_opts = {
     lsp_format = "fallback",
