@@ -19,15 +19,31 @@ RUN <<EOF
   ./install_dependencies.sh
 EOF
 
+
 RUN <<EOF
-  ~/.local/bin/mise trust "~/.config/mise"
+  ~/.local/bin/mise trust "$HOME/.config/mise"
+  ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
+  mkdir /root/.config
   ~/.local/bin/mise exec deno@latest -- deno task install
 EOF
 
 RUN <<EOF
-  . ~/.bashrc
-  eval "$($HOME/.local/bin/mise activate bash)"
-  mise install
+  if [ -f ~/.zshrc ]; then
+    sed -i 's/^ZSH_THEME=.*/ZSH_THEME="obraun"/' ~/.zshrc
+  else
+    echo 'ZSH_THEME="obraun"' >> ~/.zshrc
+  fi
+  chsh -s $(which zsh)
+EOF
+
+RUN <<EOF
+  ~/.local/bin/mise trust "$HOME/.config/mise"
+
+  for f in $(ls $HOME/.config/initial_path); do
+    . $f
+  done
+
+  ~/.local/bin/mise install || ~/.local/bin/mise install
 EOF
 
 ENV CLAUDE_CONFIG_DIR=/root/.config/claude 
