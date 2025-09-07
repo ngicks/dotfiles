@@ -37,8 +37,8 @@ PACKAGES=($(printf "%s\n" "${PACKAGES[@]}" | awk '!seen[$0]++'))
 
 if [ ${#PACKAGES[@]} -gt 0 ]; then
     echo "Installing the following packages: ${PACKAGES[*]}"
-    sudo apt update
-    sudo apt install -y "${PACKAGES[@]}"
+    sudo apt-get update
+    sudo apt-get install -y "${PACKAGES[@]}"
     echo "apt packages installation completed."
 else
     echo "No apt packages to install."

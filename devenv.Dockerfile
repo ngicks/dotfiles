@@ -2,7 +2,11 @@
 
 FROM ubuntu:noble-20250619
 
-RUN <<EOF
+RUN rm -f /etc/apt/apt.conf.d/docker-clean
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+<<EOF
   apt-get update
   apt-get install -y --no-install-recommends\
       ca-certificates \
@@ -13,7 +17,9 @@ EOF
 
 WORKDIR /root/.dotfiles
 
-RUN <<EOF
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+<<EOF
   git clone https://github.com/ngicks/dotfiles.git .
   git submodule update --init --recursive
   ./install_dependencies.sh
@@ -40,13 +46,20 @@ RUN <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
 
   for f in $(ls $HOME/.config/initial_path); do
-    . $f
+    . $HOME/.config/initial_path/$f
   done
 
   ~/.local/bin/mise install || ~/.local/bin/mise install
 EOF
 
-ENV CLAUDE_CONFIG_DIR=/root/.config/claude 
+
+RUN <<EOF
+  ~/.local/bin/mise trust "$HOME/.config/mise"
+  ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
+  ~/.local/bin/mise exec deno@latest -- deno task update:daily
+EOF
 
 WORKDIR /root
 
+ENV SHELL="/usr/bin/zsh" 
+ENTRYPOINT ["/usr/bin/zsh"]
