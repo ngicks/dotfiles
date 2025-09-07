@@ -37,6 +37,10 @@ return {
   },
   -- mason misc
   {
+    "williamboman/mason.nvim",
+    lazy = false,
+  },
+  {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     event = { "VeryLazy" },
