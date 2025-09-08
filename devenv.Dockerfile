@@ -39,7 +39,6 @@ RUN <<EOF
   else
     echo 'ZSH_THEME="obraun"' >> ~/.zshrc
   fi
-  chsh -s $(which zsh)
 EOF
 
 RUN <<EOF
