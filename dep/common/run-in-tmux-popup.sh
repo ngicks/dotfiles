@@ -1,7 +1,11 @@
-
 #!/bin/bash
 
 set -e
+
+if !(command -v go &> /dev/null); then
+  echo "  skipping...: go is not installed"
+  return
+fi
 
 if command -v tmux-popup-pinentry-curses &> /dev/null; then
     echo "  tmux-popup-pinentry-curses already installed"
