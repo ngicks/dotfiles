@@ -2,8 +2,6 @@
 
 set -e
 
-echo "Installing packages via apt..."
-
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEP_DIR="$(dirname "$SCRIPT_DIR")"
@@ -37,8 +35,8 @@ PACKAGES=($(printf "%s\n" "${PACKAGES[@]}" | awk '!seen[$0]++'))
 
 if [ ${#PACKAGES[@]} -gt 0 ]; then
     echo "Installing the following packages: ${PACKAGES[*]}"
-    sudo apt-get update
-    sudo apt-get install -y "${PACKAGES[@]}"
+    sudo -E apt-get update
+    sudo -E apt-get install -y "${PACKAGES[@]}"
     echo "apt packages installation completed."
 else
     echo "No apt packages to install."
