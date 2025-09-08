@@ -5,7 +5,9 @@ fi
 
 # but in tmux use tmux display-pop and pientry-curses
 if [ -n "${TMUX}" ]; then
-  export PINENTRY_USER_DATA=TMUX_POPUP
+  export PINENTRY_USER_DATA="TMUX_POPUP:$(which tmux):${TMUX}"
+elif [ -n "${ZELLIJ}" ]; then
+  export PINENTRY_USER_DATA="ZELLIJ_POPUP:$(which zellij):${ZELLIJ_SESSION_NAME}"
 fi
 
 # https://wiki.archlinux.org/title/GnuPG#SSH_agent
