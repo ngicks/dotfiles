@@ -23,18 +23,13 @@ echo "Detected package manager: $PKG_MANAGER"
 case "$PKG_MANAGER" in
     apt)
         echo "Starting installation for apt-based system..."
-        for f in ./dep/apt/*.sh; do
-          . $f
-        done
-        for f in ./dep/common/*.sh; do
-          . $f
-        done
+        . ./dep/apt.sh
+        . ./dep/common.sh
         ;;
     brew)
         echo "Starting installation for brew-based system..."
-        for f in ./dep/brew/*.sh; do
-          . $f
-        done
+        . ./dep/brew.sh
+        . ./dep/common.sh
         for f in ./dep/common/*.sh; do
           . $f
         done
