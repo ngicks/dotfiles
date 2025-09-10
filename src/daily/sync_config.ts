@@ -10,7 +10,11 @@ const syncPairs = [
 
 async function isWsl(): Promise<boolean> {
   try {
-    await Deno.stat("/proc/sys/fs/binfmt_misc/WSLInterop");
+    for await (const dirent of Deno.readDir("/proc/sys/fs/binfmt_misc")) {
+      if (dirent.name.startsWith("WSLInterop")) {
+        return true;
+      }
+    }
     return true;
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) {
