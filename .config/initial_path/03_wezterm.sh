@@ -19,8 +19,4 @@ __wezterm_set_user_var() {
   fi
 }
 
-# WezTerm Shell Integration
-# This sets up user variables for better hostname detection in SSH sessions
-if [ "$TERM_PROGRAM" = "WezTerm" ]; then
-  __wezterm_set_user_var "WEZTERM_HOST" "$(uname -n)"
-fi
+__wezterm_set_user_var "WEZTERM_HOST" "$(uname -n)"
