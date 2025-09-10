@@ -11,6 +11,7 @@ case "${PINENTRY_USER_DATA-}" in
   ;;
 *ZELLIJ_POPUP*)
   exec $HOME/.local/bin/zellij-popup-pinentry-curses "$@"
+  ;;
 esac
 
 exec pinentry-qt "$@"
