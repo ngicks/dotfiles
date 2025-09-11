@@ -15,7 +15,7 @@ async function isWsl(): Promise<boolean> {
         return true;
       }
     }
-    return true;
+    return false;
   } catch (err) {
     if (!(err instanceof Deno.errors.NotFound)) {
       throw err;
