@@ -8,12 +8,16 @@ local function hostname_to_color(hostname)
 	return "#" .. wezterm.truncate_right(sha256(hostname), 6)
 end
 
+local function trim(s)
+	return s:match("^%s*(.-)%s*$")
+end
+
 local function get_hostname_from_tab(tab)
 	local user_vars = tab.active_pane.user_vars or {}
 
 	if user_vars.WEZTERM_HOST ~= nil and user_vars.WEZTERM_HOST ~= "" then
-		wezterm.log_info("user_vars.WEZTERM_HOST: " .. user_vars.WEZTERM_HOST)
-		return user_vars.WEZTERM_HOST
+		wezterm.log_info("user_vars.WEZTERM_HOST: " .. trim(user_vars.WEZTERM_HOST))
+		return trim(user_vars.WEZTERM_HOST)
 	end
 
 	local domain_name = tab.active_pane.domain_name
