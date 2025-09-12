@@ -31,5 +31,6 @@ config.key_tables = require("keybinds").key_tables
 
 -- https://wezterm.org/config/lua/window-events/format-tab-title.html
 wezterm.on("format-tab-title", require("event-format-tab-title").handler)
+wezterm.on("user-var-changed", require("event-user-var-changed").handler)
 
 return config
