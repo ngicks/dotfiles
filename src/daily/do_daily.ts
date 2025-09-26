@@ -46,7 +46,8 @@ export async function doDaily(
     throw err;
   }
 
-  await Deno.open(markerFilePath, { create: true, write: true });
+  const f = await Deno.open(markerFilePath, { create: true, write: true });
+  f.close();
   await Deno.utime(markerFilePath, current, current);
 
   return { done: true, next: new Date(current.getTime() + interval) };
