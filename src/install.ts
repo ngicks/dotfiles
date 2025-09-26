@@ -47,10 +47,8 @@ async function buildInjectedScriptLines(basePaths: BasePaths): Promise<string> {
   done
 fi
 
-
-
 if [[ -d "$HOME/${relativeConfDir}/env" ]]; then
-  if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\.env' > /dev/null 2>&1; then
+  if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\\.env' > /dev/null 2>&1; then
     for f in $HOME/${relativeConfDir}/env/*.env; do
       set -a
       . $f
@@ -58,16 +56,26 @@ if [[ -d "$HOME/${relativeConfDir}/env" ]]; then
     done
   fi
 
-  if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\.sh' > /dev/null 2>&1; then
+  if ls $HOME/${relativeConfDir}/env/ | grep -e '.*\\.sh' > /dev/null 2>&1; then
     for f in $HOME/${relativeConfDir}/env/*.sh; do
       . $f
     done
   fi
 fi
 
-pushd $HOME/${relativeDotEnvDir} > /dev/null
-deno task update:daily > /dev/null
-popd > /dev/null
+# Run daily update check
+if command -v dotfiles_should_update >/dev/null 2>&1; then
+  if dotfiles_should_update; then
+    pushd $HOME/${relativeDotEnvDir} > /dev/null
+    deno task update:daily > /dev/null
+    popd > /dev/null
+  fi
+else
+  # Fallback if function not defined
+  pushd $HOME/${relativeDotEnvDir} > /dev/null
+  deno task update:daily > /dev/null
+  popd > /dev/null
+fi
 `;
 }
 
