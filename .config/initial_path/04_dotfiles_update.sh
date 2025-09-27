@@ -39,3 +39,45 @@ dotfiles_should_update() {
     return 1
   fi
 }
+
+# Function to get next update time (returns string)
+dotfiles_next_update_time() {
+  local MARKER_FILE="$HOME/.cache/dotfiles/.update_daily"
+  local INTERVAL=57600  # 16 hours in seconds
+
+  if [[ ! -f "$MARKER_FILE" ]]; then
+    printf "now (marker file not found)"
+    return
+  fi
+
+  # Handle OS-specific stat command to get file modification time
+  local FILE_TIME
+  case "$(uname -s)" in
+    Linux*)
+      FILE_TIME=$(stat -c %Y "$MARKER_FILE" 2>/dev/null || echo 0)
+      ;;
+    Darwin*)
+      FILE_TIME=$(stat -f %m "$MARKER_FILE" 2>/dev/null || echo 0)
+      ;;
+    *)
+      printf "unknown (unsupported OS)"
+      return
+      ;;
+  esac
+
+  # Calculate next update time
+  local NEXT_TIME=$((FILE_TIME + INTERVAL))
+
+  # Format and return the next update time
+  local NEXT_DATE
+  case "$(uname -s)" in
+    Linux*)
+      NEXT_DATE=$(date -d "@$NEXT_TIME" "+%Y-%m-%d %H:%M:%S")
+      ;;
+    Darwin*)
+      NEXT_DATE=$(date -r "$NEXT_TIME" "+%Y-%m-%d %H:%M:%S")
+      ;;
+  esac
+
+  printf "%s" "$NEXT_DATE"
+}

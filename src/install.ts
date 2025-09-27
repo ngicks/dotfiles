@@ -69,6 +69,11 @@ if command -v dotfiles_should_update >/dev/null 2>&1; then
     pushd $HOME/${relativeDotEnvDir} > /dev/null
     deno task update:daily > /dev/null
     popd > /dev/null
+  else
+    echo "update deferred"
+    echo "If you want update to happen again immediately, remove $HOME/.cache/dotfiles/.update_daily"
+    echo ""
+    echo "next update occurrs after $(dotfiles_next_update_time)"
   fi
 else
   # Fallback if function not defined
