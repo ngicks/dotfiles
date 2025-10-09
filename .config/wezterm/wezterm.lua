@@ -24,7 +24,7 @@ config.color_scheme = "Tokyo Night"
 config.audible_bell = "Disabled"
 
 -- keys
-config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
+config.leader = { key = "Q", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = require("keybinds").keys
 config.key_tables = require("keybinds").key_tables
