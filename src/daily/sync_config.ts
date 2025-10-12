@@ -67,7 +67,7 @@ export async function syncConfig(): Promise<void> {
     for await (const dirent of Deno.readDir(src)) {
       await fs.promises.cp(
         path.join(src, dirent.name),
-        dst,
+        path.join(dst, dirent.name),
         { recursive: true, force: true },
       );
     }
