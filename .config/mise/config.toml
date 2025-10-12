@@ -3,6 +3,12 @@ experimental = true
 auto_install = true
 idiomatic_version_file_enable_tools = ['node', 'python', 'rust']
 
+[settings.pipx]
+uvx = true
+
+[settings.cargo]
+binstall = true
+
 [tools]
 # core
 deno = "latest"
