@@ -74,6 +74,6 @@ return {
       return
     end
 
-    vim.notify '"golangci-lint config verify" failed for both v1 and v2'
+    vim.notify('"golangci-lint config verify" failed for both v1 and v2', vim.log.levels.WARN)
   end,
 }
