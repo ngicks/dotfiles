@@ -1,8 +1,5 @@
 keybinds clear-defaults=true {
     normal {
-        bind "Ctrl space" {
-            SwitchToMode "pane"
-        }
         // prevent friction to neovim
         unbind "Ctrl h"
         unbind "Ctrl j"
@@ -432,7 +429,7 @@ keybinds clear-defaults=true {
         }
     }
     shared_except "locked" "pane" {
-        bind "Ctrl p" {
+        bind "Ctrl space" {
             SwitchToMode "pane"
         }
     }
