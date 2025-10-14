@@ -44,6 +44,13 @@ go = "latest"
 # generators
 "go:github.com/cweill/gotests/gotests" = { version = "latest" }
 "go:github.com/haya14busa/goplay/cmd/goplay" = { version = "latest" }
+# protobuf
+"go:github.com/bufbuild/buf/cmd/buf" = { version = "latest" }
+"go:google.golang.org/protobuf/cmd/protoc-gen-go" = { version = "latest" }
+"go:google.golang.org/grpc/cmd/protoc-gen-go-grpc" = { version = "latest" }
+"go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway" = { version = "latest" }
+"go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2" = { version = "latest" }
+
 
 "cargo:yazi-fm" = "latest"   # yazi file manager
 "cargo:yazi-cli" = "latest"  # yazi CLI companion
