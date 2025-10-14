@@ -25,6 +25,7 @@ go = "latest"
 "npm:@upstash/context7-mcp" = "latest"
 
 "pipx:oraios/serena" = { version = "latest" }
+"pipx:github/spec-kit" = { version = "latest" }
 
 # go tools
 "go:github.com/jesseduffield/lazygit" = { version = "latest" }
