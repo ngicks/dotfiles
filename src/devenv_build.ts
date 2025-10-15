@@ -18,7 +18,22 @@ async function main() {
 
   console.log(`building devenv:${ver}`);
 
-  // TODO: check tag and skip building if already built?
+  if (!bump) {
+    const exist = await (new Deno.Command(
+      "podman",
+      {
+        args: [
+          "image",
+          "inspect",
+          `devenv:${ver}`,
+        ],
+      },
+    ).output());
+    if (exist.code == 0) {
+      console.log("ready build");
+      return;
+    }
+  }
 
   const cmd = new Deno.Command(
     "podman",
