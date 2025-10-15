@@ -6,9 +6,20 @@ function incrementVer(ver: string): string {
 }
 
 async function main() {
-  const ver = (await Deno.readTextFile(verFile)).trim();
-  const newVer = incrementVer(ver);
-  console.log(`next version: ${newVer}`);
+  const bump = Deno.args.includes("--bump") || Deno.args.includes("-b");
+  const currentVer = (await Deno.readTextFile(verFile)).trim();
+
+  const ver = (() => {
+    if (!bump) {
+      return currentVer;
+    }
+    return incrementVer(currentVer);
+  })();
+
+  console.log(`building devenv:${ver}`);
+
+  // TODO: check tag and skip building if already built?
+
   const cmd = new Deno.Command(
     "podman",
     {
@@ -19,7 +30,7 @@ async function main() {
         "-f",
         "./devenv.Dockerfile",
         "-t",
-        "devenv:" + newVer,
+        "devenv:" + ver,
         "--no-cache",
       ],
       stdout: "piped",
@@ -30,7 +41,10 @@ async function main() {
   await s.stdout.pipeTo(Deno.stdout.writable, { preventClose: true });
   await s.stderr.pipeTo(Deno.stderr.writable, { preventClose: true });
   await s.output();
-  await Deno.writeTextFile(verFile, newVer);
+  if (!(await s.status).success) {
+    throw new Error("build failed");
+  }
+  await Deno.writeTextFile(verFile, ver);
 }
 
 main();
