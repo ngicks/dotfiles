@@ -24,7 +24,6 @@ async function main() {
     "podman",
     {
       args: [
-        "image",
         "buildx",
         "build",
         ".",
