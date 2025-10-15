@@ -51,6 +51,9 @@ RUN <<EOF
   ~/.local/bin/mise install || ~/.local/bin/mise install
 EOF
 
+RUN <<EOF
+  ~/.local/bin/mise exec github:neovim/neovim@latest -- nvim --headless "+Lazy! restore" +qa || echo "somewhat failed"
+EOF
 
 RUN <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
