@@ -19,4 +19,7 @@ __wezterm_set_user_var() {
   fi
 }
 
-__wezterm_set_user_var "WEZTERM_HOST" "$(uname -n)"
+if [[ -t 0 && $- = *i* ]]
+then
+  __wezterm_set_user_var "WEZTERM_HOST" "$(uname -n)"
+fi
