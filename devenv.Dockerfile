@@ -12,6 +12,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       ca-certificates \
       git \
       curl \
+      vi \
+      vim \
       sudo
 EOF
 
