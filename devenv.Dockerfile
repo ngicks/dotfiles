@@ -26,7 +26,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   ./install_dependencies.sh
 EOF
 
-
 RUN <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
@@ -46,7 +45,7 @@ RUN <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
   echo "calling mise install"
-  ~/.local/bin/mise install -y || ~/.local/bin/mise install -y
+  ~/.local/bin/mise install -y --raw
   echo "mise install done"
 EOF
 
