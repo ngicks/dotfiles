@@ -2,6 +2,8 @@
 
 set -Cue
 
+tag=$(cat $(dirname $0)/devenv_ver)
+
 if ! podman volume exists claude-config; then
   podman volume create claude-config
 fi
@@ -25,4 +27,4 @@ podman run -it --rm --init\
   --mount type=volume,src=codex-config,dst=/root/.codex\
   --mount type=bind,src=.,dst=$(pwd)\
   --workdir $(pwd)\
-  devenv:latest
+  devenv:${tag}
