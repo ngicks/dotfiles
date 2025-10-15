@@ -1,7 +1,8 @@
 {
   "tasks": {
     "install": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData ./src/install.ts",
-    "update:daily": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts"
+    "update:daily": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts",
+    "devenv:build": "deno run -R=./devenv_ver -W=./devenv_ver --allow-run=podman ./src/build_devenv.ts"
   },
   "imports": {
     "#/": "./src/"
