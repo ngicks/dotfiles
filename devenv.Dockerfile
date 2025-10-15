@@ -45,11 +45,7 @@ EOF
 RUN <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
-
-  for f in $(ls $HOME/.config/initial_path); do
-    . $HOME/.config/initial_path/$f
-  done
-
+  ~/.local/bin/mise activate
   echo "calling mise install"
   ~/.local/bin/mise install || ~/.local/bin/mise install
   echo "mise install done"
