@@ -25,6 +25,7 @@ async function main() {
     {
       args: [
         "image",
+        "buildx",
         "build",
         ".",
         "-f",
