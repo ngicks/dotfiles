@@ -46,7 +46,7 @@ RUN <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
   echo "calling mise install"
-  ~/.local/bin/mise install || ~/.local/bin/mise install
+  ~/.local/bin/mise install -y || ~/.local/bin/mise install -y
   echo "mise install done"
 EOF
 
