@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Installing packages via apt..."
+echo "Installing packages via brew..."
 
 for f in ./dep/brew/*.sh; do
   . $f
