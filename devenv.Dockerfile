@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM ubuntu:noble-20250619
+FROM docker.io/library/ubuntu:noble-20250619
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean
 
