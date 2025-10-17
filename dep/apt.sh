@@ -8,4 +8,4 @@ for f in ./dep/apt/*.sh; do
   . $f
 done
 
-echo "brew done"
+echo "apt done"
