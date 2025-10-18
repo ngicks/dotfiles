@@ -7,9 +7,9 @@ core_tools=$(mise ls --json | jq -r 'keys[] | select(contains(":") | not)' | tr 
 echo "installing core(no backend) tools:"
 echo "  $core_tools"
 echo ""
-mise install -y --raw $core_tools
+mise install -y $core_tools
 echo ""
 echo ""
 echo "install rest of tools"
 echo ""
-mise install -y --raw
+mise install -y
