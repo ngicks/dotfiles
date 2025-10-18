@@ -56,7 +56,7 @@ RUN <<EOF
   export MISE_GPG_VERIFY=0
   export PATH="${PATH}:$HOME/.local/bin"
   echo "calling mise install"
-  bash ~/.dotenv/mise_install.sh bash
+  bash ~/.dotfiles/mise_install.sh bash
   echo "installation done"
   ~/.local/bin/mise ls
 EOF
