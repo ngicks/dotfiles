@@ -64,15 +64,11 @@ go = "latest"
 "cargo:bat" = "latest"       # better cat
 "cargo:exa" = "latest"       # better ls
 "cargo:fd-find" = "latest"   # better find
-"cargo:zoxide" = "latest"    # better cd
-"cargo:starship" = "latest"  # prompt
 "cargo:bottom" = "latest"    # system monitor (btm)
 "cargo:du-dust" = "latest"   # disk usage
 "cargo:procs" = "latest"     # better ps
 "cargo:sd" = "latest"        # better sed
 "cargo:hyperfine" = "latest" # benchmarking tool
-"cargo:tokei" = "latest"     # code statistics
-"cargo:git-delta" = "latest" # better git diff
 
 "github:neovim/neovim" = "latest"
 
