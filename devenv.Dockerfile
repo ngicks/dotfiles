@@ -17,6 +17,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       curl \
       vim \
       sudo
+  mkdir ~/.gnupg
+  chmod 700 ~/.gnupg
 EOF
 
 WORKDIR /root/.dotfiles
