@@ -20,4 +20,4 @@ echo ""
 echo ""
 echo "install rest of tools"
 echo ""
-mise install -y
+mise install -y --raw
