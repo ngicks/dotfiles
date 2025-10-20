@@ -61,6 +61,10 @@ RUN <<EOF
   bash ~/.dotfiles/mise_install.sh bash
   echo "installation done"
   ~/.local/bin/mise ls
+  if [ $(~/.local/bin/mise ls --missing | wc -l) -gt 1 ]; then
+    echo "failed to install some tools"
+    exit 1
+  fi
 EOF
 
 RUN <<EOF
