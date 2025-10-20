@@ -3,6 +3,11 @@ local act = wezterm.action
 
 return {
 	keys = {
+		-- leader
+		{ key = "l", mods = "LEADER", action = act.ShowLauncher },
+		{ key = "p", mods = "LEADER", action = act.PaneSelect },
+		{ key = "x", mods = "LEADER", action = act.ActivateCopyMode },
+
 		{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
 		{ key = "Tab", mods = "SHIFT|CTRL", action = act.ActivateTabRelative(-1) },
 		{ key = "Enter", mods = "ALT", action = act.ToggleFullScreen },
@@ -73,7 +78,6 @@ return {
 		{ key = "N", mods = "SHIFT|CTRL", action = act.SpawnWindow },
 		{ key = "P", mods = "CTRL", action = act.ActivateCommandPalette },
 		{ key = "P", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
-		{ key = "p", mods = "LEADER", action = act.PaneSelect },
 		{ key = "R", mods = "CTRL", action = act.ReloadConfiguration },
 		{ key = "R", mods = "SHIFT|CTRL", action = act.ReloadConfiguration },
 		{ key = "T", mods = "CTRL", action = act.SpawnTab("CurrentPaneDomain") },
@@ -94,7 +98,6 @@ return {
 		{ key = "W", mods = "SHIFT|CTRL", action = act.CloseCurrentTab({ confirm = true }) },
 		-- { key = "X", mods = "CTRL", action = act.ActivateCopyMode },
 		-- { key = "X", mods = "SHIFT|CTRL", action = act.ActivateCopyMode },
-		{ key = "x", mods = "LEADER", action = act.ActivateCopyMode },
 		{ key = "Z", mods = "CTRL", action = act.TogglePaneZoomState },
 		{ key = "Z", mods = "SHIFT|CTRL", action = act.TogglePaneZoomState },
 		{ key = "[", mods = "SHIFT|SUPER", action = act.ActivateTabRelative(-1) },
@@ -110,7 +113,6 @@ return {
 		{ key = "k", mods = "SHIFT|CTRL", action = act.ClearScrollback("ScrollbackOnly") },
 		{ key = "k", mods = "SUPER", action = act.ClearScrollback("ScrollbackOnly") },
 		{ key = "l", mods = "SHIFT|CTRL", action = act.ShowDebugOverlay },
-		{ key = "l", mods = "LEADER", action = act.ShowLauncher },
 		{ key = "m", mods = "SHIFT|CTRL", action = act.Hide },
 		{ key = "m", mods = "SUPER", action = act.Hide },
 		{ key = "n", mods = "SHIFT|CTRL", action = act.SpawnWindow },
