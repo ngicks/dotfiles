@@ -12,7 +12,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       gpg \
       gnupg2 \
       ca-certificates \
-      apt-transport-https \
       git \
       curl \
       vim \
