@@ -1,20 +1,17 @@
 local wezterm = require("wezterm")
 
+local host_color_from_pane = require("host-color").host_color_from_pane
+local text_color = require("host-color").text_color
+
 local M = {}
 
-M.handler = function(window, pane, name, value)
-	-- Each element holds the text for a cell in a "powerline" style << fade
-	local cells = {
-		" " .. window:active_workspace() .. " ",
-	}
-
+local function get_hostname(pane)
+	local hostname = ""
 	-- Figure out the cwd and host of the current pane.
 	-- This will pick up the hostname for the remote host if your
 	-- shell is using OSC 7 on the remote host.
 	local cwd_uri = pane:get_current_working_dir()
 	if cwd_uri then
-		local hostname = ""
-
 		if type(cwd_uri) == "userdata" then
 			-- Running on a newer version of wezterm and we have
 			-- a URL object here, making this simple!
@@ -37,13 +34,17 @@ M.handler = function(window, pane, name, value)
 		if hostname == "" then
 			hostname = wezterm.hostname()
 		end
-
-		table.insert(cells, " " .. hostname .. " ")
 	end
 
-	-- I like my date/time in this style: "Wed Mar 3 08:14"
-	local date = wezterm.strftime(" %a %b %-d %H:%M:%S ")
-	table.insert(cells, date)
+	return hostname
+end
+
+M.handler = function(window, pane, name, value)
+	local cells = {
+		{ text = window:active_workspace() },
+		{ text = get_hostname(pane), color = host_color_from_pane(window:active_pane() or {}) },
+		{ text = wezterm.strftime("%a %b %-d %H:%M:%S") },
+	}
 
 	-- An entry for each battery (typically 0 or 1 battery)
 	for _, b in ipairs(wezterm.battery_info()) do
@@ -56,42 +57,49 @@ M.handler = function(window, pane, name, value)
 	-- Color palette for the backgrounds of each cell
 	local colors = {
 		"#103D14",
-		"#18521E",
 		"#27692E",
 		"#448546",
 		"#76914C",
 		"#91894C",
 		"#8F7B51",
 	}
+	local function get_color(i)
+		if i < 1 then
+			return colors[1]
+		elseif #colors < i then
+			return colors[#colors]
+		end
+		return colors[i]
+	end
 
 	-- Foreground color for the text across the fade
-	local text_fg = "#c0c0c0"
 
 	-- The elements to be formatted
 	local elements = {
+		{ Attribute = { Intensity = "Bold" } },
 		{ Background = { Color = "none" } },
 		{ Foreground = { Color = colors[1] } },
 		{ Text = SOLID_LEFT_ARROW },
 	}
-	-- How many cells have been formatted
-	local num_cells = 0
 
-	-- Translate a cell into elements
-	local function push(text, is_last)
-		local cell_no = num_cells + 1
-		table.insert(elements, { Foreground = { Color = text_fg } })
-		table.insert(elements, { Background = { Color = colors[cell_no] } })
-		table.insert(elements, { Text = " " .. text .. " " })
-		if not is_last then
-			table.insert(elements, { Foreground = { Color = colors[cell_no + 1] } })
+	local cursor = 1
+
+	for i, cell in ipairs(cells) do
+		local color = cell.color
+		if color == nil then
+			color = get_color(cursor)
+			cursor = cursor + 1
+		end
+
+		if i > 1 then
+			table.insert(elements, { Attribute = { Intensity = "Bold" } })
+			table.insert(elements, { Foreground = { Color = color } })
 			table.insert(elements, { Text = SOLID_LEFT_ARROW })
 		end
-		num_cells = num_cells + 1
-	end
-
-	while #cells > 0 do
-		local cell = table.remove(cells, 1)
-		push(cell, #cells == 0)
+		table.insert(elements, { Attribute = { Intensity = "Normal" } })
+		table.insert(elements, { Background = { Color = color } })
+		table.insert(elements, { Foreground = { Color = text_color(color) } })
+		table.insert(elements, { Text = " " .. cell.text .. " " })
 	end
 
 	window:set_right_status(wezterm.format(elements))

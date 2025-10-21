@@ -1,33 +1,11 @@
 local wezterm = require("wezterm")
 
-local sha256 = require("sha256").sha256
+local hostColor = require("host-color")
+
+local get_hostname_from_tab = hostColor.get_hostname_from_tab
+local hostname_to_color = hostColor.hostname_to_color
 
 local M = {}
-
-local function hostname_to_color(hostname)
-	return "#" .. wezterm.truncate_right(sha256(hostname), 6)
-end
-
-local function trim(s)
-	return s:match("^%s*(.-)%s*$")
-end
-
-local function get_hostname_from_tab(tab)
-	local user_vars = tab.active_pane.user_vars or {}
-
-	if user_vars.WEZTERM_HOST ~= nil and user_vars.WEZTERM_HOST ~= "" then
-		wezterm.log_info("user_vars.WEZTERM_HOST: " .. trim(user_vars.WEZTERM_HOST))
-		return trim(user_vars.WEZTERM_HOST)
-	end
-
-	local domain_name = tab.active_pane.domain_name
-	if domain_name and domain_name:match("^SSH:") then
-		-- lua is 1-indexed
-		return domain_name:sub(5)
-	end
-
-	return wezterm.hostname()
-end
 
 local function get_tab_title(tab)
 	local title = tab.tab_title
