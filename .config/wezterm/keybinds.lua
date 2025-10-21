@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
+-- local workspaces = require("workspaces")
 
 return {
 	keys = {
@@ -7,6 +8,7 @@ return {
 		{ key = "l", mods = "LEADER", action = act.ShowLauncher },
 		{ key = "p", mods = "LEADER", action = act.PaneSelect },
 		{ key = "x", mods = "LEADER", action = act.ActivateCopyMode },
+		-- { key = "w", mods = "LEADER", action = workspaces.activate() },
 
 		{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
 		{ key = "Tab", mods = "SHIFT|CTRL", action = act.ActivateTabRelative(-1) },

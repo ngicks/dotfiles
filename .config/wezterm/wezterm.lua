@@ -34,4 +34,12 @@ wezterm.on("format-tab-title", require("event-format-tab-title").handler)
 wezterm.on("user-var-changed", require("event-user-var-changed").handler)
 wezterm.on("update-right-status", require("event-update-right-status").handler)
 
+-- Workspace management
+-- local workspaces = require("workspaces")
+-- wezterm.on("augment-command-palette", function(window, pane)
+-- 	local launcher_items = {}
+-- 	workspaces.augment_launcher(launcher_items)
+-- 	return launcher_items
+-- end)
+
 return config
