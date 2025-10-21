@@ -53,27 +53,6 @@ RUN <<EOF
 EOF
 
 RUN <<EOF
-  ~/.local/bin/mise trust "$HOME/.config/mise"
-  ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
-
-  # gpg verification fails for ... reasons.
-  # There's basically no chance of downloading deceptive files.
-  # gpg verifications work greatly when file host varies.
-  # If official downloads could be swapped 
-  # then the attackers also have had their hands on the gpg key,ikr? 
-  export MISE_GPG_VERIFY=0
-  export PATH="${PATH}:$HOME/.local/bin"
-  echo "calling mise install"
-  bash ~/.dotfiles/mise_install.sh bash
-  echo "installation done"
-  ~/.local/bin/mise ls
-  if [ $(~/.local/bin/mise ls --missing | wc -l) -gt 1 ]; then
-    echo "failed to install some tools"
-    exit 1
-  fi
-EOF
-
-RUN <<EOF
   ~/.local/bin/mise exec github:neovim/neovim@latest -- nvim --headless "+Lazy! restore" +qa || echo "somewhat failed"
 EOF
 
