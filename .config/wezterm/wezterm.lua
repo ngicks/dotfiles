@@ -32,7 +32,7 @@ config.key_tables = require("keybinds").key_tables
 -- https://wezterm.org/config/lua/window-events/format-tab-title.html
 wezterm.on("format-tab-title", require("event-format-tab-title").handler)
 wezterm.on("user-var-changed", require("event-user-var-changed").handler)
-wezterm.on("update-right-status", require("event-update-right-status").handler)
+wezterm.on("update-status", require("event-update-status").handler)
 
 -- Workspace management
 -- local workspaces = require("workspaces")
