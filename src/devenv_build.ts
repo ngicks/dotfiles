@@ -47,6 +47,16 @@ async function main() {
         "-t",
         "devenv:" + ver,
         "--no-cache",
+        ...(Deno.env.has("HTTP_PROXY")
+          ? [
+            "--build-arg HTTP_PROXY=" + Deno.env.get("HTTP_PROXY"),
+            "--build-arg HTTPS_PROXY=" + Deno.env.get("HTTPS_PROXY"),
+            "--build-arg http_proxy=" + Deno.env.get("http_proxy"),
+            "--build-arg https_proxy=" + Deno.env.get("https_proxy"),
+            "--build-arg NO_PROXY=" + Deno.env.get("NO_PROXY"),
+            "--build-arg no_proxy=" + Deno.env.get("no_proxy"),
+          ]
+          : []),
       ],
       stdout: "piped",
       stderr: "piped",

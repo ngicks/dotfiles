@@ -2,7 +2,7 @@
   "tasks": {
     "install": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData ./src/install.ts",
     "update:daily": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts",
-    "devenv:build": "deno run -R=./devenv_ver -W=./devenv_ver --allow-run=podman ./src/devenv_build.ts"
+    "devenv:build": "deno run -R=./devenv_ver -W=./devenv_ver --allow-run=podman -E=HTTP_PROXY,HTTPS_PROXY,http_proxy,https_proxy,NO_PROXY,no_proxy ./src/devenv_build.ts"
     "devenv:build:bump": "deno task devenv:build --bump"
   },
   "imports": {

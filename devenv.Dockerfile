@@ -1,5 +1,12 @@
 # syntax=docker/dockerfile:1.4
 
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG http_proyx=${HTTP_PROXY}
+ARG https_proyx=${HTTPS_PROXY}
+ARG NO_PROXY=""
+ARG no_proxy=${NO_PROXY}
+
 FROM docker.io/library/ubuntu:noble-20250619
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean
