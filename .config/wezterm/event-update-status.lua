@@ -13,14 +13,11 @@ M.handler = function(window, pane, name, value)
 	-- shell is using OSC 7 on the remote host.
 	local cwd_uri = pane:get_current_working_dir()
 	if cwd_uri then
-		local cwd = ""
 		local hostname = ""
 
 		if type(cwd_uri) == "userdata" then
 			-- Running on a newer version of wezterm and we have
 			-- a URL object here, making this simple!
-
-			cwd = cwd_uri.file_path
 			hostname = cwd_uri.host or wezterm.hostname()
 		else
 			-- an older version of wezterm, 20230712-072601-f4abf8fd or earlier,
@@ -29,10 +26,6 @@ M.handler = function(window, pane, name, value)
 			local slash = cwd_uri:find("/")
 			if slash then
 				hostname = cwd_uri:sub(1, slash - 1)
-				-- and extract the cwd from the uri, decoding %-encoding
-				cwd = cwd_uri:sub(slash):gsub("%%(%x%x)", function(hex)
-					return string.char(tonumber(hex, 16))
-				end)
 			end
 		end
 
@@ -45,7 +38,6 @@ M.handler = function(window, pane, name, value)
 			hostname = wezterm.hostname()
 		end
 
-		table.insert(cells, " " .. cwd .. " ")
 		table.insert(cells, " " .. hostname .. " ")
 	end
 
