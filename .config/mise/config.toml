@@ -2,6 +2,7 @@
 experimental = true
 auto_install = true
 idiomatic_version_file_enable_tools = ['node', 'python', 'rust']
+lockfile = true
 
 [settings.npm]
 bun = true
