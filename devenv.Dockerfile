@@ -11,7 +11,8 @@ FROM docker.io/library/ubuntu:noble-20250619
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
 <<EOF
   apt-get update
@@ -29,19 +30,29 @@ EOF
 
 WORKDIR /root/.dotfiles
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
 <<EOF
+  if [ -f "/ca-certificates.crt" ]; then
+    export SSL_CERT_FILE="/ca-certificates.crt"
+    export NODE_EXTRA_CA_CERTS="/ca-certificates.crt"
+  fi
   git clone https://github.com/ngicks/dotfiles.git .
   git submodule update --init --recursive
   ./install_dependencies.sh
 EOF
 
-RUN <<EOF
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  if [ -f "/ca-certificates.crt" ]; then
+    export SSL_CERT_FILE="/ca-certificates.crt"
+    export NODE_EXTRA_CA_CERTS="/ca-certificates.crt"
+  fi
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
   mkdir /root/.config
-  ~/.local/bin/mise exec deno@latest -- deno task install
+  ~/.local/bin/mise exec deno -- deno task install
 EOF
 
 RUN <<EOF
@@ -52,14 +63,25 @@ RUN <<EOF
   fi
 EOF
 
-RUN <<EOF
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  if [ -f "/ca-certificates.crt" ]; then
+    export SSL_CERT_FILE="/ca-certificates.crt"
+    export NODE_EXTRA_CA_CERTS="/ca-certificates.crt"
+  fi
   ~/.local/bin/mise exec github:neovim/neovim@latest -- nvim --headless "+Lazy! restore" +qa || echo "somewhat failed"
 EOF
 
-RUN <<EOF
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  if [ -f "/ca-certificates.crt" ]; then
+    export SSL_CERT_FILE="/ca-certificates.crt"
+    export NODE_EXTRA_CA_CERTS="/ca-certificates.crt"
+    export DENO_CERT="/ca-certificates.crt"
+  fi
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
-  ~/.local/bin/mise exec deno@latest -- deno task update:daily
+  ~/.local/bin/mise exec deno -- deno task update:daily
 EOF
 
 WORKDIR /root

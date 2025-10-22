@@ -35,29 +35,33 @@ async function main() {
     }
   }
 
+  const args = [
+    "buildx",
+    "build",
+    ".",
+    "-f",
+    "./devenv.Dockerfile",
+    "-t",
+    "devenv:" + ver,
+    "--no-cache",
+    ...(Deno.env.has("HTTP_PROXY")
+      ? ["HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY"]
+        .map((v) => [v, v.toLowerCase()])
+        .flat()
+        .map((v) => [`--build-arg=${v}=${Deno.env.get(v) ?? ""}`]).flat()
+      : []),
+    ...(Deno.env.has("SSL_CERT_FILE")
+      ? [
+        `--secret`,
+        `id=cert,src=${Deno.env.get("SSL_CERT_FILE")}`,
+      ]
+      : []),
+  ];
+
   const cmd = new Deno.Command(
     "podman",
     {
-      args: [
-        "buildx",
-        "build",
-        ".",
-        "-f",
-        "./devenv.Dockerfile",
-        "-t",
-        "devenv:" + ver,
-        "--no-cache",
-        ...(Deno.env.has("HTTP_PROXY")
-          ? [
-            "--build-arg HTTP_PROXY=" + Deno.env.get("HTTP_PROXY"),
-            "--build-arg HTTPS_PROXY=" + Deno.env.get("HTTPS_PROXY"),
-            "--build-arg http_proxy=" + Deno.env.get("http_proxy"),
-            "--build-arg https_proxy=" + Deno.env.get("https_proxy"),
-            "--build-arg NO_PROXY=" + Deno.env.get("NO_PROXY"),
-            "--build-arg no_proxy=" + Deno.env.get("no_proxy"),
-          ]
-          : []),
-      ],
+      args,
       stdout: "piped",
       stderr: "piped",
     },
@@ -73,3 +77,4 @@ async function main() {
 }
 
 main();
+

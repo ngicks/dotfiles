@@ -22,7 +22,7 @@ mise_data_dir=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
 podman run -it --rm --init\
   --mount type=bind,src=$HOME/.config/env/,dst=/root/.config/env,ro\
   --mount type=bind,src=$HOME/.bashrc,dst=/root/.bashrc,ro\
-  --mount type=bind,src=${SSL_CERT_FILE},dst=${SSL_CERT_FILE},ro\
+  --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
   --mount type=bind,src=${mise_data_dir},dst=/root/.local/share/mise,ro\
   --mount type=volume,src=claude-config,dst=/root/.config/claude\
   --mount type=volume,src=gemini-config,dst=/root/.gemini\
