@@ -22,7 +22,9 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
       ca-certificates \
       git \
       curl \
+      wget \
       vim \
+      less \
       sudo
   mkdir ~/.gnupg
   chmod 700 ~/.gnupg
