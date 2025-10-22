@@ -1,49 +1,18 @@
 local wezterm = require("wezterm")
 
-local host_color_from_pane = require("host-color").host_color_from_pane
+local get_hostname_from_pane = require("host-color").get_hostname_from_pane
+local hostname_to_color = require("host-color").hostname_to_color
 local text_color = require("host-color").text_color
 
 local M = {}
 
-local function get_hostname(pane)
-	local hostname = ""
-	-- Figure out the cwd and host of the current pane.
-	-- This will pick up the hostname for the remote host if your
-	-- shell is using OSC 7 on the remote host.
-	local cwd_uri = pane:get_current_working_dir()
-	if cwd_uri then
-		if type(cwd_uri) == "userdata" then
-			-- Running on a newer version of wezterm and we have
-			-- a URL object here, making this simple!
-			hostname = cwd_uri.host or wezterm.hostname()
-		else
-			-- an older version of wezterm, 20230712-072601-f4abf8fd or earlier,
-			-- which doesn't have the Url object
-			cwd_uri = cwd_uri:sub(8)
-			local slash = cwd_uri:find("/")
-			if slash then
-				hostname = cwd_uri:sub(1, slash - 1)
-			end
-		end
-
-		-- Remove the domain name portion of the hostname
-		local dot = hostname:find("[.]")
-		if dot then
-			hostname = hostname:sub(1, dot - 1)
-		end
-		if hostname == "" then
-			hostname = wezterm.hostname()
-		end
-	end
-
-	return hostname
-end
-
 M.handler = function(window, pane, name, value)
-	wezterm.log_info("update-status")
+	wezterm.log_info("update-status", name, value)
+	local hostname = get_hostname_from_pane(pane)
+	local host_color = hostname_to_color(hostname)
 	local cells = {
 		{ text = window:active_workspace() },
-		{ text = get_hostname(pane), color = host_color_from_pane(window:active_pane() or {}) },
+		{ text = hostname, color = host_color },
 		{ text = wezterm.strftime("%a %b %-d %H:%M:%S") },
 	}
 

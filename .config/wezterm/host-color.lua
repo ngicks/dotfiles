@@ -14,7 +14,22 @@ end
 
 M.get_hostname_from_pane = function(pane)
 	if pane ~= nil then
-		local user_vars = pane.user_vars or {}
+		local user_vars = {}
+		if pane.user_vars ~= nil then
+			-- from PaneInfomation
+			-- https://wezterm.org/config/lua/PaneInformation.html
+			user_vars = pane.user_vars
+		else
+			-- from Pane
+			-- https://wezterm.org/config/lua/pane/index.html
+			local sucess, result = pcall(function()
+				return pane:get_user_vars()
+			end)
+			if sucess then
+				user_vars = result
+			end
+		end
+
 		if user_vars.WEZTERM_HOST ~= nil and user_vars.WEZTERM_HOST ~= "" then
 			wezterm.log_info("user_vars.WEZTERM_HOST: " .. trim(user_vars.WEZTERM_HOST))
 			return trim(user_vars.WEZTERM_HOST)
