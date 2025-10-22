@@ -1,15 +1,15 @@
 local wezterm = require("wezterm")
 
-local get_hostname_from_pane = require("host-color").get_hostname_from_pane
-local hostname_to_color = require("host-color").hostname_to_color
-local text_color = require("host-color").text_color
+local get_host_name_from_pane = require("host-color").get_host_name_from_pane
+local get_color_from_host_name_from_pane = require("host-color").get_color_from_host_name_from_pane
+local foreground_color = require("host-color").foreground_color
 
 local M = {}
 
 M.handler = function(window, pane, name, value)
 	wezterm.log_info("update-status", name, value)
-	local hostname = get_hostname_from_pane(pane)
-	local host_color = hostname_to_color(hostname)
+	local hostname = get_host_name_from_pane(pane)
+	local host_color = get_color_from_host_name_from_pane(hostname)
 	local cells = {
 		{ text = window:active_workspace() },
 		{ text = hostname, color = host_color },
@@ -68,7 +68,7 @@ M.handler = function(window, pane, name, value)
 		end
 		table.insert(elements, { Attribute = { Intensity = "Normal" } })
 		table.insert(elements, { Background = { Color = color } })
-		table.insert(elements, { Foreground = { Color = text_color(color) } })
+		table.insert(elements, { Foreground = { Color = foreground_color(color) } })
 		table.insert(elements, { Text = " " .. cell.text .. " " })
 	end
 

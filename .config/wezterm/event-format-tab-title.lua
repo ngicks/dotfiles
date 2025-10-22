@@ -1,9 +1,7 @@
 local wezterm = require("wezterm")
 
-local hostColor = require("host-color")
-
-local get_hostname_from_tab = hostColor.get_hostname_from_tab
-local hostname_to_color = hostColor.hostname_to_color
+local get_host_name_from_pane = require("host-color").get_host_name_from_pane
+local get_color_from_host_name_from_pane = require("host-color").get_color_from_host_name_from_pane
 
 local M = {}
 
@@ -18,10 +16,10 @@ end
 -- Format tab title with hostname-based colors
 M.handler = function(tab, tabs, panes, config, hover, max_width)
 	wezterm.log_info("format-tab-title")
-	local hostname = get_hostname_from_tab(tab)
+	local hostname = get_host_name_from_pane(tab.active_pane)
 	local title = get_tab_title(tab)
 
-	local host_color = hostname_to_color(hostname)
+	local host_color = get_color_from_host_name_from_pane(hostname)
 	wezterm.log_info("host name: " .. hostname .. ", host_color: " .. host_color)
 
 	if #title > max_width - 6 then
