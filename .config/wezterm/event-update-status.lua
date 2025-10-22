@@ -40,6 +40,7 @@ local function get_hostname(pane)
 end
 
 M.handler = function(window, pane, name, value)
+	wezterm.log_info("update-status")
 	local cells = {
 		{ text = window:active_workspace() },
 		{ text = get_hostname(pane), color = host_color_from_pane(window:active_pane() or {}) },
