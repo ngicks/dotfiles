@@ -17,13 +17,17 @@ if ! podman volume exists codex-config; then
 fi
 
 SSL_CERT_FILE=${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}
-mise_data_dir=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
+MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
+UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 
 podman run -it --rm --init\
   --mount type=bind,src=$HOME/.config/env/,dst=/root/.config/env,ro\
   --mount type=bind,src=$HOME/.bashrc,dst=/root/.bashrc,ro\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
-  --mount type=bind,src=${mise_data_dir},dst=/root/.local/share/mise,ro\
+  --mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR},ro\
+  --env MISE_DATA_DIR=${MISE_DATA_DIR}\
+  --env MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:${MISE_DATA_DIR}"\
+  --mount type=bind,src=${UV_HOME},dst=${UV_HOME},ro\
   --mount type=volume,src=claude-config,dst=/root/.config/claude\
   --mount type=volume,src=gemini-config,dst=/root/.gemini\
   --mount type=volume,src=codex-config,dst=/root/.codex\
