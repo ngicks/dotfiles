@@ -1,18 +1,35 @@
 local wezterm = require("wezterm")
 
 local get_host_name_from_pane = require("host-color").get_host_name_from_pane
-local get_color_from_host_name_from_pane = require("host-color").get_color_from_host_name_from_pane
+local text_to_color = require("host-color").text_to_color
 local foreground_color = require("host-color").foreground_color
 
 local M = {}
 
+local function normalize_hostname(hostname, n)
+	-- It's not monospace font or white spaces are squashed.
+	-- But anyway just regulate host name length
+	if #hostname > n then
+		return wezterm.truncate_right(hostname, n - 3) .. "..."
+	end
+	if #hostname == n then
+		return hostname
+	end
+	local diff = n - #hostname
+	local half = math.floor(diff / 2)
+	local s = string.rep(" ", half) .. hostname .. string.rep(" ", half)
+	if diff % 2 ~= 0 then
+		s = " " .. s
+	end
+	return s
+end
+
 M.handler = function(window, pane, name, value)
 	wezterm.log_info("update-status", name, value)
 	local hostname = get_host_name_from_pane(pane)
-	local host_color = get_color_from_host_name_from_pane(hostname)
 	local cells = {
 		{ text = window:active_workspace() },
-		{ text = hostname, color = host_color },
+		{ text = normalize_hostname(hostname, 16), color = text_to_color(hostname) },
 		{ text = wezterm.strftime("%a %b %-d %H:%M:%S") },
 	}
 

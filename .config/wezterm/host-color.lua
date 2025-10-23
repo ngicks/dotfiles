@@ -32,43 +32,34 @@ M.foreground_color = function(bgColor)
 	end
 end
 
--- Props that counter part of PaneInformation has get_ method for them.
--- see https://wezterm.org/config/lua/PaneInformation.html
-local _get_keys = {
-	current_working_dir = true,
-	cursor_position = true,
-	dimensions = true,
-	domain_name = true,
-	foreground_process_info = true,
-	foreground_process_name = true,
-	lines_as_escapes = true,
-	lines_as_text = true,
-	logical_lines_as_text = true,
-	metadata = true,
-	progress = true,
-	semantic_zone_at = true,
-	semantic_zones = true,
-	text_from_region = true,
-	text_from_semantic_zone = true,
-	title = true,
-	tty_name = true,
-	user_vars = true,
-}
-
 -- see
 -- https://wezterm.org/config/lua/PaneInformation.html
 -- and
 -- https://wezterm.org/config/lua/PaneInformation.html
-M.get_from_pane_or_pane_info = function(paneOrPaneInfo, propName)
-	if _get_keys[propName] then
-		local sucess, result = pcall(function()
-			return paneOrPaneInfo["get_" + propName](paneOrPaneInfo)
-		end)
-		if sucess then
-			return result
-		end
-	elseif paneOrPaneInfo[propName] then
-		return paneOrPaneInfo[propName]
+M.user_vars_from_pane_or_pane_info = function(paneOrPaneInfo)
+	-- p["get_"..propName](p) did not work well somehow.
+	-- I'll keep doing this dirty copy-pasting until I can find a fix.
+	local sucess, result = pcall(function()
+		return paneOrPaneInfo:get_user_vars()
+	end)
+	if sucess then
+		return result
+	end
+	if paneOrPaneInfo.user_vars then
+		return paneOrPaneInfo.user_vars
+	end
+	return nil
+end
+
+M.domain_name_from_pane_or_pane_info = function(paneOrPaneInfo)
+	local sucess, result = pcall(function()
+		return paneOrPaneInfo:get_domain_name()
+	end)
+	if sucess then
+		return result
+	end
+	if paneOrPaneInfo.domain_name then
+		return paneOrPaneInfo.domain_name
 	end
 	return nil
 end
@@ -80,13 +71,13 @@ end
 -- gets user_vars.WEZTERM_HOST and returns it.
 -- If not set, falls back to wezterm.hostname()
 M.get_host_name_from_pane = function(paneOrPaneInfo)
-	local user_vars = M.get_from_pane_or_pane_info(paneOrPaneInfo, "user_vars") or {}
+	local user_vars = M.user_vars_from_pane_or_pane_info(paneOrPaneInfo) or {}
 	if user_vars.WEZTERM_HOST ~= nil and user_vars.WEZTERM_HOST ~= "" then
 		wezterm.log_info("user_vars.WEZTERM_HOST: " .. trim(user_vars.WEZTERM_HOST))
 		return trim(user_vars.WEZTERM_HOST)
 	end
 
-	local domain_name = M.get_from_pane_or_pane_info(paneOrPaneInfo, "domain_name") or ""
+	local domain_name = M.domain_name_from_pane_or_pane_info(paneOrPaneInfo) or ""
 	if domain_name and domain_name:match("^SSH:") then
 		-- lua is 1-indexed
 		return domain_name:sub(5)
