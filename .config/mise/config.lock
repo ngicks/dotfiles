@@ -119,7 +119,7 @@ version = "0.55.1"
 backend = "go:github.com/jesseduffield/lazygit"
 
 [[tools."go:github.com/junegunn/fzf"]]
-version = "0.66.0"
+version = "0.66.1"
 backend = "go:github.com/junegunn/fzf"
 
 [[tools."go:github.com/nametake/golangci-lint-langserver"]]
@@ -160,7 +160,7 @@ size = 56658152
 url = "https://nodejs.org/dist/v22.21.0/node-v22.21.0-linux-x64.tar.gz"
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.25"
+version = "2.0.27"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
@@ -172,15 +172,15 @@ version = "0.10.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.47.0"
+version = "0.50.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "1.0.25"
+version = "1.0.26"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."pipx:github/spec-kit"]]
-version = "v0.0.77"
+version = "v0.0.79"
 backend = "pipx:github/spec-kit"
 
 [[tools."pipx:oraios/serena"]]
