@@ -58,9 +58,25 @@ backend = "cargo:zellij"
 version = "2.5.4"
 backend = "core:deno"
 
+[[tools.gh]]
+version = "2.82.1"
+backend = "aqua:cli/cli"
+
+[tools.gh.platforms.linux-x64]
+checksum = "sha256:afada88676dfccea384e6cc28ae990b3e31bbc55f9d75c4697f902c757fa462b"
+size = 18099610
+url = "https://github.com/cli/cli/releases/download/v2.82.1/gh_2.82.1_linux_amd64.tar.gz"
+
 [[tools."github:neovim/neovim"]]
 version = "0.11.4"
 backend = "github:neovim/neovim"
+
+[[tools.glab]]
+version = "1.74.0"
+backend = "ubi:gitlab-org/cli[provider=gitlab,exe=glab]"
+
+[tools.glab.platforms.linux-x64-glab-glab]
+checksum = "blake3:492cf888d5c1d2377c31c423f5c4d894ac52b4604be9d40bc97106a99dcdaafb"
 
 [[tools.go]]
 version = "1.25.3"

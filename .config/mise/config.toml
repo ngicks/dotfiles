@@ -24,30 +24,36 @@ ruby = "latest"
 rust = { version = "stable" }
 go = "latest"
 
+# tools
+"github:neovim/neovim" = "latest"
+"gh" = "latest"
+"glab" = "latest"
+
+# LLM related
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex" = "latest"
 "npm:@upstash/context7-mcp" = "latest"
-
+# MCP
 "pipx:oraios/serena" = { version = "latest" }
 "pipx:github/spec-kit" = { version = "latest" }
 
 # go tools
 "go:github.com/jesseduffield/lazygit" = { version = "latest" }
 "go:github.com/junegunn/fzf" = { version = "latest" }
-# ls
+## ls
 "go:golang.org/x/tools/gopls" = { version = "latest" }
-# formater
+## formater
 "go:golang.org/x/tools/cmd/goimports" = { version = "latest" }
 "go:mvdan.cc/gofumpt" = { version = "latest" }
-# linter
+## linter
 "go:honnef.co/go/tools/cmd/staticcheck" = { version = "latest" }
 "go:github.com/nametake/golangci-lint-langserver" = { version = "latest" }
 "go:github.com/golangci/golangci-lint/cmd/golangci-lint" = { version = "latest" }
 "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint" = { version = "latest" }
-# debugger
+## debugger
 "go:github.com/go-delve/delve/cmd/dlv" = { version = "latest" }
-# generators
+## generators
 "go:github.com/cweill/gotests/gotests" = { version = "latest" }
 "go:github.com/haya14busa/goplay/cmd/goplay" = { version = "latest" }
 
@@ -63,8 +69,6 @@ go = "latest"
 "cargo:procs" = "latest"     # better ps
 "cargo:sd" = "latest"        # better sed
 "cargo:hyperfine" = "latest" # benchmarking tool
-
-"github:neovim/neovim" = "latest"
 
 # protobuf
 "go:github.com/bufbuild/buf/cmd/buf" = { version = "latest" }
