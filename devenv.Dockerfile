@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1
 
 ARG HTTP_PROXY=""
 ARG HTTPS_PROXY=""
@@ -76,6 +76,7 @@ EOF
 
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
+  # cache deps in case it would be manually called.
   if [ -f "/ca-certificates.crt" ]; then
     export SSL_CERT_FILE="/ca-certificates.crt"
     export NODE_EXTRA_CA_CERTS="/ca-certificates.crt"
@@ -84,6 +85,8 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
   ~/.local/bin/mise trust "$HOME/.config/mise"
   ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
   ~/.local/bin/mise exec deno -- deno task update:daily
+  # no config auto update
+  touch "${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
 EOF
 
 WORKDIR /root
