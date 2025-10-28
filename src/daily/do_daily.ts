@@ -1,11 +1,28 @@
 import path from "node:path";
 
-import { interval, markerFilePath } from "./config.ts";
+import {
+  interval,
+  markerFilePath,
+  noAutoUpdateMarkerFilePath,
+} from "./config.ts";
 
 export async function doDaily(
   tasks: { name: string; task: () => Promise<void> }[],
   opts?: { force?: boolean },
-): Promise<{ done: boolean; next: Date }> {
+): Promise<{ done: boolean; stopped?: boolean; next: Date }> {
+  const noDailyUpdate = await Deno.stat(noAutoUpdateMarkerFilePath).then(
+    () => true,
+    () => false,
+  );
+  if (noDailyUpdate) {
+    if (!opts?.force) {
+      return {
+        done: false,
+        stopped: true,
+        next: new Date(),
+      };
+    }
+  }
   await Deno.mkdir(path.dirname(markerFilePath), { recursive: true });
 
   const s = await Deno.stat(markerFilePath).catch((e: Error) => e);

@@ -3,8 +3,13 @@
 # This avoids unnecessary Deno startup overhead on every shell initialization
 
 dotfiles_should_update() {
-  local MARKER_FILE="$HOME/.cache/dotfiles/.update_daily"
+  local MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.update_daily"
+  local NO_AUTO_UPDATE_MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
   local INTERVAL=57600  # 16 hours in seconds
+
+  if [[ -f "$NO_AUTO_UPDATE_MARKER_FILE" ]]; then
+    return 1
+  fi
 
   # If marker file doesn't exist, update is needed
   if [[ ! -f "$MARKER_FILE" ]]; then
@@ -42,8 +47,14 @@ dotfiles_should_update() {
 
 # Function to get next update time (returns string)
 dotfiles_next_update_time() {
-  local MARKER_FILE="$HOME/.cache/dotfiles/.update_daily"
+  local MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.update_daily"
+  local NO_AUTO_UPDATE_MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
   local INTERVAL=57600  # 16 hours in seconds
+  
+  if [[ -f "$NO_AUTO_UPDATE_MARKER_FILE" ]]; then
+    printf "never: no-auto-update marker found at ${NO_AUTO_UPDATE_MARKER_FILE}"
+    return
+  fi
 
   if [[ ! -f "$MARKER_FILE" ]]; then
     printf "now (marker file not found)"

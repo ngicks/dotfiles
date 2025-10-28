@@ -9,3 +9,9 @@ export const markerFilePath = path.join(
   "dotfiles",
   ".update_daily",
 );
+
+export const noAutoUpdateMarkerFilePath = path.join(
+  basePaths.cache,
+  "dotfiles",
+  ".no_update_daily",
+);
