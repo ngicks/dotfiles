@@ -87,7 +87,7 @@ version = "1.59.0"
 backend = "go:github.com/bufbuild/buf/cmd/buf"
 
 [[tools."go:github.com/cweill/gotests/gotests"]]
-version = "1.8.0"
+version = "1.9.0"
 backend = "go:github.com/cweill/gotests/gotests"
 
 [[tools."go:github.com/go-delve/delve/cmd/dlv"]]
@@ -160,7 +160,7 @@ size = 56658152
 url = "https://nodejs.org/dist/v22.21.0/node-v22.21.0-linux-x64.tar.gz"
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.27"
+version = "2.0.28"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
