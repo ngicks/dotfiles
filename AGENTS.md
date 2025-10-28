@@ -43,17 +43,6 @@ mise up
 mise doctor
 ```
 
-### Development Tasks
-
-```bash
-# Daily update (pulls git changes, syncs wezterm config to host, rate-limited to 16hr intervals)
-deno task update:daily
-
-# Install/manage JDK versions (optional)
-deno task jdk:install
-deno task jdk:dotenv >> ~/.config/env/jdk.env
-```
-
 ### Docker Development Environment
 
 ```bash
@@ -68,7 +57,7 @@ deno task devenv:build:bump
 
 ### Tool Management with Mise
 
-**Mise** is the central tool version manager that replaces the old ngpkgmgr/nggitmgr system.
+**Mise** is the central tool version manager.
 
 **Configuration Files**:
 
@@ -159,7 +148,6 @@ Scripts executed as separate processes (not sourced) for environment isolation.
   - `src/install.ts` - Dotfiles symlink manager
   - `src/update_daily.ts` - Daily update automation
   - `src/devenv_build.ts` - Docker environment builder
-  - `src/jdk.ts` - JDK version manager
 - **Mise configuration**: `.config/mise/config.toml` - Tool definitions and settings
 - **Dependency scripts**: `dep/` - Package manager specific installers
   - `dep/apt/` - Ubuntu/Debian packages
