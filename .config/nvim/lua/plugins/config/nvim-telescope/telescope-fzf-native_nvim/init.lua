@@ -1,9 +1,7 @@
 local M = {}
 
-local uv = vim.uv or vim.loop
-
 local function ensure_built()
-  local sysname = uv.os_uname().sysname
+  local sysname = vim.uv.os_uname().sysname
   local lib_name
   if sysname == "Darwin" then
     lib_name = "libfzf.dylib"
@@ -15,7 +13,7 @@ local function ensure_built()
   local root = require("lazy.core.config").options.root .. "/telescope-fzf-native.nvim"
   local lib = root .. "/build/" .. lib_name
 
-  if uv.fs_stat(lib) then
+  if vim.uv.fs_stat(lib) then
     return true
   end
 
@@ -48,7 +46,7 @@ local function ensure_built()
     return false
   end
 
-  if uv.fs_stat(lib) then
+  if vim.uv.fs_stat(lib) then
     vim.notify("telescope-fzf-native.nvim: native extension ready", vim.log.levels.INFO)
     return true
   end
