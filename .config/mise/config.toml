@@ -4,9 +4,6 @@ auto_install = true
 idiomatic_version_file_enable_tools = ['node', 'python', 'rust']
 lockfile = true
 
-[settings.npm]
-bun = true
-
 [settings.pipx]
 uvx = true
 
@@ -15,7 +12,6 @@ binstall = true
 
 [tools]
 # core
-bun = "latest"
 deno = "latest"
 node = "lts"
 uv = "latest"
