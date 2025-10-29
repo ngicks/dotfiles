@@ -107,9 +107,8 @@ deno task devenv:build:bump
 2. Installs system packages via `dep/apt/` or `dep/brew/`
 3. Installs mise via `dep/common/mise.sh` (runs `curl https://mise.run | sh`)
 4. Installs common tools via `dep/common/` (Oh My Zsh, dasel)
-5. `mise_install.sh` activates mise and runs `mise install` to install all tools
-6. `deno task install` symlinks configuration files to `~/.config/`
-7. Shell restart loads mise activation and all tools become available
+5. `deno task install` symlinks configuration files to `~/.config/`
+6. Shell restart loads mise activation and all tools become available
 
 ### Dependency Installer Structure
 
