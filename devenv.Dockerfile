@@ -45,6 +45,8 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
   ./install_dependencies.sh
 EOF
 
+ENV SHELL="/usr/bin/zsh" 
+
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
   if [ -f "/ca-certificates.crt" ]; then
@@ -91,5 +93,4 @@ EOF
 
 WORKDIR /root
 
-ENV SHELL="/usr/bin/zsh" 
 ENTRYPOINT ["/usr/bin/zsh"]
