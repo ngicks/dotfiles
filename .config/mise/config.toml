@@ -24,21 +24,54 @@ go = "latest"
 "github:neovim/neovim" = "latest"
 "gh" = "latest"
 "glab" = "latest"
+"go:github.com/jesseduffield/lazygit" = "latest" # lazygit: opinionated git TUI
+"go:github.com/junegunn/fzf" = "latest"          # fzf: fuzzy finder
+"cargo:yazi-fm" = "latest"                       # yazi: file manager
+"cargo:yazi-cli" = "latest"                      # ya: yazi CLI companion
+"cargo:zellij" = "latest"                        # zellij: terminal multiplexer, tmux alternative
+## better XX
+"cargo:ripgrep" = "latest"   # rg: fast grep
+"cargo:bat" = "latest"       # bat: better cat
+"cargo:exa" = "latest"       # exa: better ls
+"cargo:fd-find" = "latest"   # fd: better find
+"cargo:bottom" = "latest"    # btm: system monitor
+"cargo:du-dust" = "latest"   # dust: disk usage
+"cargo:procs" = "latest"     # better ps
+"cargo:sd" = "latest"        # sd: better sed
+"cargo:hyperfine" = "latest" # hyperfine: benchmarking tool
+## automation
+"pipx:ansible" = "latest"
+"pipx:ansible-core" = "latest"
+## k8s
+"aqua:kubernetes/kompose" = "latest"
+"aqua:kubernetes/kops" = "latest"
+"aqua:kubernetes/kubernetes/kubectl" = "latest"
+"aqua:kubernetes/kubernetes/kubectl-convert" = "latest"
+## helm
+"aqua:helm/helm" = "latest"
+"aqua:helm/chart-releaser" = "latest"
+"aqua:helm/chart-testing" = "latest"
 
-# LLM cli agent
+# protobuf
+"go:github.com/bufbuild/buf/cmd/buf" = "latest"
+"go:google.golang.org/protobuf/cmd/protoc-gen-go" = "latest"
+"go:google.golang.org/grpc/cmd/protoc-gen-go-grpc" = "latest"
+"go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway" = "latest"
+"go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2" = "latest"
+"npm:@bufbuild/protoc-gen-es" = "latest"
+
+# LLM related
+## cli anget
 "npm:@anthropic-ai/claude-code" = "latest"
 "npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex" = "latest"
-# custom slash
+## custom slash
 "pipx:github/spec-kit" = "latest"
-# MCP
+## MCP
 "npm:@upstash/context7-mcp" = "latest"
 "pipx:oraios/serena" = "latest"
 
-
-# go tools
-"go:github.com/jesseduffield/lazygit" = "latest"
-"go:github.com/junegunn/fzf" = "latest"
+# go
 ## ls
 "go:golang.org/x/tools/gopls" = "latest"
 ## formater
@@ -54,41 +87,6 @@ go = "latest"
 ## generators
 "go:github.com/cweill/gotests/gotests" = "latest"
 "go:github.com/haya14busa/goplay/cmd/goplay" = "latest"
-
-"cargo:yazi-fm" = "latest"   # yazi file manager
-"cargo:yazi-cli" = "latest"  # yazi CLI companion
-"cargo:ripgrep" = "latest"   # rg - fast grep
-"cargo:zellij" = "latest"    # terminal multiplexer
-"cargo:bat" = "latest"       # better cat
-"cargo:exa" = "latest"       # better ls
-"cargo:fd-find" = "latest"   # better find
-"cargo:bottom" = "latest"    # system monitor (btm)
-"cargo:du-dust" = "latest"   # disk usage
-"cargo:procs" = "latest"     # better ps
-"cargo:sd" = "latest"        # better sed
-"cargo:hyperfine" = "latest" # benchmarking tool
-
-# protobuf
-"go:github.com/bufbuild/buf/cmd/buf" = "latest"
-"go:google.golang.org/protobuf/cmd/protoc-gen-go" = "latest"
-"go:google.golang.org/grpc/cmd/protoc-gen-go-grpc" = "latest"
-"go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway" = "latest"
-"go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2" = "latest"
-"npm:@bufbuild/protoc-gen-es" = "latest"
-
-# automation
-"pipx:ansible" = "latest"
-"pipx:ansible-core" = "latest"
-
-# k8s
-"aqua:kubernetes/kompose" = "latest"
-"aqua:kubernetes/kops" = "latest"
-"aqua:kubernetes/kubernetes/kubectl" = "latest"
-"aqua:kubernetes/kubernetes/kubectl-convert" = "latest"
-
-"aqua:helm/helm" = "latest"
-"aqua:helm/chart-releaser" = "latest"
-"aqua:helm/chart-testing" = "latest"
 
 [env]
 
