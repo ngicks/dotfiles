@@ -76,6 +76,16 @@ go = "latest"
 "go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2" = "latest"
 "npm:@bufbuild/protoc-gen-es" = "latest"
 
+# k8s
+"aqua:kubernetes/kompose" = "latest"
+"aqua:kubernetes/kops" = "latest"
+"aqua:kubernetes/kubernetes/kubectl" = "latest"
+"aqua:kubernetes/kubernetes/kubectl-convert" = "latest"
+
+"aqua:helm/helm" = "latest"
+"aqua:helm/chart-releaser" = "latest"
+"aqua:helm/chart-testing" = "latest"
+
 [env]
 
 [alias]
