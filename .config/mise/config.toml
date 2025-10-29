@@ -76,6 +76,10 @@ go = "latest"
 "go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2" = "latest"
 "npm:@bufbuild/protoc-gen-es" = "latest"
 
+# automation
+"pipx:ansible" = "latest"
+"pipx:ansible-core" = "latest"
+
 # k8s
 "aqua:kubernetes/kompose" = "latest"
 "aqua:kubernetes/kops" = "latest"

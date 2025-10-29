@@ -234,6 +234,14 @@ backend = "npm:@openai/codex"
 version = "1.0.26"
 backend = "npm:@upstash/context7-mcp"
 
+[[tools."pipx:ansible"]]
+version = "12.1.0"
+backend = "pipx:ansible"
+
+[[tools."pipx:ansible-core"]]
+version = "2.19.3"
+backend = "pipx:ansible-core"
+
 [[tools."pipx:github/spec-kit"]]
 version = "v0.0.79"
 backend = "pipx:github/spec-kit"
