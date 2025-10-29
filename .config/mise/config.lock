@@ -1,3 +1,21 @@
+[[tools."aqua:FiloSottile/age"]]
+version = "1.2.1"
+backend = "aqua:FiloSottile/age"
+
+[tools."aqua:FiloSottile/age".platforms.linux-x64]
+checksum = "blake3:8441277927f75428a6d22897a5cc05e8cdc03562d7a203b2bb9a7c6cd1d0c3bd"
+size = 5194720
+url = "https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz"
+
+[[tools."aqua:getsops/sops"]]
+version = "3.11.0"
+backend = "aqua:getsops/sops"
+
+[tools."aqua:getsops/sops".platforms.linux-x64]
+checksum = "sha256:775f1384d55decfad228e7196a3f683791914f92a473f78fc47700531c29dfef"
+size = 46346424
+url = "https://github.com/getsops/sops/releases/download/v3.11.0/sops-v3.11.0.linux.amd64"
+
 [[tools."aqua:helm/chart-releaser"]]
 version = "1.8.1"
 backend = "aqua:helm/chart-releaser"

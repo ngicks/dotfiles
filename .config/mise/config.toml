@@ -29,6 +29,8 @@ go = "latest"
 "cargo:yazi-fm" = "latest"                       # yazi: file manager
 "cargo:yazi-cli" = "latest"                      # ya: yazi CLI companion
 "cargo:zellij" = "latest"                        # zellij: terminal multiplexer, tmux alternative
+"aqua:getsops/sops" = "latest"                   # partially encrypt file
+"aqua:FiloSottile/age" = "latest"                # encryption
 ## better XX
 "cargo:ripgrep" = "latest"   # rg: fast grep
 "cargo:bat" = "latest"       # bat: better cat
