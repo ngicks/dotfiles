@@ -158,11 +158,11 @@ version = "0.11.4"
 backend = "github:neovim/neovim"
 
 [[tools.glab]]
-version = "1.74.0"
+version = "1.75.0"
 backend = "ubi:gitlab-org/cli[provider=gitlab,exe=glab]"
 
 [tools.glab.platforms.linux-x64-glab-glab]
-checksum = "blake3:492cf888d5c1d2377c31c423f5c4d894ac52b4604be9d40bc97106a99dcdaafb"
+checksum = "blake3:fe5181223bcd6644b24f7c42aec2222581fdffdc1985a0c3c2e2e0f200817c44"
 
 [[tools.go]]
 version = "1.25.3"
@@ -246,7 +246,7 @@ size = 58899117
 url = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-linux-x64.tar.gz"
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.30"
+version = "2.0.31"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
@@ -254,7 +254,7 @@ version = "2.10.0"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.11.2"
+version = "0.11.3"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
@@ -294,10 +294,10 @@ version = "stable"
 backend = "core:rust"
 
 [[tools.uv]]
-version = "0.9.6"
+version = "0.9.7"
 backend = "aqua:astral-sh/uv"
 
 [tools.uv.platforms.linux-x64]
-checksum = "sha256:8b119693b1c78b6f27a1a9cf435e88011d596e9554bc71254c6ea05bc834efaa"
-size = 21635459
-url = "https://github.com/astral-sh/uv/releases/download/0.9.6/uv-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:611d1e4d340c6b78519891d37d512c184f58b5424aebecdbd983585ff659ff16"
+size = 21645895
+url = "https://github.com/astral-sh/uv/releases/download/0.9.7/uv-x86_64-unknown-linux-musl.tar.gz"

@@ -22,8 +22,8 @@ go = "latest"
 
 # tools
 "github:neovim/neovim" = "latest"
-"gh" = "latest"
-"glab" = "latest"
+"gh" = "latest"                                  # github's cli/cli
+"glab" = "latest"                                # glab's cli/cli
 "go:github.com/jesseduffield/lazygit" = "latest" # lazygit: opinionated git TUI
 "go:github.com/junegunn/fzf" = "latest"          # fzf: fuzzy finder
 "cargo:yazi-fm" = "latest"                       # yazi: file manager
