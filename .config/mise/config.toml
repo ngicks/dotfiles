@@ -31,6 +31,8 @@ go = "latest"
 "cargo:zellij" = "latest"                        # zellij: terminal multiplexer, tmux alternative
 "aqua:getsops/sops" = "latest"                   # partially encrypt file
 "aqua:FiloSottile/age" = "latest"                # encryption
+"aqua:containerd/nerdctl" = "latest"             # containerd cli
+
 ## better XX
 "cargo:ripgrep" = "latest"   # rg: fast grep
 "cargo:bat" = "latest"       # bat: better cat

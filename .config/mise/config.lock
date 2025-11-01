@@ -7,6 +7,15 @@ checksum = "blake3:8441277927f75428a6d22897a5cc05e8cdc03562d7a203b2bb9a7c6cd1d0c
 size = 5194720
 url = "https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz"
 
+[[tools."aqua:containerd/nerdctl"]]
+version = "2.1.6"
+backend = "aqua:containerd/nerdctl"
+
+[tools."aqua:containerd/nerdctl".platforms.linux-x64]
+checksum = "sha256:22857b373edea479a4534ba62cae1c77f2af38f0aac4c91c1c68cf09e29d6f9e"
+size = 11096277
+url = "https://github.com/containerd/nerdctl/releases/download/v2.1.6/nerdctl-2.1.6-linux-amd64.tar.gz"
+
 [[tools."aqua:getsops/sops"]]
 version = "3.11.0"
 backend = "aqua:getsops/sops"
