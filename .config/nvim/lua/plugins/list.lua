@@ -133,7 +133,8 @@ return {
     event = { "BufReadPost *.csv", "BufNewFile *.csv" },
     cmd = { "CsvViewEnable", "CsvViewDisable", "CsvViewToggle" },
   },
-  { -- database fales
+  -- editor for specific formatted files
+  { -- database viewer
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
       { "tpope/vim-dadbod" },
@@ -145,6 +146,10 @@ return {
       "DBUIAddConnection",
       "DBUIFindBuffer",
     },
+  },
+  {
+    "lemarsu/sops.nvim",
+    cmd = { "Sops" },
   },
   {
     "akinsho/toggleterm.nvim",
