@@ -154,8 +154,15 @@ size = 18099610
 url = "https://github.com/cli/cli/releases/download/v2.82.1/gh_2.82.1_linux_amd64.tar.gz"
 
 [[tools."github:neovim/neovim"]]
-version = "0.11.4"
+version = "0.11.5"
 backend = "github:neovim/neovim"
+
+[tools."github:neovim/neovim".platforms.linux-x64]
+checksum = "sha256:b2f91117be5b5ea39edd7297156dc2a4a8df4add6c95a90809a8df19e7ab6f52"
+name = "nvim-linux-x86_64.tar.gz"
+size = 10973811
+url = "https://github.com/neovim/neovim/releases/download/v0.11.5/nvim-linux-x86_64.tar.gz"
+url_api = "https://api.github.com/repos/neovim/neovim/releases/assets/311637684"
 
 [[tools.glab]]
 version = "1.75.0"
@@ -201,7 +208,7 @@ version = "1.0.0"
 backend = "go:github.com/haya14busa/goplay/cmd/goplay"
 
 [[tools."go:github.com/jesseduffield/lazygit"]]
-version = "0.55.1"
+version = "0.56.0"
 backend = "go:github.com/jesseduffield/lazygit"
 
 [[tools."go:github.com/junegunn/fzf"]]
