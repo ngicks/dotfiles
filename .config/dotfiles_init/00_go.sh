@@ -1,4 +1,10 @@
 # I'm not using ~/.cache/go since it is somehow populated
-export GOPATH="$HOME/.local/go"
-export GOBIN="$HOME/.local/go/bin" 
-export PATH="$GOBIN:$PATH"
+export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
+export GOBIN="${XDG_DATA_HOME:-$HOME/.local/share}/go/bin" 
+case ":${PATH}:" in
+    *:"$GOBIN":*)
+        ;;
+    *)
+        export PATH="$GOBIN:$PATH"
+        ;;
+esac
