@@ -92,6 +92,9 @@ go = "latest"
 "go:github.com/cweill/gotests/gotests" = "latest"
 "go:github.com/haya14busa/goplay/cmd/goplay" = "latest"
 
+# zenn
+"npm:zenn-cli" = "latest"
+
 [env]
 
 [alias]

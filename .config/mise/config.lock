@@ -277,6 +277,10 @@ backend = "npm:@openai/codex"
 version = "1.0.26"
 backend = "npm:@upstash/context7-mcp"
 
+[[tools."npm:zenn-cli"]]
+version = "0.2.10"
+backend = "npm:zenn-cli"
+
 [[tools."pipx:ansible"]]
 version = "12.2.0"
 backend = "pipx:ansible"
