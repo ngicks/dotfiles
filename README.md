@@ -1,11 +1,16 @@
 # dotfiles
 
-## env
+My dotfiles.
 
-Only intended for `linux/amd64` and when it have `/bin/bash`.
+Devenv setup scripts + configuration for tools.
 
-Some scripts have swtich statements for `windows`, `darwin`, and arch other than `amd64` but they are totally WIP stubs.
-Currently no other platforms are supported.
+Just like others do, install scripts symlinks contents under `./.config/` to under `${XDG_CONFIG_HOME:-$HOME/.config}/`
+
+## Intended Environment
+
+Only intended for `linux/amd64` and the env must have `/bin/bash`.
+
+Some scripts may leave switch pattern for other than `linux/amd64`, e.g. `windows`/`darwin`, architectures like `arm64`. But they are totally WIP stubs.
 
 ## isntall prerequisites
 
@@ -25,80 +30,55 @@ git clone https://github.com/ryanoasis/nerd-fonts .
 ./install.sh
 ```
 
-### libs
+If you are running a terminal on windows and running linux on wsl2 instances, then install fonts to windows(`install.ps1`).
+
+### Deps
+
+Only `apt` or `brew` is supported.
 
 ```
 ./install_dependencies.sh
 ```
 
-## install SDK
-
-First, install SDKs by `./install_sdk.sh`
-
-All other scripts are intended run by `deno`.
-
-All SDKs are installed under `$HOME`
-
-## install dotfiles
-
-After installation of SDKs, call `install` tasks.
-
-At this point, PATH is not modified so call deno directly.
-
-```
-~/.deno/bin/deno task install
-```
-
-## set up configs under ~/.config/env
+Modify `~/.zshrc`.
 
 ```shell
 export ZSH_THEME="obraun"
 ```
 
-## source .bashrc again
+## Install Dotfiles
 
 ```
-. ~/.bashrc
-
-# or
-
-. ~/.zshrc
+~/.local/bin/mise exec deno -- deno task install
 ```
 
-## install jdk(OPTIONAL)
+Restart shell after installation
 
-download and places opnenjdk distributions.
+## Install SDK
 
-All JDKs are installed under `~/.local/openjdk`
+`mise install`
 
-```
-deno task jdk:install
-```
+## Set up configs under ${XDG_CONFIG_HOME:-$HOME/.config}/env
 
-The task `jdk:dotenv` prints `JAVA9_HOME=/path/to/that/version`
-
-```
-deno task jdk:dotenv >> ~/.config/env/jdk.env
-```
-
-Later create of modify `~/.config/env/jdk.sh`
-
-All `*.sh` files are loaded after `*.env` files so you can safely use.
-
-```
-#!/bin/bash
-
-export JAVA_HOME=$JAVA24_HOME
-export PATH=$JAVA_HOME/bin:$PATH
-export GRADLE_USER_HOME=$HOME/.cache/gradle
-
-```
+All `*.sh` and `*.env` files under `${XDG_CONFIG_HOME:-$HOME/.config}/env` are loaded.
 
 ## About each config
 
-### nvim
+### dotfiles_init
 
-#### Use with `BitstromWera Nerd Font Mono`
+Automatically loaded in `~/.zshrc`.
+
+Default-ish environment variables are defined in there.
+
+### lazygit
+
+- Nothing specific is defined. Just changed copy command to `xsel -bi`.
+
+### mise
+
+- All SDKs / tools.
+
+### nvim
 
 #### It's based on NvChad
 
@@ -128,3 +108,11 @@ Say thanks to https://nvchad.com/
 - vim like copy mode.
 - nvim like pane move: prefix+{h,j,k,l} to move around
 - nvim like pane split: prefix+s to split horizontally, prefix+v to virtically
+
+### wezterm
+
+- Terminal emulator.
+
+### zellij
+
+- Keymaps / layouts.
