@@ -48,11 +48,19 @@ export ZSH_THEME="obraun"
 
 ## Install Dotfiles
 
+### Linking
+
 ```
 ~/.local/bin/mise exec deno -- deno task install
 ```
 
 Restart shell after installation
+
+### Disable daily auto-update if needed
+
+```
+touch "${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
+```
 
 ## Install SDK
 
@@ -62,7 +70,13 @@ Restart shell after installation
 
 All `*.sh` and `*.env` files under `${XDG_CONFIG_HOME:-$HOME/.config}/env` are loaded.
 
+## Build optional tools
+
+Things under `build`
+
 ## About each config
+
+Things under `.config`
 
 ### dotfiles_init
 
