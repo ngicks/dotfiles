@@ -74,6 +74,10 @@ All `*.sh` and `*.env` files under `${XDG_CONFIG_HOME:-$HOME/.config}/env` are l
 
 Things under `build`
 
+### podman-static
+
+[podman-static](https://github.com/mgoltzsche/podman-static.git)
+
 ## About each config
 
 Things under `.config`

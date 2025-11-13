@@ -1,19 +1,28 @@
-c_bin=$HOME/.local/containers/bin:$PATH
-c_lib=$HOME/.local/containers/lib/podman:$PATH
+_c_bin=${HOME}/.local/containers/bin
+_c_lib=${HOME}/.local/containers/lib/podman
+_c_libexec=${HOME}/.local/containers/libexec/podman
 
 case ":${PATH}:" in
-    *:"c_bin":*)
+    *:"$_c_bin":*)
         ;;
     *)
-        export PATH="c_bin:$PATH"
+        export PATH="$_c_bin:$PATH"
         ;;
 esac
 
 
 case ":${PATH}:" in
-    *:"c_lib":*)
+    *:"$_c_lib":*)
         ;;
     *)
-        export PATH="c_lib:$PATH"
+        export PATH="$_c_lib:$PATH"
+        ;;
+esac
+
+case ":${PATH}:" in
+    *:"$_c_libexec":*)
+        ;;
+    *)
+        export PATH="$_c_libexec:$PATH"
         ;;
 esac
