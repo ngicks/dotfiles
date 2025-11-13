@@ -1,14 +1,6 @@
 #!/bin/bash
 
 case ":${PATH}:" in
-    *:"$HOME/bin":*)
-        ;;
-    *)
-        export PATH="$HOME/bin:$PATH"
-        ;;
-esac
-
-case ":${PATH}:" in
     *:"$HOME/.local/bin":*)
         ;;
     *)
