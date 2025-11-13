@@ -27,7 +27,7 @@ layout {
                 name "editor"
                 cwd "~/gitrepo/github.com/ngicks/zenn-article/"
                 command "zsh"
-                args "-lc" "npx zenn preview"
+                args "-lc" "zenn preview"
             }
             pane {
                 cwd "~/gitrepo/github.com/ngicks/"
