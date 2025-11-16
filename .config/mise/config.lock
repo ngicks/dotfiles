@@ -93,7 +93,7 @@ version = "0.26.0"
 backend = "cargo:bat"
 
 [[tools."cargo:bottom"]]
-version = "0.11.3"
+version = "0.11.4"
 backend = "cargo:bottom"
 
 [[tools."cargo:du-dust"]]
@@ -217,7 +217,7 @@ version = "0.56.0"
 backend = "go:github.com/jesseduffield/lazygit"
 
 [[tools."go:github.com/junegunn/fzf"]]
-version = "0.66.1"
+version = "0.67.0"
 backend = "go:github.com/junegunn/fzf"
 
 [[tools."go:github.com/nametake/golangci-lint-langserver"]]
