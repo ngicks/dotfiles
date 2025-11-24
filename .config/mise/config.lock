@@ -109,7 +109,7 @@ version = "10.3.0"
 backend = "cargo:fd-find"
 
 [[tools."cargo:hyperfine"]]
-version = "1.19.0"
+version = "1.20.0"
 backend = "cargo:hyperfine"
 
 [[tools."cargo:procs"]]
@@ -165,11 +165,11 @@ url = "https://github.com/neovim/neovim/releases/download/v0.11.5/nvim-linux-x86
 url_api = "https://api.github.com/repos/neovim/neovim/releases/assets/311637684"
 
 [[tools.glab]]
-version = "1.77.0"
+version = "1.78.2"
 backend = "ubi:gitlab-org/cli[provider=gitlab,exe=glab]"
 
 [tools.glab.platforms.linux-x64-glab-glab]
-checksum = "blake3:5bab959d72a37a7652fb2dd4bace3b25d970df07350a11d4e735c1ed239e3b4c"
+checksum = "blake3:1a2d922064aa244a09a101de99e90465e945a12d22151e26c64b45efd41a9d44"
 
 [[tools.go]]
 version = "1.25.4"
@@ -258,7 +258,7 @@ size = 56272770
 url = "https://nodejs.org/dist/v24.11.1/node-v24.11.1-linux-x64.tar.gz"
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.42"
+version = "2.0.50"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
@@ -266,15 +266,15 @@ version = "2.10.1"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.15.3"
+version = "0.17.1"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.58.0"
+version = "0.63.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "1.0.27"
+version = "1.0.29"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
@@ -282,7 +282,7 @@ version = "0.2.10"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:ansible"]]
-version = "12.2.0"
+version = "13.0.0"
 backend = "pipx:ansible"
 
 [[tools."pipx:ansible-core"]]
@@ -310,10 +310,10 @@ version = "stable"
 backend = "core:rust"
 
 [[tools.uv]]
-version = "0.9.9"
+version = "0.9.11"
 backend = "aqua:astral-sh/uv"
 
 [tools.uv.platforms.linux-x64]
-checksum = "sha256:b0e4530c1fed09720d7eb703703047f097fe23d6b266945a98422f0a0e5c74b4"
-size = 21541880
-url = "https://github.com/astral-sh/uv/releases/download/0.9.9/uv-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:5cc06fe71374a8883aeb2c83a141a4b5fac8584ee894ba31c5792254508b4e9a"
+size = 21893281
+url = "https://github.com/astral-sh/uv/releases/download/0.9.11/uv-x86_64-unknown-linux-musl.tar.gz"
