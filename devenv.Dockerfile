@@ -9,12 +9,13 @@ ARG no_proxy=${NO_PROXY}
 
 FROM docker.io/library/ubuntu:noble-20250619
 
-RUN rm -f /etc/apt/apt.conf.d/docker-clean
 
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
 <<EOF
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
   apt-get update
   apt-get install -y --no-install-recommends\
       gpg \
@@ -26,8 +27,6 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
       vim \
       less \
       sudo
-  mkdir ~/.gnupg
-  chmod 700 ~/.gnupg
 EOF
 
 WORKDIR /root/.dotfiles
