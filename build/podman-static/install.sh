@@ -15,9 +15,6 @@ fi
 artifact_version=$(${dir}/podman-static/build/asset/podman-linux-amd64/usr/local/bin/podman --version | sed -s 's/podman version //')
 
 tgt_dir=${XDG_DATA_HOME:-$HOME/.local/share}/podman/${artifact_version}
-mkdir -p ${tgt_dir}
-cp -r ${artifact_dir}/* ${tgt_dir}/
-
 
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}/containers
 

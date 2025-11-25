@@ -64,3 +64,9 @@ for u in $(ls ${user_service_dir}); do
     ${user_service_dir}/${u} \
     ${TARGET_HOME:-$HOME}/.config/containers/path.env
 done
+
+artifact_version=$(${artifact_dir}/usr/local/bin/podman --version | sed -s 's/podman version //')
+
+tgt_dir=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}/${artifact_version}
+mkdir -p ${tgt_dir}
+cp -r ${artifact_dir}/* ${tgt_dir}/
