@@ -62,7 +62,8 @@ user_service_dir=${artifact_dir}/usr/local/lib/systemd/user
 for u in $(ls ${user_service_dir}); do
   deno -R=${user_service_dir}/${u} -W=${user_service_dir}/${u} $(dirname $0)/insert_environment_file.ts \
     ${user_service_dir}/${u} \
-    ${TARGET_HOME:-$HOME}/.config/containers/path.env
+    ${TARGET_HOME:-$HOME}/.config/containers/path.env \
+    ${HOME}/.local/containers/bin/podman
 done
 
 artifact_version=$(${artifact_dir}/usr/local/bin/podman --version | sed -s 's/podman version //')

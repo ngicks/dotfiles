@@ -44,16 +44,9 @@ mkdir -p ${HOME}/.config/systemd/user
 
 user_service_dir=${artifact_dir}/usr/local/lib/systemd/user
 for u in $(ls ${user_service_dir}); do
-  if [[ -e ${user_service_dir}/${u} ]]; then 
+  if [[ -e ${HOME}/.config/systemd/user/${u} ]]; then
     rm ${HOME}/.config/systemd/user/${u}
   fi
   ln -s ${HOME}/.local/containers/lib/systemd/user/${u} ${HOME}/.config/systemd/user/${u}
 done
 
-# cp -r ./build/asset/podman-linux-amd64/usr/local/ ~/.local/containers/
-#
-# cp -r ./build_podman_static/conf ~/.config/containers
-# 
-#
-# echo "source ~/.config/containers/path.sh in start up script"
-# echo ". ~/.config/containers/path.sh"
