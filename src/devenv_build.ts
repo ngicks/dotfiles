@@ -50,12 +50,10 @@ async function main() {
         .flat()
         .map((v) => [`--build-arg=${v}=${Deno.env.get(v) ?? ""}`]).flat()
       : []),
-    ...(Deno.env.has("SSL_CERT_FILE")
-      ? [
-        `--secret`,
-        `id=cert,src=${Deno.env.get("SSL_CERT_FILE")}`,
-      ]
-      : []),
+    `--secret`,
+    `id=cert,src=${
+      Deno.env.get("SSL_CERT_FILE") || "/etc/ssl/certs/ca-certificates.crt"
+    }`,
   ];
 
   const cmd = new Deno.Command(
@@ -77,4 +75,3 @@ async function main() {
 }
 
 main();
-
