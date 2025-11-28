@@ -65,10 +65,12 @@ async function main() {
     },
   );
   const s = cmd.spawn();
-  await s.stdout.pipeTo(Deno.stdout.writable, { preventClose: true });
-  await s.stderr.pipeTo(Deno.stderr.writable, { preventClose: true });
-  await s.output();
-  if (!(await s.status).success) {
+  await Promise.all([
+    s.stdout.pipeTo(Deno.stdout.writable, { preventClose: true }),
+    s.stderr.pipeTo(Deno.stderr.writable, { preventClose: true }),
+  ]);
+  const result = await s.status;
+  if (!result.success) {
     throw new Error("build failed");
   }
   await Deno.writeTextFile(verFile, ver);
