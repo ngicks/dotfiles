@@ -9,8 +9,8 @@ M.opts = {
     json = { "prettier" },
     jsonc = { "prettier" },
     xml = { "xmlformatter" },
-    kdl = { "kdlfmt", "format" },
-    python = { "ruff", "format" },
+    kdl = { "kdlfmt_format" },
+    python = { "ruff_format" },
   },
   default_format_opts = {
     lsp_format = "fallback",
