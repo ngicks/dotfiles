@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM docker.io/library/ubuntu:noble-20250619
+FROM docker.io/library/ubuntu:noble-20251013
 
 ARG HTTP_PROXY=""
 ARG HTTPS_PROXY=""
