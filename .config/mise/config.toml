@@ -33,9 +33,6 @@ go = "latest"
 "aqua:FiloSottile/age" = "latest"                # encryption
 "aqua:containerd/nerdctl" = "latest"             # containerd cli
 
-# needed for betterproto2_compiler
-"ruff" = "latest"
-
 ## better XX
 "cargo:ripgrep" = "latest"   # rg: fast grep
 "cargo:bat" = "latest"       # bat: better cat
@@ -96,6 +93,10 @@ go = "latest"
 ## generators
 "go:github.com/cweill/gotests/gotests" = "latest"
 "go:github.com/haya14busa/goplay/cmd/goplay" = "latest"
+
+# python
+## needed for betterproto2_compiler
+"ruff" = "latest"
 
 # zenn
 "npm:zenn-cli" = "latest"
