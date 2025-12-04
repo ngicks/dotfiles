@@ -1,4 +1,5 @@
 local wezterm = require("wezterm")
+local commands = require("commands")
 
 local config = wezterm.config_builder()
 
@@ -33,12 +34,8 @@ config.key_tables = require("keybinds").key_tables
 wezterm.on("format-tab-title", require("event-format-tab-title").handler)
 wezterm.on("update-status", require("event-update-status").handler)
 
--- Workspace management
--- local workspaces = require("workspaces")
--- wezterm.on("augment-command-palette", function(window, pane)
--- 	local launcher_items = {}
--- 	workspaces.augment_launcher(launcher_items)
--- 	return launcher_items
--- end)
+wezterm.on("augment-command-palette", function(window, pane)
+	return commands.commands(window, pane)
+end)
 
 return config
