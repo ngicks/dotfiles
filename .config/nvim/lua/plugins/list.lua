@@ -30,6 +30,7 @@ return {
   },
   {
     "nvchad/base46",
+    lazy = false,
     build = function()
       require("base46").load_all_highlights()
     end,
@@ -118,16 +119,6 @@ return {
       },
     },
   },
-
-  {
-    "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    cmd = "Telescope",
-    opts = function()
-      return require "plugins._nvchad.telescope"
-    end,
-  },
-
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufReadPost", "BufNewFile", "BufReadPre" },
@@ -197,6 +188,7 @@ return {
   -- telescope
   {
     "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
