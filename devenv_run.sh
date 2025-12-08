@@ -17,7 +17,7 @@ if ! podman volume exists codex-config; then
 fi
 
 SSL_CERT_FILE=${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}
-MISE_CONFIG_DIR=${MISE_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/mise}
+MISE_GLOBAL_CONFIG_FILE=${MISE_GLOBAL_CONFIG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/mise/config.toml}
 MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
 
 CARGO_HOME=${CARGO_HOME:-$HOME/.cargo}
@@ -30,10 +30,11 @@ podman run -it --rm --init\
   --mount type=bind,src=$HOME/.bashrc,dst=/root/.bashrc,ro\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
   --env MISE_CONFIG_DIR=${MISE_CONFIG_DIR}\
-  --mount type=bind,src=${MISE_CONFIG_DIR},dst=${MISE_CONFIG_DIR},ro\
+  --env MISE_GLOBAL_CONFIG_FILE="${MISE_GLOBAL_CONFIG_FILE}"\
+  --env MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:$(dirname MISE_GLOBAL_CONFIG_FILE)"\
+  --mount type=bind,src=$(dirname MISE_GLOBAL_CONFIG_FILE),dst=$(dirname MISE_GLOBAL_CONFIG_FILE),ro\
   --env MISE_DATA_DIR=${MISE_DATA_DIR}\
   --mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR},ro\
-  --env MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:${MISE_CONFIG_DIR}:${MISE_DATA_DIR}"\
   --mount type=bind,src=${UV_HOME},dst=${UV_HOME},ro\
   --env CARGO_HOME=${CARGO_HOME}\
   --mount type=bind,src=${CARGO_HOME},dst=${CARGO_HOME},ro\

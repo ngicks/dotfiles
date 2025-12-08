@@ -48,7 +48,7 @@ ENV SHELL="/usr/bin/zsh"
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
-  ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
+  ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise"
   mkdir /root/.config
   ~/.local/bin/mise exec deno -- deno task install
 EOF
@@ -69,7 +69,6 @@ EOF
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
   ~/.local/bin/mise trust "$HOME/.config/mise"
-  ~/.local/bin/mise trust "$HOME/.dotfiles/.config/mise/config.toml"
   ~/.local/bin/mise exec deno -- deno task update:daily
   # no config auto update
   touch "${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
