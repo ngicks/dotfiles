@@ -125,8 +125,8 @@ return {
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
   },
   {
-    "machakann/vim-sandwich",
-    event = { "BufReadPre", "BufNewFile" },
+    "nvim-mini/mini.nvim",
+    keys = { "<leader>s" },
   },
 
   -- management

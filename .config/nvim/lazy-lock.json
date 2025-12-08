@@ -23,6 +23,7 @@
   "mason.nvim": { "branch": "main", "commit": "ad7146aa61dcaeb54fa900144d768f040090bff0" },
   "memolist.vim": { "branch": "master", "commit": "8090f7a973f266a600c2ea84ec6941346414300a" },
   "menu": { "branch": "main", "commit": "7a0a4a2896b715c066cfbe320bdc048091874cc6" },
+  "mini.nvim": { "branch": "main", "commit": "94cae4660a8b2d95dbbd56e1fbc6fcfa2716d152" },
   "minty": { "branch": "main", "commit": "aafc9e8e0afe6bf57580858a2849578d8d8db9e0" },
   "nvim-bqf": { "branch": "main", "commit": "654c904d5ad9dc4846445056086168e25bd8ba2d" },
   "nvim-cmp": { "branch": "main", "commit": "8c82d0bd31299dbff7f8e780f5e06d2283de9678" },
@@ -50,7 +51,6 @@
   "vim-dadbod": { "branch": "master", "commit": "6f8b99868fd5560d6eb47f82ca76ec62e3d5ae78" },
   "vim-dadbod-completion": { "branch": "master", "commit": "a8dac0b3cf6132c80dc9b18bef36d4cf7a9e1fe6" },
   "vim-dadbod-ui": { "branch": "master", "commit": "48c4f271da13d380592f4907e2d1d5558044e4e5" },
-  "vim-sandwich": { "branch": "master", "commit": "785fb39d79bb843b545f1d8a9265bd8f2e2285f8" },
   "volt": { "branch": "main", "commit": "620de1321f275ec9d80028c68d1b88b409c0c8b1" },
   "which-key.nvim": { "branch": "main", "commit": "fcbf4eea17cb299c02557d576f0d568878e354a4" }
 }
