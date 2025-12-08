@@ -92,7 +92,7 @@ go = "latest"
 "go:github.com/go-delve/delve/cmd/dlv" = "latest"
 ## generators
 "go:github.com/cweill/gotests/gotests" = "latest"
-"go:github.com/haya14busa/goplay/cmd/goplay" = "latest"
+# "go:github.com/haya14busa/goplay/cmd/goplay" = "latest"
 
 # python
 ## needed for betterproto2_compiler
