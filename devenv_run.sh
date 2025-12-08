@@ -29,10 +29,9 @@ podman run -it --rm --init\
   --mount type=bind,src=$HOME/.config/env/,dst=/root/.config/env,ro\
   --mount type=bind,src=$HOME/.bashrc,dst=/root/.bashrc,ro\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
-  --env MISE_CONFIG_DIR=${MISE_CONFIG_DIR}\
   --env MISE_GLOBAL_CONFIG_FILE="${MISE_GLOBAL_CONFIG_FILE}"\
-  --env MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:$(dirname MISE_GLOBAL_CONFIG_FILE)"\
-  --mount type=bind,src=$(dirname MISE_GLOBAL_CONFIG_FILE),dst=$(dirname MISE_GLOBAL_CONFIG_FILE),ro\
+  --env MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:$(dirname $MISE_GLOBAL_CONFIG_FILE)"\
+  --mount type=bind,src=$(dirname $MISE_GLOBAL_CONFIG_FILE),dst=$(dirname $MISE_GLOBAL_CONFIG_FILE),ro\
   --env MISE_DATA_DIR=${MISE_DATA_DIR}\
   --mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR},ro\
   --mount type=bind,src=${UV_HOME},dst=${UV_HOME},ro\
