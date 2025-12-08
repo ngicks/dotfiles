@@ -124,13 +124,17 @@ return {
     event = { "BufReadPost", "BufNewFile", "BufReadPre" },
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
   },
+  {
+    "machakann/vim-sandwich",
+    event = { "BufReadPre", "BufNewFile" },
+  },
 
   -- management
   {
     "rmagatti/auto-session",
     lazy = false,
   },
-  -- AI integration
+  -- LLM integration
   {
     "greggh/claude-code.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
