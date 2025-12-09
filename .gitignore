@@ -1,5 +1,6 @@
 .claude
 .serena
+/.config/nvim/playground
 # technically this is not needed since podman-static is a submodule.
 # But serena, mcp tool for claude that efficiently reads and edits semantic files,
 # reads non-gitignore-d directories while the onboarding process
