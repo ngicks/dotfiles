@@ -26,6 +26,8 @@ UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 
 podman run -it --rm --init\
   --env IN_CONTAINER=1\
+  --env TERM=${TERM}\
+  --env LANG=C.UTF-8\
   --mount type=bind,src=$HOME/.config/env/,dst=/root/.config/env,ro\
   --mount type=bind,src=$HOME/.bashrc,dst=/root/.bashrc,ro\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\

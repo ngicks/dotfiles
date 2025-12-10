@@ -29,7 +29,8 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
       wget \
       vim \
       less \
-      sudo
+      sudo \
+      ncurses-term
 EOF
 
 WORKDIR /root/.dotfiles
