@@ -2,7 +2,7 @@ import { mergeReadableStreams } from "jsr:@std/streams";
 
 export async function gitPull() {
   const cmd = new Deno.Command("git", {
-    args: ["pull", "--recurse-submodules"],
+    args: ["pull"],
     stdout: "piped",
     stderr: "piped",
   }).spawn();
