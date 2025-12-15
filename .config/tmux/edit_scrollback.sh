@@ -6,6 +6,7 @@ if [[ -z "${pane_id}" ]]; then
   echo "No pane id provided" >&2
   exit 1
 fi
+initial_mode="$(tmux display-message -p -t "${pane_id}" '#{pane_mode}')"
 
 c_opt=""
 if [[ ! -z "${2:-}" ]]; then
@@ -36,3 +37,8 @@ editor_cmd+=("${scrollback_file}")
 printf -v editor_cmd_str ' %q' "${editor_cmd[@]}"
 
 tmux display-popup -w 90% -h 90% $c_opt -E "sh -c '${editor_cmd_str:1}' --"
+
+# return pane to normal mode if we were in copy mode when launching popup
+if [[ "${initial_mode}" =~ ^copy-mode ]]; then
+  tmux send-keys -t "${pane_id}" -X cancel
+fi
