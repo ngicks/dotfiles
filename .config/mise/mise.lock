@@ -42,13 +42,13 @@ backend = "aqua:helm/chart-testing"
 "platforms.windows-x64" = { checksum = "sha256:0720a57213521a627d74cb2fe3da16197fd5c8dd382c01cdb0b20682a5df98d9", url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-testing_3.14.0_windows_amd64.zip"}
 
 [[tools."aqua:helm/helm"]]
-version = "4.0.2"
+version = "4.0.4"
 backend = "aqua:helm/helm"
-"platforms.linux-arm64" = { checksum = "sha256:3de681b463fb783f49f5ab72d700c057124ef73fa74062624b8fe95deafded4b", url = "https://get.helm.sh/helm-v4.0.2-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:980756a9b2fd501a1d6ddd1b21741678875df005c91bb05bb41093988bb83bb7", url = "https://get.helm.sh/helm-v4.0.2-linux-amd64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:fed6a23bba5db8a21e40175f44c159e057b26a6361f4280e24c820d0841e150b", url = "https://get.helm.sh/helm-v4.0.2-darwin-arm64.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:1dd2ce37855f5380abc86d56ab38387d4f1b8b05be296760addfe32d7c56a393", url = "https://get.helm.sh/helm-v4.0.2-darwin-amd64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:df22d66514caf45407511c6a1ff342a5be259542d259a83a96b4b1c6389edbad", url = "https://get.helm.sh/helm-v4.0.2-windows-amd64.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:16b88acc6503d646b7537a298e7389bef469c5cc9ebadf727547abe9f6a35903", url = "https://get.helm.sh/helm-v4.0.4-linux-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:29454bc351f4433e66c00f5d37841627cbbcc02e4c70a6d796529d355237671c", url = "https://get.helm.sh/helm-v4.0.4-linux-amd64.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:a7ea99937a9679b3935fa0a2b70e577aa1ea84e5856e7c0821ca6ffa064ea976", url = "https://get.helm.sh/helm-v4.0.4-darwin-arm64.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:73bcfd6ab000fdc95acf9fe1c59e8e47179426a653e45ae485889869d4a00523", url = "https://get.helm.sh/helm-v4.0.4-darwin-amd64.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:d5c119dbc502687a886a233e5e6996ebc5b2594fd571f67216f8cdc23acb870e", url = "https://get.helm.sh/helm-v4.0.4-windows-amd64.tar.gz"}
 
 [[tools."aqua:kubernetes/kompose"]]
 version = "1.37.0"
@@ -224,7 +224,7 @@ version = "0.40.0"
 backend = "go:golang.org/x/tools/cmd/goimports"
 
 [[tools."go:golang.org/x/tools/gopls"]]
-version = "0.20.0"
+version = "0.21.0"
 backend = "go:golang.org/x/tools/gopls"
 
 [[tools."go:google.golang.org/grpc/cmd/protoc-gen-go-grpc"]]
@@ -253,19 +253,19 @@ backend = "core:node"
 "platforms.windows-x64" = { checksum = "sha256:9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.67"
+version = "2.0.71"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
-version = "2.10.1"
+version = "2.10.2"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.20.0"
+version = "0.21.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.71.0"
+version = "0.73.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -273,7 +273,7 @@ version = "1.0.31"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
-version = "0.2.10"
+version = "0.2.11"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:ansible"]]
