@@ -118,6 +118,10 @@ map({ "n", "t" }, "<M-f>", function()
   require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
 end, { desc = "terminal toggle floating term" })
 
+-- diff view
+map("n", "<leader>gdd", "<cmd>DiffviewOpen<CR>", { desc = "open diff view" })
+map("n", "<leader>gdc", "<cmd>DiffviewClose<CR>", { desc = "close diff view" })
+
 -- remove nvchad's nvtree config and tie them nearly
 map("n", "<leader>et", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 map("n", "<leader>ef", "<cmd>NvimTreeFocus<CR>", { desc = "nvimtree focus window" })

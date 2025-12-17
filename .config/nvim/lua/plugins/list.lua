@@ -60,6 +60,10 @@ return {
     cmd = "WhichKey",
   },
 
+  {
+    "sindrets/diffview.nvim",
+    cmd = "DiffviewOpen",
+  },
   -- git stuff
   {
     "lewis6991/gitsigns.nvim",
