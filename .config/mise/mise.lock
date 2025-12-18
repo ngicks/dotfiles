@@ -69,22 +69,22 @@ backend = "aqua:kubernetes/kops"
 "platforms.windows-x64" = { checksum = "sha256:75513058f301903dca937252a64d7efa01686de9bc8ec0ac4efcfca2f245241e", url = "https://github.com/kubernetes/kops/releases/download/v1.34.1/kops-windows-amd64"}
 
 [[tools."aqua:kubernetes/kubernetes/kubectl"]]
-version = "1.34.3"
+version = "1.35.0"
 backend = "aqua:kubernetes/kubernetes/kubectl"
-"platforms.linux-arm64" = { checksum = "sha256:46913a7aa0327f6cc2e1cc2775d53c4a2af5e52f7fd8dacbfbfd098e757f19e9", url = "https://dl.k8s.io/v1.34.3/bin/linux/arm64/kubectl"}
-"platforms.linux-x64" = { checksum = "sha256:ab60ca5f0fd60c1eb81b52909e67060e3ba0bd27e55a8ac147cbc2172ff14212", url = "https://dl.k8s.io/v1.34.3/bin/linux/amd64/kubectl"}
-"platforms.macos-arm64" = { checksum = "sha256:e51367d2107d605f4edd7c2fb25897b0c0695a7de1a9f9d04cd6c9356b890b14", url = "https://dl.k8s.io/v1.34.3/bin/darwin/arm64/kubectl"}
-"platforms.macos-x64" = { checksum = "sha256:657afbd0e653c4ce3af1b5a645a4eaba282cf8eb2bcda7191ff60866e50e4d7f", url = "https://dl.k8s.io/v1.34.3/bin/darwin/amd64/kubectl"}
-"platforms.windows-x64" = { checksum = "sha256:5ef6e0b019cfea5b0eff55b576c0118f64c0758a8bcbf52587c7f454f302f7bc", url = "https://dl.k8s.io/v1.34.3/bin/windows/amd64/kubectl.exe"}
+"platforms.linux-arm64" = { checksum = "sha256:58f82f9fe796c375c5c4b8439850b0f3f4d401a52434052f2df46035a8789e25", url = "https://dl.k8s.io/v1.35.0/bin/linux/arm64/kubectl"}
+"platforms.linux-x64" = { checksum = "sha256:a2e984a18a0c063279d692533031c1eff93a262afcc0afdc517375432d060989", url = "https://dl.k8s.io/v1.35.0/bin/linux/amd64/kubectl"}
+"platforms.macos-arm64" = { checksum = "sha256:cf699c56340dc775230fde4ef84237d27563ea6ef52164c7d078072b586c3918", url = "https://dl.k8s.io/v1.35.0/bin/darwin/arm64/kubectl"}
+"platforms.macos-x64" = { checksum = "sha256:2447cb78911b10a667202b078eeb30541ec78d1280c3682921dc81607e148d96", url = "https://dl.k8s.io/v1.35.0/bin/darwin/amd64/kubectl"}
+"platforms.windows-x64" = { checksum = "sha256:4c5d14b8673bd55f813a8965ad70d5150e3960ee5f274025e2286aea3a0fa8b6", url = "https://dl.k8s.io/v1.35.0/bin/windows/amd64/kubectl.exe"}
 
 [[tools."aqua:kubernetes/kubernetes/kubectl-convert"]]
-version = "1.34.3"
+version = "1.35.0"
 backend = "aqua:kubernetes/kubernetes/kubectl-convert"
-"platforms.linux-arm64" = { checksum = "sha256:e1966ef0e49caf28bacabc917283ae08a5b31e3e6723e41245d867b3229ffb90", url = "https://dl.k8s.io/v1.34.3/bin/linux/arm64/kubectl-convert"}
-"platforms.linux-x64" = { checksum = "sha256:2362e667b2babda96e93fc307ed6960ab2db0a9a6c360f4b1d12010937bb444b", url = "https://dl.k8s.io/v1.34.3/bin/linux/amd64/kubectl-convert"}
-"platforms.macos-arm64" = { checksum = "sha256:d9e2260910552a35907c8a49fd4ed5d25d72746fe0df55f354e5a006a2310067", url = "https://dl.k8s.io/v1.34.3/bin/darwin/arm64/kubectl-convert"}
-"platforms.macos-x64" = { checksum = "sha256:23991c7c369473fe6862c7b0619a95efb76eb5727b54b059675334214ec8ca57", url = "https://dl.k8s.io/v1.34.3/bin/darwin/amd64/kubectl-convert"}
-"platforms.windows-x64" = { checksum = "sha256:a8e526caa02d6f58231413ba795dd3154b03104967536fbcfd0b57f6fe0d99c1", url = "https://dl.k8s.io/v1.34.3/bin/windows/amd64/kubectl-convert.exe"}
+"platforms.linux-arm64" = { checksum = "sha256:97f9ac591ab9d02393f861245fd6fa3df1079e0a1a897499cbbf2db5ee9d2f03", url = "https://dl.k8s.io/v1.35.0/bin/linux/arm64/kubectl-convert"}
+"platforms.linux-x64" = { checksum = "sha256:472614832efcc923937004fa830141b2f90de65db0e53d2abb9e16f8f355aa00", url = "https://dl.k8s.io/v1.35.0/bin/linux/amd64/kubectl-convert"}
+"platforms.macos-arm64" = { checksum = "sha256:a7971b79cba6d8e124183a9e8c6a59a41dfed415315c21d40b57283e17361174", url = "https://dl.k8s.io/v1.35.0/bin/darwin/arm64/kubectl-convert"}
+"platforms.macos-x64" = { checksum = "sha256:bf30475916976c3d5675ec04d600c6b49bcefdc49e7b501be36d3e5aee972bb8", url = "https://dl.k8s.io/v1.35.0/bin/darwin/amd64/kubectl-convert"}
+"platforms.windows-x64" = { checksum = "sha256:5173549d8e89fa26c5c8ad2162ab34caeb7b5e22b23d5bd6caf03d4d12aae5fb", url = "https://dl.k8s.io/v1.35.0/bin/windows/amd64/kubectl-convert.exe"}
 
 [[tools."cargo:bat"]]
 version = "0.26.1"
@@ -162,9 +162,9 @@ backend = "github:neovim/neovim"
 "platforms.windows-x64" = { checksum = "sha256:718e731326e7759cf17bbbb33f38975707a2ac85642614686b818ef5fde38f48", url = "https://github.com/neovim/neovim/releases/download/v0.11.5/nvim-win64.zip", url_api = "https://api.github.com/repos/neovim/neovim/releases/assets/311637690"}
 
 [[tools.glab]]
-version = "1.79.0"
+version = "1.80.2"
 backend = "ubi:gitlab-org/cli[provider=gitlab,exe=glab]"
-"platforms.linux-x64-glab-glab" = { checksum = "blake3:d9a7e986cce5d0d2440312e9ded6e3ccf5ea3eb65bdd3c3972596c3eaa112a83"}
+"platforms.linux-x64-glab-glab" = { checksum = "blake3:54befdfe1445f2867a12b4b4ae5d3251c615b34d43beae5608718263ab296263"}
 
 [tools.glab.options]
 exe = "glab"
@@ -253,7 +253,7 @@ backend = "core:node"
 "platforms.windows-x64" = { checksum = "sha256:9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.71"
+version = "2.0.72"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
@@ -261,7 +261,7 @@ version = "2.10.2"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.21.0"
+version = "0.21.2"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
@@ -269,7 +269,7 @@ version = "0.73.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "1.0.31"
+version = "1.0.33"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
@@ -310,13 +310,13 @@ version = "3.14.2"
 backend = "core:python"
 
 [[tools.ruby]]
-version = "3.4.7"
+version = "3.4.8"
 backend = "core:ruby"
-"platforms.linux-arm64" = { checksum = "sha256:23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:23815a6d095696f7919090fdc3e2f9459b2c83d57224b2e446ce1f5f7333ef36", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.7.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:3dd7f2b29e15ec2a49f5faa3599caf424b57f98dddaae11650dd7fb00caa2f51", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.arm64_linux.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:e09f762d35dadb1a7dfaacab2c987918a53fced6fd0eecd09b71a4e0038c5451", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.x86_64_linux.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:2dbab06d72d6c63d2b8128d0368eb99d1367113639aaf434ee852462c4f56196", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.macos.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz"}
 
 [[tools.ruff]]
 version = "0.14.9"
@@ -332,10 +332,10 @@ version = "stable"
 backend = "core:rust"
 
 [[tools.uv]]
-version = "0.9.17"
+version = "0.9.18"
 backend = "aqua:astral-sh/uv"
-"platforms.linux-arm64" = { checksum = "sha256:f6f48a301f8e855765af42ef50257af0cebc9c5439dfdcbc188142941aea45ca", url = "https://github.com/astral-sh/uv/releases/download/0.9.17/uv-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:ab616c1851e7b1ed377a9ff3997dcee184bea7eda0b20bc8607abba6c469cbad", url = "https://github.com/astral-sh/uv/releases/download/0.9.17/uv-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:a1e1464aa1d04d5e5fa700aa2f2e10397d1114e835dbd56be25ba65c9a31bd99", url = "https://github.com/astral-sh/uv/releases/download/0.9.17/uv-aarch64-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:249e7fb18d45c06ba283c48f0a8e586ecc5fbb9e8dad0923c4169a7c4db815b2", url = "https://github.com/astral-sh/uv/releases/download/0.9.17/uv-x86_64-apple-darwin.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:ebc76197bf3e1a58f9dac6f70f49b0ebd3e6907ab35289ce228bce5ba8a3f201", url = "https://github.com/astral-sh/uv/releases/download/0.9.17/uv-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:b710ceb9889276cbd7ce04e2ca06b5bd3e288da465bd38f7dd17955c4e703a65", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-aarch64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:a55ae2d0d53c8f6541bb4d6afc95857ff33a97de8f1d23e9d09acdcb865c4a00", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:dc3bee4abbb3bac267a3985a23ea7617d19d41ff381dbaf560ba415ad65af68f", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-aarch64-apple-darwin.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:f86836c637333c65bbc7902acc9c49888eef9fbd15dccbc1946b10e30b041073", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-x86_64-apple-darwin.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:28cbe5d30907a774bfe27a517a39b494ec6f7d3816bda8bbf6f9645490449182", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-x86_64-pc-windows-msvc.zip"}
