@@ -8,11 +8,11 @@ backend = "aqua:FiloSottile/age"
 "platforms.windows-x64" = { url = "https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-windows-amd64.zip"}
 
 [[tools."aqua:containerd/nerdctl"]]
-version = "2.2.0"
+version = "2.2.1"
 backend = "aqua:containerd/nerdctl"
-"platforms.linux-arm64" = { checksum = "sha256:37b353122e0785578d1680fb1d7be546f4c64d0a4aed7875d3a216b2c44be76d", url = "https://github.com/containerd/nerdctl/releases/download/v2.2.0/nerdctl-2.2.0-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:1b3390a832eaeaa1459cf42357da983205da2dd72300a015ad018b3499fc455e", url = "https://github.com/containerd/nerdctl/releases/download/v2.2.0/nerdctl-2.2.0-linux-amd64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:fba81da47ea734290a36ecc523ba6c59087081f4db3b542529d0f764b76ac05f", url = "https://github.com/containerd/nerdctl/releases/download/v2.2.0/nerdctl-2.2.0-windows-amd64.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:abc83c9ac3d843c3442eedfb61c6456b8b59b1e4cd69f69598ca1582acc7c094", url = "https://github.com/containerd/nerdctl/releases/download/v2.2.1/nerdctl-2.2.1-linux-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:34144de7f12756aa4b9dc42a907fd95b0c5eb82a63566a650ca10c8abe7a26a0", url = "https://github.com/containerd/nerdctl/releases/download/v2.2.1/nerdctl-2.2.1-linux-amd64.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:243061402791f30f6bc0d90689855d478b7f0f501fa1687c0d7b1abecabedd34", url = "https://github.com/containerd/nerdctl/releases/download/v2.2.1/nerdctl-2.2.1-windows-amd64.tar.gz"}
 
 [[tools."aqua:getsops/sops"]]
 version = "3.11.0"
@@ -135,13 +135,13 @@ version = "0.43.1"
 backend = "cargo:zellij"
 
 [[tools.deno]]
-version = "2.6.0"
+version = "2.6.3"
 backend = "core:deno"
-"platforms.linux-arm64" = { checksum = "sha256:de796c8d3a59f4b1dd71cebc60287b281a03592260f98406477d7ec4154096de", url = "https://dl.deno.land/release/v2.6.0/deno-aarch64-unknown-linux-gnu.zip"}
-"platforms.linux-x64" = { checksum = "sha256:506fe8daa211e4015a94fb1702e82636756bc3ceb2cc34d4fe3ef31b82a36844", url = "https://dl.deno.land/release/v2.6.0/deno-x86_64-unknown-linux-gnu.zip"}
-"platforms.macos-arm64" = { checksum = "sha256:2bde8aa54e27048f09a5a1ce1a875b03223430a57b9d96c2cdd6ad3b0bd0a026", url = "https://dl.deno.land/release/v2.6.0/deno-aarch64-apple-darwin.zip"}
-"platforms.macos-x64" = { checksum = "sha256:eef2dc47a3884d38e7e4807c49135fb0673260dc5521533e0569ac20a3e4bd54", url = "https://dl.deno.land/release/v2.6.0/deno-x86_64-apple-darwin.zip"}
-"platforms.windows-x64" = { checksum = "sha256:Algorithm", url = "https://dl.deno.land/release/v2.6.0/deno-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:92c9496e8c71e6b18abf1f728d6223bb682749e4946f24589a7ef8972fec423e", url = "https://dl.deno.land/release/v2.6.3/deno-aarch64-unknown-linux-gnu.zip"}
+"platforms.linux-x64" = { checksum = "sha256:b3c24dc6f3982607896bd795fd6bcbdc53f3d11e8d8190b2a07fd1881eb1148a", url = "https://dl.deno.land/release/v2.6.3/deno-x86_64-unknown-linux-gnu.zip"}
+"platforms.macos-arm64" = { checksum = "sha256:7fdc01002a90a6ac58b8936e5d7a872fa7885db71d51bac7f776b7b790c82085", url = "https://dl.deno.land/release/v2.6.3/deno-aarch64-apple-darwin.zip"}
+"platforms.macos-x64" = { checksum = "sha256:3942e5af4d25588b506f49155278239c9fa09e7683a912ca091a346a1fc40733", url = "https://dl.deno.land/release/v2.6.3/deno-x86_64-apple-darwin.zip"}
+"platforms.windows-x64" = { checksum = "sha256:Algorithm", url = "https://dl.deno.land/release/v2.6.3/deno-x86_64-pc-windows-msvc.zip"}
 
 [[tools.gh]]
 version = "2.83.2"
@@ -162,9 +162,9 @@ backend = "github:neovim/neovim"
 "platforms.windows-x64" = { checksum = "sha256:718e731326e7759cf17bbbb33f38975707a2ac85642614686b818ef5fde38f48", url = "https://github.com/neovim/neovim/releases/download/v0.11.5/nvim-win64.zip", url_api = "https://api.github.com/repos/neovim/neovim/releases/assets/311637690"}
 
 [[tools.glab]]
-version = "1.80.2"
+version = "1.80.4"
 backend = "ubi:gitlab-org/cli[provider=gitlab,exe=glab]"
-"platforms.linux-x64-glab-glab" = { checksum = "blake3:54befdfe1445f2867a12b4b4ae5d3251c615b34d43beae5608718263ab296263"}
+"platforms.linux-x64-glab-glab" = { checksum = "blake3:ab1fdc881ff776dff5f15c8f932a9e54cca3f0b3424cd2b779123aa6318f1720"}
 
 [tools.glab.options]
 exe = "glab"
@@ -188,7 +188,7 @@ version = "1.9.0"
 backend = "go:github.com/cweill/gotests/gotests"
 
 [[tools."go:github.com/go-delve/delve/cmd/dlv"]]
-version = "1.25.2"
+version = "1.26.0"
 backend = "go:github.com/go-delve/delve/cmd/dlv"
 
 [[tools."go:github.com/golangci/golangci-lint/cmd/golangci-lint"]]
@@ -253,7 +253,7 @@ backend = "core:node"
 "platforms.windows-x64" = { checksum = "sha256:9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.0.72"
+version = "2.0.76"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
@@ -261,11 +261,11 @@ version = "2.10.2"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.21.2"
+version = "0.22.2"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.73.0"
+version = "0.77.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -312,9 +312,9 @@ backend = "core:python"
 [[tools.ruby]]
 version = "3.4.8"
 backend = "core:ruby"
-"platforms.linux-arm64" = { checksum = "sha256:3dd7f2b29e15ec2a49f5faa3599caf424b57f98dddaae11650dd7fb00caa2f51", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.arm64_linux.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:e09f762d35dadb1a7dfaacab2c987918a53fced6fd0eecd09b71a4e0038c5451", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.x86_64_linux.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:2dbab06d72d6c63d2b8128d0368eb99d1367113639aaf434ee852462c4f56196", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.macos.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:44f74c29a400ef37ed1cc63725026f11d0ff1cbea7b3075a3edfb5fb4afa1a17", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.arm64_linux.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:69ab8aa791a3ec63b0167e60563f85428e2130b81394b645b9c34f7118e88709", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.x86_64_linux.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:e7114974470133161d3bcb6498e00235c9a82a5ec4cc598c5f480454fca1bada", url = "https://github.com/jdx/ruby/releases/download/3.4.8/ruby-3.4.8.macos.tar.gz"}
 "platforms.macos-x64" = { checksum = "sha256:53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz"}
 "platforms.windows-x64" = { checksum = "sha256:53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b", url = "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz"}
 

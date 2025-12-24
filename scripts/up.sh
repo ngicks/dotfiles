@@ -30,6 +30,7 @@ pushd ~/.config/mise
 mise up
 __force_reinstall_if_not_exist uv uv
 __force_reinstall_if_not_exist cargo rust
+mise lock
 popd
 
 
