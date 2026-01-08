@@ -4,17 +4,13 @@ set -Cue
 
 dir=$(dirname $0)
 
-# TODO: add os/arch detection?
-artifact_dir=${dir}/podman-static/build/asset/podman-linux-amd64
+target_tag=$(cat $(dirname $0)/tag)
+built_dir=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}/${target_tag}
 
-if [[ ! -d ${artifact_dir} ]]; then
+if [[ ! -d ${built_dir} ]]; then
   echo "not built: buidling"
   ${dir}/build.sh
 fi
-
-artifact_version=$(${dir}/podman-static/build/asset/podman-linux-amd64/usr/local/bin/podman --version | sed -s 's/podman version //')
-
-tgt_dir=${XDG_DATA_HOME:-$HOME/.local/share}/podman/${artifact_version}
 
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}/containers
 
@@ -27,7 +23,7 @@ if [[ -e ${config_dir} ]]; then
   rm ${config_dir}
 fi
 
-ln -s ${tgt_dir}/etc/containers $config_dir
+ln -s ${built_dir}/etc/containers $config_dir
 
 echo "unlinking ${HOME}/.local/containers if it already exists"
 if [[ -e ${HOME}/.local/containers ]]; then
@@ -38,11 +34,11 @@ if [[ -e ${HOME}/.local/containers ]]; then
   rm ${HOME}/.local/containers
 fi
 
-ln -s ${tgt_dir}/usr/local ${HOME}/.local/containers
+ln -s ${built_dir}/usr/local ${HOME}/.local/containers
 
 mkdir -p ${HOME}/.config/systemd/user
 
-user_service_dir=${artifact_dir}/usr/local/lib/systemd/user
+user_service_dir=${built_dir}/usr/local/lib/systemd/user
 for u in $(ls ${user_service_dir}); do
   if [[ -e ${HOME}/.config/systemd/user/${u} ]]; then
     rm ${HOME}/.config/systemd/user/${u}

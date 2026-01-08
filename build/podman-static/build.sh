@@ -26,11 +26,21 @@ if ! command -v newgidmap >/dev/null 2>&1; then
   sudo -E apt install -y uidmap
 fi
 
-echo "updating submodule"
-git submodule update --init --recursive
-
 dir=$(dirname $0)/podman-static
+
+echo "updating github.com/mgoltzsche/podman-static"
+if [ ! -d "$dir" ]; then
+  mkdir $dir
+  git clone https://github.com/mgoltzsche/podman-static $dir
+fi
+
+target_tag=$(cat $(dirname $0)/tag)
+
 pushd $dir
+
+git switch master
+git pull --all --ff-only
+git reset --hard tags/${target_tag}
 
 if docker info | grep rootless > /dev/null 2>&1; then
   echo "bulding podman as rootless"
@@ -66,8 +76,6 @@ for u in $(ls ${user_service_dir}); do
     ${HOME}/.local/containers/bin/podman
 done
 
-artifact_version=$(${artifact_dir}/usr/local/bin/podman --version | sed -s 's/podman version //')
-
-tgt_dir=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}/${artifact_version}
+tgt_dir=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}/${target_tag}
 mkdir -p ${tgt_dir}
 cp -r ${artifact_dir}/* ${tgt_dir}/

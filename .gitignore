@@ -6,3 +6,5 @@
 # reads non-gitignore-d directories while the onboarding process
 # regardless of exclusion specified in .serena_project.json.
 .mcp.json
+
+build/podman-static/podman-static
