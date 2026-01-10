@@ -79,7 +79,7 @@ M.commands = function()
 			end),
 		},
 		{
-			brief = "LLM launch Claude Code Haiku",
+			brief = "LLM Launch Claude Code Haiku",
 			icon = "md_comment_account",
 			action = wezterm.action_callback(function(win, pane)
 				local script = launch_haiku_script("llm")
