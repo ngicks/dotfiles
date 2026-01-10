@@ -73,7 +73,7 @@ for u in $(ls ${user_service_dir}); do
   deno -R=${user_service_dir}/${u} -W=${user_service_dir}/${u} $(dirname $0)/insert_environment_file.ts \
     ${user_service_dir}/${u} \
     ${TARGET_HOME:-$HOME}/.config/containers/path.env \
-    ${HOME}/.local/containers/bin/podman
+    ${TARGET_HOME:-$HOME}/.local/containers/bin/podman
 done
 
 tgt_dir=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}/${target_tag}
