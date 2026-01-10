@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Coming from https://github.com/wezterm/wezterm/blob/3715c8744def1e9bedb038e5ace1d5dfb76e8d3b/assets/shell-integration/wezterm.sh
+# Took from https://github.com/wezterm/wezterm/blob/3715c8744def1e9bedb038e5ace1d5dfb76e8d3b/assets/shell-integration/wezterm.sh
 
 # shellcheck shell=bash
 
