@@ -27,7 +27,7 @@ echo ""
 echo "mise install"
 echo ""
 pushd ~/.config/mise
-mise intall
+mise install
 __force_reinstall_if_not_exist uv uv
 __force_reinstall_if_not_exist cargo rust
 popd
