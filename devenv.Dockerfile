@@ -22,7 +22,6 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
   apt-get update
   apt-get install -y --no-install-recommends\
       gpg \
-      gnupg2 \
       ca-certificates \
       git \
       curl \
