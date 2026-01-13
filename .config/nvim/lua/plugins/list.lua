@@ -35,6 +35,11 @@ return {
       require("base46").load_all_highlights()
     end,
   },
+  {
+    "nosduco/remote-sshfs.nvim",
+    lazy = false,
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+  },
   -- ui
   {
     "nvzone/volt",
