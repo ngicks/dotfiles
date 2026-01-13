@@ -94,7 +94,7 @@ version = "0.12.3"
 backend = "cargo:bottom"
 
 [[tools."cargo:du-dust"]]
-version = "1.2.3"
+version = "1.2.4"
 backend = "cargo:du-dust"
 
 [[tools."cargo:exa"]]
@@ -195,7 +195,7 @@ version = "1.64.8"
 backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
 
 [[tools."go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"]]
-version = "2.7.2"
+version = "2.8.0"
 backend = "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
 
 [[tools."go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway"]]
@@ -207,7 +207,7 @@ version = "2.27.4"
 backend = "go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2"
 
 [[tools."go:github.com/jesseduffield/lazygit"]]
-version = "0.58.0"
+version = "0.58.1"
 backend = "go:github.com/jesseduffield/lazygit"
 
 [[tools."go:github.com/junegunn/fzf"]]
@@ -219,7 +219,7 @@ version = "0.0.11"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
 [[tools."go:golang.org/x/tools/cmd/goimports"]]
-version = "0.40.0"
+version = "0.41.0"
 backend = "go:golang.org/x/tools/cmd/goimports"
 
 [[tools."go:golang.org/x/tools/gopls"]]
@@ -243,16 +243,16 @@ version = "0.9.2"
 backend = "go:mvdan.cc/gofumpt"
 
 [[tools.node]]
-version = "24.12.0"
+version = "24.13.0"
 backend = "core:node"
-"platforms.linux-arm64" = { checksum = "sha256:9b2a2eeb98a8eb37361224e2a1d060300ad2dd143af58dfdb16de785df0f1228", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:6159227e0af7d7c3c6bb2fa900452b04a6cb8841a702a79acc613209d70b04d0", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-linux-x64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:319f221adc5e44ff0ed57e8a441b2284f02b8dc6fc87b8eb92a6a93643fd8080", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-darwin-arm64.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:b82ea4c62fd08e250cab59d625e75d77cc5b0a3d60c6698ebee4545c88a169c5", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-darwin-x64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-win-x64.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:0f6d40b94c6a2eb6b4c240ffc8b9fd3ada7ab044c177dd413c06e1ef9a63f081", url = "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:6223aad1a81f9d1e7b682c59d12e2de233f7b4c37475cd40d1c89c42b737ffa8", url = "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-x64.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:d595961e563fcae057d4a0fb992f175a54d97fcc4a14dc2d474d92ddeea3b9f8", url = "https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-arm64.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:6f03c1b48ddbe1b129a6f8038be08e0899f05f17185b4d3e4350180ab669a7f3", url = "https://nodejs.org/dist/v24.13.0/node-v24.13.0-darwin-x64.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:ca2742695be8de44027d71b3f53a4bdb36009b95575fe1ae6f7f0b5ce091cb88", url = "https://nodejs.org/dist/v24.13.0/node-v24.13.0-win-x64.zip"}
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.1.0"
+version = "2.1.6"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@bufbuild/protoc-gen-es"]]
@@ -264,15 +264,15 @@ version = "0.23.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.79.0"
+version = "0.80.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "2.0.2"
+version = "2.1.0"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
-version = "0.2.11"
+version = "0.3.0"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:ansible"]]
@@ -296,45 +296,45 @@ version = "v0.1.4"
 backend = "pipx:oraios/serena"
 
 [[tools.protoc]]
-version = "33.2"
+version = "33.4"
 backend = "aqua:protocolbuffers/protobuf/protoc"
-"platforms.linux-arm64" = { checksum = "sha256:706662a332683aa2fffe1c4ea61588279d31679cd42d91c7d60a69651768edb8", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.2/protoc-33.2-linux-aarch_64.zip"}
-"platforms.linux-x64" = { checksum = "sha256:b24b53f87c151bfd48b112fe4c3a6e6574e5198874f38036aff41df3456b8caf", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.2/protoc-33.2-linux-x86_64.zip"}
-"platforms.macos-arm64" = { checksum = "sha256:5be1427127788c9f7dd7d606c3e69843dd3587327dea993917ffcb77e7234b44", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.2/protoc-33.2-osx-aarch_64.zip"}
-"platforms.macos-x64" = { checksum = "sha256:dba51cfcc85076d56e7de01a647865c5a7f995c3dce427d5215b53e50b7be43f", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.2/protoc-33.2-osx-x86_64.zip"}
-"platforms.windows-x64" = { checksum = "sha256:376770cd4073beb63db56fdd339260edb9957b3c4472e05a75f5f9ec8f98d8f5", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.2/protoc-33.2-win64.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:15aa988f4a6090636525ec236a8e4b3aab41eef402751bd5bb2df6afd9b7b5a5", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.4/protoc-33.4-linux-aarch_64.zip"}
+"platforms.linux-x64" = { checksum = "sha256:c0040ea9aef08fdeb2c74ca609b18d5fdbfc44ea0042fcfbfb38860d35f7dd66", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.4/protoc-33.4-linux-x86_64.zip"}
+"platforms.macos-arm64" = { checksum = "sha256:726297dcfed58592fd35620a5a6246ae020c39e88f3fd4cb1827df7bcf3dfcf1", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.4/protoc-33.4-osx-aarch_64.zip"}
+"platforms.macos-x64" = { checksum = "sha256:a49bec10d039e902d3b43e49938c42526f90011467609864fa6386ac4014da58", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.4/protoc-33.4-osx-x86_64.zip"}
+"platforms.windows-x64" = { checksum = "sha256:0b31be019b9fe45a388e93bf1f16d70afdf9ce5caf958ea47892fbc868b5a1b3", url = "https://github.com/protocolbuffers/protobuf/releases/download/v33.4/protoc-33.4-win64.zip"}
 
 [[tools.python]]
 version = "3.14.2"
 backend = "core:python"
 
 [[tools.ruby]]
-version = "4.0.0"
+version = "4.0.1"
 backend = "core:ruby"
-"platforms.linux-arm64" = { checksum = "sha256:2e8389c8c072cb658c93a1372732d9eac84082c88b065750db1e52a5ac630271", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.0.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:2e8389c8c072cb658c93a1372732d9eac84082c88b065750db1e52a5ac630271", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.0.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:2e8389c8c072cb658c93a1372732d9eac84082c88b065750db1e52a5ac630271", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.0.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:2e8389c8c072cb658c93a1372732d9eac84082c88b065750db1e52a5ac630271", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.0.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:2e8389c8c072cb658c93a1372732d9eac84082c88b065750db1e52a5ac630271", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.0.tar.gz"}
+"platforms.linux-arm64" = { checksum = "sha256:3924be2d05db30f4e35f859bf028be85f4b7dd01714142fd823e4af5de2faf9d", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.1.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:3924be2d05db30f4e35f859bf028be85f4b7dd01714142fd823e4af5de2faf9d", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.1.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:3924be2d05db30f4e35f859bf028be85f4b7dd01714142fd823e4af5de2faf9d", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.1.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:3924be2d05db30f4e35f859bf028be85f4b7dd01714142fd823e4af5de2faf9d", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.1.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:3924be2d05db30f4e35f859bf028be85f4b7dd01714142fd823e4af5de2faf9d", url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.1.tar.gz"}
 
 [[tools.ruff]]
-version = "0.14.10"
+version = "0.14.11"
 backend = "aqua:astral-sh/ruff"
-"platforms.linux-arm64" = { checksum = "sha256:0888883f71199ca3af3569052d0cc1aee8b316390ffe75bc19f9a8047ffd0158", url = "https://github.com/astral-sh/ruff/releases/download/0.14.10/ruff-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:e1fac6f2705057f48f3d000694d0f41c95b06e738cf4825315c670f3b9d24933", url = "https://github.com/astral-sh/ruff/releases/download/0.14.10/ruff-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:dd0f3ec914604d802658ae0d271ff9d767c117d1702a44222170dd2ffbad8d2c", url = "https://github.com/astral-sh/ruff/releases/download/0.14.10/ruff-aarch64-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:7d5af84e84a189b49ac235d7970d35588cbed0d087f4237c96e5ac3c392bc6fb", url = "https://github.com/astral-sh/ruff/releases/download/0.14.10/ruff-x86_64-apple-darwin.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:9c3340d322fff7a6dc132b8783ba734f5eaf4c46f7dd8bc828abdf850b3bebe1", url = "https://github.com/astral-sh/ruff/releases/download/0.14.10/ruff-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:4779a99b51812b56d56d180174be46ddb2fed98fecaea7565b450d37cff1b8c6", url = "https://github.com/astral-sh/ruff/releases/download/0.14.11/ruff-aarch64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:8e8b7a3f791e0faf3a1728d808133f6f9bd5c1422eccb9956e7e7376ff5404b8", url = "https://github.com/astral-sh/ruff/releases/download/0.14.11/ruff-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:c3fab6bcad9cc2f8a342829dd4ea011c54b9671d023b71baac1cbf2b3526cefd", url = "https://github.com/astral-sh/ruff/releases/download/0.14.11/ruff-aarch64-apple-darwin.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:b301d1c04facba1004d180c8fd9ae36d868b780900682c97ecf324015c75f0b3", url = "https://github.com/astral-sh/ruff/releases/download/0.14.11/ruff-x86_64-apple-darwin.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:e254f04e054e095215b8f74d5cdb7288f2d3f226bdc42b35cd44751fc7a55b2d", url = "https://github.com/astral-sh/ruff/releases/download/0.14.11/ruff-x86_64-pc-windows-msvc.zip"}
 
 [[tools.rust]]
 version = "stable"
 backend = "core:rust"
 
 [[tools.uv]]
-version = "0.9.22"
+version = "0.9.24"
 backend = "aqua:astral-sh/uv"
-"platforms.linux-arm64" = { checksum = "sha256:a400eaede62557af86bed6c5252a101aa1efd596698bb10c9400334fcc2847ec", url = "https://github.com/astral-sh/uv/releases/download/0.9.22/uv-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:84d087a8e77a223d80578919894f3103f46ca7c263250c3e0478ce7c38850349", url = "https://github.com/astral-sh/uv/releases/download/0.9.22/uv-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:4bfc6dacc9bcc9e433a9214a658495ca082b94fd607949b6745a955f34ccbc3c", url = "https://github.com/astral-sh/uv/releases/download/0.9.22/uv-aarch64-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:c0057ad78b475f343739b1bbe223361c1054524c9edf310ee1dc85a050207f86", url = "https://github.com/astral-sh/uv/releases/download/0.9.22/uv-x86_64-apple-darwin.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:93a0a244f26eec208d8ea8077e3de743d9687ad76c190342722f1f57fa629457", url = "https://github.com/astral-sh/uv/releases/download/0.9.22/uv-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:b16359904ede857b90b68168f10b0f6bf500858df9bed4e7156dbc59fd3f0747", url = "https://github.com/astral-sh/uv/releases/download/0.9.24/uv-aarch64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:cf307aa4271038daa334ca64e75aa40c0c085ce6fa0c0e6f21e41a2b62c7904d", url = "https://github.com/astral-sh/uv/releases/download/0.9.24/uv-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:89661d9a16682197086df54bb43d0b03e58e23d4d9360fc8c6c0166f2828fd71", url = "https://github.com/astral-sh/uv/releases/download/0.9.24/uv-aarch64-apple-darwin.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:fda9b3203cce6ec3a37177440c33c4c1963c4957fff17e2820c60ab6ccd625da", url = "https://github.com/astral-sh/uv/releases/download/0.9.24/uv-x86_64-apple-darwin.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:cf9d6fa12017199d19c6f9a8f7f55811c8c04d70681b8cb6d89ffb179f08cf1f", url = "https://github.com/astral-sh/uv/releases/download/0.9.24/uv-x86_64-pc-windows-msvc.zip"}
