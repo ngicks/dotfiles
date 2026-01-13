@@ -36,7 +36,7 @@ fi
 # Skip wezterm shell integration inside Neovim's terminal
 # Neovim's terminal doesn't understand OSC 1337 sequences
 if [[ -n "${NVIM-}" ]] ; then
-  return 0
+  WEZTERM_SHELL_SKIP_USER_VARS=1
 fi
 
 case "$TERM" in
