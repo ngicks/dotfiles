@@ -4,13 +4,27 @@ set -Cue
 
 dir=$(dirname $0)
 
-target_tag=$(cat $(dirname $0)/tag)
-built_dir=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}/${target_tag}
+target_tag=${1:-$(cat ${dir}/tag)}
+podman_base=${TARGET_ARTIFACT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/podman}
+built_dir=${podman_base}/${target_tag}
 
 if [[ ! -d ${built_dir} ]]; then
   echo "not built: buidling"
   ${dir}/build.sh
 fi
+
+current_link=${podman_base}/current
+
+echo "unlinking ${current_link} if it already exists"
+if [[ -e ${current_link} ]]; then
+  if [[ ! -L ${current_link} ]]; then
+    echo "failing: target is not symlink: ${current_link}"
+    exit 2
+  fi
+  rm ${current_link}
+fi
+
+ln -s ${target_tag} ${current_link}
 
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}/containers
 
@@ -23,7 +37,7 @@ if [[ -e ${config_dir} ]]; then
   rm ${config_dir}
 fi
 
-ln -s ${built_dir}/etc/containers $config_dir
+ln -s ${current_link}/etc/containers $config_dir
 
 echo "unlinking ${HOME}/.local/containers if it already exists"
 if [[ -e ${HOME}/.local/containers ]]; then
@@ -34,7 +48,7 @@ if [[ -e ${HOME}/.local/containers ]]; then
   rm ${HOME}/.local/containers
 fi
 
-ln -s ${built_dir}/usr/local ${HOME}/.local/containers
+ln -s ${current_link}/usr/local ${HOME}/.local/containers
 
 mkdir -p ${HOME}/.config/systemd/user
 
