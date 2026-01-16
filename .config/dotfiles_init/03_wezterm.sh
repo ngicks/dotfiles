@@ -37,6 +37,7 @@ fi
 # Neovim's terminal doesn't understand OSC 1337 sequences
 if [[ -n "${NVIM-}" ]] ; then
   export WEZTERM_SHELL_SKIP_USER_VARS=1
+  # TODO: remove this line and do ${NVIM} check in each hook.
 fi
 
 case "$TERM" in
