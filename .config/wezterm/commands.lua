@@ -1,5 +1,7 @@
 local wezterm = require("wezterm")
 
+local user_def_actions = require("action")
+
 local act = wezterm.action
 
 local pane_cwd = function(pane, default)
@@ -67,16 +69,7 @@ M.commands = function()
 		{
 			brief = "Toggle Window Opacity",
 			icon = "md_circle_opacity",
-			action = wezterm.action_callback(function(win, pane)
-				local overrides = win:get_config_overrides() or {}
-				local current = overrides.window_background_opacity or 1.0
-				if current < 1.0 then
-					overrides.window_background_opacity = 1.0
-				else
-					overrides.window_background_opacity = 0.75
-				end
-				win:set_config_overrides(overrides)
-			end),
+			action = user_def_actions.toggle_background_opacity,
 		},
 		{
 			brief = "LLM Launch Claude Code Haiku",

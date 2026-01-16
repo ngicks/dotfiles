@@ -1,6 +1,8 @@
 local wezterm = require("wezterm")
-local act = wezterm.action
+local user_def_actions = require("action")
 -- local workspaces = require("workspaces")
+--
+local act = wezterm.action
 
 return {
 	keys = {
@@ -9,6 +11,9 @@ return {
 		{ key = "p", mods = "LEADER", action = act.PaneSelect },
 		{ key = "x", mods = "LEADER", action = act.ActivateCopyMode },
 		-- { key = "w", mods = "LEADER", action = workspaces.activate() },
+		-- non-default
+		{ key = "o", mods = "SHIFT|CTRL", action = user_def_actions.toggle_background_opacity },
+		-- default
 
 		{ key = "Tab", mods = "CTRL", action = act.ActivateTabRelative(1) },
 		{ key = "Tab", mods = "SHIFT|CTRL", action = act.ActivateTabRelative(-1) },
