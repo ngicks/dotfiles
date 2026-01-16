@@ -11,7 +11,7 @@ apt_update_once() {
 }
 
 echo "installing docker if it does not exist"
-if ! docker version >/dev/null 2>&1; then
+if ! docker version >/dev/null 2>&1 && ! sudo docker version >/dev/null 2>&1; then
   apt_updated="1"
   $(dirname $0)/docker_install.sh
   sudo systemctl start docker
