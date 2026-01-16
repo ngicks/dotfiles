@@ -92,14 +92,23 @@ map("n", "<leader>v", function()
   require("nvchad.term").new { pos = "vsp" }
 end, { desc = "terminal new vertical term" })
 
--- toggleable
-map({ "n", "t" }, "<A-v>", function()
-  require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
-end, { desc = "terminal toggleable vertical term" })
+-- toggleable terminal
+map({ "n", "t" }, "<M-h>", function()
+  require("toggleterm_cmd.terminals").horizontal:toggle()
+end, { desc = "terminal toggle horizontal term" })
 
-map({ "n", "t" }, "<A-h>", function()
-  require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
-end, { desc = "terminal toggleable horizontal term" })
+map({ "n", "t" }, "<M-v>", function()
+  require("toggleterm_cmd.terminals").vertical:toggle()
+end, { desc = "terminal toggle vertical term" })
+
+map({ "n", "t" }, "<M-f>", function()
+  require("toggleterm_cmd.terminals").floating:toggle()
+end, { desc = "terminal toggle floating term" })
+
+-- lazygit
+map("n", "<leader>gg", function()
+  require("toggleterm_cmd.lazygit_floating"):toggle()
+end, { noremap = true, silent = true, desc = "Toggle lazygit floating window" })
 
 -- whichkey
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })
@@ -117,10 +126,6 @@ if vim.lsp.inlay_hint then
     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
   end, { desc = "Toggle Inlay Hints" })
 end
-
-map({ "n", "t" }, "<M-f>", function()
-  require("nvchad.term").toggle { pos = "float", id = "floatTerm" }
-end, { desc = "terminal toggle floating term" })
 
 -- diff view
 map("n", "<leader>gdd", "<cmd>DiffviewOpen<CR>", { desc = "open diff view" })
@@ -172,12 +177,6 @@ map("n", "<leader>rc", "<cmd>CsvViewToggle<cr>", { desc = "Toggle csv rendering"
 map("n", "<leader>mn", ":MemoNew<CR>", { desc = "create a new memo" })
 map("n", "<leader>ml", ":Telescope memo list<CR>", { desc = "telescope memo list" })
 map("n", "<leader>mg", ":Telescope memo live_grep<CR>", { desc = "telescope memo live grep" })
-
--- lazygit
-map("n", "<leader>gg", function()
-  require("toggleterm_cmd.lazygit_floating"):toggle()
-end, { noremap = true, silent = true, desc = "Toggle lazygit floating window" })
-
 -- luadev
 map("n", "<leader>ld", function()
   require("luadev").start()
