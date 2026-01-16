@@ -4,12 +4,13 @@ local lazygit = Terminal:new {
   cmd = "lazygit",
   direction = "float",
   float_opts = {
-    border = "double",
+    border = "single",
   },
   -- function to run on opening the terminal
   on_open = function(term)
     vim.cmd "startinsert!"
-    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = term.bufnr, noremap = true, silent = true })
+    vim.keymap.set({ "n", "t" }, "<C-q>", function() term:toggle() end, { buffer = term.bufnr, noremap = true, silent = true })
   end,
   -- function to run on closing the terminal
   on_close = function()
