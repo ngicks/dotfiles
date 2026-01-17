@@ -19,6 +19,21 @@ config.font_size = 11
 -- color
 config.color_scheme = "Tokyo Night"
 
+--background
+local gpu = require("gpu")
+config.front_end = "WebGpu"
+config.webgpu_power_preference = "HighPerformance"
+
+local bg_cfg = gpu.get_default_config()
+config.window_background_opacity = bg_cfg.window_background_opacity
+if gpu.is_windows then
+	config.win32_system_backdrop = bg_cfg.win32_system_backdrop
+elseif gpu.is_macos then
+	config.macos_window_background_blur = bg_cfg.macos_window_background_blur
+elseif gpu.is_kde and gpu.is_nightly then
+	config.kde_window_background_blur = bg_cfg.kde_window_background_blur
+end
+
 -- alerts
 -- Hate noises when pressing tab in shells.
 -- I might improve this later not just disabling all sounds, but disallow ringing bells when tabs/command fail, etc.
