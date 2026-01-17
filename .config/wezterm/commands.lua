@@ -19,6 +19,7 @@ end
 local create_tmux_session_or_window_script = function(session_name, dir)
 	return string.format(
 		[[
+set -e
 if tmux has-session -t %s 2>/dev/null; then
     win=$(tmux new-window -P -t %s -c %q)
     tmux send-keys -t "$win" "~/.dotfiles/devenv_run.sh" Enter
@@ -41,6 +42,7 @@ end
 local launch_haiku_script = function(session_name)
 	return string.format(
 		[[
+set -e
 tmp_dir=$(mktemp -d)
 if tmux has-session -t %s 2>/dev/null; then
     win=$(tmux new-window -P -t %s -c ${tmp_dir})
