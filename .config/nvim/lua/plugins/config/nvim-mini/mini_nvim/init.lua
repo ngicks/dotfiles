@@ -7,6 +7,8 @@ M.opts = function()
       custom_surroundings = {
         ["("] = { output = { left = "(", right = ")" } },
         [")"] = { output = { left = "( ", right = " )" } },
+        ["["] = { output = { left = "[", right = "]" } },
+        ["]"] = { output = { left = "[ ", right = " ]" } },
       },
 
       -- Duration (in ms) of highlight when calling `MiniSurround.highlight()`
