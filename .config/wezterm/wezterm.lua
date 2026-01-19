@@ -21,8 +21,6 @@ config.color_scheme = "Tokyo Night"
 
 --background
 local gpu = require("gpu")
-config.front_end = "WebGpu"
-config.webgpu_power_preference = "HighPerformance"
 
 local bg_cfg = gpu.get_default_config()
 config.window_background_opacity = bg_cfg.window_background_opacity
