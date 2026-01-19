@@ -22,7 +22,7 @@ return {
 		{ key = "v", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 		{ key = "s", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		-- non-default
-		{ key = "o", mods = "SHIFT|CTRL", action = user_def_actions.toggle_background_opacity },
+		{ key = "o", mods = "ALT|CTRL", action = user_def_actions.toggle_background_opacity },
 
 		-- default
 
