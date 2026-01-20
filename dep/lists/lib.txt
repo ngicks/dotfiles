@@ -1,2 +1,0 @@
-apt:libyaml-dev, zlib1g-dev
-brew:libyaml, zlib
