@@ -42,7 +42,7 @@ async function main() {
     "-f",
     "./devenv.Dockerfile",
     "-t",
-    "devenv:" + ver,
+    "localhost/devenv/devenv:" + ver,
     "--no-cache",
     ...(Deno.env.has("HTTP_PROXY")
       ? ["HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY"]
