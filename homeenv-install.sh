@@ -5,8 +5,20 @@ set -e
 dir=$(dirname $0)
 
 pushd $dir
+  echo ""
+  echo "system package manager update"
+  echo ""
   ./scripts/homeenv/system-package-manager-update.sh
-  ./scripts/homeenv/mise-install.sh
+  echo ""
+  echo "nvim lazy / ts restore"
+  echo ""
   ./scripts/homeenv/nvim-lazy-restore.sh
+  echo ""
+  echo "mise install"
+  echo ""
+  ./scripts/homeenv/mise-install.sh
+  echo ""
+  echo "switch home manager"
+  echo ""
   ./scripts/homeenv/nix-run-home-manager.sh
 popd
