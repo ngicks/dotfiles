@@ -84,5 +84,24 @@
     # IaC/Automation
     ansible        # Automation tool
 
+    # Yazi optional dependencies (preview & navigation)
+    ffmpeg         # video thumbnails
+    poppler        # PDF preview
+    imagemagick    # image/font preview
+    chafa          # ASCII image preview fallback
+    resvg          # SVG preview
+    zoxide         # directory history navigation
+
+    # System/Build Tools (ported from apt deps)
+    gnupg          # GPG encryption
+    wget           # Download utility
+    curl           # HTTP client
+    gnumake        # Make build tool
+    gcc            # GNU C compiler
+    jq             # JSON processor
+    xsel           # Clipboard utility
+    p7zip          # 7-Zip archiver
+    libyaml        # YAML library
+    zlib           # Compression library
   ];
 }
