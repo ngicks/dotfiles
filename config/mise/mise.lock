@@ -206,6 +206,10 @@ backend = "go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway"
 version = "2.27.4"
 backend = "go:github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2"
 
+[[tools."go:github.com/haya14busa/goplay/cmd/goplay"]]
+version = "1.0.0"
+backend = "go:github.com/haya14busa/goplay/cmd/goplay"
+
 [[tools."go:github.com/jesseduffield/lazygit"]]
 version = "0.58.1"
 backend = "go:github.com/jesseduffield/lazygit"
@@ -260,7 +264,7 @@ version = "2.10.2"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.24.0"
+version = "0.24.5"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]

@@ -1,12 +1,10 @@
-#!/bin/bash
+#!/bin/env bash
 
 set -e
 
 # Detect package manager
 if command -v apt &> /dev/null; then
     PKG_MANAGER="apt"
-elif command -v brew &> /dev/null; then
-    PKG_MANAGER="brew"
 elif command -v yum &> /dev/null; then
     PKG_MANAGER="yum"
 elif command -v dnf &> /dev/null; then
@@ -22,17 +20,17 @@ echo "Detected package manager: $PKG_MANAGER"
 # Handle package manager
 case "$PKG_MANAGER" in
     apt)
-        echo "Starting installation for apt-based system..."
-        . ./dep/apt.sh
-        . ./dep/common.sh
-        ;;
-    brew)
-        echo "Starting installation for brew-based system..."
-        . ./dep/brew.sh
-        . ./dep/common.sh
-        for f in ./dep/common/*.sh; do
-          . $f
-        done
+        echo "apt update"
+        echo ""
+        sudo -E apt update
+        echo ""
+        echo "apt dist-upgrade"
+        echo ""
+        sudo -E apt dist-upgrade -y
+        echo ""
+        echo "apt autoremove"
+        echo ""
+        sudo -E apt autoremove -y
         ;;
     *)
         echo "Error: package manager $PKG_MANAGER is not supported"
@@ -40,4 +38,3 @@ case "$PKG_MANAGER" in
         ;;
 esac
 
-echo "Installation completed successfully!"

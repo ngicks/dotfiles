@@ -1,6 +1,5 @@
 {
   "tasks": {
-    "install": "deno run -P=install ./src/install.ts",
     "update:daily": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts",
     "devenv:build": "deno run -P=devenv:build src/devenv_build.ts",
     "devenv:build:bump": "deno task devenv:build --bump"

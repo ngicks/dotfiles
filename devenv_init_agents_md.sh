@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 touch AGENTS.md
 ln -s AGENTS.md CLAUDE.md

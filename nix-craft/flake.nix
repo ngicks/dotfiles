@@ -1,5 +1,5 @@
 {
-    description = "dotfiles (home-manager, macOS)";
+    description = "dotfiles (home-manager, Linux/macOS)";
 
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -11,8 +11,16 @@
 
     outputs = { self, nixpkgs, home-manager, ... }:
     let
-        system = "aarch64-darwin";
-        pkgs = import nixpkgs {
+        supportedSystems = [
+            "x86_64-linux"
+            "aarch64-linux"
+            "x86_64-darwin"
+            "aarch64-darwin"
+        ];
+
+        forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+
+        pkgsFor = system: import nixpkgs {
             inherit system;
             config.allowUnfreePredicate = pkg:
                 builtins.elem (nixpkgs.lib.getName pkg) [
@@ -21,16 +29,20 @@
         };
     in
     {
-        packages.${system}.home-manager = home-manager.packages.${system}.home-manager;
+        packages = forAllSystems (system: {
+            home-manager = home-manager.packages.${system}.home-manager;
+        });
 
-        apps.${system}.home-manager = {
-            type = "app";
-            program = "${self.packages.${system}.home-manager}/bin/home-manager";
-        };
+        apps = forAllSystems (system: {
+            home-manager = {
+                type = "app";
+                program = "${self.packages.${system}.home-manager}/bin/home-manager";
+            };
+        });
 
-        homeConfigurations.default =
+        homeConfigurations.default = 
             home-manager.lib.homeManagerConfiguration {
-                inherit pkgs;
+                pkgs = pkgsFor builtins.currentSystem;
                 modules = [ ./home/home.nix ];
             };
     };

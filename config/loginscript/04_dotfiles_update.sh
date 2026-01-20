@@ -50,7 +50,7 @@ dotfiles_next_update_time() {
   local MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.update_daily"
   local NO_AUTO_UPDATE_MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
   local INTERVAL=57600  # 16 hours in seconds
-  
+
   if [[ -f "$NO_AUTO_UPDATE_MARKER_FILE" ]]; then
     printf "never: no-auto-update marker found at ${NO_AUTO_UPDATE_MARKER_FILE}"
     return

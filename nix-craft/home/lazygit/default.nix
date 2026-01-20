@@ -1,0 +1,10 @@
+{
+  enable = true;
+  settings = {
+    os = {
+      copyToClipboardCmd = "echo {{text}} | xsel -bi";
+      editPreset = "nvim";
+    };
+    git.overrideGpg = true;
+  };
+}

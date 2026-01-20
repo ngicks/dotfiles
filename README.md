@@ -2,15 +2,13 @@
 
 My dotfiles.
 
-Devenv setup scripts + configuration for tools.
+Stores config files for tools and setup scripts for them.
 
-Just like others do, install scripts symlinks contents under `./.config/` to under `${XDG_CONFIG_HOME:-$HOME/.config}/`
+Combination of `nix`(for most of packages) and `mise`(anything that can be managed via nix)
 
 ## Intended Environment
 
-Only intended for `linux/amd64` and the env must have `/bin/bash`.
-
-Some scripts may leave switch pattern for other than `linux/amd64`, e.g. `windows`/`darwin`, architectures like `arm64`. But they are totally WIP stubs.
+Only intended for `linux/macos` and `x86_64/aarch64` and the env must have `bash`.
 
 ## isntall prerequisites
 
@@ -32,39 +30,30 @@ git clone https://github.com/ryanoasis/nerd-fonts .
 
 If you are running a terminal on windows and running linux on wsl2 instances, then install fonts to windows(`install.ps1`).
 
-### Deps
+### nix
 
-Only `apt` or `brew` is supported.
+https://nixos.org/download/#nix-install-windows
 
 ```
-./install_dependencies.sh
-```
-
-Modify `~/.zshrc`.
-
-```shell
-export ZSH_THEME="obraun"
+# share `/nix` dir
+sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+# or single user installation
+sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daemon
 ```
 
 ## Install Dotfiles
 
-### Linking
+### Install
 
 ```
-~/.local/bin/mise exec deno -- deno task install
+./homeenv-install.sh
 ```
-
-Restart shell after installation
 
 ### Disable daily auto-update if needed
 
 ```
 touch "${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
 ```
-
-## Install SDK
-
-`mise install`
 
 ## Set up configs under ${XDG_CONFIG_HOME:-$HOME/.config}/env
 
@@ -81,12 +70,6 @@ Things under `build`
 ## About each config
 
 Things under `.config`
-
-### dotfiles_init
-
-Automatically loaded in `~/.zshrc`.
-
-Default-ish environment variables are defined in there.
 
 ### lazygit
 
