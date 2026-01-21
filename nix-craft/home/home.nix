@@ -37,12 +37,12 @@
   };
 
   home.packages = with pkgs; [
-    # core runtimes (base packages, mise handles version management)
-    nodejs         # Node.js runtime
+    # core runtimes
+    nodejs
     deno
-    bun            # JavaScript runtime & package manager
+    bun
     python3
-    uv             # Python package installer
+    uv
     ruby
     rustup
     go
@@ -52,7 +52,8 @@
     bat            # Better cat
     eza            # Better ls (replaces exa)
     fd             # Better find
-    bottom         # System monitor (btm)
+    htop           # Better top
+    bottom         # Better top#2
     dust           # Disk usage (dust)
     procs          # Better ps
     sd             # Better sed
@@ -60,6 +61,7 @@
     fzf            # Fuzzy finder
     yazi           # File manager
     stow           # Symlink manager
+    zoxide         # directory history navigation
 
     # Kubernetes/DevOps
     kubectl        # Kubernetes CLI
@@ -84,24 +86,40 @@
     # IaC/Automation
     ansible        # Automation tool
 
-    # Yazi optional dependencies (preview & navigation)
+    # Media
     ffmpeg         # video thumbnails
     poppler        # PDF preview
     imagemagick    # image/font preview
     chafa          # ASCII image preview fallback
     resvg          # SVG preview
-    zoxide         # directory history navigation
 
-    # System/Build Tools (ported from apt deps)
+    # System/Build Tools
     gnupg          # GPG encryption
-    wget           # Download utility
-    curl           # HTTP client
     gnumake        # Make build tool
     gcc            # GNU C compiler
     jq             # JSON processor
     xsel           # Clipboard utility
-    p7zip          # 7-Zip archiver
     libyaml        # YAML library
-    zlib           # Compression library
+
+    # Traditional Unix utilities (container compatibility)
+    gawk           # GNU awk
+    gnused         # GNU sed
+    gnugrep        # GNU grep
+
+    # Compression utilities
+    zlib
+    xz             # XZ/LZMA compression
+    zip            # Zip creation
+    unzip          # Zip extraction
+    p7zip          # 7-Zip archiver
+    zstd           # Zstandard compression
+
+    # Networking utilities
+    curl           # HTTP client
+    wget           # Download utility
+    netcat         # Network utility (nc)
+    dig            # DNS lookup
+    iproute2       # ip, ss (Linux networking)
+    traceroute     # Network path tracing
   ];
 }
