@@ -1,15 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [
-    ./tmux
-    ./zellij
-    ./wezterm
-    ./nvim
-    ./mise
-    ./zsh
-  ];
-
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
 
@@ -22,15 +13,26 @@
 
   home.sessionVariables = {
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/.config/mise/mise.toml:$HOME/.dotfiles/config/mise/mise.toml";
-    };
+  };
 
   xdg.configFile."nix" = {
     source = ../../config/nix;
     recursive = true;
   };
 
+  imports = [
+    ./fzf
+    ./lazygit
+    ./mise
+    ./nvim
+    ./starship
+    ./tmux
+    ./wezterm
+    ./zellij
+    ./zsh
+  ];
+
   programs = {
-    lazygit = import ./lazygit;
     git = {
       enable = true;
     };
@@ -58,7 +60,6 @@
     procs          # Better ps
     sd             # Better sed
     hyperfine      # Benchmarking
-    fzf            # Fuzzy finder
     yazi           # File manager
     stow           # Symlink manager
     zoxide         # directory history navigation

@@ -1,10 +1,14 @@
+{ config, pkgs, ... }:
 {
-  enable = true;
-  settings = {
-    os = {
-      copyToClipboardCmd = "echo {{text}} | xsel -bi";
-      editPreset = "nvim";
+  programs.lazygit = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      os = {
+        copyToClipboardCmd = "echo {{text}} | xsel -bi";
+        editPreset = "nvim";
+      };
+      git.overrideGpg = true;
     };
-    git.overrideGpg = true;
   };
 }
