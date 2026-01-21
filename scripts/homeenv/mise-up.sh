@@ -2,7 +2,7 @@
 
 set -e
 
-tag="${$(git describe --tags --abbrev=0):1}"
+tag=$(git describe --tags --abbrev=0 | cut -c 2-)
 
 pushd ./config/mise/
   # Let mise up be called in container
