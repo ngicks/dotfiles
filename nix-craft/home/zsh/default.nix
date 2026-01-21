@@ -62,8 +62,12 @@ let
 
   # Hostname color script: computes color from hostname hash
   hostnameColorScript = pkgs.writeShellScript "starship-hostname-color" ''
-    hostname=$(hostname -s)
+    hostname=$(uname -n)
     hash=$(echo -n "$hostname" | sha256sum | cut -c1-6)
+
+    if [ "''${#hostname}" -gt 9 ]; then
+        hostname="$(echo $hostname | cut -c1-6)..."
+    fi
 
     r=$((16#''${hash:0:2}))
     g=$((16#''${hash:2:2}))
@@ -74,7 +78,7 @@ let
 
     # Background based on hostname color brightness (inverted)
     if [ $brightness -gt 128 ]; then
-      bg="16;16;16"      # dark background for bright hostname color
+      bg="30;28;60"      # dark background for bright hostname color
     else
       bg="192;192;192"   # light background for dark hostname color
     fi
@@ -177,7 +181,7 @@ $character
 
       username = {
         show_always = true;
-        style_root = "fg:#a36d15 bg:#a3aed2";
+        style_root = "fg:#cca15a bg:#a3aed2";
         style_user = "fg:#315750 bg:#a3aed2";
         format = "[ $user:]($style)";
       };
