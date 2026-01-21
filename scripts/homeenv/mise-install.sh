@@ -3,5 +3,6 @@
 set -e
 
 pushd ./config/mise/
-  mise install
+  # it always fails because of read-only lock file
+  mise install || true
 popd

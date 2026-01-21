@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-set -e
-
-XDG_CONFIG_HOME=./config nvim --headless "+Lazy! restore" +qa
-XDG_CONFIG_HOME=./config nvim --headless -c "TSUpdateSync" +qa
+# this always fails because of readonly
+# lazy.lock
+nvim --headless "+Lazy! restore" +qa
+nvim --headless -c "TSUpdateSync" +qa
