@@ -4,7 +4,7 @@ import fs from "node:fs";
 const syncPairs = [
   {
     name: "wezterm",
-    target: ".config/wezterm",
+    target: "config/wezterm",
   },
 ];
 
