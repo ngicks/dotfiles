@@ -48,7 +48,7 @@ $character
 
       username = {
         show_always = true;
-        style_root = "fg:#cca15a bg:#a3aed2";
+        style_root = "fg:#8a662b bg:#a3aed2";
         style_user = "fg:#315750 bg:#a3aed2";
         format = "[ $user:]($style)";
       };
