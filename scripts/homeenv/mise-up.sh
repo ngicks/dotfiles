@@ -2,7 +2,7 @@
 
 set -e
 
-tag=$(cat devenv_ver)
+tag="${$(git describe --tags --abbrev=0):1}"
 
 pushd ./config/mise/
   # Let mise up be called in container
