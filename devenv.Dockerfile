@@ -20,7 +20,7 @@ ARG NIX_SSL_CERT_FILE=${SSL_CERT_FILE}
 WORKDIR /root/.dotfiles
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
-    git clone --depth 1 --branch ${GIT_TAG} https://github.com/ngicks/dotfiles.git .
+    git clone --depth 1 --branch v${GIT_TAG} https://github.com/ngicks/dotfiles.git .
 EOF
 
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
