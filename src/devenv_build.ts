@@ -1,44 +1,52 @@
 const verFile = "devenv_ver";
 
-function incrementVer(ver: string): string {
-  const [v1, v2, v3] = ver.split(".");
-  return [v1, v2, String(Number(v3) + 1)].join(".");
+async function gitTag(): Promise<string> {
+  const out = await (new Deno.Command(
+    "git",
+    {
+      args: [
+        "describe",
+        "--tags",
+        "--abbrev=0",
+      ],
+    },
+  ).output());
+  if (out.code != 0) {
+    throw new Error(
+      `git describe --tags --abbrev=0 failed: ${
+        new TextDecoder().decode(out.stderr)
+      }`,
+    );
+  }
+  return new TextDecoder().decode(out.stdout).trim().slice(1);
 }
 
 async function main() {
-  const bump = Deno.args.includes("--bump") || Deno.args.includes("-b");
-  const currentVer = (await Deno.readTextFile(verFile)).trim();
+  const ver = await gitTag();
 
-  const ver = (() => {
-    if (!bump) {
-      return currentVer;
-    }
-    return incrementVer(currentVer);
-  })();
+  console.log(`building localhost/devenv/devenv:${ver}`);
 
-  console.log(`building devenv:${ver}`);
-
-  if (!bump) {
-    const exist = await (new Deno.Command(
-      "podman",
-      {
-        args: [
-          "image",
-          "inspect",
-          `devenv:${ver}`,
-        ],
-      },
-    ).output());
-    if (exist.code == 0) {
-      console.log("ready build");
-      return;
-    }
+  const exist = await (new Deno.Command(
+    "podman",
+    {
+      args: [
+        "image",
+        "inspect",
+        `localhost/devenv/devenv:${ver}`,
+      ],
+    },
+  ).output());
+  if (exist.code == 0) {
+    console.log("already built");
+    return;
   }
 
   const args = [
     "buildx",
     "build",
     ".",
+    "--build-arg",
+    `GIT_TAG=${ver}`,
     "-f",
     "./devenv.Dockerfile",
     "-t",

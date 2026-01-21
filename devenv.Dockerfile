@@ -4,6 +4,7 @@ FROM docker.io/nixos/nix:2.33.1
 # FROM docker.io/library/ubuntu:noble-20260113
 # FROM ghcr.io/cameronraysmith/nixpod:0.4.12
 
+ARG GIT_TAG=""
 ARG HTTP_PROXY=""
 ARG HTTPS_PROXY=""
 ARG http_proxy=${HTTP_PROXY}
@@ -19,7 +20,7 @@ ARG NIX_SSL_CERT_FILE=${SSL_CERT_FILE}
 WORKDIR /root/.dotfiles
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
-    git clone --depth 1 https://github.com/ngicks/dotfiles.git .
+    git clone --depth 1 --branch ${GIT_TAG} https://github.com/ngicks/dotfiles.git .
 EOF
 
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
