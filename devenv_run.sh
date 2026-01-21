@@ -2,7 +2,7 @@
 
 set -Cue
 
-tag=$(cat $(dirname $0)/devenv_ver)
+tag="${$(git -C $(dirname $0) describe --tags --abbrev=0):1}"
 
 if ! podman volume exists claude-config; then
   podman volume create claude-config

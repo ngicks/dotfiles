@@ -81,7 +81,6 @@ async function main() {
   if (!result.success) {
     throw new Error("build failed");
   }
-  await Deno.writeTextFile(verFile, ver);
 }
 
 main();
