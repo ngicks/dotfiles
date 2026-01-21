@@ -21,6 +21,9 @@ binstall = true
 "npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex" = "latest"
 
+"npm:vibe-kanban" = "latest"
+"npm:claude-code-webui" = "latest"
+
 # mcp / tools for llm
 "npm:@upstash/context7-mcp" = "latest"
 "npm:@bufbuild/protoc-gen-es" = "latest"
