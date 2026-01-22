@@ -4,7 +4,7 @@ import fs from "node:fs";
 const syncPairs = [
   {
     name: "wezterm",
-    target: "config/wezterm",
+    target: ".config/wezterm",
   },
 ];
 
@@ -57,7 +57,7 @@ export async function syncConfig(): Promise<void> {
   const hostProfileDir = await getHostProfileDir();
 
   for (const pair of syncPairs) {
-    const src = path.join("./.config", pair.name);
+    const src = path.join("./config", pair.name);
     const dst = path.join(hostProfileDir, pair.target);
 
     console.log(`src = ${src}, dst = ${dst}`);
