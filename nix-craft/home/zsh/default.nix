@@ -90,6 +90,7 @@ in
       zle -N fzf-select-history
       bindkey '^r' fzf-select-history
 
+      mkdir -p ''${XDG_CACHE_HOME:-$HOME/.cache}/shell
       autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
       add-zsh-hook chpwd chpwd_recent_dirs
 
