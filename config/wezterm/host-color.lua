@@ -17,16 +17,16 @@ M.hex_grb = function(c)
 	return tonumber(r, 16), tonumber(g, 16), tonumber(b, 16)
 end
 
--- returns #101010 or #c0c0c0
--- based on brightness computed from bgColor.
--- bgColor must follow "#ffffff" format.
+-- returns #1e1c3c or #c0c0c0
+-- based on brightness computed from c.
+-- c must follow "#ffffff" format.
 -- The formula follow one shown in https://www.w3.org/TR/AERT/
 -- Technique 2.2.1 [priority 3] Test the color attributes of the following elements for visibility
-M.foreground_color = function(bgColor)
-	local r, g, b = M.hex_grb(bgColor)
+M.contrast_color = function(c)
+	local r, g, b = M.hex_grb(c)
 	local brightness = ((r * 299 + g * 587 + b * 114) / 1000)
 	if brightness > 128 then
-		return "#101010"
+		return "#1e1c3c"
 	else
 		return "#c0c0c0"
 	end

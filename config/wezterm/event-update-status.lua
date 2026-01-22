@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 
 local get_host_name_from_pane = require("host-color").get_host_name_from_pane
 local text_to_color = require("host-color").text_to_color
-local foreground_color = require("host-color").foreground_color
+local contrast_color = require("host-color").contrast_color
 
 local M = {}
 
@@ -39,7 +39,7 @@ M.handler = function(window, pane, name, value)
 	end
 
 	-- The filled in variant of the < symbol
-	local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
+	local LEFT_CIRCLE = wezterm.nerdfonts.ple_left_half_circle_thick
 
 	-- Color palette for the backgrounds of each cell
 	local colors = {
@@ -66,26 +66,31 @@ M.handler = function(window, pane, name, value)
 		{ Attribute = { Intensity = "Bold" } },
 		{ Background = { Color = "none" } },
 		{ Foreground = { Color = colors[1] } },
-		{ Text = SOLID_LEFT_ARROW },
+		{ Text = LEFT_CIRCLE },
 	}
 
 	local cursor = 1
 
 	for i, cell in ipairs(cells) do
-		local color = cell.color
-		if color == nil then
-			color = get_color(cursor)
+		local bgColor = cell.color
+		local fgColor
+		if bgColor ~= nil then
+			fgColor = bgColor
+			bgColor = contrast_color(bgColor)
+		else
+			bgColor = get_color(cursor)
+			fgColor = contrast_color(bgColor)
 			cursor = cursor + 1
 		end
 
 		if i > 1 then
 			table.insert(elements, { Attribute = { Intensity = "Bold" } })
-			table.insert(elements, { Foreground = { Color = color } })
-			table.insert(elements, { Text = SOLID_LEFT_ARROW })
+			table.insert(elements, { Foreground = { Color = bgColor } })
+			table.insert(elements, { Text = LEFT_CIRCLE })
 		end
 		table.insert(elements, { Attribute = { Intensity = "Normal" } })
-		table.insert(elements, { Background = { Color = color } })
-		table.insert(elements, { Foreground = { Color = foreground_color(color) } })
+		table.insert(elements, { Background = { Color = bgColor } })
+		table.insert(elements, { Foreground = { Color = fgColor } })
 		table.insert(elements, { Text = " " .. cell.text .. " " })
 	end
 
