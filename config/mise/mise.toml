@@ -1,7 +1,6 @@
 [settings]
 experimental = true
 auto_install = true
-idiomatic_version_file_enable_tools = ['node', 'python', 'rust']
 lockfile = true
 
 trusted_config_paths = [
@@ -17,7 +16,6 @@ binstall = true
 
 [tools]
 # LLM
-"npm:@anthropic-ai/claude-code" = "latest"
 "npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex" = "latest"
 
