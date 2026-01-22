@@ -13,6 +13,5 @@ pushd ./config/mise/
     --mount type=bind,src=.,dst=/root/.config/mise \
     --mount type=bind,src=${MISE_DATA_DIR},dst=/root/.local/share/mise \
     localhost/devenv/devenv:${tag} \
-    -lc "mise up"
-  mise lock
+    -lc "mise up && mise lock"
 popd
