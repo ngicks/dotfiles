@@ -57,11 +57,11 @@ version = "2.11.0"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.25.0"
+version = "0.25.1"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.88.0"
+version = "0.89.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -89,10 +89,10 @@ version = "v0.1.4"
 backend = "pipx:oraios/serena"
 
 [[tools.ruff]]
-version = "0.14.13"
+version = "0.14.14"
 backend = "aqua:astral-sh/ruff"
-"platforms.linux-arm64" = { checksum = "sha256:25941b777ff712f4d9473d26c1b875034214a3d5de20ea99b2add939dcd0b367", url = "https://github.com/astral-sh/ruff/releases/download/0.14.13/ruff-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:2fe394f493318551f271277a2228e56b31ca69a4842483e5709af4548f342bc3", url = "https://github.com/astral-sh/ruff/releases/download/0.14.13/ruff-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:067d1a90da8add55614eff91990425883a092d8279d9e503258ff8be0f8e9c18", url = "https://github.com/astral-sh/ruff/releases/download/0.14.13/ruff-aarch64-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:69e424a42ac3a7c6c7032ad96deb757c35c93c848b6ea329a3f4c605e6d89ef9", url = "https://github.com/astral-sh/ruff/releases/download/0.14.13/ruff-x86_64-apple-darwin.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:d2af4376053458f283d74980b49dc0d61d3ef9d9b8684c5b25bd64b73e11634a", url = "https://github.com/astral-sh/ruff/releases/download/0.14.13/ruff-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:a4d7302aa201a6f8e71dfa217cd8273fddd4e434a93ee3b4b07047fd7a684ac1", url = "https://github.com/astral-sh/ruff/releases/download/0.14.14/ruff-aarch64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:55a1ee65f5ac9416cc40f99c2df62f0d4525d40369fe371caff945c495174d57", url = "https://github.com/astral-sh/ruff/releases/download/0.14.14/ruff-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:76a9b0ebe57d0eee56940dbe0b62462578d1369cca8314ed0d2a6f2102292d4f", url = "https://github.com/astral-sh/ruff/releases/download/0.14.14/ruff-aarch64-apple-darwin.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:749396c675c6f07205be6c4ef89e2e95123d790062d681059a355030e9d7d119", url = "https://github.com/astral-sh/ruff/releases/download/0.14.14/ruff-x86_64-apple-darwin.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:81bfeed34f15296e6c81ecea912b6fff4430b957de8a1181ce9365434e3d6744", url = "https://github.com/astral-sh/ruff/releases/download/0.14.14/ruff-x86_64-pc-windows-msvc.zip"}
