@@ -5,7 +5,7 @@ let
     hostname=$(uname -n)
     hash=$(echo -n "$hostname" | sha256sum | cut -c1-6)
 
-    if [ "''${#hostname}" -gt 15 ]; then
+    if [ "''${#hostname}" -gt 18 ]; then
         hostname="$(echo $hostname | cut -c1-15)..."
     fi
 
