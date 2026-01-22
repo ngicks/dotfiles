@@ -23,8 +23,7 @@ let
       bg="192;192;192"   # light background for dark hostname color
     fi
 
-    # Output: "[ hostname ]" in computed color with inverted bg
-    printf '\033[48;2;%sm\033[38;2;%d;%d;%dm[ %s ]\033[48;2;118;159;240m\033[38;2;%sm\033[0m' "$bg" "$r" "$g" "$b" "$hostname" "$bg"
+    printf '\033[48;2;163;174;210m\033[38;2;%sm▒\033[48;2;%sm\033[38;2;%d;%d;%dm[ %s ]\033[48;2;118;159;240m\033[38;2;%sm\033[0m' "$bg" "$bg" "$r" "$g" "$b" "$hostname" "$bg"
   '';
 in {
   programs.starship = {
@@ -50,7 +49,7 @@ $character
         show_always = true;
         style_root = "fg:#8a662b bg:#a3aed2";
         style_user = "fg:#315750 bg:#a3aed2";
-        format = "[ $user:]($style)";
+        format = "[ $user]($style)";
       };
 
       # Custom hostname: [ hostname ] with computed colors
