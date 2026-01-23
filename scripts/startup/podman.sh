@@ -1,1 +1,0 @@
-. ~/.config/containers/path.sh

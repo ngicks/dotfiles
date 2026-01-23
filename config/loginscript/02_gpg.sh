@@ -1,13 +1,20 @@
+# no nested virtualization
+if [ "${IN_CONTAINER:-}" -eq "1" ]; then
+  return 0
+fi
+
 if [ -t 0 ]; then
 	# Set GPG_TTY so gpg-agent knows where to prompt.  See gpg-agent(1)
 	export GPG_TTY="$(tty)"
 fi
 
-# but in tmux use tmux display-pop and pientry-curses
-if [ -n "${TMUX}" ]; then
-  export PINENTRY_USER_DATA="TMUX_POPUP:$(which tmux):$(tmux display -p '#{client_tty}'):${TMUX_PANE}"
-elif [ -n "${ZELLIJ}" ]; then
-  export PINENTRY_USER_DATA="ZELLIJ_POPUP:$(which zellij):${ZELLIJ_SESSION_NAME}"
+if [ "${HOMEENV_PREFER_TMUX_PINENTRY}" -eq "1" ]; then
+  # but in tmux use tmux display-pop and pientry-curses
+  if [ -n "${TMUX}" ]; then
+    export PINENTRY_USER_DATA="TMUX_POPUP:$(which tmux):${TMUX_PANE}"
+  elif [ -n "${ZELLIJ}" ]; then
+    export PINENTRY_USER_DATA="ZELLIJ_POPUP:$(which zellij):${ZELLIJ_SESSION_NAME}"
+  fi
 fi
 
 # https://wiki.archlinux.org/title/GnuPG#SSH_agent
