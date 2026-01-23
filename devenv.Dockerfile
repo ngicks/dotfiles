@@ -39,6 +39,11 @@ RUN \
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
 EOF
 
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+    curl -fsSL https://claude.ai/install.sh | bash
+EOF
+
 WORKDIR /root
 
 ENV LANG=C.UTF-8
