@@ -19,8 +19,8 @@ return {
 		{ key = "7", mods = "LEADER", action = act.ActivateTab(6) },
 		{ key = "8", mods = "LEADER", action = act.ActivateTab(7) },
 		{ key = "9", mods = "LEADER", action = act.ActivateTab(8) },
-		{ key = "v", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-		{ key = "s", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+		{ key = "s", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+		{ key = "v", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
 		-- non-default
 		{ key = "o", mods = "ALT|CTRL", action = user_def_actions.toggle_background_opacity },
 
