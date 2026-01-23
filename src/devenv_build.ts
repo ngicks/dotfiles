@@ -1,5 +1,3 @@
-const verFile = "devenv_ver";
-
 async function gitTag(): Promise<string> {
   const out = await (new Deno.Command(
     "git",
