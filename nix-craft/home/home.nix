@@ -98,6 +98,7 @@
     gnupg          # GPG encryption
     gnumake        # Make build tool
     gcc            # GNU C compiler
+    glibc
     jq             # JSON processor
     xsel           # Clipboard utility
     libyaml        # YAML library
