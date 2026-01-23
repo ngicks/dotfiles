@@ -4,6 +4,15 @@ set -eCu
 
 tag=$(git -C $(dirname $0) describe --tags --abbrev=0 | cut -c 2-)
 
+
+if ! podman volume exists local-bin; then
+  podman volume create local-bin
+fi
+
+if ! podman volume exists claude-bin; then
+  podman volume create claude-bin
+fi
+
 if ! podman volume exists claude-config; then
   podman volume create claude-config
 fi
@@ -32,9 +41,6 @@ UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 NPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/npm
 NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_DIR}/npmrc
 NPM_CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/npm
-
-LOCAL_BIN=$HOME/.local/bin
-CLAUDE_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/claude
 
 if_ro() {
   if [[ "${DEVENV_READONLY:-}" == "1" ]]; then
@@ -84,9 +90,8 @@ podman container run -it --rm --init \
   --env GOPATH=${GOPATH}\
   --mount type=bind,src=${GOPATH},dst=${GOPATH}\
   \
-  --mount type=bind,src=${LOCAL_BIN},dst=/root/.local/bin\
-  --mount type=bind,src=${CLAUDE_DIR},dst=${CLAUDE_DIR}\
-  \
+  --mount type=volume,src=local-bin,dst=/root/.local/bin\
+  --mount type=volume,src=claude-bin,dst=/root/.local/share/claude\
   --mount type=volume,src=claude-config,dst=/root/.config/claude\
   --mount type=volume,src=gemini-config,dst=/root/.gemini\
   --mount type=volume,src=codex-config,dst=/root/.codex\
