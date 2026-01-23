@@ -80,6 +80,8 @@ in
       bindkey -e
       bindkey '^[[1;5D' backward-word  # Ctrl+Left
       bindkey '^[[1;5C' forward-word   # Ctrl+Right
+      # missing in devenv container
+      bindkey '^[[3~' delete-char      # Delete key
 
       function fzf-select-history() {
         BUFFER=''$(history -n -r 1 | fzf --query "''$LBUFFER" --reverse)
