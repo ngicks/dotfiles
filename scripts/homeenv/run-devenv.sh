@@ -2,7 +2,21 @@
 
 set -eCu
 
+image_repository="localhost/devenv/devenv"
 tag=$(git -C $(dirname $0) describe --tags --abbrev=0 | cut -c 2-)
+
+image=${image_repository}:${tag}
+if ! podman image inspect ${image} > /dev/null 2>&1; then
+  echo "[WARNING]: ${image} not loaded"
+  echo "[WARNING]: Falling back to other tag"
+  fallback=$(podman image ls --format '{{.Repository}}:{{.Tag}}' --filter reference=${image_repository} | head -n 1)
+  if [[ -z $fallback ]]; then
+    echo "[ERROR]: no tag found"
+    exit 1
+  fi
+  image=$fallback
+  echo "[WARNING]: Fall back image selected: ${image}"
+fi
 
 
 if ! podman volume exists local-bin; then
@@ -98,5 +112,5 @@ podman container run -it --rm --init \
   \
   ${arg1}\
   \
-  localhost/devenv/devenv:${tag}\
+  ${image}\
   "$@"
