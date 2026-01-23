@@ -77,6 +77,11 @@ in
     };
 
     initContent = ''
+      # this script may change ''${XDG_CONFIG_HOME}
+      if [[ -f "$HOME/.config/env/.first_rc" ]]; then
+        . $HOME/.config/env/.first_rc
+      fi
+
       bindkey -e
       bindkey '^[[1;5D' backward-word  # Ctrl+Left
       bindkey '^[[1;5C' forward-word   # Ctrl+Right
