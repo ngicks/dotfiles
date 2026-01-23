@@ -61,8 +61,7 @@ let
 
 
   cd_gitroot = pkgs.writeShellScript "cd_gitroot" ''
-    GITREPO_ROOT=''${GITREPO_ROOT:-$HOME/gitrepo}
-  cd ''$(FZF_DEFAULT_COMMAND="fd --type d --hidden --no-ignore '^\.git\$' ''${GITREPO_ROOT} --exec dirname {}" fzf)
+    cd ''$(FZF_DEFAULT_COMMAND="fd --type d --hidden --no-ignore '^\.git\$' ''${GITREPO_ROOT:-$HOME/gitrepo} --exec dirname {}" fzf)
   '';
 in
 {
