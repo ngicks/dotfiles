@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:1
 
 FROM docker.io/nixos/nix:2.33.1
-# FROM docker.io/library/ubuntu:noble-20260113
-# FROM ghcr.io/cameronraysmith/nixpod:0.4.12
 
 ARG GIT_TAG=""
 ARG HTTP_PROXY=""
