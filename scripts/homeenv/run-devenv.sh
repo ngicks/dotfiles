@@ -59,6 +59,8 @@ podman container run -it --rm --init \
   --env SSL_CERT_FILE=${SSL_CERT_FILE}\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
   \
+  --mount type=bind,src=${XDG_CONFIG_HOME:-$HOME/.config}/env,dst=/root/.config/env,ro\
+  \
   --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim,ro\
   \
   --env MISE_GLOBAL_CONFIG_FILE=/root/.config/mise_host/mise.toml \
