@@ -71,7 +71,7 @@ in
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        gcd = "${cd_gitroot}";
+        gcd = ". ${cd_gitroot}";
         homeenv-update = "~/.dotfiles/homeenv-update.sh";
         homeenv-install = "~/.dotfiles/homeenv-install.sh";
       };
