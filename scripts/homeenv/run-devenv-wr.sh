@@ -7,14 +7,20 @@ tag=$(git describe --tags --abbrev=0 | cut -c 2-)
 SSL_CERT_FILE=${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}
 
 NVIM_STD_DATA=${XDG_DATA_HOME:-$HOME/.local/share}/nvim
+
 MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
 MISE_CONFIG_DIR=$HOME/.dotfiles/config/mise
+
 CARGO_HOME=${CARGO_HOME:-$HOME/.cargo}
 RUSTUP_HOME=${RUSTUP_HOME:-$HOME/.rustup}
+
 UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
+
 NPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/npm
 NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_DIR}/npmrc
 NPM_CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/npm
+
+CLAUDE_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/claude
 
 if_ro() {
   if [[ "${DEVENV_READONLY:-}" == "1" ]]; then
@@ -58,6 +64,7 @@ podman container run -it --rm --init \
   --env GOPATH=${GOPATH}\
   --mount type=bind,src=${GOPATH},dst=${GOPATH}\
   \
+  --mount type=bind,src=${CLAUDE_DIR},dst=/root/.local/share/claude\
   ${arg1}\
   \
   localhost/devenv/devenv:${tag}\
