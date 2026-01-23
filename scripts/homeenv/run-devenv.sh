@@ -2,7 +2,19 @@
 
 set -eCu
 
-tag=$(git describe --tags --abbrev=0 | cut -c 2-)
+tag=$(git -C $(dirname $0) describe --tags --abbrev=0 | cut -c 2-)
+
+if ! podman volume exists claude-config; then
+  podman volume create claude-config
+fi
+
+if ! podman volume exists gemini-config; then
+  podman volume create gemini-config
+fi
+
+if ! podman volume exists codex-config; then
+  podman volume create codex-config
+fi
 
 SSL_CERT_FILE=${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}
 
@@ -46,6 +58,8 @@ podman container run -it --rm --init \
   --env SSL_CERT_FILE=${SSL_CERT_FILE}\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
   \
+  --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim,ro\
+  \
   --env MISE_DATA_DIR=${MISE_DATA_DIR}\
   --mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR}$(ro)\
   \
@@ -67,6 +81,10 @@ podman container run -it --rm --init \
   \
   --mount type=bind,src=${LOCAL_BIN},dst=/root/.local/bin\
   --mount type=bind,src=${CLAUDE_DIR},dst=${CLAUDE_DIR}\
+  \
+  --mount type=volume,src=claude-config,dst=/root/.config/claude\
+  --mount type=volume,src=gemini-config,dst=/root/.gemini\
+  --mount type=volume,src=codex-config,dst=/root/.codex\
   \
   ${arg1}\
   \
