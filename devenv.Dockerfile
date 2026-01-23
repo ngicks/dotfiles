@@ -35,8 +35,6 @@ ENV SHELL="/root/.nix-profile/bin/zsh"
 
 RUN \
 <<EOF
-    mkdir -p /root/.local/bin
-    ln -s /root/.local/bin/claude /root/.local/share/claude
     mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles" && \
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
 EOF

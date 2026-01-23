@@ -20,6 +20,7 @@ NPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/npm
 NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_DIR}/npmrc
 NPM_CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/npm
 
+LOCAL_BIN=$HOME/.local/bin
 CLAUDE_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/claude
 
 if_ro() {
@@ -64,7 +65,9 @@ podman container run -it --rm --init \
   --env GOPATH=${GOPATH}\
   --mount type=bind,src=${GOPATH},dst=${GOPATH}\
   \
-  --mount type=bind,src=${CLAUDE_DIR},dst=/root/.local/share/claude\
+  --mount type=bind,src=${LOCAL_BIN},dst=/root/.local/bin\
+  --mount type=bind,src=${CLAUDE_DIR},dst=${CLAUDE_DIR}\
+  \
   ${arg1}\
   \
   localhost/devenv/devenv:${tag}\

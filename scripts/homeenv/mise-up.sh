@@ -3,7 +3,7 @@
 set -e
 
 tag=$(git describe --tags --abbrev=0 | cut -c 2-)
-runner=$(dirname $0)/run-devenv-wr.sh
+runner=$(dirname $0)/run-devenv.sh
 
 pushd ./config/mise/
   # Let mise up be called in container
