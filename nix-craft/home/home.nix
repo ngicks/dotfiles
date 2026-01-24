@@ -108,6 +108,9 @@
     gnused         # GNU sed
     gnugrep        # GNU grep
 
+    # Terminal support
+    ncurses        # Terminfo database for less/vim/etc
+
     # Compression utilities
     zlib
     xz             # XZ/LZMA compression
