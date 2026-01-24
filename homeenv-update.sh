@@ -23,8 +23,4 @@ pushd $dir
   pushd ./nix-craft/
     nix flake update
   popd
-  echo ""
-  echo "switch home manager"
-  echo ""
-  ./scripts/homeenv/nix-run-home-manager.sh
 popd
