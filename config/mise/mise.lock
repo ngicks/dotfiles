@@ -64,6 +64,10 @@ backend = "npm:@google/gemini-cli"
 version = "0.89.0"
 backend = "npm:@openai/codex"
 
+[[tools."npm:@siteboon/claude-code-ui"]]
+version = "1.13.6"
+backend = "npm:@siteboon/claude-code-ui"
+
 [[tools."npm:@upstash/context7-mcp"]]
 version = "2.1.0"
 backend = "npm:@upstash/context7-mcp"
