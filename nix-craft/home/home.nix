@@ -43,7 +43,7 @@
     nodejs
     deno
     bun
-    python3
+    (python3.withPackages (ps: [ ps.setuptools ]))
     uv
     ruby
     rustup
