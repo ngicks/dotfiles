@@ -20,7 +20,6 @@ binstall = true
 "npm:@openai/codex" = "latest"
 
 "npm:vibe-kanban" = "latest"
-"npm:@siteboon/claude-code-ui" = "latest"
 
 # mcp / tools for llm
 "npm:@upstash/context7-mcp" = "latest"
