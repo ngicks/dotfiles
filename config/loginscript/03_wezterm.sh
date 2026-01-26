@@ -465,12 +465,7 @@ __wezterm_osc7() {
     # If the command failed (perhaps the installed wezterm
     # is too old?) then fall back to the simple version below.
   fi
-  if [[ -z "${TMUX-}" ]] ; then
-    printf "\033]7;file://%s%s\033\\" "${HOSTNAME}" "${PWD}"
-  else
-    # Wrap OSC 7 for tmux passthrough
-    printf "\033Ptmux;\033\033]7;file://%s%s\033\033\\\033\\" "${HOSTNAME}" "${PWD}"
-  fi
+  printf "\033]7;file://%s%s\033\\" "${HOSTNAME}" "${PWD}"
 }
 
 # The semantic precmd and prexec functions generate semantic
