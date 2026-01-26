@@ -11,7 +11,7 @@ buildGoModule rec {
     owner = "ngicks";
     repo = "run-in-tmux-popup";
     rev = "bd95f5dbcacf00bde3f89afd9b34666f6819612c";
-    hash = "sha256-ya4XXXbWkuNwDjyRJbXT6EDqu0g256D/wV6jki0MIag=";
+    hash = "sha256-tn4e70Bl8cbGv4iDV8PzM7LGnDUfphv788nhbU9CybQ=";
   };
 
   vendorHash = null;
