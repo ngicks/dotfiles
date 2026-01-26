@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  run-in-tmux-popup = pkgs.callPackage ../pkgs/run-in-tmux-popup.nix { };
+in
 {
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
@@ -15,10 +18,16 @@
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/.config/mise/mise.toml:$HOME/.dotfiles/config/mise/mise.toml";
   };
 
+  home.file.".local/bin/pinentry.sh" = {
+    source = ../../scripts/pinentry.sh;
+    executable = true;
+  };
+
   xdg.configFile."nix" = {
     source = ../../config/nix;
     recursive = true;
   };
+
 
   imports = [
     ./fzf
@@ -126,5 +135,8 @@
     dig            # DNS lookup
     iproute2       # ip, ss (Linux networking)
     traceroute     # Network path tracing
+
+    # Custom-built packages
+    run-in-tmux-popup  # pinentry in tmux/zellij popup
   ];
 }
