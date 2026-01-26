@@ -11,7 +11,7 @@ fi
 if [ "${HOMEENV_PREFER_TMUX_PINENTRY}" -eq "1" ]; then
   # but in tmux use tmux display-pop and pientry-curses
   if [ -n "${TMUX}" ]; then
-    export PINENTRY_USER_DATA="TMUX_POPUP:$(which tmux):${TMUX_PANE}"
+    export PINENTRY_USER_DATA="TMUX_POPUP:$(which tmux):$(tmux display -p '#S'):$(tmux display -p '#{client_tty}')"
   elif [ -n "${ZELLIJ}" ]; then
     export PINENTRY_USER_DATA="ZELLIJ_POPUP:$(which zellij):${ZELLIJ_SESSION_NAME}"
   fi
