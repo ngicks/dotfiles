@@ -2,6 +2,11 @@
 
 set -e
 
+if [ -n "SYSTEM_PKG_UPDATE_NOT_ALLOWED" ]; then
+  echo "skip: system package manager update"
+  return 0
+fi
+
 # Detect package manager
 if command -v apt &> /dev/null; then
     PKG_MANAGER="apt"
