@@ -1,7 +1,5 @@
 #!/bin/env bash
 
-set -e
-
 tag=$(git describe --tags --abbrev=0 | cut -c 2-)
 
 runner=$(dirname $0)/run-devenv.sh
