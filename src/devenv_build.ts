@@ -20,9 +20,16 @@ async function gitTag(): Promise<string> {
 }
 
 async function main() {
-  const ver = await gitTag();
+  const exp = Deno.args.includes("--exp") || Deno.args.includes("-e");
+  let ver = await gitTag();
 
-  console.log(`building localhost/devenv/devenv:${ver}`);
+  if (exp) {
+    ver += "-exp1";
+  }
+
+  console.log(
+    `building localhost/devenv/devenv:${ver}`,
+  );
 
   const exist = await (new Deno.Command(
     "podman",
@@ -44,7 +51,7 @@ async function main() {
     "build",
     ".",
     "--build-arg",
-    `GIT_TAG=${ver}`,
+    `GIT_TAG=${exp ? "exp" : ver}`,
     "-f",
     "./devenv.Dockerfile",
     "-t",

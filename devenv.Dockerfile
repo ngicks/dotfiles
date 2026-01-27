@@ -15,11 +15,18 @@ ARG NODE_EXTRA_CA_CERTS=${SSL_CERT_FILE}
 ARG DENO_CERT=${SSL_CERT_FILE}
 ARG NIX_SSL_CERT_FILE=${SSL_CERT_FILE}
 
-WORKDIR /root/.dotfiles
+WORKDIR /root
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=bind,target=/.dotfiles \
 <<EOF
-    git clone --depth 1 --branch v${GIT_TAG} https://github.com/ngicks/dotfiles.git .
+    if [ "${GIT_TAG}" = "exp" ]; then
+      cp -a /.dotfiles .
+    else
+      git clone --depth 1 --branch v${GIT_TAG} https://github.com/ngicks/dotfiles.git ./.dotfiles
+    fi 
 EOF
+
+WORKDIR /root/.dotfiles
 
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
