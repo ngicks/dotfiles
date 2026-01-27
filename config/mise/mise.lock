@@ -61,7 +61,7 @@ version = "0.25.2"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.91.0"
+version = "0.92.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@siteboon/claude-code-ui"]]
@@ -79,10 +79,6 @@ backend = "npm:claude-code-webui"
 [[tools."npm:vibe-kanban"]]
 version = "0.0.162"
 backend = "npm:vibe-kanban"
-
-[[tools."npm:zenn-cli"]]
-version = "0.4.1"
-backend = "npm:zenn-cli"
 
 [[tools."npm:zenn-cli"]]
 version = "0.4.2"
