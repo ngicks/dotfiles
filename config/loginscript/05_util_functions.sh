@@ -1,6 +1,4 @@
-#!/bin/bash
-# pim - Pipe stdin to temp file, cd there, and edit
-
+# pim - pipe and vim. pipe stdin to tmpfile and open it with "${EDITOR:-${VISUAL:-vim}}"
 pim() {
   # Create temp file
   local tmpfile
@@ -14,4 +12,8 @@ pim() {
 
   # Open in editor (priority: EDITOR > VISUAL > vim)
   "${EDITOR:-${VISUAL:-vim}}" "$tmpfile"
+}
+
+devenv() {
+  $HOME/.dotfiles/devenv_run.sh "$@"
 }
