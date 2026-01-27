@@ -23,8 +23,6 @@ EOF
 
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 <<EOF
-    # For sshfs.nvim
-    mkdir -p ~/mnt/sshfs
     for p in $(nix-env -q); do
         nix-env --set-flag priority 0 $p
     done
@@ -33,6 +31,9 @@ EOF
 
 ENV SHELL="/root/.nix-profile/bin/zsh"
 RUN <<EOF
+    # For sshfs.nvim
+    mkdir -p ~/mnt/sshfs
+
     mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles" && \
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
 
