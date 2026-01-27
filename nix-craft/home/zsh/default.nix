@@ -58,11 +58,6 @@ let
       popd > /dev/null
     fi
   '';
-
-
-  cd_gitroot = pkgs.writeShellScript "cd_gitroot" ''
-    cd ''$(FZF_DEFAULT_COMMAND="fd --type d --hidden --no-ignore '^\.git\$' ''${GITREPO_ROOT:-$HOME/gitrepo} --exec dirname {}" fzf --reverse)
-  '';
 in
 {
   programs.zsh = {
@@ -70,7 +65,6 @@ in
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        gcd = ". ${cd_gitroot}";
         homeenv-update = "~/.dotfiles/homeenv-update.sh";
         homeenv-install = "~/.dotfiles/homeenv-install.sh";
       };

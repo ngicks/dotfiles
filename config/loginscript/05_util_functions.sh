@@ -17,3 +17,7 @@ pim() {
 devenv() {
   $HOME/.dotfiles/devenv_run.sh "$@"
 }
+
+gcd() {
+  cd $(FZF_DEFAULT_COMMAND="fd --type d --hidden --no-ignore '^\.git\$' ${GITREPO_ROOT:-$HOME/gitrepo} --exec dirname {}" fzf --reverse)
+}
