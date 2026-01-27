@@ -36,6 +36,20 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
     bash ./scripts/homeenv/nix-run-home-manager.sh
 EOF
 
+RUN <<EOF
+    # Install nix-ld for FHS binary compatibility
+    nix-env -iA nixpkgs.nix-ld
+
+    # Create dynamic linker symlink (required for non-Nix binaries)
+    mkdir -p /lib64 /lib
+    NIX_LD_PATH=$(nix-build '<nixpkgs>' -A nix-ld --no-out-link)/libexec/nix-ld
+    ln -sf ${NIX_LD_PATH} /lib64/ld-linux-x86-64.so.2
+    ln -sf ${NIX_LD_PATH} /lib/ld-linux-x86-64.so.2
+EOF
+
+# Set library paths for FHS binary compatibility (general purpose)
+ENV NIX_LD_LIBRARY_PATH="/root/.nix-profile/lib"
+
 ENV SHELL="/root/.nix-profile/bin/zsh"
 RUN <<EOF
     # For sshfs.nvim
@@ -43,12 +57,6 @@ RUN <<EOF
 
     mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles" && \
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
-
-    # FHS compatibility: Create dynamic linker symlinks for non-Nix binaries
-    mkdir -p /lib64 /lib
-    GLIBC_PATH=$(nix-build '<nixpkgs>' -A glibc --no-out-link)
-    ln -sf ${GLIBC_PATH}/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
-    ln -sf ${GLIBC_PATH}/lib/ld-linux-x86-64.so.2 /lib/ld-linux-x86-64.so.2
 EOF
 
 
