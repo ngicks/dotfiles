@@ -65,8 +65,8 @@ in
     zsh-abbr = {
       enable = true;
       abbreviations = {
-        homeenv-update = "~/.dotfiles/homeenv-update.sh";
-        homeenv-install = "~/.dotfiles/homeenv-install.sh";
+        homeup = "~/.dotfiles/homeenv-upgrade.sh";
+        homesync = "~/.dotfiles/homeenv-install.sh";
       };
     };
 
