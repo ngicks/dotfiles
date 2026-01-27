@@ -7,11 +7,8 @@ runner=$(dirname $0)/run-devenv.sh
 # because it always tries to update things
 # under `~/.config/mise/`.
 $runner \
-  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/root/.config/mise \
-  --workdir /root/.config/mise" \
-  "-lc" "mise up"
-
-pushd $(dirname $0)/../../config/mise
-  mise lock
-popd
+  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
+  --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
+  --workdir /mise" \
+  "-lc" "mise up && mise lock"
 
