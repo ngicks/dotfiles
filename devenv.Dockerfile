@@ -36,20 +36,6 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
     bash ./scripts/homeenv/nix-run-home-manager.sh
 EOF
 
-RUN <<EOF
-    # Install nix-ld for FHS binary compatibility
-    nix-env -iA nixpkgs.nix-ld
-
-    # Create dynamic linker symlink (required for non-Nix binaries)
-    mkdir -p /lib64 /lib
-    NIX_LD_PATH=$(nix-build '<nixpkgs>' -A nix-ld --no-out-link)/libexec/nix-ld
-    ln -sf ${NIX_LD_PATH} /lib64/ld-linux-x86-64.so.2
-    ln -sf ${NIX_LD_PATH} /lib/ld-linux-x86-64.so.2
-EOF
-
-# Set library paths for FHS binary compatibility (general purpose)
-ENV NIX_LD_LIBRARY_PATH="/root/.nix-profile/lib"
-
 ENV SHELL="/root/.nix-profile/bin/zsh"
 RUN <<EOF
     # For sshfs.nvim
