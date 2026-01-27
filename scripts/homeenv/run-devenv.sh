@@ -3,7 +3,11 @@
 set -eCu
 
 image_repository="localhost/devenv/devenv"
-tag=$(git -C $(dirname $0) describe --tags --abbrev=0 | cut -c 2-)
+if [ -n "${DEVENV_TAG:-""}" ]; then
+  tag=${DEVENV_TAG}
+else
+  tag=$(git -C $(dirname $0) describe --tags --abbrev=0 | cut -c 2-)
+fi
 
 image=${image_repository}:${tag}
 if ! podman image inspect ${image} > /dev/null 2>&1; then
