@@ -57,7 +57,7 @@ version = "2.11.0"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.25.2"
+version = "0.26.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
@@ -77,11 +77,11 @@ version = "0.1.56"
 backend = "npm:claude-code-webui"
 
 [[tools."npm:vibe-kanban"]]
-version = "0.0.162"
+version = "0.0.163"
 backend = "npm:vibe-kanban"
 
 [[tools."npm:zenn-cli"]]
-version = "0.4.2"
+version = "0.4.3"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:betterproto2_compiler"]]
