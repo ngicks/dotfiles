@@ -4,7 +4,7 @@ set -e
 
 if [ "${SYSTEM_PKG_UPDATE_NOT_ALLOWED}" = "1" ]; then
   echo "skip: system package manager update"
-  return 0
+  exit 0
 fi
 
 # Detect package manager
