@@ -10,5 +10,5 @@ $runner \
   "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
   --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
   --workdir /mise" \
-  "-lc" "mise up && mise lock"
+  "-lc" "mise up && mise prune -y && mise lock"
 

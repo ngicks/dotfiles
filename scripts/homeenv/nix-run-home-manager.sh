@@ -14,3 +14,5 @@ nix run .#home-manager --extra-experimental-features "nix-command flakes" -- swi
 # may need refresh
 
 # nix run .#home-manager --refresh --extra-experimental-features "nix-command flakes" -- switch -b backup --flake .#default --impure --extra-experimental-features "nix-command flakes"
+
+nix-collect-garbage -d
