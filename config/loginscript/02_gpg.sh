@@ -23,8 +23,9 @@ __update_pinentry_user_data() {
   fi
 }
 
+__update_pinentry_user_data
+
 if [ "${HOMEENV_PREFER_TMUX_PINENTRY:-0}" -eq "1" -a -n "${ZSH_NAME:-}" ]; then
-  __update_pinentry_user_data
   autoload -Uz add-zsh-hook
   add-zsh-hook precmd __update_pinentry_user_data
 fi
