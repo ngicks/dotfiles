@@ -2,6 +2,10 @@
 
 set -e
 
+if ! sudo echo "unlocked" ; then
+  echo "[WARNING] sudo failed"
+fi
+
 if [ "${SYSTEM_PKG_UPDATE_NOT_ALLOWED}" = "1" ]; then
   echo "skip: system package manager update"
   exit 0
