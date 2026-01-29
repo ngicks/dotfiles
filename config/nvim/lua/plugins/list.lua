@@ -58,12 +58,6 @@ return {
     "lukas-reineke/indent-blankline.nvim",
     event = "User FilePost",
   },
-  { -- rendering image
-    "3rd/image.nvim",
-    opts = {
-      processor = "magick_cli", -- or "magick_rock"
-    },
-  },
 
   {
     "folke/which-key.nvim",

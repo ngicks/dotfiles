@@ -2,8 +2,7 @@
 {
   programs.neovim = {
     enable = true;
-    extraLuaPackages = ps: [ ps.magick ];
-    extraPackages = with pkgs; [ ripgrep fd xsel xclip imagemagick ];
+    extraPackages = with pkgs; [ ripgrep fd xsel xclip ];
   };
 
   xdg.configFile."nvim" = {
