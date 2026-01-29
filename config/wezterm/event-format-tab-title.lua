@@ -1,5 +1,7 @@
 local wezterm = require("wezterm")
 
+local env = require("env")
+
 local get_host_name_from_pane = require("host-color").get_host_name_from_pane
 local text_to_color = require("host-color").text_to_color
 
@@ -15,12 +17,17 @@ end
 
 -- Format tab title with hostname-based colors
 M.handler = function(tab, tabs, panes, config, hover, max_width)
-	wezterm.log_info("format-tab-title")
 	local hostname = get_host_name_from_pane(tab.active_pane)
-	local title = get_tab_title(tab)
+	local user_vars = env.user_vars_from_pane_or_pane_info(tab.active_pane)
 
 	local host_color = text_to_color(hostname)
-	wezterm.log_info("host name: " .. hostname .. ", host_color: " .. host_color)
+
+	local title
+	if user_vars.WEZTERM_PROG ~= nil and user_vars.WEZTERM_PROG ~= "" then
+		title = user_vars.WEZTERM_PROG
+	else
+		title = get_tab_title(tab)
+	end
 
 	if #title > max_width - 6 then
 		title = wezterm.truncate_right(title, max_width * 2 - 6) .. "..."
