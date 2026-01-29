@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 
 runner=$(dirname $0)/run-devenv.sh
 # Let mise up be called in container
