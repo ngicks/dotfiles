@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 
 local user_def_actions = require("action")
+local env = require("env")
 
 local act = wezterm.action
 
@@ -64,6 +65,21 @@ fi
 	)
 end
 
+local spawn_shell = function(script)
+	return wezterm.action_callback(function(win, pane)
+		local env_vars = env.get_env_vars_for_spawn(pane)
+		local shell = env_vars.SHELL or "bash"
+		win:perform_action(
+			act.SpawnCommandInNewWindow({
+				args = { shell, "-l", "-c", script(win, pane) },
+				domain = "CurrentPaneDomain",
+				set_environment_variables = env_vars,
+			}),
+			pane
+		)
+	end)
+end
+
 local M = {}
 
 M.commands = function()
@@ -76,30 +92,15 @@ M.commands = function()
 		{
 			brief = "LLM Launch Claude Code Haiku",
 			icon = "md_comment_account",
-			action = wezterm.action_callback(function(win, pane)
-				local script = launch_haiku_script("llm")
-				win:perform_action(
-					act.SpawnCommandInNewWindow({
-						args = { "bash", "-l", "-c", script },
-						domain = "CurrentPaneDomain",
-					}),
-					pane
-				)
+			action = spawn_shell(function()
+				return launch_haiku_script("llm")
 			end),
 		},
 		{
 			brief = "LLM DevEnv",
 			icon = "md_console",
-			action = wezterm.action_callback(function(win, pane)
-				local cwd = pane_cwd(pane, "~")
-				local script = create_tmux_session_or_window_script("llm", cwd)
-				win:perform_action(
-					act.SpawnCommandInNewWindow({
-						args = { "bash", "-l", "-c", script },
-						domain = "CurrentPaneDomain",
-					}),
-					pane
-				)
+			action = spawn_shell(function(_, pane)
+				return create_tmux_session_or_window_script("llm", pane_cwd(pane, "~"))
 			end),
 		},
 	}

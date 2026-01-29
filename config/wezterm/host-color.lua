@@ -1,6 +1,7 @@
 local wezterm = require("wezterm")
 
 local sha256 = require("sha256").sha256
+local env = require("env")
 
 local M = {}
 
@@ -32,24 +33,8 @@ M.contrast_color = function(c)
 	end
 end
 
--- see
--- https://wezterm.org/config/lua/PaneInformation.html
--- and
--- https://wezterm.org/config/lua/PaneInformation.html
-M.user_vars_from_pane_or_pane_info = function(paneOrPaneInfo)
-	-- p["get_"..propName](p) did not work well somehow.
-	-- I'll keep doing this dirty copy-pasting until I can find a fix.
-	local sucess, result = pcall(function()
-		return paneOrPaneInfo:get_user_vars()
-	end)
-	if sucess then
-		return result
-	end
-	if paneOrPaneInfo.user_vars then
-		return paneOrPaneInfo.user_vars
-	end
-	return nil
-end
+-- Delegate to env.lua for backward compatibility
+M.user_vars_from_pane_or_pane_info = env.user_vars_from_pane_or_pane_info
 
 M.domain_name_from_pane_or_pane_info = function(paneOrPaneInfo)
 	local sucess, result = pcall(function()

@@ -581,4 +581,21 @@ if [[ -z "${WEZTERM_SHELL_SKIP_CWD-}" ]] ; then
   fi
 fi
 
+# Set static environment variables as user vars (called once at init)
+__wezterm_set_env_user_vars() {
+  if [[ -n "${WEZTERM_SHELL_SKIP_USER_VARS-}" ]]; then
+    return
+  fi
+  __wezterm_set_user_var "env_SHELL" "${SHELL:-}"
+  __wezterm_set_user_var "env_XDG_RUNTIME_DIR" "${XDG_RUNTIME_DIR:-}"
+  __wezterm_set_user_var "env_HOME" "${HOME:-}"
+  __wezterm_set_user_var "env_USER" "${USER:-}"
+  __wezterm_set_user_var "env_LANG" "${LANG:-}"
+  __wezterm_set_user_var "env_LC_ALL" "${LC_ALL:-}"
+  __wezterm_set_user_var "env_TMUX" "${TMUX:-}"
+}
+
+# Call once at script load (after __wezterm_set_user_var is defined)
+__wezterm_set_env_user_vars
+
 true
