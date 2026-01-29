@@ -1,7 +1,5 @@
 #!/bin/env bash
 
-tag=$(git describe --tags --abbrev=0 | cut -c 2-)
-
 runner=$(dirname $0)/run-devenv.sh
 # Let mise up be called in container
 # because it always tries to update things
