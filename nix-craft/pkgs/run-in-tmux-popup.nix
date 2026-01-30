@@ -10,19 +10,21 @@ buildGoModule rec {
   src = fetchFromGitHub {
     owner = "ngicks";
     repo = "run-in-tmux-popup";
-    rev = "bd95f5dbcacf00bde3f89afd9b34666f6819612c";
-    hash = "sha256-tn4e70Bl8cbGv4iDV8PzM7LGnDUfphv788nhbU9CybQ=";
+    rev = "817f0e1feac528bfe66e35d161f29613203d4098";
+    hash = "sha256-5sQx6W/68QDCYtZE6L1gAiJO4Afe+WA/KKncApELXxA=";
   };
 
-  vendorHash = null;
+  vendorHash = "sha256-2jXbhAzK87W5c4gBMOIeh2qve00fkEWbWasg+sLqohk=";
+  proxyVendor = true;
 
   subPackages = [
     "cmd/tmux-popup-pinentry-curses"
     "cmd/zellij-popup-pinentry-curses"
+    "cmd/pickentry"
   ];
 
   meta = with lib; {
-    description = "Launch pinentry-curses in tmux/zellij popup";
+    description = "Run things in tmux/zllij popup";
     homepage = "https://github.com/ngicks/run-in-tmux-popup";
     license = licenses.mit;
     mainProgram = "tmux-popup-pinentry-curses";
