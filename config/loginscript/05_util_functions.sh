@@ -21,3 +21,7 @@ devenv() {
 gcd() {
   cd $(FZF_DEFAULT_COMMAND="fd --type d --hidden --no-ignore '^\.git\$' ${GITREPO_ROOT:-$HOME/gitrepo} --exec dirname {}" fzf --reverse)
 }
+
+bapp() {
+  "${XDG_CONFIG_HOME:-$HOME/.config}/mydotfiles/background-app/run.sh"
+}

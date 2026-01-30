@@ -28,6 +28,11 @@ in
     recursive = true;
   };
 
+  xdg.configFile."mydotfiles" = {
+    source = ../../config/mydotfiles;
+    recursive = true;
+  };
+
 
   imports = [
     ./fzf

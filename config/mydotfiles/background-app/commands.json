@@ -1,0 +1,7 @@
+[
+  {
+    "id": "bastion-chrome",
+    "cmd": "${XDG_CONFIG_HOME:-$HOME/.config}/mydotfiles/background-app/scripts/bastion-chrome.sh"
+  },
+  { "id": "drawio", "cmd": "drawio" }
+]
