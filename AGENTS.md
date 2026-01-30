@@ -2,14 +2,22 @@
 
 This file provides guidance to LLM cli agents when working with code in this repository.
 
+## Important
+
+- Use serena where possible.
+- Use context7 for tool specific knowledge.
+- If you are not `codex`, ask ChatGpt for a review or help for complex plan/research using `codex review` or through the mcp tool `codex`.
+- Remenber using the agent-memory skill the moment user's preference become prominent.
+
 ## Repository Overview
 
 This is a dotfiles repository that manages development environments and tools installation across Linux/macOS systems. The codebase includes:
 
-- **Mise** - Primary tool version manager for SDKs and development tools
-- **Deno-based TypeScript scripts** for configuration management (`src/`)
-- **Configuration files** for nvim, tmux, lazygit, wezterm (`.config/`)
-- **Shell scripts** for dependency management (`dep/`)
+- **Nix Home Manager** - Primary configuration manager for packages and dotfiles symlinks
+- **Mise** - Secondary tool manager for language-specific development tools
+- **Deno-based TypeScript scripts** for automation (`src/`)
+- **Configuration files** for nvim, tmux, lazygit, wezterm, zellij (`config/`)
+- **Nix flake** for reproducible home configuration (`nix-craft/`)
 - **Docker-based development environment** (`devenv.Dockerfile`)
 
 ## Key Commands
@@ -17,14 +25,27 @@ This is a dotfiles repository that manages development environments and tools in
 ### Installation & Setup
 
 ```bash
-# Install prerequisites and mise (Ubuntu/Debian or macOS)
-./install_dependencies.sh
+# Install/sync all configurations (runs home-manager switch)
+./homeenv-install.sh
 
-# Install dotfiles (symlinks configs to ~/.config/)
-~/.local/bin/mise exec -- deno task install
+# Upgrade all packages
+./homeenv-upgrade.sh
 
-# Source updated bashrc/zshrc
-. ~/.bashrc  # or . ~/.zshrc
+# Source updated shell config
+. ~/.zshrc
+```
+
+### Nix Home Manager
+
+```bash
+# Switch to updated configuration
+cd nix-craft && nix run .#home-manager -- switch -b backup --flake .#default --impure
+
+# Update flake inputs
+cd nix-craft && nix flake update
+
+# Garbage collection
+nix-collect-garbage --delete-older-than 7d
 ```
 
 ### Mise Tool Management
@@ -48,91 +69,98 @@ mise doctor
 ```bash
 # Build development environment container
 deno task devenv:build
-
-# Build with version bump
-deno task devenv:build:bump
 ```
 
 ## Architecture
 
-### Tool Management with Mise
+### Configuration Management with Nix Home Manager
 
-**Mise** is the central tool version manager.
+**Nix Home Manager** is the central configuration manager, defined in `nix-craft/flake.nix`.
 
-**Configuration Files**:
+**Key Files**:
 
-- `.config/mise/config.toml` - Main mise configuration with all tool definitions
-- `.config/initial_path/01_mise.sh` - Shell activation script (auto-loaded at shell startup)
+- `nix-craft/flake.nix` - Flake definition with inputs (nixpkgs, home-manager)
+- `nix-craft/home/home.nix` - Main home configuration with packages and imports
+- `nix-craft/home/*/default.nix` - Per-program module configurations
+
+**Managed via Home Manager**:
+
+- **Core runtimes**: nodejs, deno, bun, python, uv, ruby, rustup, go
+- **CLI utilities**: ripgrep, bat, eza, fd, htop, bottom, dust, procs, sd, yazi, zoxide
+- **Kubernetes/DevOps**: kubectl, helm, kompose, kops, sops, age, nerdctl
+- **Git tools**: gh, glab
+- **Protobuf**: protobuf, buf, protoc-gen-go, protoc-gen-go-grpc, grpc-gateway
+- **System tools**: gnupg, gnumake, gcc, jq, curl, wget, and more
+
+**Symlink Strategy** (via `xdg.configFile`):
+
+- Source: Repository's `config/` directory
+- Destination: User's `~/.config/` directory
+- Managed by: Home Manager `xdg.configFile` declarations
+- Automatic backup: Uses `-b backup` flag during switch
+
+### Secondary Tool Management with Mise
+
+**Mise** handles tools that benefit from version management or aren't well-suited for Nix.
+
+**Configuration**: `config/mise/mise.toml`
 
 **Managed Tools** (via different backends):
 
-- **Core runtimes**: deno, node, bun, python, uv, ruby, rust, go
-- **Go tools** (`go:` backend): gopls, lazygit, fzf, goimports, gofumpt, golangci-lint, delve, buf, protoc-gen-\*
-- **Cargo tools** (`cargo:` backend): yazi, ripgrep, zellij, bat, exa, fd-find, bottom, du-dust, procs
-- **NPM tools** (`npm:` backend): claude-code, gemini-cli, MCP servers
-- **Pipx tools** (`pipx:` backend): serena, spec-kit
-- **GitHub releases**: neovim
+- **LLM tools** (`npm:` backend): gemini-cli, codex
+- **MCP servers** (`npm:`, `pipx:` backends): context7-mcp, serena
+- **Go development** (`go:` backend): gopls, goimports, gofumpt, staticcheck, golangci-lint, delve, gotests
+- **Helm tools** (`aqua:` backend): chart-releaser, chart-testing
+- **Other**: ruff, zenn-cli, betterproto2_compiler
 
-**Mise Features**:
+**Mise Settings**:
 
 - `auto_install = true` - Automatically installs missing tools
-- `lockfile = true` - Creates config.lock for reproducible installs
+- `lockfile = true` - Creates mise.lock for reproducible installs
 - `binstall = true` - Uses cargo-binstall for faster Rust tool installation
 - `uvx = true` - Uses uvx for pipx backend
-- `bun = true` - Uses bun for npm backend
 
-### Configuration Management Flow
+### Shell Configuration Flow
 
-1. **Environment Loading**:
-   - `~/.config/env/*.env` files loaded first (key=value pairs)
-   - `~/.config/env/*.sh` files loaded second (bash scripts)
-   - Mise activation happens in `01_mise.sh` (auto-loaded)
-   - Allows layered configuration with overrides
-
-2. **Symlink Strategy**:
-   - Source: Repository's `.config/` directory
-   - Destination: User's `~/.config/` directory
-   - Managed by: `src/install.ts` Deno script
-   - Non-destructive: Backs up existing configs
-
-3. **PATH Management**:
-   - Mise shims: `~/.local/share/mise/shims/` (managed by mise)
-   - User binaries: `~/bin/`
-   - SDK binaries: `~/.local/*/bin/`
-   - PATH setup: Managed via `~/.config/env/00_path.sh`
+1. **Home Manager** generates `.zshrc` with embedded configuration
+2. **loginscript loading**: Sources `~/.config/loginscript/*.sh` (from `config/loginscript/`)
+3. **Environment loading**: Sources `~/.config/env/*.env` then `~/.config/env/*.sh`
+4. **Daily update check**: Runs `deno task update:daily` if update is due
 
 ### Installation Flow
 
-1. `install_dependencies.sh` detects OS and package manager (apt/brew)
-2. Installs system packages via `dep/apt/` or `dep/brew/`
-3. Installs mise via `dep/common/mise.sh` (runs `curl https://mise.run | sh`)
-4. Installs common tools via `dep/common/` (Oh My Zsh, dasel)
-5. `deno task install` symlinks configuration files to `~/.config/`
-6. Shell restart loads mise activation and all tools become available
+1. **Prerequisites**: Nix package manager with flakes enabled
+2. `homeenv-install.sh` runs:
+   - System package manager update
+   - Neovim lazy.nvim plugin restore
+   - Mise tool installation
+   - Home Manager switch (symlinks configs)
+3. Shell restart loads all configurations
 
-### Dependency Installer Structure
+### Upgrade Flow
 
-The `install_dependencies.sh` script supports multiple package managers:
+`homeenv-upgrade.sh` runs:
 
-- `dep/apt/` - Ubuntu/Debian system packages
-- `dep/brew/` - macOS Homebrew packages
-- `dep/common/` - Cross-platform tools (mise, Oh My Zsh, dasel)
-
-Scripts executed as separate processes (not sourced) for environment isolation.
+- System package manager update
+- Mise tool upgrades
+- Neovim lazy.nvim sync
+- Nix flake update
 
 ### Neovim Configuration
 
 - **Base**: NvChad framework
+- **Location**: `config/nvim/`
 - **Structure**:
-  - `configs/` - Eagerly loaded configuration files
-  - `plugins/` - Lazy.nvim plugin definitions (auto-injected)
-  - `setup/` - Auto-loaded setup scripts
-  - `toggleterm_cmd/` - Manually loaded terminal commands
-- **Font Requirement**: BlexMono Nerd Font
+  - `lua/config/` - Configuration files
+  - `lua/plugins/` - Lazy.nvim plugin definitions
+  - `lua/setup/` - Setup scripts
+  - `lua/toggleterm_cmd/` - Terminal command definitions
+  - `lua/func/` - Custom functions
 
 ### Tmux Configuration
 
-- Uses `xterm-256color` for better compatibility with older software
+- **Location**: `config/tmux/`
+- Uses `xterm-256color` for better compatibility
 - Status line features:
   - Colored mode indicator: bright green (VIEW), blue (COPY)
   - Colored prefix indicator: bright violet (ON), dark purple (OFF)
@@ -142,21 +170,21 @@ Scripts executed as separate processes (not sourced) for environment isolation.
 
 ## File Locations
 
-- **Deno tasks**: `deno.json` - Main task definitions
-- **TypeScript source**: `src/` - Installation and management scripts
-  - `src/install.ts` - Dotfiles symlink manager
+- **Nix flake**: `nix-craft/flake.nix` - Main flake definition
+- **Home config**: `nix-craft/home/home.nix` - Package list and module imports
+- **Program modules**: `nix-craft/home/*/default.nix` - Per-program configurations
+- **Deno tasks**: `deno.json` - Task definitions
+- **TypeScript source**: `src/` - Automation scripts
   - `src/update_daily.ts` - Daily update automation
   - `src/devenv_build.ts` - Docker environment builder
-- **Mise configuration**: `.config/mise/config.toml` - Tool definitions and settings
-- **Dependency scripts**: `dep/` - Package manager specific installers
-  - `dep/apt/` - Ubuntu/Debian packages
-  - `dep/brew/` - macOS packages
-  - `dep/common/` - Cross-platform tools (mise, Oh My Zsh, dasel)
-- **Config templates**: `.config/nvim/`, `.config/tmux/`, `.config/lazygit/`, `.config/wezterm/`
-- **Environment configs**: `.config/env/` - Shell environment setup (auto-loaded)
+- **Mise configuration**: `config/mise/mise.toml` - Development tool definitions
+- **Config templates**: `config/nvim/`, `config/tmux/`, `config/wezterm/`, `config/zellij/`
+- **Login scripts**: `config/loginscript/` - Shell startup scripts
+- **Homeenv scripts**: `scripts/homeenv/` - Modular installation scripts
+- **Custom packages**: `nix-craft/pkgs/` - Nix package definitions
 
 ## Platform Support
 
-- **Primary target**: Linux/amd64 with `/bin/bash` or `/bin/zsh`
-- **Partial support**: macOS (darwin)
+- **Primary target**: Linux/amd64 with Nix and `/bin/zsh`
+- **Supported systems**: x86_64-linux, aarch64-linux, x86_64-darwin, aarch64-darwin
 - **WSL-specific features**: Wezterm config sync to Windows host via `update:daily` task
