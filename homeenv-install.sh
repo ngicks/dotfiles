@@ -10,6 +10,10 @@ pushd $dir
   echo ""
   ./scripts/homeenv/system-package-manager-update.sh
   echo ""
+  echo "switch home manager"
+  echo ""
+  ./scripts/homeenv/nix-run-home-manager.sh
+  echo ""
   echo "nvim lazy / ts restore"
   echo ""
   ./scripts/homeenv/nvim-lazy-restore.sh
@@ -17,8 +21,4 @@ pushd $dir
   echo "mise install"
   echo ""
   ./scripts/homeenv/mise-install.sh
-  echo ""
-  echo "switch home manager"
-  echo ""
-  ./scripts/homeenv/nix-run-home-manager.sh
 popd

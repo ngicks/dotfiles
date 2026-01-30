@@ -23,4 +23,7 @@ pushd $dir
   pushd ./nix-craft/
     nix flake update
   popd
+  # commit changes if any
+  # call manually home-siwtch
+  # ./scripts/homeenv/nix-run-home-manager.sh
 popd
