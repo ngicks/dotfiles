@@ -103,9 +103,6 @@ in
     chafa          # ASCII image preview fallback
     resvg          # SVG preview
 
-    # Design Tools
-    drawio         # Diagram editor (offline)
-
     # System/Build Tools
     gnupg          # GPG encryption
     gnumake        # Make build tool
