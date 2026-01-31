@@ -8,10 +8,12 @@ pim() {
   cat > "$tmpfile"
 
   # Change to temp file's directory
-  cd "$(dirname "$tmpfile")" || return 1
+  pushd "$(dirname "$tmpfile")" || return 1
 
   # Open in editor (priority: EDITOR > VISUAL > vim)
   "${EDITOR:-${VISUAL:-vim}}" "$tmpfile"
+
+  popd
 }
 
 devenv() {
