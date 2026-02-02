@@ -77,7 +77,7 @@ version = "0.1.56"
 backend = "npm:claude-code-webui"
 
 [[tools."npm:vibe-kanban"]]
-version = "0.0.166"
+version = "0.0.168"
 backend = "npm:vibe-kanban"
 
 [[tools."npm:zenn-cli"]]
