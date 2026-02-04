@@ -17,10 +17,16 @@ end
 M.merge = function(plugins)
   for _, plugin in ipairs(plugins) do
     local path = plugin[1]:gsub("%.", "_")
-    local conf = require("plugins.config." .. path:gsub("/", "."))
-    for _, f in ipairs { "init", "opts", "config", "main", "build" } do
-      if conf[f] then
-        plugin[f] = conf[f]
+
+    local success, conf = pcall(require, "plugins.config." .. path:gsub("/", "."))
+
+    if not success then
+      vim.notify("missing plugin config: " .. path, vim.log.levels.WARN)
+    else
+      for _, f in ipairs { "init", "opts", "config", "main", "build" } do
+        if conf[f] then
+          plugin[f] = conf[f]
+        end
       end
     end
   end
