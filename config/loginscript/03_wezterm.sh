@@ -558,8 +558,7 @@ if [[ -z "${WEZTERM_SHELL_SKIP_SEMANTIC_ZONES-}" ]]; then
     blehook PRECMD+=__wezterm_semantic_precmd
     blehook PREEXEC+=__wezterm_semantic_preexec
   else
-    precmd_functions+=(__wezterm_semantic_precmd)
-    preexec_functions+=(__wezterm_semantic_preexec)
+    safe_hook_pair __wezterm_semantic_precmd __wezterm_semantic_preexec
   fi
 fi
 
@@ -568,8 +567,7 @@ if [[ -z "${WEZTERM_SHELL_SKIP_USER_VARS-}" ]]; then
     blehook PRECMD+=__wezterm_user_vars_precmd
     blehook PREEXEC+=__wezterm_user_vars_preexec
   else
-    precmd_functions+=(__wezterm_user_vars_precmd)
-    preexec_functions+=(__wezterm_user_vars_preexec)
+    safe_hook_pair __wezterm_user_vars_precmd __wezterm_user_vars_preexec
   fi
 fi
 
@@ -577,7 +575,7 @@ if [[ -z "${WEZTERM_SHELL_SKIP_CWD-}" ]] ; then
   if [[ -n "${BLE_VERSION-}" ]]; then
     blehook PRECMD+=__wezterm_osc7
   else
-    precmd_functions+=(__wezterm_osc7)
+    safe_hook_append precmd_functions __wezterm_osc7
   fi
 fi
 
