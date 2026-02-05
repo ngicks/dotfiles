@@ -136,6 +136,8 @@ in
     iproute2       # ip, ss (Linux networking)
     traceroute     # Network path tracing
 
+    libkrun
+
     # Custom-built packages
     run-in-tmux-popup  # pinentry in tmux/zellij popup
   ];
