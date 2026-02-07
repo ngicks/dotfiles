@@ -1,5 +1,5 @@
 git:
   overrideGpg: true
 os:
-  copyToClipboardCmd: echo {{text}} | xsel -bi
+  copyToClipboardCmd: printf "\033]52;c;$(printf '{{text}}' | base64 -w 0)\a" > /dev/tty
   editPreset: nvim

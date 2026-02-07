@@ -722,7 +722,7 @@ web_client {
 // copy_command "wl-copy"                    // wayland
 // copy_command "pbcopy"                     // osx
 //
-copy_command "xsel -bi"
+// copy_command "xsel -bi" // disabled: zellij uses OSC52 by default when unset
 // Choose the destination for copied text
 // Allows using the primary selection buffer (on x11/wayland) instead of the system clipboard.
 // Does not apply when using copy_command.
