@@ -41,14 +41,13 @@ RUN <<EOF
     # For sshfs.nvim
     mkdir -p ~/mnt/sshfs
 
-    mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles" && \
+    mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles"
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
 
     NIX_GLIBC_PATH=$(nix-build '<nixpkgs>' -A glibc --no-out-link)
     ln -s ${NIX_GLIBC_PATH}/lib /lib
     ln -s ${NIX_GLIBC_PATH}/lib64 /lib64
 EOF
-
 
 WORKDIR /root
 

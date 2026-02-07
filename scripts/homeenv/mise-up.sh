@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-runner=$(dirname $0)/run-devenv.sh
+runner=$(dirname $0)/../../devenv/scripts/run-devenv.sh
 # Let mise up be called in container
 # because it always tries to update things
 # under `~/.config/mise/`.

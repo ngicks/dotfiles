@@ -60,6 +60,14 @@ NPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/npm
 NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_DIR}/npmrc
 NPM_CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/npm
 
+timezone_opts=""
+if [ -n "${TZ:-}" ]; then
+  timezone_opts="${timezone_opts} --env TZ=${TZ}"
+fi
+if [ -f /etc/localtime ]; then
+  timezone_opts="${timezone_opts} --mount type=bind,src=/etc/localtime,dst=/etc/localtime,ro"
+fi
+
 if_ro() {
   if [[ "${DEVENV_READONLY:-}" == "1" ]]; then
     printf "%s" "$1"
@@ -82,6 +90,7 @@ podman container run -it --rm --init \
   \
   --env SSL_CERT_FILE=${SSL_CERT_FILE}\
   --mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro\
+  ${timezone_opts}\
   \
   --mount type=bind,src=${XDG_CONFIG_HOME:-$HOME/.config}/env,dst=/root/.config/env,ro\
   \

@@ -53,7 +53,7 @@ async function main() {
     "--build-arg",
     `GIT_TAG=${exp ? "exp" : ver}`,
     "-f",
-    "./devenv.Dockerfile",
+    "./devenv/Containerfile",
     "-t",
     "localhost/devenv/devenv:" + ver,
     "--no-cache",
