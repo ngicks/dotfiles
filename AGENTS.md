@@ -7,9 +7,9 @@ This file provides guidance to LLM cli agents when working with code in this rep
 - Use serena where possible.
 - Use context7 for tool specific knowledge.
 - If you are not `codex`:
-  - ALWAYS output plans to under `./doc/plans`, following file format `${RFC3339-DATETIME-FORMAT}-${name-on-plan}.md`
+  - ALWAYS output plans to under `./doc/plans`, following file format `${RFC3339-DATETIME-FORMAT}-${name-of-plan}.md`
   - ALWAYS ask `codex` to review your plan, using `codex review`.
-- Before planning, you may lookup through `./doc/plans` to retrieve important context.
+- Before planning, you may lookup through `./doc/plans` to retrieve related context.
 - In difficult reserach, complex planning, ask `codex` for help using `codex mcp` tool.
 - You might be in a restricted enviroment: some commands may fail and some special files may not be present (e.g. `/dev/kvm`).
 - Remenber to use the agent-memory skill the moment user's preference become prominent.
