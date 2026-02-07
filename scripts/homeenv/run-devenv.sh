@@ -85,7 +85,7 @@ podman container run -it --rm --init \
   \
   --mount type=bind,src=${XDG_CONFIG_HOME:-$HOME/.config}/env,dst=/root/.config/env,ro\
   \
-  --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim,ro\
+  --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim\
   \
   --env MISE_GLOBAL_CONFIG_FILE=/root/.config/mise_host/mise.toml \
   --mount type=bind,src=${MISE_CONFIG_DIR},dst=/root/.config/mise_host,ro\
