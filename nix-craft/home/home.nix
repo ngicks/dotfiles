@@ -116,9 +116,6 @@ in
     gawk           # GNU awk
     gnused         # GNU sed
     gnugrep        # GNU grep
-    gnutar
-    coreutils
-    util-linux     # script(1)
 
     # Terminal support
     ncurses        # Terminfo database for less/vim/etc
@@ -138,21 +135,8 @@ in
     dig            # DNS lookup
     iproute2       # ip, ss (Linux networking)
     traceroute     # Network path tracing
-    openssh        # ssh, ssh-keygen
 
-    # Container image tools
-    skopeo         # OCI image operations 
-    # Networking
-    passt          # user-mode networking (pasta/passt)   
-
-    libkrun        # light weight VMM(Virtual Machine Monitor)
-    qemu-utils     # qemu-img
-    cdrkit         # genisoimage
-    libvirt        # virsh, libvirtd, virtqemud, virtlogd
-    virtiofsd      # vhost-user virtio-fs backend
-
-    # Libraries
-    libselinux
+    libkrun
 
     # Custom-built packages
     run-in-tmux-popup  # pinentry in tmux/zellij popup

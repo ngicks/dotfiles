@@ -10,4 +10,3 @@
 build/podman-static/podman-static
 build/krun/crun
 build/krun/built
-build/krun/crun-vm
