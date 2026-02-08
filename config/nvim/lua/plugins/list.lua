@@ -19,6 +19,7 @@
 return {
   { -- utils
     "nvim-lua/plenary.nvim",
+    lazy = false,
   },
   -- base: thanks nvchad!
   {
