@@ -1,24 +1,35 @@
 {
   "tasks": {
     "update:daily": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts",
-    "devenv:build": "deno run -P=devenv:build src/devenv_build.ts"
+    "devenv:build": "deno run -P=devenv:build src/devenv_build.ts",
+    "devenv:save": "deno run -P=devenv:save src/devenv_save.ts",
+    "devenv:pull": "deno run -P=devenv:pull src/devenv_pull.ts"
   },
   "imports": {
     "#/": "./src/"
   },
   "permissions": {
-    "install": {
+    "devenv:save": {
       "read": true,
       "write": true,
+      "run": ["git", "podman", "gzip"],
       "env": [
-        "SHELL",
         "HOME",
-        "XDG_CONFIG_HOME",
         "XDG_CACHE_HOME",
-        "USERPROFILE",
-        "AppData",
-        "LocalAppData"
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "NO_PROXY",
+        "no_proxy",
+        "SSL_CERT_FILE"
       ]
+    },
+    "devenv:pull": {
+      "read": true,
+      "write": true,
+      "run": ["git", "ssh", "scp", "podman"],
+      "env": ["HOME", "XDG_CACHE_HOME"]
     },
     "devenv:build": {
       "read": ["./devenv_ver"],
