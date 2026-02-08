@@ -13,6 +13,10 @@ local serverIndependentTools = {
   "kdlfmt",
 }
 
+local nonMasonServers = {
+  "moonbit_lsp",
+}
+
 local function get_servers()
   local servers = {}
 
@@ -31,6 +35,20 @@ local function get_servers()
   return vim.list_extend(servers, nonCustomizedServers)
 end
 
+local function get_mason_servers()
+  local exclude = {}
+  for _, s in ipairs(nonMasonServers) do
+    exclude[s] = true
+  end
+  local mason = {}
+  for _, s in ipairs(get_servers()) do
+    if not exclude[s] then
+      table.insert(mason, s)
+    end
+  end
+  return mason
+end
+
 local function get_tools()
   local merge = require("func.table").insert_unique
   local tools = {}
@@ -44,5 +62,6 @@ end
 
 return {
   lsp = get_servers(),
+  mason_lsp = get_mason_servers(),
   tools = get_tools(),
 }

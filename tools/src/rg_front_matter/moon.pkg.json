@@ -1,0 +1,10 @@
+{
+  "is-main": true,
+  "import": [
+    {
+      "path": "dotfiles/tools/src/lib",
+      "alias": "lib"
+    },
+    "moonbitlang/core/env"
+  ]
+}

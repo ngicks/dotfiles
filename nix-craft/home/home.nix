@@ -12,14 +12,26 @@ in
   home.sessionPath = [
     "$HOME/.nix-profile/bin"
     "$HOME/.local/bin"
+    "$HOME/.local/share/moonbit/bin"
   ];
 
   home.sessionVariables = {
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/.config/mise/mise.toml:$HOME/.dotfiles/config/mise/mise.toml";
+      MOON_HOME = "$HOME/.local/share/moonbit";
   };
 
   home.file.".local/bin/pinentry.sh" = {
     source = ../../scripts/pinentry.sh;
+    executable = true;
+  };
+
+  home.file.".local/bin/find-root" = {
+    source = ../../scripts/tools/find-root.sh;
+    executable = true;
+  };
+
+  home.file.".local/bin/rg-front-matter" = {
+    source = ../../scripts/tools/rg-front-matter.sh;
     executable = true;
   };
 

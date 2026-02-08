@@ -21,4 +21,12 @@ pushd $dir
   echo "mise install"
   echo ""
   ./scripts/homeenv/mise-install.sh
+  echo ""
+  echo "moonbit install"
+  echo ""
+  ./scripts/homeenv/moonbit-install.sh
+  echo ""
+  echo "moonbit tools build"
+  echo ""
+  ./scripts/homeenv/moonbit-tools-build.sh
 popd
