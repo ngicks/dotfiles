@@ -54,6 +54,9 @@ MISE_CONFIG_DIR=$HOME/.dotfiles/config/mise
 CARGO_HOME=${CARGO_HOME:-$HOME/.cargo}
 RUSTUP_HOME=${RUSTUP_HOME:-$HOME/.rustup}
 
+DENO_DIR=${DENO_DIR:-$HOME/.cache/deno}
+DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT:-$HOME/.deno/bin}
+
 UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 
 NPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/npm
@@ -101,6 +104,11 @@ podman container run -it --rm --init \
   --mount type=bind,src=${MISE_CONFIG_DIR},dst=/root/.config/mise_host,ro\
   --env MISE_DATA_DIR=${MISE_DATA_DIR}\
   --mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR}$(ro)\
+  \
+  --env DENO_DIR=${DENO_DIR}\
+  --mount type=bind,src=${DENO_DIR},dst=${DENO_DIR}\
+  --env DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT}\
+  --mount type=bind,src=${DENO_INSTALL_ROOT},dst=${DENO_INSTALL_ROOT}\
   \
   --env UV_HOME=${UV_HOME}\
   --mount type=bind,src=${UV_HOME},dst=${UV_HOME}$(ro)\
