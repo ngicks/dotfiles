@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 pane_id="${1:-${TMUX_PANE:-}}"
