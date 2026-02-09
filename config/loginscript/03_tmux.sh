@@ -2,7 +2,7 @@ __update_pane_title() {
   printf '\033]2;%s\033\\' "$(uname -n)"
 }
 
-if [[ -n ${SSH_CONNECTION:-} && -z ${NVIM:-} ]]; then
+if [[ -z ${NVIM:-} ]]; then
   if [[ -n "${ZSH_NAME:-}" ]]; then
     autoload -Uz add-zsh-hook
     add-zsh-hook precmd __update_pane_title
