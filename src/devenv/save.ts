@@ -1,5 +1,7 @@
 import path from "node:path";
 
+import { mergeReadableStreams } from "jsr:@std/streams";
+
 import { build, getTag } from "#/devenv/build.ts";
 import { basePaths } from "#/lib/config.ts";
 
@@ -57,11 +59,11 @@ export async function save(noBuild: boolean, isExperimental: boolean) {
     truncate: true,
   });
 
+  const errStream = mergeReadableStreams(podmanProc.stderr, gzipProc.stderr);
   await Promise.all([
     podmanProc.stdout.pipeTo(gzipProc.stdin),
-    podmanProc.stderr.pipeTo(Deno.stderr.writable, { preventClose: true }),
     gzipProc.stdout.pipeTo(outFile.writable),
-    gzipProc.stderr.pipeTo(Deno.stderr.writable, { preventClose: true }),
+    errStream.pipeTo(Deno.stderr.writable, { preventClose: true }),
   ]);
 
   const [podmanResult, gzipResult] = await Promise.all([

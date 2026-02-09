@@ -15,6 +15,7 @@
       "run": ["git", "podman", "gzip"],
       "env": [
         "HOME",
+        "XDG_CONFIG_HOME",
         "XDG_CACHE_HOME",
         "HTTP_PROXY",
         "HTTPS_PROXY",
