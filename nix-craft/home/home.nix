@@ -2,6 +2,7 @@
 
 let
   run-in-tmux-popup = pkgs.callPackage ../pkgs/run-in-tmux-popup.nix { };
+  lsp-gw = pkgs.callPackage ../pkgs/lsp-gw.nix { };
 in
 {
   home.username = builtins.getEnv "USER";
@@ -140,5 +141,6 @@ in
 
     # Custom-built packages
     run-in-tmux-popup  # pinentry in tmux/zellij popup
+    lsp-gw             # Neovim LSP gateway CLI
   ];
 }
