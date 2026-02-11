@@ -1,5 +1,0 @@
-# github.com/neovim/go-client v1.2.1
-## explicit; go 1.15
-github.com/neovim/go-client/msgpack
-github.com/neovim/go-client/msgpack/rpc
-github.com/neovim/go-client/nvim
