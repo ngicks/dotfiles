@@ -1,6 +1,6 @@
 -- lsp_gateway: Lua module for Neovim LSP gateway.
--- NOTE: This is the interactive Neovim copy.
--- A second copy lives at tools/lsp-gw/server/lua/lsp_gateway/init.lua (Go-embedded for CLI use).
+-- NOTE: This is the Go-embedded copy used by the lsp-gw CLI at runtime.
+-- A second copy lives at config/nvim/lua/lsp_gateway/init.lua for interactive Neovim use.
 -- Keep both copies in sync when making changes.
 
 local M = {}

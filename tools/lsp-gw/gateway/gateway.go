@@ -1,4 +1,4 @@
-package main
+package gateway
 
 import (
 	"context"
@@ -7,6 +7,16 @@ import (
 	"time"
 
 	"github.com/neovim/go-client/nvim"
+)
+
+// Lua code strings for ExecLua calls.
+const (
+	LuaGetDefinition      = `return require('lsp_gateway').get_definition(...)`
+	LuaGetReferences      = `return require('lsp_gateway').get_references(...)`
+	LuaGetHover           = `return require('lsp_gateway').get_hover(...)`
+	LuaGetDocumentSymbols = `return require('lsp_gateway').get_document_symbols(...)`
+	LuaGetDiagnostics     = `return require('lsp_gateway').get_diagnostics(...)`
+	LuaHealth             = `return require('lsp_gateway').health()`
 )
 
 // Connect dials the Neovim Unix socket and returns an *nvim.Nvim client.
@@ -28,34 +38,34 @@ func Connect(socket string) (*nvim.Nvim, error) {
 }
 
 // QueryGateway executes a Lua snippet via ExecLua and returns the decoded result.
-func QueryGateway(client *nvim.Nvim, luaCode string, args ...interface{}) (interface{}, error) {
-	var result interface{}
+func QueryGateway(client *nvim.Nvim, luaCode string, args ...any) (any, error) {
+	var result any
 	err := client.ExecLua(luaCode, &result, args...)
 	if err != nil {
 		return nil, fmt.Errorf("exec lua: %w", err)
 	}
-	return normalizeResult(result), nil
+	return NormalizeResult(result), nil
 }
 
-// normalizeResult recursively converts map[interface{}]interface{} (from msgpack)
+// NormalizeResult recursively converts map[interface{}]interface{} (from msgpack)
 // to map[string]interface{} for JSON serialization.
-func normalizeResult(v interface{}) interface{} {
+func NormalizeResult(v any) any {
 	switch val := v.(type) {
-	case map[interface{}]interface{}:
-		m := make(map[string]interface{}, len(val))
+	case map[any]any:
+		m := make(map[string]any, len(val))
 		for k, v := range val {
-			m[fmt.Sprintf("%v", k)] = normalizeResult(v)
+			m[fmt.Sprintf("%v", k)] = NormalizeResult(v)
 		}
 		return m
-	case map[string]interface{}:
-		m := make(map[string]interface{}, len(val))
+	case map[string]any:
+		m := make(map[string]any, len(val))
 		for k, v := range val {
-			m[k] = normalizeResult(v)
+			m[k] = NormalizeResult(v)
 		}
 		return m
-	case []interface{}:
+	case []any:
 		for i, v := range val {
-			val[i] = normalizeResult(v)
+			val[i] = NormalizeResult(v)
 		}
 		return val
 	default:
