@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/watage/lsp-gw/gateway"
+	pb "github.com/watage/lsp-gw/proto"
 )
 
 func newDiagnosticsCmd() *cobra.Command {
@@ -13,13 +13,24 @@ func newDiagnosticsCmd() *cobra.Command {
 		Short: "Show file diagnostics",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			socket, projectRoot, err := resolveSocketAndProject()
+			project, err := resolveProject()
 			if err != nil {
-				outputError(fmt.Sprintf("resolve: %v", err))
+				outputError(fmt.Sprintf("resolve project: %v", err))
 				return nil
 			}
 
-			runQuery(socket, projectRoot, gateway.LuaGetDiagnostics, args[0])
+			conn, client, err := dialDaemon(resolveDaemonSocket())
+			if err != nil {
+				outputError(fmt.Sprintf("connect: %v", err))
+				return nil
+			}
+			defer conn.Close()
+
+			resp, rpcErr := client.GetDiagnostics(cmd.Context(), &pb.FileRequest{
+				Project:  project,
+				Filepath: args[0],
+			})
+			outputQueryResponse(resp, rpcErr)
 			return nil
 		},
 	}

@@ -1,0 +1,42 @@
+syntax = "proto3";
+package lspgw;
+option go_package = "github.com/watage/lsp-gw/proto";
+
+import "google/protobuf/struct.proto";
+
+service LspGateway {
+  rpc GetDefinition(LocationRequest) returns (QueryResponse);
+  rpc GetReferences(LocationRequest) returns (QueryResponse);
+  rpc GetHover(LocationRequest) returns (QueryResponse);
+  rpc GetDocumentSymbols(FileRequest) returns (QueryResponse);
+  rpc GetDiagnostics(FileRequest) returns (QueryResponse);
+  rpc Health(ProjectRequest) returns (QueryResponse);
+  rpc DaemonStatus(DaemonStatusRequest) returns (QueryResponse);
+  rpc Shutdown(ShutdownRequest) returns (QueryResponse);
+}
+
+message LocationRequest {
+  string project = 1;
+  string filepath = 2;
+  int32 line = 3;
+  int32 col = 4;
+}
+
+message FileRequest {
+  string project = 1;
+  string filepath = 2;
+}
+
+message ProjectRequest {
+  string project = 1;
+}
+
+message DaemonStatusRequest {}
+
+message ShutdownRequest {}
+
+message QueryResponse {
+  bool ok = 1;
+  string error = 2;
+  google.protobuf.Value result = 3;
+}

@@ -5,6 +5,9 @@
 
 local M = {}
 
+-- Disable swap files globally – headless instance never needs recovery prompts.
+vim.o.swapfile = false
+
 -- Idle auto-shutdown
 local last_activity = vim.uv.now() -- monotonic ms
 
@@ -300,15 +303,6 @@ end
 local function cleanup_runtime_files()
   local socket = vim.g.lsp_gw_socket
   if not socket or socket == "" then return end
-  local sidecar = socket .. ".luadir"
-  local f = io.open(sidecar, "r")
-  if f then
-    local dir = vim.trim(f:read("*a"))
-    f:close()
-    if dir ~= "" then vim.fn.delete(dir, "rf") end
-  end
-  os.remove(sidecar)
-  os.remove(socket .. ".lock")
   os.remove(socket)
 end
 

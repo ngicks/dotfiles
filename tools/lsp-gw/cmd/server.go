@@ -1,16 +1,23 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/spf13/cobra"
+	pb "github.com/watage/lsp-gw/proto"
 	"github.com/watage/lsp-gw/server"
 )
+
+var maxIdleFlag int
 
 func newServerCmd() *cobra.Command {
 	serverCmd := &cobra.Command{
 		Use:   "server",
-		Short: "Manage the headless Neovim server",
+		Short: "Manage the lsp-gw daemon",
 	}
 
 	serverCmd.AddCommand(
@@ -23,42 +30,44 @@ func newServerCmd() *cobra.Command {
 }
 
 func newServerStartCmd() *cobra.Command {
-	return &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "start",
-		Short: "Start the headless Neovim server",
+		Short: "Start the lsp-gw daemon (foreground)",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			socket, projectRoot, err := resolveSocketAndProject()
-			if err != nil {
-				outputError(fmt.Sprintf("resolve: %v", err))
-				return nil
+			socket := resolveDaemonSocket()
+			daemon := server.NewDaemon(socket, maxIdleFlag)
+
+			ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+			defer stop()
+
+			if err := daemon.Run(ctx); err != nil {
+				fmt.Fprintf(os.Stderr, "daemon: %v\n", err)
+				return err
 			}
-			if err := server.StartServer(socket, projectRoot, maxIdleFlag); err != nil {
-				outputError(fmt.Sprintf("start server: %v", err))
-				return nil
-			}
-			outputJSON(map[string]any{"ok": true, "result": "server started"})
 			return nil
 		},
 	}
+	cmd.Flags().IntVar(&maxIdleFlag, "max-idle", 30, "Auto-shutdown neovim after N minutes of inactivity (0 to disable)")
+	return cmd
 }
 
 func newServerStopCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "stop",
-		Short: "Stop the headless Neovim server",
+		Short: "Stop the lsp-gw daemon",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			socket, _, err := resolveSocketAndProject()
+			socket := resolveDaemonSocket()
+			conn, client, err := dialDaemon(socket)
 			if err != nil {
-				outputError(fmt.Sprintf("resolve: %v", err))
+				outputError(fmt.Sprintf("connect: %v", err))
 				return nil
 			}
-			if err := server.StopServer(socket); err != nil {
-				outputError(fmt.Sprintf("stop server: %v", err))
-				return nil
-			}
-			outputJSON(map[string]any{"ok": true, "result": "server stopped"})
+			defer conn.Close()
+
+			resp, err := client.Shutdown(cmd.Context(), &pb.ShutdownRequest{})
+			outputQueryResponse(resp, err)
 			return nil
 		},
 	}
@@ -67,16 +76,19 @@ func newServerStopCmd() *cobra.Command {
 func newServerStatusCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "status",
-		Short: "Show the server status",
+		Short: "Show daemon status",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			socket, _, err := resolveSocketAndProject()
+			socket := resolveDaemonSocket()
+			conn, client, err := dialDaemon(socket)
 			if err != nil {
-				outputError(fmt.Sprintf("resolve: %v", err))
+				outputError(fmt.Sprintf("connect: %v", err))
 				return nil
 			}
-			status := server.ServerStatus(socket)
-			outputJSON(map[string]any{"ok": true, "result": status})
+			defer conn.Close()
+
+			resp, err := client.DaemonStatus(cmd.Context(), &pb.DaemonStatusRequest{})
+			outputQueryResponse(resp, err)
 			return nil
 		},
 	}

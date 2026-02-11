@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
-	"github.com/watage/lsp-gw/gateway"
+	pb "github.com/watage/lsp-gw/proto"
 )
 
 func newDefinitionCmd() *cobra.Command {
@@ -26,13 +26,26 @@ func newDefinitionCmd() *cobra.Command {
 				return nil
 			}
 
-			socket, projectRoot, err := resolveSocketAndProject()
+			project, err := resolveProject()
 			if err != nil {
-				outputError(fmt.Sprintf("resolve: %v", err))
+				outputError(fmt.Sprintf("resolve project: %v", err))
 				return nil
 			}
 
-			runQuery(socket, projectRoot, gateway.LuaGetDefinition, filepath, line, col)
+			conn, client, err := dialDaemon(resolveDaemonSocket())
+			if err != nil {
+				outputError(fmt.Sprintf("connect: %v", err))
+				return nil
+			}
+			defer conn.Close()
+
+			resp, rpcErr := client.GetDefinition(cmd.Context(), &pb.LocationRequest{
+				Project:  project,
+				Filepath: filepath,
+				Line:     int32(line),
+				Col:      int32(col),
+			})
+			outputQueryResponse(resp, rpcErr)
 			return nil
 		},
 	}

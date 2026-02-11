@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/watage/lsp-gw/gateway"
+	pb "github.com/watage/lsp-gw/proto"
 )
 
 func newHealthCmd() *cobra.Command {
@@ -13,13 +13,23 @@ func newHealthCmd() *cobra.Command {
 		Short: "Check server health",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			socket, projectRoot, err := resolveSocketAndProject()
+			project, err := resolveProject()
 			if err != nil {
-				outputError(fmt.Sprintf("resolve: %v", err))
+				outputError(fmt.Sprintf("resolve project: %v", err))
 				return nil
 			}
 
-			runQuery(socket, projectRoot, gateway.LuaHealth)
+			conn, client, err := dialDaemon(resolveDaemonSocket())
+			if err != nil {
+				outputError(fmt.Sprintf("connect: %v", err))
+				return nil
+			}
+			defer conn.Close()
+
+			resp, rpcErr := client.Health(cmd.Context(), &pb.ProjectRequest{
+				Project: project,
+			})
+			outputQueryResponse(resp, rpcErr)
 			return nil
 		},
 	}

@@ -6,14 +6,16 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/watage/lsp-gw/gateway"
+	pb "github.com/watage/lsp-gw/proto"
 	"github.com/watage/lsp-gw/server"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 var (
 	socketFlag  string
 	projectFlag string
-	maxIdleFlag int
 )
 
 // NewRootCmd creates the root cobra command.
@@ -23,11 +25,14 @@ func NewRootCmd() *cobra.Command {
 		Short:         "neovim-as-lsp-gateway app.",
 		SilenceUsage:  true,
 		SilenceErrors: true,
+		Args:          cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return cmd.Help()
+		},
 	}
 
-	rootCmd.PersistentFlags().StringVar(&socketFlag, "socket", "", "Neovim socket path")
+	rootCmd.PersistentFlags().StringVar(&socketFlag, "socket", "", "Daemon socket path")
 	rootCmd.PersistentFlags().StringVar(&projectFlag, "project", "", "Project root directory")
-	rootCmd.PersistentFlags().IntVar(&maxIdleFlag, "max-idle", 30, "Auto-shutdown after N minutes of inactivity (0 to disable)")
 
 	rootCmd.AddCommand(
 		newServerCmd(),
@@ -42,26 +47,35 @@ func NewRootCmd() *cobra.Command {
 	return rootCmd
 }
 
-// resolveSocketAndProject resolves the socket and project root from flags/env/detection.
-func resolveSocketAndProject() (string, string, error) {
-	projectRoot := projectFlag
-	if projectRoot == "" {
-		var err error
-		projectRoot, err = server.DetectProjectRoot()
-		if err != nil {
-			return "", "", fmt.Errorf("detect project root: %w", err)
-		}
+// resolveDaemonSocket resolves the daemon socket from flag/env/default.
+func resolveDaemonSocket() string {
+	if socketFlag != "" {
+		return socketFlag
 	}
+	if s := os.Getenv("LSP_GW_SOCKET"); s != "" {
+		return s
+	}
+	return server.DaemonSocket()
+}
 
-	socket := socketFlag
-	if socket == "" {
-		socket = os.Getenv("LSP_GW_SOCKET")
+// resolveProject resolves the project root from flag or auto-detection.
+func resolveProject() (string, error) {
+	if projectFlag != "" {
+		return projectFlag, nil
 	}
-	if socket == "" {
-		socket = server.ProjectSocket(projectRoot)
-	}
+	return server.DetectProjectRoot()
+}
 
-	return socket, projectRoot, nil
+// dialDaemon connects to the gRPC daemon and returns the connection and client.
+func dialDaemon(socket string) (*grpc.ClientConn, pb.LspGatewayClient, error) {
+	conn, err := grpc.NewClient(
+		"unix:"+socket,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+	if err != nil {
+		return nil, nil, fmt.Errorf("dial daemon: %w", err)
+	}
+	return conn, pb.NewLspGatewayClient(conn), nil
 }
 
 // outputJSON writes a JSON value to stdout.
@@ -79,25 +93,26 @@ func outputError(msg string) {
 	})
 }
 
-// runQuery ensures the server is running, connects, and executes a Lua query.
-func runQuery(socket, projectRoot, luaCode string, luaArgs ...any) {
-	if err := server.EnsureRunning(socket, projectRoot, maxIdleFlag); err != nil {
-		outputError(fmt.Sprintf("ensure server: %v", err))
-		return
-	}
-
-	client, err := gateway.Connect(socket)
+// outputQueryResponse converts a gRPC QueryResponse to JSON and prints it.
+func outputQueryResponse(resp *pb.QueryResponse, err error) {
 	if err != nil {
-		outputError(fmt.Sprintf("connect: %v", err))
+		outputError(fmt.Sprintf("rpc: %v", err))
 		return
 	}
-	defer client.Close()
 
-	result, err := gateway.QueryGateway(client, luaCode, luaArgs...)
+	// Use protojson to marshal, then re-parse to get clean JSON
+	raw, err := protojson.Marshal(resp)
 	if err != nil {
-		outputError(fmt.Sprintf("query: %v", err))
+		outputError(fmt.Sprintf("marshal: %v", err))
 		return
 	}
 
-	outputJSON(result)
+	// Re-parse and pretty-print
+	var m any
+	if err := json.Unmarshal(raw, &m); err != nil {
+		os.Stdout.Write(raw)
+		os.Stdout.Write([]byte("\n"))
+		return
+	}
+	outputJSON(m)
 }
