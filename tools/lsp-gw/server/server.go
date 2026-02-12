@@ -56,7 +56,7 @@ func IsServerRunning(socket string) bool {
 // StartNeovim spawns a headless Neovim instance listening on the given socket.
 // The caller is responsible for preparing the Lua runtime (luaDir) beforehand.
 // singleflight in the daemon prevents concurrent starts for the same project.
-func StartNeovim(nvimSocket, projectRoot, luaDir string, maxIdleMins int) error {
+func StartNeovim(nvimSocket, projectRoot, luaDir string) error {
 	if err := os.MkdirAll(filepath.Dir(nvimSocket), 0o700); err != nil {
 		return fmt.Errorf("mkdir socket dir: %w", err)
 	}
@@ -66,8 +66,6 @@ func StartNeovim(nvimSocket, projectRoot, luaDir string, maxIdleMins int) error 
 		os.Remove(nvimSocket)
 	}
 
-	idleCmd := fmt.Sprintf("let g:lsp_gw_max_idle_mins=%d", maxIdleMins)
-	socketCmd := fmt.Sprintf("let g:lsp_gw_socket='%s'", nvimSocket)
 	// Pin the embedded lsp_gateway module via package.preload so require()
 	// always loads it regardless of RTP or user config caching.
 	luaFile := filepath.Join(luaDir, "lua", "lsp_gateway", "init.lua")
@@ -77,8 +75,6 @@ func StartNeovim(nvimSocket, projectRoot, luaDir string, maxIdleMins int) error 
 	)
 
 	cmd := exec.Command("nvim", "--headless", "--listen", nvimSocket,
-		"--cmd", idleCmd,
-		"--cmd", socketCmd,
 		"--cmd", preloadCmd)
 	cmd.Dir = projectRoot
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}

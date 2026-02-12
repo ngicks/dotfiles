@@ -8,13 +8,6 @@ local M = {}
 -- Disable swap files globally – headless instance never needs recovery prompts.
 vim.o.swapfile = false
 
--- Idle auto-shutdown
-local last_activity = vim.uv.now() -- monotonic ms
-
-local function touch_activity()
-  last_activity = vim.uv.now()
-end
-
 --- Open a file in the current Neovim instance and ensure it's loaded.
 ---@param filepath string
 ---@param timeout_ms? number (default 5000)
@@ -66,20 +59,83 @@ local function lsp_request(bufnr, method, params, timeout_ms)
   return results, nil
 end
 
+--- Check whether a URI uses the file:// scheme.
+---@param uri string
+---@return boolean
+local function is_file_uri(uri)
+  return uri:sub(1, 7) == "file://"
+end
+
+--- Resolve a non-file URI by opening it as a Neovim buffer.
+--- URI handler plugins (nvim-jdtls, deno, etc.) register BufReadCmd
+--- autocmds that populate the buffer with decompiled/virtual source.
+---@param uri string
+---@param timeout_ms? number (default 10000)
+---@return string|nil content
+local function resolve_virtual_uri(uri, timeout_ms)
+  timeout_ms = timeout_ms or 10000
+  local bufnr = vim.fn.bufadd(uri)
+
+  -- If the buffer is already populated (e.g. same URI queried twice),
+  -- return its content immediately.
+  local existing = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  if #existing > 1 or (#existing == 1 and existing[1] ~= "") then
+    return table.concat(existing, "\n")
+  end
+
+  -- Record changedtick before triggering load.
+  local tick_before = vim.b[bufnr].changedtick or 0
+
+  -- Use :edit to trigger BufReadCmd — this is the path URI handler plugins
+  -- (nvim-jdtls, etc.) expect. keepalt/keepjumps avoids side effects.
+  vim.api.nvim_buf_call(bufnr, function()
+    vim.cmd("silent keepalt keepjumps edit " .. vim.fn.fnameescape(uri))
+  end)
+
+  -- Poll until changedtick changes (content was written) or timeout.
+  -- vim.wait processes events between checks, avoiding RPC starvation.
+  local ok = vim.wait(timeout_ms, function()
+    local tick = vim.b[bufnr].changedtick or 0
+    return tick ~= tick_before
+  end, 50)
+
+  if not ok then return nil end
+
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  if #lines == 0 or (#lines == 1 and lines[1] == "") then
+    return nil
+  end
+  return table.concat(lines, "\n")
+end
+
 --- Normalize an LSP location to a simple table.
+--- For file:// URIs, resolves to a local path.
+--- For non-file URIs (jdt://, deno://, etc.), attempts to resolve the
+--- virtual document content via Neovim's URI handler plugins.
 ---@param loc table
 ---@return table
 local function normalize_location(loc)
   local uri = loc.uri or loc.targetUri
   local range = loc.range or loc.targetSelectionRange or loc.targetRange
-  local filename = uri and vim.uri_to_fname(uri) or ""
   local line = 0
   local col = 0
   if range and range.start then
     line = range.start.line
     col = range.start.character
   end
-  return { filename = filename, line = line, col = col }
+
+  if not uri or is_file_uri(uri) then
+    local filename = uri and vim.uri_to_fname(uri) or ""
+    return { filename = filename, line = line, col = col }
+  end
+
+  -- Non-file URI: resolve virtual document content.
+  local content = resolve_virtual_uri(uri)
+  local result = { filename = uri, line = line, col = col }
+  if content then
+    result.content = content
+  end
+  return result
 end
 
 --- Extract results from LSP response, handling multiple clients.
@@ -102,7 +158,6 @@ local function extract_lsp_results(results)
 end
 
 function M.get_definition(filepath, line, col)
-  touch_activity()
   local bufnr = open_file(filepath)
   if not wait_for_client(bufnr) then
     return { ok = false, error = "no LSP client attached" }
@@ -128,7 +183,6 @@ function M.get_definition(filepath, line, col)
 end
 
 function M.get_references(filepath, line, col)
-  touch_activity()
   local bufnr = open_file(filepath)
   if not wait_for_client(bufnr) then
     return { ok = false, error = "no LSP client attached" }
@@ -155,7 +209,6 @@ function M.get_references(filepath, line, col)
 end
 
 function M.get_hover(filepath, line, col)
-  touch_activity()
   local bufnr = open_file(filepath)
   if not wait_for_client(bufnr) then
     return { ok = false, error = "no LSP client attached" }
@@ -195,7 +248,6 @@ function M.get_hover(filepath, line, col)
 end
 
 function M.get_document_symbols(filepath)
-  touch_activity()
   local bufnr = open_file(filepath)
   if not wait_for_client(bufnr) then
     return { ok = false, error = "no LSP client attached" }
@@ -241,7 +293,6 @@ function M.get_document_symbols(filepath)
 end
 
 function M.get_diagnostics(filepath)
-  touch_activity()
   local bufnr = open_file(filepath)
   -- Wait briefly for diagnostics to populate
   if not wait_for_client(bufnr) then
@@ -266,7 +317,6 @@ function M.get_diagnostics(filepath)
 end
 
 function M.health()
-  touch_activity()
   local bufs = vim.api.nvim_list_bufs()
   local loaded_bufs = 0
   for _, b in ipairs(bufs) do
@@ -285,42 +335,14 @@ function M.health()
     })
   end
 
-  local idle_seconds = math.floor((vim.uv.now() - last_activity) / 1000)
-  local max_idle_mins = vim.g.lsp_gw_max_idle_mins
-
   return {
     ok = true,
     result = {
       pid = vim.fn.getpid(),
       loaded_buffers = loaded_bufs,
       lsp_clients = client_info,
-      idle_seconds = idle_seconds,
-      max_idle_minutes = max_idle_mins or 0,
     },
   }
 end
-
-local function cleanup_runtime_files()
-  local socket = vim.g.lsp_gw_socket
-  if not socket or socket == "" then return end
-  os.remove(socket)
-end
-
-local function setup_idle_timer()
-  local max_idle_mins = vim.g.lsp_gw_max_idle_mins
-  if not max_idle_mins or max_idle_mins <= 0 then return end
-  local max_idle_ms = max_idle_mins * 60 * 1000
-  local timer = vim.uv.new_timer()
-  timer:start(60000, 60000, function()
-    if vim.uv.now() - last_activity >= max_idle_ms then
-      vim.schedule(function()
-        cleanup_runtime_files()
-        vim.cmd("qa!")
-      end)
-    end
-  end)
-end
-
-setup_idle_timer()
 
 return M

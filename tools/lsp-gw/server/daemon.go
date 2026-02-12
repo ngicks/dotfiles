@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"sync/atomic"
+	"time"
 
 	"github.com/neovim/go-client/nvim"
 	"github.com/watage/lsp-gw/gateway"
@@ -18,9 +20,11 @@ import (
 )
 
 type projectState struct {
-	mu         sync.Mutex
-	nvimSocket string
-	client     *nvim.Nvim
+	mu           sync.Mutex
+	nvimSocket   string
+	client       *nvim.Nvim
+	lastActivity atomic.Int64  // UnixNano timestamp
+	inFlight     atomic.Int32  // active request count
 }
 
 // Daemon is the gRPC server that manages neovim processes.
@@ -81,6 +85,7 @@ func (d *Daemon) Run(ctx context.Context) error {
 		<-ctx.Done()
 		d.shutdown()
 	}()
+	go d.startIdleReaper(ctx)
 
 	if err := d.grpcServer.Serve(lis); err != nil {
 		return fmt.Errorf("grpc serve: %w", err)
@@ -117,7 +122,7 @@ func (d *Daemon) ensureNeovim(projectRoot string) (*projectState, error) {
 		d.mu.Unlock()
 
 		nvimSocket := NvimSocketPath(projectRoot)
-		if err := StartNeovim(nvimSocket, projectRoot, d.luaDir, d.maxIdleMins); err != nil {
+		if err := StartNeovim(nvimSocket, projectRoot, d.luaDir); err != nil {
 			return nil, fmt.Errorf("start neovim for %s: %w", projectRoot, err)
 		}
 
@@ -131,6 +136,7 @@ func (d *Daemon) ensureNeovim(projectRoot string) (*projectState, error) {
 			nvimSocket: nvimSocket,
 			client:     client,
 		}
+		ps.lastActivity.Store(time.Now().UnixNano())
 
 		d.mu.Lock()
 		d.projects[projectRoot] = ps
@@ -167,9 +173,15 @@ func (d *Daemon) queryNeovim(projectRoot, luaCode string, args ...any) (map[stri
 			return nil, err
 		}
 
+		ps.inFlight.Add(1)
+		ps.lastActivity.Store(time.Now().UnixNano())
+
 		ps.mu.Lock()
 		result, err := gateway.QueryGateway(ps.client, luaCode, args...)
 		ps.mu.Unlock()
+
+		ps.lastActivity.Store(time.Now().UnixNano())
+		ps.inFlight.Add(-1)
 
 		if err != nil {
 			if attempt == 0 {
@@ -336,6 +348,45 @@ func (d *Daemon) DaemonStatus(_ context.Context, _ *pb.DaemonStatusRequest) (*pb
 	})
 
 	return &pb.QueryResponse{Ok: true, Result: result}, nil
+}
+
+func (d *Daemon) startIdleReaper(ctx context.Context) {
+	if d.maxIdleMins <= 0 {
+		return
+	}
+	maxIdle := time.Duration(d.maxIdleMins) * time.Minute
+	ticker := time.NewTicker(60 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			d.reapIdleProjects(maxIdle)
+		}
+	}
+}
+
+func (d *Daemon) reapIdleProjects(maxIdle time.Duration) {
+	now := time.Now()
+	d.mu.Lock()
+	var toRemove []string
+	for root, ps := range d.projects {
+		if ps.inFlight.Load() > 0 {
+			continue
+		}
+		lastNano := ps.lastActivity.Load()
+		idle := now.Sub(time.Unix(0, lastNano))
+		if idle >= maxIdle {
+			toRemove = append(toRemove, root)
+		}
+	}
+	d.mu.Unlock()
+
+	for _, root := range toRemove {
+		log.Printf("reaping idle neovim for %s", root)
+		d.removeProject(root)
+	}
 }
 
 func (d *Daemon) Shutdown(_ context.Context, _ *pb.ShutdownRequest) (*pb.QueryResponse, error) {
