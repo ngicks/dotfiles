@@ -8,5 +8,7 @@
 .mcp.json
 
 build/podman-static/podman-static
+build/podman-static/podman-systemd/out/
+build/krun/out/
 build/krun/crun
 build/krun/built

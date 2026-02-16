@@ -41,5 +41,4 @@ popd
 cp ./crun/crun ${artifact_dir}
 
 pushd ${artifact_dir}
-ln -fs ./crun krun
 popd

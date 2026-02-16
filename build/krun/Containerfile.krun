@@ -1,0 +1,167 @@
+FROM docker.io/library/ubuntu:noble-20260113 AS libkrunfw-build
+
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG http_proxy=${HTTP_PROXY}
+ARG https_proxy=${HTTPS_PROXY}
+ARG NO_PROXY=""
+ARG no_proxy=${NO_PROXY}
+
+ARG SSL_CERT_FILE="/ca-certificates.crt"
+
+ARG LIBKRUNFW_VERSION=5.2.0
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+<<EOF
+  set -eux
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+  apt-get update
+  apt-get install -yqq --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    make \
+    gcc \
+    libc6-dev \
+    flex \
+    bison \
+    bc \
+    cpio \
+    python3 \
+    python3-pyelftools \
+    libelf-dev \
+    libssl-dev \
+    xz-utils \
+    patch
+EOF
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  set -eux
+  git clone -c 'advice.detachedHead=false' --depth=1 --branch v${LIBKRUNFW_VERSION} https://github.com/containers/libkrunfw /src/libkrunfw
+  cd /src/libkrunfw
+  make
+  make install
+EOF
+
+
+FROM docker.io/library/ubuntu:noble-20260113 AS libkrun-build
+
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG http_proxy=${HTTP_PROXY}
+ARG https_proxy=${HTTPS_PROXY}
+ARG NO_PROXY=""
+ARG no_proxy=${NO_PROXY}
+
+ARG SSL_CERT_FILE="/ca-certificates.crt"
+
+ARG LIBKRUN_VERSION=1.9.8
+
+COPY --from=libkrunfw-build /usr/local/lib64/libkrunfw* /usr/local/lib64/
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+<<EOF
+  set -eux
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+  apt-get update
+  apt-get install -yqq --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    make \
+    gcc \
+    libc6-dev \
+    patchelf
+EOF
+
+ENV PKG_CONFIG_PATH="/usr/local/lib64/pkgconfig"
+ENV LD_LIBRARY_PATH="/usr/local/lib64"
+ENV LIBRARY_PATH="/usr/local/lib64"
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  set -eux
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+  . "$HOME/.cargo/env"
+
+  git clone -c 'advice.detachedHead=false' --depth=1 --branch v${LIBKRUN_VERSION} https://github.com/containers/libkrun /src/libkrun
+  cd /src/libkrun
+  make
+  make install
+EOF
+
+
+FROM docker.io/library/ubuntu:noble-20260113 AS crun-build
+
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG http_proxy=${HTTP_PROXY}
+ARG https_proxy=${HTTPS_PROXY}
+ARG NO_PROXY=""
+ARG no_proxy=${NO_PROXY}
+
+ARG SSL_CERT_FILE="/ca-certificates.crt"
+
+ARG CRUN_VERSION=1.26
+
+COPY --from=libkrunfw-build /usr/local/lib64/libkrunfw* /usr/local/lib64/
+COPY --from=libkrun-build /usr/local/lib64/libkrun* /usr/local/lib64/
+COPY --from=libkrun-build /usr/local/include/libkrun.h /usr/local/include/
+COPY --from=libkrun-build /usr/local/lib64/pkgconfig/libkrun.pc /usr/local/lib64/pkgconfig/
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+<<EOF
+  set -eux
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+  apt-get update
+  apt-get install -yqq --no-install-recommends \
+    ca-certificates \
+    git \
+    make \
+    gcc \
+    pkgconf \
+    libtool \
+    libsystemd-dev \
+    libprotobuf-c-dev \
+    libcap-dev \
+    libseccomp-dev \
+    libyajl-dev \
+    go-md2man \
+    autoconf \
+    python3 \
+    automake
+EOF
+
+ENV PKG_CONFIG_PATH="/usr/local/lib64/pkgconfig"
+ENV LD_LIBRARY_PATH="/usr/local/lib64"
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  set -eux
+  git clone -c 'advice.detachedHead=false' --depth=1 --branch ${CRUN_VERSION} https://github.com/containers/crun /src/crun
+  cd /src/crun
+  ./autogen.sh
+  ./configure --with-libkrun
+  make
+
+  ./crun --version
+
+  mkdir -p /out
+  cp ./crun /out/crun
+EOF
+
+
+FROM scratch AS out
+COPY --from=crun-build /out/* /bin/
+COPY --from=libkrunfw-build /usr/local/lib64/libkrunfw* /lib/
+COPY --from=libkrun-build /usr/local/lib64/libkrun* /lib/

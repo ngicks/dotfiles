@@ -1,0 +1,74 @@
+FROM docker.io/library/golang:1.26.0-trixie AS golangbuildbase
+
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG http_proxy=${HTTP_PROXY}
+ARG https_proxy=${HTTPS_PROXY}
+ARG NO_PROXY=""
+ARG no_proxy=${NO_PROXY}
+
+ARG SSL_CERT_FILE="/ca-certificates.crt"
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+<<EOF
+  set -eux
+  rm -f /etc/apt/apt.conf.d/docker-clean
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+  apt-get update
+  apt-get install -yqq --no-install-recommends \
+    tzdata \
+    curl \
+    git \
+    make \
+    gcc \
+    pkgconf \
+    btrfs-progs \
+    libbtrfs-dev \
+    libassuan-dev \
+    libdevmapper-dev \
+    libglib2.0-dev \
+    libc6-dev \
+    libgpgme-dev \
+    libprotobuf-dev \
+    libprotobuf-c-dev \
+    libseccomp-dev \
+    libselinux1-dev \
+    libostree-dev \
+    openssl \
+    iptables \
+    go-md2man \
+    libsystemd-dev \
+
+EOF
+
+# podman (without systemd support)
+FROM golangbuildbase AS podman
+
+ARG HTTP_PROXY=""
+ARG HTTPS_PROXY=""
+ARG http_proxy=${HTTP_PROXY}
+ARG https_proxy=${HTTPS_PROXY}
+ARG NO_PROXY=""
+ARG no_proxy=${NO_PROXY}
+
+ARG SSL_CERT_FILE="/ca-certificates.crt"
+
+ARG PODMAN_VERSION=v5.8.0
+ 
+WORKDIR /build/podman
+
+RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
+<<EOF
+  git clone -c 'advice.detachedHead=false' --depth=1 --branch ${PODMAN_VERSION} https://github.com/containers/podman .
+  make bin/podman
+  bin/podman --version
+
+	COMMON_VERSION=$(grep -Eom1 'github.com/containers/common [^ ]+' go.mod | sed 's!github.com/containers/common !!');
+	curl -fsSL "https://raw.githubusercontent.com/containers/common/${COMMON_VERSION}/pkg/seccomp/seccomp.json" > ../seccomp.json
+
+	make bin/quadlet
+	make bin/rootlessport
+EOF
+
