@@ -42,6 +42,7 @@ func NewRootCmd() *cobra.Command {
 		newSymbolsCmd(),
 		newDiagnosticsCmd(),
 		newHealthCmd(),
+		newLspCmd(),
 	)
 
 	return rootCmd
