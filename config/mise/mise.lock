@@ -16,6 +16,10 @@ backend = "aqua:helm/chart-testing"
 "platforms.macos-x64" = { checksum = "sha256:6dbad5d05a357f6837764c0620c84e707c81189d6f5e9946643276848f5f7116", url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-testing_3.14.0_darwin_amd64.tar.gz"}
 "platforms.windows-x64" = { checksum = "sha256:0720a57213521a627d74cb2fe3da16197fd5c8dd382c01cdb0b20682a5df98d9", url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-testing_3.14.0_windows_amd64.zip"}
 
+[[tools."cargo:tree-sitter-cli"]]
+version = "0.26.5"
+backend = "cargo:tree-sitter-cli"
+
 [[tools."go:github.com/cweill/gotests/gotests"]]
 version = "1.9.0"
 backend = "go:github.com/cweill/gotests/gotests"
