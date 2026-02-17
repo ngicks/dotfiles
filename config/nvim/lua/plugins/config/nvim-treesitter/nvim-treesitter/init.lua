@@ -1,5 +1,9 @@
 local M = {}
 
+local treesitter_path = vim.fs.joinpath(vim.fn.stdpath "data", "/treesitter")
+
+M.build = ":TSUpdate"
+
 M.opts = function()
   pcall(function()
     dofile(vim.g.base46_cache .. "syntax")
@@ -7,33 +11,19 @@ M.opts = function()
   end)
 
   return {
-    ensure_installed = {
-      "lua",
-      "luadoc",
-      "printf",
-      "vim",
-      "vimdoc",
-      "vim",
-      "lua",
-      "vimdoc",
-      "html",
-      "css",
-      "markdown",
-      "go",
-      "rust",
-    },
-
-    highlight = {
-      enable = true,
-      use_languagetree = true,
-    },
-
-    indent = { enable = true },
+    install_dir = treesitter_path,
   }
 end
 
 M.config = function(_, opts)
-  require("nvim-treesitter.configs").setup(opts)
+  require("nvim-treesitter").setup(opts)
+
+  vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
+    callback = function()
+      pcall(vim.treesitter.start)
+    end,
+  })
 end
 
 return M

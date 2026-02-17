@@ -115,8 +115,8 @@ return {
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPost", "BufNewFile", "BufReadPre" },
-    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+    lazy = false,
+    branch = "main",
   },
   {
     "nvim-mini/mini.nvim",
