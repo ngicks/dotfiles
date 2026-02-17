@@ -39,6 +39,7 @@ config.audible_bell = "Disabled"
 
 -- keys
 config.leader = { key = "Q", mods = "CTRL", timeout_milliseconds = 1000 }
+config.enable_kitty_keyboard = true
 
 config.keys = require("keybinds").keys
 config.key_tables = require("keybinds").key_tables
