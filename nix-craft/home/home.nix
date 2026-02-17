@@ -17,6 +17,8 @@ in
 
   home.sessionVariables = {
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/.config/mise/mise.toml:$HOME/.dotfiles/config/mise/mise.toml";
+      LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
+      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
   };
 
   home.file.".local/bin/pinentry.sh" = {
@@ -104,11 +106,16 @@ in
     chafa          # ASCII image preview fallback
     resvg          # SVG preview
 
+    # Rust Tools
+    cargo-binstall # Prebuilt Rust binary installer (used by mise cargo backend)
+
     # System/Build Tools
     gnupg          # GPG encryption
     gnumake        # Make build tool
     gcc            # GNU C compiler
     glibc
+    llvmPackages.libclang  # libclang for bindgen (cargo builds)
+    stdenv.cc.cc.lib       # libstdc++ (needed by libclang)
     jq             # JSON processor
     xsel           # Clipboard utility
     libyaml        # YAML library
