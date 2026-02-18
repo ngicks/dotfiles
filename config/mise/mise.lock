@@ -24,6 +24,10 @@ backend = "cargo:tree-sitter-cli"
 version = "1.9.0"
 backend = "go:github.com/cweill/gotests/gotests"
 
+[[tools."go:github.com/fatih/gomodifytags"]]
+version = "1.17.0"
+backend = "go:github.com/fatih/gomodifytags"
+
 [[tools."go:github.com/go-delve/delve/cmd/dlv"]]
 version = "1.26.0"
 backend = "go:github.com/go-delve/delve/cmd/dlv"
@@ -35,6 +39,14 @@ backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
 [[tools."go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"]]
 version = "2.10.1"
 backend = "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
+
+[[tools."go:github.com/josharian/impl"]]
+version = "1.5.0"
+backend = "go:github.com/josharian/impl"
+
+[[tools."go:github.com/koron/iferr"]]
+version = "latest"
+backend = "go:github.com/koron/iferr"
 
 [[tools."go:github.com/nametake/golangci-lint-langserver"]]
 version = "0.0.11"
@@ -61,11 +73,11 @@ version = "2.11.0"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.28.2"
+version = "0.29.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.103.0"
+version = "0.104.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@siteboon/claude-code-ui"]]
