@@ -214,6 +214,7 @@ return {
   },
   { -- preview for quick list items
     "kevinhwang91/nvim-bqf",
+    commit = "f65fba733268ffcf9c5b8ac381287eca7c223422",
     dependencies = { "junegunn/fzf" },
     -- Opening quickfix window itself can't be hooked? fall back to VeryLazy to ensure it works
     event = { "QuickFixCmdPre", "VeryLazy" },
