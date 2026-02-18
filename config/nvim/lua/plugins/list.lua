@@ -78,11 +78,6 @@ return {
 
   -- lsp stuff
   {
-    "mason-org/mason.nvim",
-    cmd = { "Mason", "MasonInstall", "MasonUpdate" },
-  },
-
-  {
     "neovim/nvim-lspconfig",
     event = "User FilePost",
   },
@@ -134,25 +129,9 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     event = { "VeryLazy" },
   },
-  -- mason misc
-  {
-    "williamboman/mason.nvim",
-    lazy = false,
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    event = { "VeryLazy" },
-  },
-  {
-    "WhoIsSethDaniel/mason-tool-installer.nvim",
-    dependencies = { "williamboman/mason.nvim" },
-    event = { "VeryLazy" },
-  },
   -- dap
   {
     "mfussenegger/nvim-dap",
-    dependencies = { "williamboman/mason.nvim" },
     event = { "LspAttach" },
   },
   {
@@ -163,11 +142,6 @@ return {
   {
     "theHamsta/nvim-dap-virtual-text",
     dependencies = { "mfussenegger/nvim-dap" },
-    event = { "LspAttach" },
-  },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = { "williamboman/mason.nvim" },
     event = { "LspAttach" },
   },
   { -- format file types where lsp is not available.

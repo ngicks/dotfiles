@@ -41,12 +41,12 @@ end
 M.config = function()
   configureSigns()
 
-  -- local loaded = require("func.scan_conf_dir").load_local_dir("config/ls-tools", true)
-  -- for _, ent in ipairs(loaded) do
-  --   if ent.dap then
-  --     ent.dap()
-  --   end
-  -- end
+  local loaded = require("func.scan_conf_dir").load_local_dir("config/ls-tools", true)
+  for _, ent in ipairs(loaded) do
+    if ent.dap then
+      ent.dap()
+    end
+  end
 end
 
 return M

@@ -1,14 +1,5 @@
 local M = {}
 
-M.tool = {
-  "delve",
-  "gomodifytags",
-  "gotests",
-  "iferr",
-  "impl",
-  "goimports",
-}
-
 M.dap = function()
   local dap = require "dap"
 

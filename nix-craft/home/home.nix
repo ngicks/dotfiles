@@ -106,6 +106,24 @@ in
     chafa          # ASCII image preview fallback
     resvg          # SVG preview
 
+    # LSP Servers
+    lua-language-server
+    vscode-langservers-extracted  # html, cssls, jsonls
+    marksman
+    taplo
+    pyright
+    typescript-language-server
+    typescript                    # peer dep for ts_ls
+
+    # Formatters / Linters
+    kdlfmt
+    prettier
+    stylua
+    xmlformat                     # xmlformatter
+
+    # DAP
+    vscode-js-debug               # js-debug binary for Node.js debugging
+
     # Rust Tools
     cargo-binstall # Prebuilt Rust binary installer (used by mise cargo backend)
 
