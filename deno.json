@@ -1,9 +1,9 @@
 {
   "tasks": {
-    "update:daily": "deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts",
-    "devenv:build": "deno run -P=devenv:build src/devenv_build.ts",
-    "devenv:save": "deno run -P=devenv:save src/devenv_save.ts",
-    "devenv:pull": "deno run -P=devenv:pull src/devenv_pull.ts"
+    "update:daily": "LD_LIBRARY_PATH=\"\" deno run -R -W -E=HOME,XDG_CONFIG_HOME,XDG_CACHE_HOME,USERPROFILE,AppData,LocalAppData --allow-run=git,powershell.exe ./src/update_daily.ts",
+    "devenv:build": "LD_LIBRARY_PATH=\"\" deno run -P=devenv:build src/devenv_build.ts",
+    "devenv:save": "LD_LIBRARY_PATH=\"\" deno run -P=devenv:save src/devenv_save.ts",
+    "devenv:pull": "LD_LIBRARY_PATH=\"\" deno run -P=devenv:pull src/devenv_pull.ts"
   },
   "imports": {
     "#/": "./src/"
