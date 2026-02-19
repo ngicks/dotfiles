@@ -9,4 +9,5 @@ fi
 
 mkdir ./.claude/agents/ -p
 cp -r $HOME/.dotfiles/agents/agents/* ./.claude/agents/
-cp -r $HOME/.dotfiles/agents/skills/ ./.claude/skills/
+mkdir -p ./.claude/skills/
+cp -r $HOME/.dotfiles/agents/skills/* ./.claude/skills/
