@@ -37,6 +37,8 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
 EOF
 
 ENV SHELL="/root/.nix-profile/bin/zsh"
+ENV RUSTUP_HOME="/root/.local/share/rustup"
+
 RUN <<EOF
     # For sshfs.nvim
     mkdir -p ~/mnt/sshfs
@@ -48,7 +50,6 @@ RUN <<EOF
     ln -sfn ${NIX_GLIBC_PATH}/lib /lib
     ln -sfn ${NIX_GLIBC_PATH}/lib64 /lib64
 
-    export RUSTUP_HOME="/root/.local/share/rustup"
     export CARGO_HOME="/root/.local/share/cargo"
     rustup default stable
 EOF
