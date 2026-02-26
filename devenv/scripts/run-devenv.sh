@@ -52,7 +52,6 @@ MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
 MISE_CONFIG_DIR=$HOME/.dotfiles/config/mise
 
 CARGO_HOME=${CARGO_HOME:-$HOME/.cargo}
-RUSTUP_HOME=${RUSTUP_HOME:-$HOME/.rustup}
 
 DENO_DIR=${DENO_DIR:-$HOME/.cache/deno}
 DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT:-$HOME/.deno/bin}
@@ -115,8 +114,6 @@ podman container run -it --rm --init \
   \
   --env CARGO_HOME=${CARGO_HOME}\
   --mount type=bind,src=${CARGO_HOME},dst=${CARGO_HOME}$(ro)\
-  --env RUSTUP_HOME=${RUSTUP_HOME}\
-  --mount type=bind,src=${RUSTUP_HOME},dst=${RUSTUP_HOME}$(ro)\
   \
   --env NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_GLOBALCONFIG}\
   --mount type=bind,src=${NPM_CONFIG_DIR},dst=${NPM_CONFIG_DIR}$(ro)\

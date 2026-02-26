@@ -45,8 +45,12 @@ RUN <<EOF
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
 
     NIX_GLIBC_PATH=$(nix-build '<nixpkgs>' -A glibc --no-out-link)
-    ln -s ${NIX_GLIBC_PATH}/lib /lib
-    ln -s ${NIX_GLIBC_PATH}/lib64 /lib64
+    ln -sfn ${NIX_GLIBC_PATH}/lib /lib
+    ln -sfn ${NIX_GLIBC_PATH}/lib64 /lib64
+
+    export RUSTUP_HOME="/root/.local/share/rustup"
+    export CARGO_HOME="/root/.local/share/cargo"
+    rustup default stable
 EOF
 
 WORKDIR /root
