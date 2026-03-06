@@ -36,7 +36,7 @@ fi
 editor_cmd+=("${scrollback_file}")
 printf -v editor_cmd_str ' %q' "${editor_cmd[@]}"
 
-tmux display-popup -w 90% -h 90% $c_opt -E "sh -c '${editor_cmd_str:1}' --"
+tmux new-window -n "scrollback" $c_opt "sh -c '${editor_cmd_str:1}' --"
 
 # return pane to normal mode if we were in copy mode when launching popup
 if [[ "${initial_mode}" =~ ^copy-mode ]]; then
