@@ -29,7 +29,7 @@ version = "1.17.0"
 backend = "go:github.com/fatih/gomodifytags"
 
 [[tools."go:github.com/go-delve/delve/cmd/dlv"]]
-version = "1.26.0"
+version = "1.26.1"
 backend = "go:github.com/go-delve/delve/cmd/dlv"
 
 [[tools."go:github.com/golangci/golangci-lint/cmd/golangci-lint"]]
@@ -37,7 +37,7 @@ version = "1.64.8"
 backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
 
 [[tools."go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"]]
-version = "2.10.1"
+version = "2.11.1"
 backend = "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
 
 [[tools."go:github.com/josharian/impl"]]
@@ -73,11 +73,11 @@ version = "2.11.0"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.31.0"
+version = "0.32.1"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.106.0"
+version = "0.111.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@siteboon/claude-code-ui"]]
@@ -85,7 +85,7 @@ version = "1.13.6"
 backend = "npm:@siteboon/claude-code-ui"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "2.1.2"
+version = "2.1.3"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:claude-code-webui"]]
@@ -93,11 +93,11 @@ version = "0.1.56"
 backend = "npm:claude-code-webui"
 
 [[tools."npm:vibe-kanban"]]
-version = "0.1.21"
+version = "0.1.25"
 backend = "npm:vibe-kanban"
 
 [[tools."npm:zenn-cli"]]
-version = "0.4.5"
+version = "0.4.6"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:betterproto2_compiler"]]
@@ -109,10 +109,10 @@ version = "v0.1.4"
 backend = "pipx:oraios/serena"
 
 [[tools.ruff]]
-version = "0.15.4"
+version = "0.15.5"
 backend = "aqua:astral-sh/ruff"
-"platforms.linux-arm64" = { checksum = "sha256:f34909dacbebaf3773ececc0d321e0fa0599729e9b4570f1dbcec91b4c435913", url = "https://github.com/astral-sh/ruff/releases/download/0.15.4/ruff-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:e39111195ef761569773562209bbb7f943c834c961f2c1ed28e2126a15c4cd35", url = "https://github.com/astral-sh/ruff/releases/download/0.15.4/ruff-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:2d63cc9fd12c9cc3b524563bbeb50470cf3f68f3194002228a417a53a2a56164", url = "https://github.com/astral-sh/ruff/releases/download/0.15.4/ruff-aarch64-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:f40e16784c867b60850fbe96a2cccd123589c90d6db71ad8ade62efdeabccc84", url = "https://github.com/astral-sh/ruff/releases/download/0.15.4/ruff-x86_64-apple-darwin.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:ca4db783ce3a1b942e67aa4002ca9f3c6ff1b150a85cb4ca1345c4299ad12a0f", url = "https://github.com/astral-sh/ruff/releases/download/0.15.4/ruff-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-arm64" = { checksum = "sha256:ae22fb3b6ad85cff59abf147d572d266397f42b73e51e6d55dba56fb3430fe1d", url = "https://github.com/astral-sh/ruff/releases/download/0.15.5/ruff-aarch64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:da9b5c8ba7a789fe3bcf6287ea58ccbac9328a711b7674681706106e7580a836", url = "https://github.com/astral-sh/ruff/releases/download/0.15.5/ruff-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.macos-arm64" = { checksum = "sha256:f39400f9504c940fa4eb46b02e2d4889a9f86b81ce4c57bda02ea3568894d094", url = "https://github.com/astral-sh/ruff/releases/download/0.15.5/ruff-aarch64-apple-darwin.tar.gz"}
+"platforms.macos-x64" = { checksum = "sha256:1e01b0d6354f14dac0f4de7a89488d18e00f8aa37ce3635b55bcaf1357b2a375", url = "https://github.com/astral-sh/ruff/releases/download/0.15.5/ruff-x86_64-apple-darwin.tar.gz"}
+"platforms.windows-x64" = { checksum = "sha256:9b71926a755bdefa151b7579cd5e19840e9df0ab2828c762241f1b773882d939", url = "https://github.com/astral-sh/ruff/releases/download/0.15.5/ruff-x86_64-pc-windows-msvc.zip"}
