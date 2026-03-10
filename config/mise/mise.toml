@@ -19,12 +19,9 @@ binstall = true
 "npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex" = "latest"
 
-"npm:vibe-kanban" = "latest"
-
 # mcp / tools for llm
 "npm:@upstash/context7-mcp" = "latest"
 "npm:@bufbuild/protoc-gen-es" = "latest"
-"pipx:oraios/serena" = "latest"
 
 # zenn
 "npm:zenn-cli" = "latest"
