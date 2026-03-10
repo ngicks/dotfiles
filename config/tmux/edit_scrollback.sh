@@ -8,13 +8,9 @@ if [[ -z "${pane_id}" ]]; then
 fi
 initial_mode="$(tmux display-message -p -t "${pane_id}" '#{pane_mode}')"
 
-c_opt=""
-if [[ ! -z "${2:-}" ]]; then
-  c_opt="-c ${2}"
-fi
+pane_cwd="$(tmux display-message -p -t "${pane_id}" '#{pane_current_path}')"
 
 scrollback_file="$(mktemp -t tmux-scrollback.XXXXXX)"
-trap 'rm -f "${scrollback_file}"' EXIT
 
 tmux capture-pane -p -J -S -32768 -t "${pane_id}" > "${scrollback_file}"
 
@@ -36,7 +32,7 @@ fi
 editor_cmd+=("${scrollback_file}")
 printf -v editor_cmd_str ' %q' "${editor_cmd[@]}"
 
-tmux new-window -n "scrollback" $c_opt "sh -c '${editor_cmd_str:1}' --"
+tmux new-window -n "scrollback" -c "${pane_cwd}" "sh -c '${editor_cmd_str:1}; rm -f ${scrollback_file}' --"
 
 # return pane to normal mode if we were in copy mode when launching popup
 if [[ "${initial_mode}" =~ ^copy-mode ]]; then
