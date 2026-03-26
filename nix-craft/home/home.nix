@@ -74,6 +74,7 @@ in
     procs          # Better ps
     sd             # Better sed
     hyperfine      # Benchmarking
+    just           # Command runner
     yazi           # File manager
     stow           # Symlink manager
     zoxide         # directory history navigation
