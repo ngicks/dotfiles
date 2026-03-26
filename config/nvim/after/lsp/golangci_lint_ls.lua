@@ -75,5 +75,17 @@ return {
     end
 
     vim.notify('"golangci-lint config verify" failed for both v1 and v2', vim.log.levels.WARN)
+
+    -- let it fall back to v2 anyway
+    config.init_options.command = {
+      "mise",
+      "exec",
+      "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint",
+      "--",
+      "golangci-lint",
+      "run",
+      "--output.json.path=stdout",
+      "--show-stats=false",
+    }
   end,
 }
