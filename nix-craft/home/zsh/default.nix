@@ -90,27 +90,19 @@ in
       zle -N fzf-select-history
       bindkey '^r' fzf-select-history
 
-      mkdir -p ''${XDG_CACHE_HOME:-$HOME/.cache}/shell
-      autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
-      add-zsh-hook chpwd chpwd_recent_dirs
+      eval "$(zoxide init zsh)"
 
-      zstyle ':completion:*' recent-dirs-insert both
-      zstyle ':chpwd:*' recent-dirs-max 500
-      zstyle ':chpwd:*' recent-dirs-default true
-      zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/shell/chpwd-recent-dirs"
-      zstyle ':chpwd:*' recent-dirs-pushd true
-
-      function fzf-cdr() {
-        local selected_dir=''$(cdr -l | awk '{ print ''$2 }' | fzf --reverse)
+      function fzf-zoxide() {
+        local selected_dir=''$(zoxide query --list | fzf --reverse)
         if [ -n "''$selected_dir" ]; then
           BUFFER="cd ''${selected_dir}"
           zle accept-line
         fi
         zle clear-screen
       }
-      zle -N fzf-cdr
+      zle -N fzf-zoxide
       setopt noflowcontrol
-      bindkey '^q' fzf-cdr
+      bindkey '^q' fzf-zoxide
 
       # Export a variable only if not in container with existing value
       export_unless_container_override() {
