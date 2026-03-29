@@ -128,6 +128,17 @@ in
     # Rust Tools
     cargo-binstall # Prebuilt Rust binary installer (used by mise cargo backend)
 
+    # Go Development Tools
+    gopls
+    gotools        # goimports
+    gofumpt
+    go-tools       # staticcheck
+    delve
+    gotests
+    gomodifytags
+    impl
+    iferr
+
     # System/Build Tools
     gnupg          # GPG encryption
     gnumake        # Make build tool
