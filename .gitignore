@@ -6,3 +6,8 @@
 build/podman-static/podman-static
 build/krun/crun
 build/krun/built
+
+target/
+_build/
+.mooncakes/
+.moonagent/

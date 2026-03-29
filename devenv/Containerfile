@@ -54,6 +54,10 @@ RUN <<EOF
 
     export CARGO_HOME="/root/.local/share/cargo"
     rustup default stable
+
+    export MOON_HOME="/root/.local/share/moonbit"
+    mkdir -p $MOON_HOME
+    curl -fsSL https://cli.moonbitlang.com/install/unix.sh | /root/.nix-profile/bin/bash
 EOF
 
 WORKDIR /root
