@@ -61,8 +61,6 @@ in
     rustup
     go
 
-    moonbit-bin.moonbit.latest
-
     # CLI Utilities (not managed by mise/modules)
     ripgrep        # Fast grep (rg)
     bat            # Better cat

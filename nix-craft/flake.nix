@@ -7,13 +7,9 @@
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
-        moonbit-overlay = {
-            url = "github:moonbit-community/moonbit-overlay";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
     };
 
-    outputs = { self, nixpkgs, home-manager, moonbit-overlay, ... }:
+    outputs = { self, nixpkgs, home-manager, ... }:
     let
         supportedSystems = [
             "x86_64-linux"
@@ -30,9 +26,6 @@
                 builtins.elem (nixpkgs.lib.getName pkg) [
                     "zsh-abbr"
                 ];
-            overlays = [
-                moonbit-overlay.overlays.default
-            ];
         };
     in
     {
