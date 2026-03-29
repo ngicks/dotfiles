@@ -248,5 +248,6 @@ return {
   {
     "moonbit-community/moonbit.nvim",
     ft = { "moonbit" },
+    lazy = false,
   },
 }

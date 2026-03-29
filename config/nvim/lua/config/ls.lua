@@ -8,6 +8,7 @@ local nonCustomizedServers = {
   "taplo", -- toml
   "pyright",
   "clangd",
+  "moonbit-lsp",
 }
 
 local function get_servers()
