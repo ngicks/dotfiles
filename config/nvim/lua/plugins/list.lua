@@ -244,4 +244,9 @@ return {
     "folke/lazydev.nvim",
     ft = "lua",
   },
+  -- moonbit
+  {
+    "moonbit-community/moonbit.nvim",
+    ft = { "moonbit" },
+  },
 }
