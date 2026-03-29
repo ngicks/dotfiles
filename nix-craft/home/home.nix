@@ -3,6 +3,10 @@
 let
   run-in-tmux-popup = pkgs.callPackage ../pkgs/run-in-tmux-popup.nix { };
   lsp-gw = pkgs.callPackage ../pkgs/lsp-gw.nix { };
+  goimports = pkgs.runCommand "goimports" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.gotools}/bin/goimports $out/bin/goimports
+  '';
 in
 {
   home.username = builtins.getEnv "USER";
@@ -130,7 +134,7 @@ in
 
     # Go Development Tools
     gopls
-    gotools        # goimports
+    goimports # extracted from gotools. See above.
     gofumpt
     go-tools       # staticcheck
     delve
