@@ -1,0 +1,17 @@
+export_unless_container_override MOON_HOME "${XDG_DATA_HOME:-$HOME/.local/share}/moonbit"
+
+case ":${PATH}:" in
+    *:"$MOON_HOME/bin":*)
+        ;;
+    *)
+        export PATH="$MOON_HOME/bin:$PATH"
+        ;;
+esac
+
+if [ ! -d "$MOON_HOME" ]; then
+    mkdir -p "${MOON_HOME}"
+fi
+
+if command -v moon &>/dev/null; then
+    eval "$(moon shell-completion --shell zsh)"
+fi
