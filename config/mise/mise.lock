@@ -65,7 +65,7 @@ checksum = "sha256:0720a57213521a627d74cb2fe3da16197fd5c8dd382c01cdb0b20682a5df9
 url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-testing_3.14.0_windows_amd64.zip"
 
 [[tools."cargo:tree-sitter-cli"]]
-version = "0.26.7"
+version = "0.26.8"
 backend = "cargo:tree-sitter-cli"
 
 [[tools."go:github.com/golangci/golangci-lint/cmd/golangci-lint"]]
@@ -85,11 +85,11 @@ version = "2.11.0"
 backend = "npm:@bufbuild/protoc-gen-es"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.35.3"
+version = "0.36.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.117.0"
+version = "0.118.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
