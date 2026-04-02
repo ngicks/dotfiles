@@ -1,10 +1,15 @@
 {
   "name": "ngicks/dotfiles",
   "version": "0.1.0",
+  "deps": {
+    "moonbitlang/async": "0.17.0"
+  },
+  "preferred-target": "native",
   "readme": "README.mbt.md",
   "repository": "",
   "license": "Unlicensed",
   "keywords": [],
-  "description": ""
+  "description": "",
+  "source": "src2"
 }
 
