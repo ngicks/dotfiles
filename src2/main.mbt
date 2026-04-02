@@ -1,21 +1,105 @@
 ///|
 fn cli() -> @argparse.Command {
-  @argparse.Command::new(
+  @argparse.Command(
     "dotfiles",
-    about="Dotfiles CLI tool",
-    subcommand_required=true,
     arg_required_else_help=true,
+    subcommand_required=true,
     subcommands=[
-      @argparse.Command::new("build", about="Build devenv container image", flags=[
-        @argparse.FlagArg::new(
-          "exp",
-          short='e',
-          long="exp",
-          about="Build experimental image",
-        ),
+      @argparse.Command("build", flags=[@argparse.FlagArg("exp", short='e')]),
+      @argparse.Command("save", flags=[
+        @argparse.FlagArg("exp", short='e'),
+        @argparse.FlagArg("no-build"),
+      ]),
+      @argparse.Command(
+        "pull",
+        flags=[
+          @argparse.FlagArg("exp", short='e'),
+          @argparse.FlagArg("no-build"),
+        ],
+        positionals=[@argparse.PositionArg("remote")],
+      ),
+      @argparse.Command(
+        "daemon",
+        arg_required_else_help=true,
+        subcommand_required=true,
+        subcommands=[
+          @argparse.Command("serve"),
+          @argparse.Command("detach"),
+          @argparse.Command("build", flags=[
+            @argparse.FlagArg("no-build"),
+            @argparse.FlagArg("exp", short='e'),
+            @argparse.FlagArg("save"),
+            @argparse.FlagArg("wait"),
+          ]),
+          @argparse.Command("job", positionals=[@argparse.PositionArg("job-id")]),
+          @argparse.Command("log", positionals=[@argparse.PositionArg("job-id")]),
+          @argparse.Command("wait", positionals=[
+            @argparse.PositionArg("job-id"),
+          ]),
+        ],
+      ),
+      @argparse.Command("internal-job", flags=[
+        @argparse.FlagArg("no-build"),
+        @argparse.FlagArg("exp", short='e'),
+        @argparse.FlagArg("save"),
       ]),
     ],
   )
+}
+
+///|
+fn has_flag(matches : @argparse.Matches, name : String) -> Bool {
+  matches.flags.get_or_default(name, false)
+}
+
+///|
+fn required_value(
+  matches : @argparse.Matches,
+  name : String,
+) -> String raise Error {
+  match matches.values.get(name) {
+    Some([value, ..]) => value
+    _ => raise Failure::Failure("missing required argument: \{name}")
+  }
+}
+
+///|
+async fn dispatch(matches : @argparse.Matches) -> Unit {
+  match matches.subcommand {
+    Some(("build", sub)) => @devenv.build(has_flag(sub, "exp"))
+    Some(("save", sub)) =>
+      @devenv.save(has_flag(sub, "no-build"), has_flag(sub, "exp"))
+    Some(("pull", sub)) =>
+      @devenv.pull(
+        required_value(sub, "remote"),
+        has_flag(sub, "no-build"),
+        has_flag(sub, "exp"),
+      )
+    Some(("daemon", daemon)) =>
+      match daemon.subcommand {
+        Some(("serve", _)) => @devenv.daemon_serve()
+        Some(("detach", _)) => ignore(@devenv.daemon_detach())
+        Some(("build", sub)) =>
+          @devenv.daemon_build(
+            has_flag(sub, "no-build"),
+            has_flag(sub, "exp"),
+            has_flag(sub, "save"),
+            has_flag(sub, "wait"),
+          )
+        Some(("job", sub)) => @devenv.daemon_job(required_value(sub, "job-id"))
+        Some(("log", sub)) => @devenv.daemon_log(required_value(sub, "job-id"))
+        Some(("wait", sub)) =>
+          @devenv.daemon_wait(required_value(sub, "job-id"))
+        _ => fail("missing daemon subcommand")
+      }
+    Some(("internal-job", sub)) =>
+      @devenv.internal_job(
+        has_flag(sub, "no-build"),
+        has_flag(sub, "exp"),
+        has_flag(sub, "save"),
+      )
+    _ => fail("missing command")
+  }
 }
 
 ///|
@@ -26,13 +110,7 @@ async fn main {
       return
     }
   }
-  match matches.subcommand {
-    Some(("build", m)) => {
-      let is_exp = m.flags.get("exp").unwrap_or(false)
-      @devenv.build(is_exp) catch {
-        e => println("error: " + e.to_string())
-      }
-    }
-    _ => ()
+  dispatch(matches) catch {
+    e => println("error: " + e.to_string())
   }
 }

@@ -1,6 +1,7 @@
 import {
-  "moonbitlang/core/argparse",
   "moonbitlang/async",
+  "moonbitlang/core/argparse",
+  "moonbitlang/core/builtin",
   "ngicks/dotfiles/devenv" @devenv,
 }
 
