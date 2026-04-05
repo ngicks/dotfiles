@@ -88,23 +88,6 @@ fn encode_kv(values : Map[String, String]) -> String {
 }
 
 ///|
-fn bool_text(value : Bool) -> String {
-  if value {
-    "1"
-  } else {
-    "0"
-  }
-}
-
-///|
-fn parse_bool(value : String?) -> Bool {
-  match value {
-    Some("1" | "true" | "yes" | "on") => true
-    _ => false
-  }
-}
-
-///|
 async fn ensure_dir(path : String) -> Unit raise Error {
   @fs.mkdir(path, permission=0o755, recursive=true)
 }
@@ -121,34 +104,6 @@ async fn read_text_if_exists(path : String) -> String? raise Error {
 ///|
 async fn write_text(path : String, text : String) -> Unit raise Error {
   @fs.write_file(path, text, create=0o644, truncate=true)
-}
-
-///|
-fn parse_query(path : String) -> Map[String, String] {
-  let query = match path.split("?").to_array() {
-    [_base, query, ..] => query
-    _ => ""
-  }
-  let result : Map[String, String] = {}
-  if query == "" {
-    return result
-  }
-  for part in query.split("&") {
-    match part.split("=").to_array() {
-      [key, value] => result[key.to_string()] = value.to_string()
-      [key] => result[key.to_string()] = "1"
-      _ => ()
-    }
-  }
-  result
-}
-
-///|
-fn strip_query(path : String) -> String {
-  match path.split("?").to_array() {
-    [base, ..] => base.to_string()
-    _ => path
-  }
 }
 
 ///|

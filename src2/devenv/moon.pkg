@@ -4,6 +4,7 @@ import {
   "moonbitlang/async/http" @http,
   "moonbitlang/core/builtin",
   "moonbitlang/core/env",
+  "moonbitlang/core/json" @json,
   "moonbitlang/core/string" @string,
   "moonbitlang/async/socket" @socket,
   "moonbitlang/async/stdio" @stdio,
