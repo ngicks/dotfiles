@@ -86,8 +86,8 @@ async fn read_running_daemon_port() -> Int? raise Error {
 
 ///|
 pub async fn daemon_detach() -> Int raise Error {
-  ensure_dir(daemon_dir())
-  ensure_dir(jobs_dir())
+  ensure_dir(daemon_dir().0)
+  ensure_dir(jobs_dir().0)
   match read_running_daemon_port() {
     Some(port) => {
       println("daemon already running on port \{port}")
@@ -135,7 +135,7 @@ async fn start_job(
 ) -> String raise Error {
   let job_id = next_job_id(state)
   let tag = get_tag(is_experimental)
-  let job_path = job_dir(job_id)
+  let job_path = job_dir(job_id).0
   ensure_dir(job_path)
   write_text(
     job_status_path(job_id),
@@ -252,8 +252,8 @@ async fn response_not_found(
 
 ///|
 pub async fn daemon_serve() -> Unit raise Error {
-  ensure_dir(daemon_dir())
-  ensure_dir(jobs_dir())
+  ensure_dir(daemon_dir().0)
+  ensure_dir(jobs_dir().0)
   let info_path = daemon_info_path()
   let info_file = @fs.open(info_path, mode=WriteOnly, create=0o644)
   guard info_file.try_lock(Exclusive) else {

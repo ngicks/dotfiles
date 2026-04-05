@@ -8,6 +8,7 @@ import {
   "moonbitlang/async/socket" @socket,
   "moonbitlang/async/stdio" @stdio,
   "moonbitlang/async/process" @process,
+  "moonbitlang/x/path" @path,
 }
 
 supported_targets = "+native"

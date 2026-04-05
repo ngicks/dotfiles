@@ -1,62 +1,51 @@
 ///|
-fn home_dir() -> String {
-  @env.get_env_var("HOME").unwrap_or(".")
+fn home_dir() -> @path.Path {
+  @path.Path(@env.get_env_var("HOME").unwrap_or("."))
 }
 
 ///|
-fn path_join(base : String, child : String) -> String {
-  if base == "" || base == "." {
-    child
-  } else if base is [.., '/'] {
-    base + child
-  } else {
-    base + "/" + child
-  }
+fn cache_root() -> @path.Path {
+  home_dir().join(@path.Path(".cache/dotfiles/devenv"))
 }
 
 ///|
-fn cache_root() -> String {
-  path_join(home_dir(), ".cache/dotfiles/devenv")
+fn image_dir() -> @path.Path {
+  cache_root().join(@path.Path("image"))
 }
 
 ///|
-fn image_dir() -> String {
-  path_join(cache_root(), "image")
-}
-
-///|
-fn daemon_dir() -> String {
-  path_join(cache_root(), "daemon")
+fn daemon_dir() -> @path.Path {
+  cache_root().join(@path.Path("daemon"))
 }
 
 ///|
 fn daemon_info_path() -> String {
-  path_join(daemon_dir(), "daemon.info")
+  daemon_dir().join(@path.Path("daemon.info")).0
 }
 
 ///|
 fn daemon_log_path() -> String {
-  path_join(daemon_dir(), "daemon.log")
+  daemon_dir().join(@path.Path("daemon.log")).0
 }
 
 ///|
-fn jobs_dir() -> String {
-  path_join(daemon_dir(), "jobs")
+fn jobs_dir() -> @path.Path {
+  daemon_dir().join(@path.Path("jobs"))
 }
 
 ///|
-fn job_dir(job_id : String) -> String {
-  path_join(jobs_dir(), job_id)
+fn job_dir(job_id : String) -> @path.Path {
+  jobs_dir().join(@path.Path(job_id))
 }
 
 ///|
 fn job_status_path(job_id : String) -> String {
-  path_join(job_dir(job_id), "status.txt")
+  job_dir(job_id).join(@path.Path("status.txt")).0
 }
 
 ///|
 fn job_log_path(job_id : String) -> String {
-  path_join(job_dir(job_id), "build.log")
+  job_dir(job_id).join(@path.Path("build.log")).0
 }
 
 ///|
@@ -66,7 +55,7 @@ pub fn image_file_name(tag : String) -> String {
 
 ///|
 pub fn image_path(tag : String) -> String {
-  path_join(image_dir(), image_file_name(tag))
+  image_dir().join(@path.Path(image_file_name(tag))).0
 }
 
 ///|

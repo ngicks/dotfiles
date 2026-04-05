@@ -36,7 +36,7 @@ pub async fn pull(
   let local_path = image_path(tag)
   let image_name = "localhost/devenv/devenv:\{tag}"
 
-  ensure_dir(image_dir())
+  ensure_dir(image_dir().0)
 
   let remote_args = ["daemon", "build", "--save", "--wait"]
   if is_experimental {

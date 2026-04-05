@@ -1,6 +1,6 @@
 ///|
 pub fn cache_dir_path() -> String {
-  image_dir()
+  image_dir().0
 }
 
 ///|
@@ -13,7 +13,7 @@ pub async fn save(no_build : Bool, is_experimental : Bool) -> Unit raise Error {
     println("skipping build, saving existing image \{image_name}")
   }
 
-  ensure_dir(image_dir())
+  ensure_dir(image_dir().0)
   let file_path = image_path(tag)
   if @fs.exists(file_path) {
     println("already saved: \{file_path}")
