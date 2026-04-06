@@ -14,9 +14,9 @@ pushd $dir
   echo ""
   ./scripts/homeenv/mise-up.sh
   echo ""
-  echo "nvim lazy / ts update"
+  echo "nvim plugin update"
   echo ""
-  ./scripts/homeenv/nvim-lazy-sync.sh
+  ./scripts/homeenv/nvim-pack-update.sh
   echo ""
   echo "nix flake update"
   echo ""

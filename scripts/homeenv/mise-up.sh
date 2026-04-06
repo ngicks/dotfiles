@@ -14,4 +14,4 @@ $runner \
   "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
   --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
   --workdir /mise" \
-  "-lc" "mise up && mise install -f ${go_tools[*]} && mise prune -y && mise lock"
+  "-lc" "mise up && mise install -f ${go_tools[*]} && mise prune -y && mise lock --global"

@@ -14,9 +14,9 @@ pushd $dir
   echo ""
   ./scripts/homeenv/nix-run-home-manager.sh
   echo ""
-  echo "nvim lazy / ts restore"
+  echo "nvim plugin restore from lockfile"
   echo ""
-  ./scripts/homeenv/nvim-lazy-restore.sh
+  ./scripts/homeenv/nvim-pack-restore.sh
   echo ""
   echo "mise install"
   echo ""
