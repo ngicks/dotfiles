@@ -93,9 +93,8 @@
       "src": "https://github.com/moonbit-community/moonbit.nvim"
     },
     "nvim-bqf": {
-      "rev": "f65fba733268ffcf9c5b8ac381287eca7c223422",
-      "src": "https://github.com/kevinhwang91/nvim-bqf",
-      "version": "'f65fba733268ffcf9c5b8ac381287eca7c223422'"
+      "rev": "c282a62bec6c0621a1ef5132aa3f4c9fc4dcc2c7",
+      "src": "https://github.com/kevinhwang91/nvim-bqf"
     },
     "nvim-cmp": {
       "rev": "a1d504892f2bc56c2e79b65c6faded2fd21f3eca",
