@@ -96,6 +96,10 @@ backend = "npm:@openai/codex"
 version = "2.1.6"
 backend = "npm:@upstash/context7-mcp"
 
+[[tools."npm:@upstash/context7-mcp"]]
+version = "2.1.7"
+backend = "npm:@upstash/context7-mcp"
+
 [[tools."npm:zenn-cli"]]
 version = "0.4.7"
 backend = "npm:zenn-cli"
