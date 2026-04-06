@@ -24,7 +24,7 @@ M.merge = function(plugins)
       vim.notify("missing plugin config: " .. path, vim.log.levels.WARN)
     else
       for _, f in ipairs { "init", "opts", "config", "main", "build" } do
-        if conf[f] then
+        if conf[f] ~= nil then
           plugin[f] = conf[f]
         end
       end

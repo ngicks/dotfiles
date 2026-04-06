@@ -1,7 +1,5 @@
 local M = {}
 
-M.build = ":TSUpdate"
-
 M.opts = function()
   dofile(vim.g.base46_cache .. "telescope")
 

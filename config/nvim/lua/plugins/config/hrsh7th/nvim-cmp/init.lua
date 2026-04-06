@@ -1,5 +1,7 @@
 local M = {}
 
+M.main = "cmp"
+
 M.opts = function()
   dofile(vim.g.base46_cache .. "cmp")
 
@@ -59,4 +61,5 @@ M.opts = function()
 
   return vim.tbl_deep_extend("force", options, require "nvchad.cmp")
 end
+
 return M

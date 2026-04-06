@@ -1,5 +1,7 @@
 local M = {}
 
+M.main = "dapui"
+
 M.opts = function()
   local dap = require "dap"
   local dapui = require "dapui"

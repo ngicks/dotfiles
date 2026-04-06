@@ -1,5 +1,7 @@
 local M = {}
 
+M.main = "bqf"
+
 M.opts = {
   auto_enable = true,
   auto_resize_height = true, -- highly recommended enable

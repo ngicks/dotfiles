@@ -1,5 +1,6 @@
 local M = {}
 local map = vim.keymap.set
+local pack_util = require "pack.util"
 
 -- export on_attach & capabilities
 M.on_attach = function(_, bufnr)
@@ -69,13 +70,16 @@ M.defaults = function()
       workspace = {
         library = {
           vim.fn.expand "$VIMRUNTIME/lua",
-          vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
-          vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
           "${3rd}/luv/library",
         },
       },
     },
   }
+
+  local nvchad_ui = pack_util.plugin_dir "ui"
+  if nvchad_ui then
+    table.insert(lua_lsp_settings.Lua.workspace.library, nvchad_ui .. "/lua/nvchad_types")
+  end
 
   -- Use new vim.lsp.config API for Neovim 0.11+
   vim.lsp.config("*", { capabilities = M.capabilities, on_init = M.on_init })
