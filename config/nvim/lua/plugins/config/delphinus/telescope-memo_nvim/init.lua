@@ -2,9 +2,7 @@ local M = {}
 
 M.config = function()
   if vim.fn.executable "memo" == 0 then
-    vim.notify "memo not found, installing with go install ..."
-    vim.fn.system { "go", "install", "github.com/mattn/memo@latest" }
-    vim.notify "done"
+    vim.notify 'memo not found. You must install "github.com/mattn/memo@latest"'
   end
 
   local dir = vim.fn.expand "~/.config/memo"
