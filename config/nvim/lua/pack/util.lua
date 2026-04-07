@@ -9,18 +9,18 @@ function M.plugin_name(spec)
   if spec.name then
     return spec.name
   end
-  if type(spec[1]) == "string" then
-    return repo_tail(spec[1])
+  if type(spec.src) == "string" and spec.src ~= "" then
+    return repo_tail(spec.src)
   end
-  return repo_tail(spec.src)
+  error("plugin spec must contain src")
 end
 
 function M.plugin_src(spec)
-  local src = spec.src or spec[1]
-  if src:find("://", 1, true) or src:find "^git@" or src:find "^[%w.+-]+:" then
+  local src = spec.src
+  if type(src) == "string" and src:find("://", 1, true) then
     return src
   end
-  return "https://github.com/" .. src
+  error("plugin spec must contain full src URL")
 end
 
 function M.plugin_version(spec)

@@ -11,194 +11,193 @@
 --   "ui"   = loaded/configured via vim.schedule after startup
 return {
   { -- utils
-    "nvim-lua/plenary.nvim",
+    src = "https://github.com/nvim-lua/plenary.nvim",
     phase = "core",
   },
   -- base: thanks nvchad!
   {
-    "nvchad/ui",
+    src = "https://github.com/nvchad/ui",
     phase = "core",
     config = function()
       require "nvchad"
     end,
   },
   {
-    "nvchad/base46",
+    src = "https://github.com/nvchad/base46",
     phase = "core",
     build = function()
       require("base46").load_all_highlights()
     end,
   },
   {
-    "nvim-tree/nvim-web-devicons",
+    src = "https://github.com/nvim-tree/nvim-web-devicons",
     phase = "core",
   },
   {
-    "nvim-treesitter/nvim-treesitter",
+    src = "https://github.com/nvim-treesitter/nvim-treesitter",
     phase = "core",
     branch = "main",
   },
   {
-    "rmagatti/auto-session",
+    src = "https://github.com/rmagatti/auto-session",
     phase = "core",
   },
   -- lsp stuff
   {
-    "neovim/nvim-lspconfig",
+    src = "https://github.com/neovim/nvim-lspconfig",
     phase = "core",
   },
   -- completion
   {
-    "rafamadriz/friendly-snippets",
+    src = "https://github.com/rafamadriz/friendly-snippets",
     phase = "core",
   },
   {
-    "L3MON4D3/LuaSnip",
+    src = "https://github.com/L3MON4D3/LuaSnip",
     phase = "core",
   },
   {
-    "saadparwaiz1/cmp_luasnip",
+    src = "https://github.com/saadparwaiz1/cmp_luasnip",
     phase = "core",
   },
   {
-    "hrsh7th/cmp-nvim-lua",
+    src = "https://github.com/hrsh7th/cmp-nvim-lua",
     phase = "core",
   },
   {
-    "hrsh7th/cmp-nvim-lsp",
+    src = "https://github.com/hrsh7th/cmp-nvim-lsp",
     phase = "core",
   },
   {
-    "hrsh7th/cmp-buffer",
+    src = "https://github.com/hrsh7th/cmp-buffer",
     phase = "core",
   },
   {
-    "FelipeLema/cmp-async-path",
     src = "https://codeberg.org/FelipeLema/cmp-async-path.git",
     phase = "core",
   },
   {
-    "hrsh7th/nvim-cmp",
+    src = "https://github.com/hrsh7th/nvim-cmp",
     phase = "core",
   },
   {
-    "moonbit-community/moonbit.nvim",
+    src = "https://github.com/moonbit-community/moonbit.nvim",
     phase = "core",
   },
   -- ui
   {
-    "nvzone/volt",
+    src = "https://github.com/nvzone/volt",
   },
   {
-    "nvzone/menu",
+    src = "https://github.com/nvzone/menu",
   },
   {
-    "nvzone/minty",
+    src = "https://github.com/nvzone/minty",
   },
   {
-    "lukas-reineke/indent-blankline.nvim",
+    src = "https://github.com/lukas-reineke/indent-blankline.nvim",
   },
   {
-    "folke/which-key.nvim",
+    src = "https://github.com/folke/which-key.nvim",
   },
   {
-    "sindrets/diffview.nvim",
+    src = "https://github.com/sindrets/diffview.nvim",
   },
   -- git stuff
   {
-    "lewis6991/gitsigns.nvim",
+    src = "https://github.com/lewis6991/gitsigns.nvim",
   },
   {
-    "nvim-mini/mini.nvim",
+    src = "https://github.com/nvim-mini/mini.nvim",
   },
   {
-    "greggh/claude-code.nvim",
+    src = "https://github.com/greggh/claude-code.nvim",
   },
   {
-    "mfussenegger/nvim-dap",
+    src = "https://github.com/mfussenegger/nvim-dap",
   },
   {
-    "nvim-neotest/nvim-nio",
+    src = "https://github.com/nvim-neotest/nvim-nio",
   },
   {
-    "rcarriga/nvim-dap-ui",
+    src = "https://github.com/rcarriga/nvim-dap-ui",
   },
   {
-    "theHamsta/nvim-dap-virtual-text",
+    src = "https://github.com/theHamsta/nvim-dap-virtual-text",
   },
   { -- format file types where lsp is not available.
-    "stevearc/conform.nvim",
+    src = "https://github.com/stevearc/conform.nvim",
   },
   { -- display lsp symbols, diagnoses
-    "folke/trouble.nvim",
+    src = "https://github.com/folke/trouble.nvim",
   },
   -- telescope
   {
-    "nvim-telescope/telescope.nvim",
+    src = "https://github.com/nvim-telescope/telescope.nvim",
   },
   {
-    "nvim-telescope/telescope-fzf-native.nvim",
+    src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
   },
   {
-    "nvim-telescope/telescope-live-grep-args.nvim",
+    src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim",
   },
   {
-    "nosduco/remote-sshfs.nvim",
+    src = "https://github.com/nosduco/remote-sshfs.nvim",
   },
   -- visual helper
   {
-    "nvim-tree/nvim-tree.lua",
+    src = "https://github.com/nvim-tree/nvim-tree.lua",
   },
   {
-    "nvim-treesitter/nvim-treesitter-context",
+    src = "https://github.com/nvim-treesitter/nvim-treesitter-context",
   },
   {
-    "petertriho/nvim-scrollbar",
+    src = "https://github.com/petertriho/nvim-scrollbar",
   },
   { -- display breadcrumb list at top of the buffer.
-    "Bekaboo/dropbar.nvim",
+    src = "https://github.com/Bekaboo/dropbar.nvim",
   },
   {
-    "junegunn/fzf",
+    src = "https://github.com/junegunn/fzf",
   },
   { -- preview for quick list items
-    "kevinhwang91/nvim-bqf",
+    src = "https://github.com/kevinhwang91/nvim-bqf",
   },
   -- renderer
   {
-    "MeanderingProgrammer/render-markdown.nvim",
+    src = "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   },
   {
-    "hat0uma/csvview.nvim",
+    src = "https://github.com/hat0uma/csvview.nvim",
   },
   -- editor for specific formatted files
   {
-    "tpope/vim-dadbod",
+    src = "https://github.com/tpope/vim-dadbod",
   },
   {
-    "kristijanhusak/vim-dadbod-completion",
+    src = "https://github.com/kristijanhusak/vim-dadbod-completion",
   },
   { -- database viewer
-    "kristijanhusak/vim-dadbod-ui",
+    src = "https://github.com/kristijanhusak/vim-dadbod-ui",
   },
   {
-    "lemarsu/sops.nvim",
+    src = "https://github.com/lemarsu/sops.nvim",
   },
   {
-    "akinsho/toggleterm.nvim",
+    src = "https://github.com/akinsho/toggleterm.nvim",
   },
   -- memo
   {
-    "glidenote/memolist.vim",
+    src = "https://github.com/glidenote/memolist.vim",
   },
   {
-    "delphinus/telescope-memo.nvim",
+    src = "https://github.com/delphinus/telescope-memo.nvim",
   },
   -- debug
   { -- gets buffer content then eval in nvim as lua script.
-    "bfredl/nvim-luadev",
+    src = "https://github.com/bfredl/nvim-luadev",
   },
   {
-    "folke/lazydev.nvim",
+    src = "https://github.com/folke/lazydev.nvim",
   },
 }

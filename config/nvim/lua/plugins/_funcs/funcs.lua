@@ -1,24 +1,33 @@
 local M = {}
 
+local function config_name(plugin)
+  if type(plugin.src) ~= "string" or plugin.src == "" then
+    error("plugin spec must contain full src URL: " .. vim.inspect(plugin))
+  end
+
+  if not plugin.src:find("://", 1, true) then
+    error("plugin spec src must be full URL: " .. plugin.src)
+  end
+
+  return plugin.src:gsub("^[%w.+-]+://", ""):gsub("/", "--"):gsub("%.", "_")
+end
+
 M.auto_create = function(plugins)
   for _, plugin in ipairs(plugins) do
-    local path = plugin[1]:gsub("%.", "_")
-    local dir = vim.fn.stdpath "config" .. "/lua/plugins/config/" .. path
+    local path = config_name(plugin)
+    local file = vim.fn.stdpath "config" .. "/lua/plugins/config/" .. path .. ".lua"
 
-    if vim.fn.isdirectory(dir) == 0 then
-      vim.fn.mkdir(dir, "p")
-    end
-    if vim.fn.filereadable(dir .. "/init.lua") == 0 then
-      vim.fn.writefile({ "local M = {}", "", "return M" }, dir .. "/init.lua")
+    if vim.fn.filereadable(file) == 0 then
+      vim.fn.writefile({ "local M = {}", "", "return M" }, file)
     end
   end
 end
 
 M.merge = function(plugins)
   for _, plugin in ipairs(plugins) do
-    local path = plugin[1]:gsub("%.", "_")
+    local path = config_name(plugin)
 
-    local success, conf = pcall(require, "plugins.config." .. path:gsub("/", "."))
+    local success, conf = pcall(require, "plugins.config." .. path)
 
     if not success then
       vim.notify("missing plugin config: " .. path, vim.log.levels.WARN)
@@ -36,14 +45,14 @@ end
 M.list_unused = function(plugins)
   local config_dir = vim.fn.stdpath "config" .. "/lua/plugins/config"
 
-  -- Build set of expected config paths from plugins
+  -- Build set of expected config paths from plugins.
   local expected = {}
   for _, plugin in ipairs(plugins) do
-    local path = plugin[1]:gsub("%.", "_")
+    local path = config_name(plugin)
     expected[path] = true
   end
 
-  -- Find all existing config directories
+  -- With a flat config layout every plugin config is a direct child Lua file in config_dir.
   local unused = {}
   local handle = vim.uv.fs_scandir(config_dir)
   if not handle then
@@ -55,22 +64,10 @@ M.list_unused = function(plugins)
     if not name then
       break
     end
-    if type == "directory" then
-      -- Recursively scan for nested directories (e.g., folke/which_key_nvim)
-      local subhandle = vim.uv.fs_scandir(config_dir .. "/" .. name)
-      if subhandle then
-        while true do
-          local subname, subtype = vim.uv.fs_scandir_next(subhandle)
-          if not subname then
-            break
-          end
-          if subtype == "directory" then
-            local full_path = name .. "/" .. subname
-            if not expected[full_path] then
-              table.insert(unused, full_path)
-            end
-          end
-        end
+    if type == "file" and name:sub(-4) == ".lua" then
+      local mod = name:sub(1, -5)
+      if not expected[mod] then
+        table.insert(unused, mod)
       end
     end
   end
