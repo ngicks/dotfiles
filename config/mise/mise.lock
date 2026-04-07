@@ -68,6 +68,10 @@ url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-tes
 version = "0.26.8"
 backend = "cargo:tree-sitter-cli"
 
+[[tools."go:github.com/chrishrb/go-grip"]]
+version = "0.9.0"
+backend = "go:github.com/chrishrb/go-grip"
+
 [[tools."go:github.com/golangci/golangci-lint/cmd/golangci-lint"]]
 version = "1.64.8"
 backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
@@ -75,6 +79,10 @@ backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
 [[tools."go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"]]
 version = "2.11.4"
 backend = "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
+
+[[tools."go:github.com/mattn/memo"]]
+version = "0.0.20"
+backend = "go:github.com/mattn/memo"
 
 [[tools."go:github.com/nametake/golangci-lint-langserver"]]
 version = "0.0.12"
