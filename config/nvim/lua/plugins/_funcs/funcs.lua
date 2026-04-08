@@ -1,6 +1,10 @@
+---@class NgPluginFuncs
 local M = {}
+---@type NgPluginSpecDefaults
 local default_spec = require "plugins.default"
 
+---@param plugin NgPluginSpec
+---@return string
 local function config_name(plugin)
   if type(plugin.src) ~= "string" or plugin.src == "" then
     error("plugin spec must contain full src URL: " .. vim.inspect(plugin))
@@ -13,6 +17,7 @@ local function config_name(plugin)
   return plugin.src:gsub("^[%w.+-]+://", ""):gsub("/", "--"):gsub("%.", "_")
 end
 
+---@param plugins NgPluginSpec[]
 M.auto_create = function(plugins)
   for _, plugin in ipairs(plugins) do
     local path = config_name(plugin)
@@ -24,13 +29,18 @@ M.auto_create = function(plugins)
   end
 end
 
+---@param plugins NgPluginSpec[]
+---@return NgPluginSpec[]
 M.merge = function(plugins)
+  ---@type NgPluginSpec[]
   local merged = {}
 
   for _, plugin in ipairs(plugins) do
+    ---@type NgPluginSpec
     local spec = vim.tbl_extend("force", {}, default_spec, plugin)
     local path = config_name(plugin)
 
+    ---@type boolean, NgPluginConfigModule
     local success, conf = pcall(require, "plugins.config." .. path)
 
     if not success then
@@ -49,10 +59,13 @@ M.merge = function(plugins)
   return merged
 end
 
+---@param plugins NgPluginSpec[]
+---@return string[]
 M.list_unused = function(plugins)
   local config_dir = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "plugins", "config")
 
   -- Build set of expected config paths from plugins.
+  ---@type table<string, boolean>
   local expected = {}
   for _, plugin in ipairs(plugins) do
     local path = config_name(plugin)
@@ -60,6 +73,7 @@ M.list_unused = function(plugins)
   end
 
   -- With a flat config layout every plugin config is a direct child Lua file in config_dir.
+  ---@type string[]
   local unused = {}
   local handle = vim.uv.fs_scandir(config_dir)
   if not handle then

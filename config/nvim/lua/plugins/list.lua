@@ -9,6 +9,7 @@
 -- phase:
 --   "core" = loaded/configured during startup
 --   "ui"   = loaded/configured via vim.schedule after startup
+---@type NgPluginSpec[]
 return {
   { -- utils
     src = "https://github.com/nvim-lua/plenary.nvim",

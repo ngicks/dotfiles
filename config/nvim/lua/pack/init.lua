@@ -1,8 +1,14 @@
+---@class NgPackModule
 local M = {}
+---@type NgPackUtil
 local util = require "pack.util"
 
+---@param plugins NgPluginSpec[]
+---@return NgPluginSpec[]
 local function normalize_plugins(plugins)
+  ---@type NgPluginSpec[]
   local normalized = {}
+  ---@type table<string, boolean>
   local seen = {}
 
   for _, spec in ipairs(plugins) do
@@ -22,6 +28,8 @@ local function normalize_plugins(plugins)
   return normalized
 end
 
+---@param spec NgPluginSpec
+---@return NgPluginOpts
 local function resolve_opts(spec)
   if type(spec.opts) == "function" then
     return spec.opts(spec)
@@ -29,6 +37,8 @@ local function resolve_opts(spec)
   return spec.opts
 end
 
+---@param spec NgPluginSpec
+---@return any|nil
 local function require_main(spec)
   local main = util.infer_main(spec)
   local ok, mod = pcall(require, main)
@@ -40,6 +50,8 @@ local function require_main(spec)
 end
 
 -- return callable instance of given a
+---@param a any
+---@return function|table|nil
 local function callable(a)
   local typ = type(a)
   if typ == "function" then
@@ -54,6 +66,10 @@ local function callable(a)
   return nil
 end
 
+---@param mod any
+---@param spec NgPluginSpec
+---@param opts NgPluginOpts
+---@return boolean
 local function call_setup(mod, spec, opts)
   local setup = callable(type(mod) == "table" and mod.setup or nil)
   if setup == nil then
@@ -64,6 +80,7 @@ local function call_setup(mod, spec, opts)
   return true
 end
 
+---@param spec NgPluginSpec
 local function ensure_loaded(spec)
   if spec._loaded then
     return
@@ -73,6 +90,7 @@ local function ensure_loaded(spec)
   spec._loaded = true
 end
 
+---@param spec NgPluginSpec
 local function run_init(spec)
   if spec._initialized then
     return
@@ -85,6 +103,7 @@ local function run_init(spec)
   spec._initialized = true
 end
 
+---@param spec NgPluginSpec
 local function run_config(spec)
   if spec._configured then
     return
@@ -111,6 +130,8 @@ local function run_config(spec)
   spec._configured = true
 end
 
+---@param spec NgPluginSpec
+---@param ev NgPluginBuildEvent
 local function run_build(spec, ev)
   if spec.build == nil then
     return
@@ -146,7 +167,9 @@ local function run_build(spec, ev)
   end
 end
 
+---@param plugins NgPluginSpec[]
 local function register_build_hooks(plugins)
+  ---@type table<string, NgPluginSpec>
   local by_name = {}
   for _, spec in ipairs(plugins) do
     if spec.build ~= nil then
@@ -155,7 +178,7 @@ local function register_build_hooks(plugins)
   end
 
   vim.api.nvim_create_autocmd("PackChanged", {
-    group = vim.api.nvim_create_augroup("DotfilesPackBuildHooks", { clear = true }),
+    group = vim.api.nvim_create_augroup("NgPackBuildHooks", { clear = true }),
     callback = function(ev)
       local spec = by_name[ev.data.spec.name]
       if spec ~= nil then
@@ -165,6 +188,8 @@ local function register_build_hooks(plugins)
   })
 end
 
+---@param plugins NgPluginSpec[]
+---@param phase NgPluginPhase
 local function setup_phase(plugins, phase)
   for _, spec in ipairs(plugins) do
     if spec.phase == phase then
@@ -173,6 +198,7 @@ local function setup_phase(plugins, phase)
   end
 end
 
+---@param plugins NgPluginSpec[]
 function M.setup(plugins)
   local normalized = normalize_plugins(plugins)
 
@@ -182,6 +208,7 @@ function M.setup(plugins)
     run_init(spec)
   end
 
+  ---@type NgPackSpec[]
   local pack_specs = {}
   for _, spec in ipairs(normalized) do
     table.insert(pack_specs, spec._pack_spec)

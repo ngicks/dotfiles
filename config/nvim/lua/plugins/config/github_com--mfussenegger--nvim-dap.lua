@@ -1,3 +1,4 @@
+---@type NgPluginConfigModule
 local M = {}
 
 local configureSigns = function()
