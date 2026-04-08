@@ -3,7 +3,7 @@ local M = {}
 M.load_local_dir = function(relative_path, hard_error)
   local scan = require("plenary.scandir").scan_dir
   local ret = {}
-  local files = scan(vim.fn.stdpath "config" .. "/lua/" .. relative_path, { depth = 1, add_dirs = false })
+  local files = scan(vim.fs.joinpath(vim.fn.stdpath "config" , "lua", relative_path), { depth = 1, add_dirs = false })
   for _, file in ipairs(files) do
     local module = file:match "([^/]+)%.lua$"
     if module then
