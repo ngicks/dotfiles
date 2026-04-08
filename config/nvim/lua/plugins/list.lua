@@ -18,6 +18,7 @@ return {
   {
     src = "https://github.com/nvchad/ui",
     phase = "core",
+    version = "",
     config = function()
       require "nvchad"
     end,
@@ -25,6 +26,7 @@ return {
   {
     src = "https://github.com/nvchad/base46",
     phase = "core",
+    version = "",
     build = function()
       require("base46").load_all_highlights()
     end,
@@ -36,6 +38,7 @@ return {
   {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     phase = "core",
+    version = "",
     branch = "main",
   },
   {
@@ -51,6 +54,7 @@ return {
   {
     src = "https://github.com/rafamadriz/friendly-snippets",
     phase = "core",
+    version = "",
   },
   {
     src = "https://github.com/L3MON4D3/LuaSnip",
@@ -59,22 +63,27 @@ return {
   {
     src = "https://github.com/saadparwaiz1/cmp_luasnip",
     phase = "core",
+    version = "",
   },
   {
     src = "https://github.com/hrsh7th/cmp-nvim-lua",
     phase = "core",
+    version = "",
   },
   {
     src = "https://github.com/hrsh7th/cmp-nvim-lsp",
     phase = "core",
+    version = "",
   },
   {
     src = "https://github.com/hrsh7th/cmp-buffer",
     phase = "core",
+    version = "",
   },
   {
     src = "https://codeberg.org/FelipeLema/cmp-async-path.git",
     phase = "core",
+    version = "",
   },
   {
     src = "https://github.com/hrsh7th/nvim-cmp",
@@ -83,16 +92,20 @@ return {
   {
     src = "https://github.com/moonbit-community/moonbit.nvim",
     phase = "core",
+    version = "",
   },
   -- ui
   {
     src = "https://github.com/nvzone/volt",
+    version = "",
   },
   {
     src = "https://github.com/nvzone/menu",
+    version = "",
   },
   {
     src = "https://github.com/nvzone/minty",
+    version = "",
   },
   {
     src = "https://github.com/lukas-reineke/indent-blankline.nvim",
@@ -108,6 +121,7 @@ return {
   },
   {
     src = "https://github.com/sindrets/diffview.nvim",
+    version = "",
   },
   -- git stuff
   {
@@ -130,6 +144,7 @@ return {
   },
   {
     src = "https://github.com/theHamsta/nvim-dap-virtual-text",
+    version = "",
   },
   { -- format file types where lsp is not available.
     src = "https://github.com/stevearc/conform.nvim",
@@ -143,6 +158,7 @@ return {
   },
   {
     src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+    version = "",
   },
   {
     src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim",
@@ -159,6 +175,7 @@ return {
   },
   {
     src = "https://github.com/petertriho/nvim-scrollbar",
+    version = "",
   },
   { -- display breadcrumb list at top of the buffer.
     src = "https://github.com/Bekaboo/dropbar.nvim",
@@ -182,9 +199,11 @@ return {
   },
   {
     src = "https://github.com/kristijanhusak/vim-dadbod-completion",
+    version = "",
   },
   { -- database viewer
     src = "https://github.com/kristijanhusak/vim-dadbod-ui",
+    version = "",
   },
   {
     src = "https://github.com/lemarsu/sops.nvim",
@@ -195,13 +214,16 @@ return {
   -- memo
   {
     src = "https://github.com/glidenote/memolist.vim",
+    version = "",
   },
   {
     src = "https://github.com/delphinus/telescope-memo.nvim",
+    version = "",
   },
   -- debug
   { -- gets buffer content then eval in nvim as lua script.
     src = "https://github.com/bfredl/nvim-luadev",
+    version = "",
   },
   {
     src = "https://github.com/folke/lazydev.nvim",

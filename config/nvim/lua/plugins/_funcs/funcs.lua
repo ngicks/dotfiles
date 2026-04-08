@@ -1,4 +1,5 @@
 local M = {}
+local default_spec = require "plugins.default"
 
 local function config_name(plugin)
   if type(plugin.src) ~= "string" or plugin.src == "" then
@@ -24,7 +25,10 @@ M.auto_create = function(plugins)
 end
 
 M.merge = function(plugins)
+  local merged = {}
+
   for _, plugin in ipairs(plugins) do
+    local spec = vim.tbl_extend("force", {}, default_spec, plugin)
     local path = config_name(plugin)
 
     local success, conf = pcall(require, "plugins.config." .. path)
@@ -34,16 +38,19 @@ M.merge = function(plugins)
     else
       for _, f in ipairs { "init", "opts", "config", "main", "build" } do
         if conf[f] ~= nil then
-          plugin[f] = conf[f]
+          spec[f] = conf[f]
         end
       end
     end
+
+    table.insert(merged, spec)
   end
-  return plugins
+
+  return merged
 end
 
 M.list_unused = function(plugins)
-  local config_dir = vim.fn.stdpath "config" .. "/lua/plugins/config"
+  local config_dir = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "plugins", "config")
 
   -- Build set of expected config paths from plugins.
   local expected = {}

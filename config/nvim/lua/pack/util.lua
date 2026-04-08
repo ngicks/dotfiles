@@ -12,7 +12,7 @@ function M.plugin_name(spec)
   if type(spec.src) == "string" and spec.src ~= "" then
     return repo_tail(spec.src)
   end
-  error("plugin spec must contain src")
+  error "plugin spec must contain src"
 end
 
 function M.plugin_src(spec)
@@ -20,17 +20,17 @@ function M.plugin_src(spec)
   if type(src) == "string" and src:find("://", 1, true) then
     return src
   end
-  error("plugin spec must contain full src URL")
+  error "plugin spec must contain full src URL"
 end
 
 function M.plugin_version(spec)
-  if spec.version ~= nil then
+  if spec.version ~= nil and spec.version ~= "" then
     return spec.version
   end
-  if spec.branch ~= nil then
+  if spec.branch ~= nil and spec.branch ~= "" then
     return spec.branch
   end
-  if spec.commit ~= nil then
+  if spec.commit ~= nil and spec.commit ~= "" then
     return spec.commit
   end
 end
