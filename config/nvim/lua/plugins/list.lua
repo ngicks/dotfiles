@@ -101,6 +101,12 @@ return {
     src = "https://github.com/folke/which-key.nvim",
   },
   {
+    src = "https://github.com/MunifTanjim/nui.nvim",
+  },
+  {
+    src = "https://github.com/folke/noice.nvim",
+  },
+  {
     src = "https://github.com/sindrets/diffview.nvim",
   },
   -- git stuff
