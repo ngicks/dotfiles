@@ -12,7 +12,7 @@ go_tools=(
 
 pushd ./config/mise/
   # it always fails because of read-only lock file
-  mise install --locked
-  mise install --locked -f "${go_tools[@]}"
-  mise prune -y --locked
+  mise install
+  mise install -f "${go_tools[@]}"
+  mise prune -y
 popd
