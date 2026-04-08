@@ -118,6 +118,9 @@ return {
     src = "https://github.com/MunifTanjim/nui.nvim",
   },
   {
+    src = "https://github.com/rcarriga/nvim-notify",
+  },
+  {
     src = "https://github.com/folke/noice.nvim",
   },
   {
