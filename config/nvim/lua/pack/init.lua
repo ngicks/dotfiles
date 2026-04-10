@@ -304,11 +304,38 @@ local ngpacks = {}
 ---@type table<string, NgPackSpec>
 local lazy_specs = {}
 
+local function setup_commands()
+  vim.api.nvim_create_user_command("PackLockDesync", function()
+    require("pack.lock").report_desync(true)
+  end, {
+    desc = "Report desync between nvim-pack-lock.json and installed plugin repositories",
+  })
+
+  vim.api.nvim_create_user_command("PackLockDropDesync", function(args)
+    require("pack.lock").drop_desync {
+      names = args.fargs,
+      restart = args.bang,
+    }
+  end, {
+    bang = true,
+    nargs = "*",
+    complete = function()
+      return require("pack.lock").complete_desync()
+    end,
+    desc = "Remove desynced lock entries; use ! to restart after rewriting the lockfile",
+  })
+end
+
 ---@param specs NgPackSpecPlain[]
 local function setup(specs)
   if already_setup then
     return
   end
+
+  setup_commands()
+  vim.schedule(function()
+    require("pack.lock").report_desync(false)
+  end)
 
   ngpacks = from_plain(specs)
 
