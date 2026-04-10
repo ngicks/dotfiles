@@ -1,25 +1,16 @@
 local M = {}
 
----@type NgcfgToggleTermTerminals
+---@type NgToggleTerms
 local terminals = require "ngcfg.pkg.toggleterm.terminals"
-
----@param term Terminal
-local function ensure_shell_started(term)
-  if term.job_id and vim.fn.jobwait({ term.job_id }, 0)[1] == -1 then
-    return
-  end
-
-  term:spawn()
-end
 
 ---@return nil
 function M.setup()
-  ensure_shell_started(terminals.horizontal.t)
-  ensure_shell_started(terminals.vertical.t)
-  ensure_shell_started(terminals.floating.t)
+  terminals.horizontal:prepare()
+  terminals.vertical:prepare()
+  terminals.floating:prepare()
 end
 
----@return NgcfgToggleTermTerminals
+---@return NgToggleTerms
 function M.terminals()
   return terminals
 end

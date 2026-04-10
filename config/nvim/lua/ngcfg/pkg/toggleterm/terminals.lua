@@ -17,9 +17,29 @@ NgToggleTerm.__index = NgToggleTerm
 ---@field t Terminal
 ---@field size? function(term: Terminal) -> integer
 
+---@param term Terminal
+local function spawn(term)
+  if term.job_id and vim.fn.jobwait({ term.job_id }, 0)[1] == -1 then
+    return
+  end
+  term:spawn()
+end
+
 ---@param tb NgToggleTermArgs
 function NgToggleTerm:new(tb)
+  tb.t.on_open = function()
+    vim.cmd "startinsert!"
+  end
+  tb.t.on_exit = function(t)
+    vim.schedule(function()
+      spawn(t)
+    end)
+  end
   return setmetatable(tb, NgToggleTerm)
+end
+
+function NgToggleTerm:prepare()
+  spawn(self.t)
 end
 
 function NgToggleTerm:toggle()
@@ -38,9 +58,6 @@ local h = NgToggleTerm:new {
   end,
   t = Terminal:new {
     direction = "horizontal",
-    on_open = function()
-      vim.cmd "startinsert!"
-    end,
   },
 }
 
@@ -52,9 +69,6 @@ local v = NgToggleTerm:new {
   end,
   t = Terminal:new {
     direction = "vertical",
-    on_open = function()
-      vim.cmd "startinsert!"
-    end,
   },
 }
 
@@ -66,9 +80,6 @@ local f = NgToggleTerm:new {
     float_opts = {
       border = "single",
     },
-    on_open = function()
-      vim.cmd "startinsert!"
-    end,
   },
 }
 
