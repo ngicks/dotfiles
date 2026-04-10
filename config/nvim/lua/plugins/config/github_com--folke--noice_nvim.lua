@@ -3,19 +3,20 @@ local M = {}
 
 M.opts = {
   lsp = {
+    hover = {
+      enabled = false,
+    },
+    signature = {
+      auto_open = {
+        enabled = false,
+      },
+    },
     override = {},
   },
   presets = {
     bottom_search = true,
     command_palette = true,
     long_message_to_split = true,
-  },
-  views = {
-    hover = {
-      border = {
-        style = "single",
-      },
-    },
   },
 }
 
