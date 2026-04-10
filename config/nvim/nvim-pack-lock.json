@@ -53,11 +53,11 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "18315000185a6e6461b9b4aa4a4cb6cd164e0e35",
+      "rev": "0eb2ae9f8bd57fed6242d76d2273df4a1be31cc8",
       "src": "https://github.com/junegunn/fzf"
     },
     "gitsigns.nvim": {
-      "rev": "0d797daee85366bc242580e352a4f62d67557b84",
+      "rev": "8d82c240f190fc33723d48c308ccc1ed8baad69d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "indent-blankline.nvim": {
@@ -97,8 +97,9 @@
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
     "nvim-bqf": {
-      "rev": "654c904d5ad9dc4846445056086168e25bd8ba2d",
-      "src": "https://github.com/kevinhwang91/nvim-bqf"
+      "rev": "c282a62bec6c0621a1ef5132aa3f4c9fc4dcc2c7",
+      "src": "https://github.com/kevinhwang91/nvim-bqf",
+      "version": "'main'"
     },
     "nvim-cmp": {
       "rev": "a1d504892f2bc56c2e79b65c6faded2fd21f3eca",
@@ -117,7 +118,7 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-lspconfig": {
-      "rev": "bedca8b426b2fee0ccac596d167d71bbe971253f",
+      "rev": "c588db330592fa477a70d2fee6ba20a57194bdc3",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-luadev": {
@@ -150,11 +151,11 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-context"
     },
     "nvim-web-devicons": {
-      "rev": "95b7a002d5dba1a42eb58f5fac5c565a485eefd0",
+      "rev": "c72328a5494b4502947a022fe69c0c47e53b6aa6",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {
-      "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "remote-sshfs.nvim": {
@@ -174,7 +175,7 @@
       "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
     },
     "telescope-live-grep-args.nvim": {
-      "rev": "b80ec2c70ec4f32571478b501218c8979fab5201",
+      "rev": "53e9df55b3651dd7cf77e172f1e8c9a17407acca",
       "src": "https://github.com/nvim-telescope/telescope-live-grep-args.nvim"
     },
     "telescope-memo.nvim": {
@@ -182,7 +183,7 @@
       "src": "https://github.com/delphinus/telescope-memo.nvim"
     },
     "telescope.nvim": {
-      "rev": "7ef4d6dccb78ee71e552bbd866176762ad328afa",
+      "rev": "f7c673b8e46e8f233ff581d3624a517d33a7e264",
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "toggleterm.nvim": {
@@ -190,7 +191,7 @@
       "src": "https://github.com/akinsho/toggleterm.nvim"
     },
     "trouble.nvim": {
-      "rev": "748ca2789044607f19786b1d837044544c55e80a",
+      "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
@@ -198,7 +199,7 @@
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
-      "rev": "6f8b99868fd5560d6eb47f82ca76ec62e3d5ae78",
+      "rev": "6d1d41da4873a445c5605f2005ad2c68c99d8770",
       "src": "https://github.com/tpope/vim-dadbod"
     },
     "vim-dadbod-completion": {

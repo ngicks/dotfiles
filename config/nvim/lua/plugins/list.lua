@@ -198,6 +198,7 @@ return {
   },
   { -- preview for quick list items
     src = "https://github.com/kevinhwang91/nvim-bqf",
+    branch = "main",
   },
   -- renderer
   {
