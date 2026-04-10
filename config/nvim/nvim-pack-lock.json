@@ -77,7 +77,7 @@
       "src": "https://github.com/nvzone/menu"
     },
     "mini.nvim": {
-      "rev": "2431902e78b76f435542d1e606f08475360068ca",
+      "rev": "69b7433355664cf76898eb86a12a019f39bd86d1",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "minty": {
@@ -85,7 +85,7 @@
       "src": "https://github.com/nvzone/minty"
     },
     "moonbit.nvim": {
-      "rev": "625b9e64a9fbd1227b7d51b9bc035ba887d75ed5",
+      "rev": "3f3b41c31aba7f766913788f3ce1c1bfaecbfbd0",
       "src": "https://github.com/moonbit-community/moonbit.nvim"
     },
     "noice.nvim": {
