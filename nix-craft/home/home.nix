@@ -151,6 +151,7 @@ in
     llvmPackages.libclang  # libclang for bindgen (cargo builds)
     stdenv.cc.cc.lib       # libstdc++ (needed by libclang)
     jq             # JSON processor
+    yq             # YAML/JSON processor
     xsel           # Clipboard utility
     libyaml        # YAML library
 
