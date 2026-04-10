@@ -195,10 +195,6 @@ map("n", "<leader>lf", function()
   require("luadev").exec(buffer_to_string())
 end, { desc = "eval whole current buffer as lua script" })
 
--- claude code
-
-vim.keymap.set("n", "<leader>ac", "<cmd>ClaudeCode<CR>", { desc = "Toggle Claude Code" })
-
 -- DAP (Debug Adapter Protocol) keybindings
 map("n", "<F5>", function()
   require("dap").continue()

@@ -135,9 +135,6 @@ return {
     src = "https://github.com/nvim-mini/mini.nvim",
   },
   {
-    src = "https://github.com/greggh/claude-code.nvim",
-  },
-  {
     src = "https://github.com/mfussenegger/nvim-dap",
   },
   {
