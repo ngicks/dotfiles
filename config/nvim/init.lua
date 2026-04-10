@@ -43,7 +43,7 @@ for _, plugin in ipairs {
   vim.g["loaded_" .. plugin] = 1
 end
 
-require("pack").setup(require "ngcfg.plugins")
+require("ngpack").setup(require "ngcfg.plugins")
 
 local function ensure_base46_cache()
   local defaults = vim.g.base46_cache .. "defaults"

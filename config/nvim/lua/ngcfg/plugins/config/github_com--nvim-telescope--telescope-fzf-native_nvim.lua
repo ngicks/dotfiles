@@ -11,7 +11,7 @@ local function library_path()
   else
     lib_name = "libfzf.so"
   end
-  local root = require("pack.util").plugin_dir "telescope-fzf-native.nvim"
+  local root = require("ngpack.util").plugin_dir "telescope-fzf-native.nvim"
   if not root then
     return nil
   end

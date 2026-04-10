@@ -1,5 +1,5 @@
 local M = {}
-local util = require "pack.util"
+local util = require "ngpack.util"
 
 ---@class NgPackLockDesync
 ---@field name string

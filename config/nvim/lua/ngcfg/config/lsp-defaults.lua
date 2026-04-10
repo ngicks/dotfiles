@@ -1,6 +1,6 @@
 local M = {}
 local map = vim.keymap.set
-local pack_util = require "pack.util"
+local pack_util = require "ngpack.util"
 
 -- export on_attach & capabilities
 M.on_attach = function(_, bufnr)
