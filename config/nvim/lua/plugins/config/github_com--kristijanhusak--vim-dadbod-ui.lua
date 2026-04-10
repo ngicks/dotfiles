@@ -1,4 +1,4 @@
----@type NgPluginConfigModule
+---@type NgPackPluginConfigModule
 local M = {}
 
 M.init = function()

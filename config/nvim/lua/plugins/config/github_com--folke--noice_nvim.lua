@@ -1,4 +1,4 @@
----@type NgPluginConfigModule
+---@type NgPackPluginConfigModule
 local M = {}
 
 M.opts = {
@@ -9,6 +9,13 @@ M.opts = {
     bottom_search = true,
     command_palette = true,
     long_message_to_split = true,
+  },
+  views = {
+    hover = {
+      border = {
+        style = "single",
+      },
+    },
   },
 }
 

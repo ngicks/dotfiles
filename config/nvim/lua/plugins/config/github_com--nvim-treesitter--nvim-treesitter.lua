@@ -1,4 +1,4 @@
----@type NgPluginConfigModule
+---@type NgPackPluginConfigModule
 local M = {}
 
 local treesitter_path = vim.fs.joinpath(vim.fn.stdpath "data", "/treesitter")

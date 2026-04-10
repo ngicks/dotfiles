@@ -9,7 +9,8 @@
 -- phase:
 --   "core" = loaded/configured during startup
 --   "ui"   = loaded/configured via vim.schedule after startup
----@type NgPluginSpec[]
+--   "lazy" = loaded/configured manually
+---@type NgPackSpecPlain[]
 return {
   { -- utils
     src = "https://github.com/nvim-lua/plenary.nvim",
@@ -60,6 +61,7 @@ return {
   {
     src = "https://github.com/L3MON4D3/LuaSnip",
     phase = "core",
+    dep = { "https://github.com/rafamadriz/friendly-snippets" },
   },
   {
     src = "https://github.com/saadparwaiz1/cmp_luasnip",
@@ -122,6 +124,7 @@ return {
   },
   {
     src = "https://github.com/folke/noice.nvim",
+    dep = { "https://github.com/MunifTanjim/nui.nvim" },
   },
   {
     src = "https://github.com/sindrets/diffview.nvim",
@@ -142,6 +145,10 @@ return {
   },
   {
     src = "https://github.com/rcarriga/nvim-dap-ui",
+    dep = {
+      "https://github.com/mfussenegger/nvim-dap",
+      "https://github.com/nvim-neotest/nvim-nio",
+    },
   },
   {
     src = "https://github.com/theHamsta/nvim-dap-virtual-text",
@@ -163,9 +170,14 @@ return {
   },
   {
     src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim",
+    dep = { "https://github.com/nvim-telescope/telescope.nvim" },
   },
   {
     src = "https://github.com/nosduco/remote-sshfs.nvim",
+    dep = {
+      "https://github.com/nvim-telescope/telescope.nvim",
+      "https://github.com/nvim-lua/plenary.nvim",
+    },
   },
   -- visual helper
   {
@@ -190,6 +202,10 @@ return {
   -- renderer
   {
     src = "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+    dep = {
+      "https://github.com/nvim-treesitter/nvim-treesitter",
+      "https://github.com/nvim-mini/mini.nvim",
+    },
   },
   {
     src = "https://github.com/hat0uma/csvview.nvim",
@@ -201,10 +217,15 @@ return {
   {
     src = "https://github.com/kristijanhusak/vim-dadbod-completion",
     version = "",
+    dep = { "https://github.com/tpope/vim-dadbod" },
   },
   { -- database viewer
     src = "https://github.com/kristijanhusak/vim-dadbod-ui",
     version = "",
+    dep = {
+      "https://github.com/tpope/vim-dadbod",
+      "https://github.com/kristijanhusak/vim-dadbod-completion",
+    },
   },
   {
     src = "https://github.com/lemarsu/sops.nvim",
@@ -220,6 +241,7 @@ return {
   {
     src = "https://github.com/delphinus/telescope-memo.nvim",
     version = "",
+    dep = { "https://github.com/nvim-telescope/telescope.nvim" },
   },
   -- debug
   { -- gets buffer content then eval in nvim as lua script.

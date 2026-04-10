@@ -1,9 +1,9 @@
----@type NgPluginConfigModule
+---@type NgPackPluginConfigModule
 local M = {}
 
 M.config = function()
   local telescope = require "telescope"
-  local telescope_config = require "telescope.config".values
+  local telescope_config = require("telescope.config").values
   local lga_actions = require "telescope-live-grep-args.actions"
   local unpack = table.unpack or unpack
   local extra_glob_args = { "--hidden", "--glob", "!.git/**" }

@@ -1,9 +1,7 @@
 ---@class NgPluginFuncs
 local M = {}
----@type NgPluginSpecDefaults
-local default_spec = require "plugins.default"
 
----@param plugin NgPluginSpec
+---@param plugin NgPackSpecPlain
 ---@return string
 local function config_name(plugin)
   if type(plugin.src) ~= "string" or plugin.src == "" then
@@ -14,14 +12,15 @@ local function config_name(plugin)
     error("plugin spec src must be full URL: " .. plugin.src)
   end
 
-  return plugin.src:gsub("^[%w.+-]+://", ""):gsub("/", "--"):gsub("%.", "_")
+  local s = plugin.src:gsub("^[%w.+-]+://", ""):gsub("/", "--"):gsub("%.", "_")
+  return s
 end
 
----@param plugins NgPluginSpec[]
+---@param plugins NgPackSpecPlain[]
 M.auto_create = function(plugins)
   for _, plugin in ipairs(plugins) do
     local path = config_name(plugin)
-    local file = vim.fn.stdpath "config" .. "/lua/plugins/config/" .. path .. ".lua"
+    local file = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "plugins", "config", path .. ".lua")
 
     if vim.fn.filereadable(file) == 0 then
       vim.fn.writefile({ "local M = {}", "", "return M" }, file)
@@ -29,18 +28,19 @@ M.auto_create = function(plugins)
   end
 end
 
----@param plugins NgPluginSpec[]
----@return NgPluginSpec[]
-M.merge = function(plugins)
-  ---@type NgPluginSpec[]
+---@param plugins NgPackSpecPlain[]
+---@param default_spec NgPackSpecPlainDefault
+---@return NgPackSpecPlain[]
+M.merge = function(plugins, default_spec)
+  ---@type NgPackSpecPlain[]
   local merged = {}
 
   for _, plugin in ipairs(plugins) do
-    ---@type NgPluginSpec
+    ---@type NgPackSpecPlain
     local spec = vim.tbl_extend("force", {}, default_spec, plugin)
     local path = config_name(plugin)
 
-    ---@type boolean, NgPluginConfigModule
+    ---@type boolean, NgPackPluginConfigModule
     local success, conf = pcall(require, "plugins.config." .. path)
 
     if not success then
@@ -59,7 +59,7 @@ M.merge = function(plugins)
   return merged
 end
 
----@param plugins NgPluginSpec[]
+---@param plugins NgPackSpecPlain[]
 ---@return string[]
 M.list_unused = function(plugins)
   local config_dir = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "plugins", "config")
