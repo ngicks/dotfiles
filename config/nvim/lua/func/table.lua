@@ -1,6 +1,6 @@
 local M = {}
 
-M.insert_unique = function(dst, src)
+function M.insert_unique(dst, src)
   if not dst then
     dst = {}
   end

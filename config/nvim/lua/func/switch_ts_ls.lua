@@ -17,7 +17,8 @@ local M = {}
 --
 -- I know there's alot more javascript runtime out there like Bun, cloudflare edge something something, etc.
 -- TODO: expand if I have to do that?
-M.find_deno_root_dir = function(bufnr)
+---@param bufnr integer
+function M.find_deno_root_dir(bufnr)
   local fname = vim.api.nvim_buf_get_name(bufnr)
   local droot = vim.fs.root(fname, { "deno.json", "deno.jsonc" })
   if droot then
@@ -36,7 +37,8 @@ end
 
 -- returns the root directory for fname if it is pointing to node.js typescript/javascript.
 -- It is an opposite of deno_root_dir
-M.find_node_root_dir = function(bufnr)
+---@param bufnr integer
+function M.find_node_root_dir(bufnr)
   local fname = vim.api.nvim_buf_get_name(bufnr)
   if M.find_deno_root_dir(bufnr) then
     return nil

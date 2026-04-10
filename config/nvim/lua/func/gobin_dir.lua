@@ -1,6 +1,6 @@
 local M = {}
 
-M.gobin_dir = function()
+function M.gobin_dir()
   local gobin = vim.fn.system { "go", "env", "GOBIN" }
   gobin = gobin:match "^%s*(.-)%s*$"
   if gobin ~= nil and gobin ~= "" then
