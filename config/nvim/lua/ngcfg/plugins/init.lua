@@ -1,6 +1,6 @@
-local funcs = require "plugins._funcs.funcs"
+local funcs = require "ngcfg.plugins.funcs"
 ---@type NgPackSpecPlain[]
-local plugins = require "plugins.list"
+local plugins = require "ngcfg.plugins.list"
 
 vim.api.nvim_create_user_command("CreatePluginConfigs", function()
   funcs.auto_create(plugins)
@@ -12,6 +12,6 @@ vim.api.nvim_create_user_command("ListUnusedConf", function()
 end, {})
 
 ---@type NgPackSpecPlain[]
-local merged = funcs.merge(plugins, require "plugins.default")
+local merged = funcs.merge(plugins, require "ngcfg.plugins.default")
 
 return merged

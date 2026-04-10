@@ -20,7 +20,7 @@ end
 M.auto_create = function(plugins)
   for _, plugin in ipairs(plugins) do
     local path = config_name(plugin)
-    local file = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "plugins", "config", path .. ".lua")
+    local file = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "ngcfg", "plugins", "config", path .. ".lua")
 
     if vim.fn.filereadable(file) == 0 then
       vim.fn.writefile({ "local M = {}", "", "return M" }, file)
@@ -41,7 +41,7 @@ M.merge = function(plugins, default_spec)
     local path = config_name(plugin)
 
     ---@type boolean, NgPackPluginConfigModule
-    local success, conf = pcall(require, "plugins.config." .. path)
+    local success, conf = pcall(require, "ngcfg.plugins.config." .. path)
 
     if not success then
       vim.notify("missing plugin config: " .. path, vim.log.levels.WARN)
@@ -62,7 +62,7 @@ end
 ---@param plugins NgPackSpecPlain[]
 ---@return string[]
 M.list_unused = function(plugins)
-  local config_dir = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "plugins", "config")
+  local config_dir = vim.fs.joinpath(vim.fn.stdpath "config", "lua", "ngcfg", "plugins", "config")
 
   -- Build set of expected config paths from plugins.
   ---@type table<string, boolean>

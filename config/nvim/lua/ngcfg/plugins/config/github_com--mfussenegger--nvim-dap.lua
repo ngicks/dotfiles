@@ -42,7 +42,7 @@ end
 M.config = function()
   configureSigns()
 
-  local loaded = require("ngcfg.func.scan_conf_dir").load_local_dir({ "config", "ls-tools" }, true)
+  local loaded = require("ngcfg.func.scan_conf_dir").load_local_dir({ "ngcfg", "config", "ls-tools" }, true)
   for _, ent in ipairs(loaded) do
     if ent.dap then
       ent.dap()

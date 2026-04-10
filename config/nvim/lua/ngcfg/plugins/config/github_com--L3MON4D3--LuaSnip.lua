@@ -8,7 +8,7 @@ M.opts = {
 
 M.config = function(_, opts)
   require("luasnip").config.set_config(opts)
-  require "config.luasnip"
+  require "ngcfg.config.luasnip"
 end
 
 return M
