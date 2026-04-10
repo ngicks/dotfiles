@@ -12,6 +12,10 @@
       "rev": "884b990dcdbe07520a0892da6ba3e8d202b46337",
       "src": "https://github.com/nvchad/base46"
     },
+    "claude-code.nvim": {
+      "rev": "55c0cb59828fbc3bec744288286a46f5d5750b83",
+      "src": "https://github.com/greggh/claude-code.nvim"
+    },
     "cmp-async-path": {
       "rev": "f8af3f726e07f2e9d37672eaa9102581aefce149",
       "src": "https://codeberg.org/FelipeLema/cmp-async-path.git"
@@ -85,7 +89,7 @@
       "src": "https://github.com/nvzone/minty"
     },
     "moonbit.nvim": {
-      "rev": "3f3b41c31aba7f766913788f3ce1c1bfaecbfbd0",
+      "rev": "1e935aff3e3c4209ccbcfd90c948655e29131c05",
       "src": "https://github.com/moonbit-community/moonbit.nvim"
     },
     "noice.nvim": {
@@ -118,7 +122,7 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-lspconfig": {
-      "rev": "c588db330592fa477a70d2fee6ba20a57194bdc3",
+      "rev": "cb5bc0b2b35a6d513e3298d285db81453e791f4f",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-luadev": {
