@@ -54,9 +54,9 @@ function NgPackSpec:src()
   return self._p.src
 end
 
----@return string?
+---@return string
 function NgPackSpec:name()
-  return self._p.name
+  return self:pack_name()
 end
 
 ---@return (string|vim.VersionRange)?
