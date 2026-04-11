@@ -40,8 +40,7 @@ return {
   {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
     phase = "core",
-    version = "",
-    branch = "main",
+    version = "main",
   },
   {
     src = "https://github.com/rmagatti/auto-session",
@@ -198,7 +197,7 @@ return {
   },
   { -- preview for quick list items
     src = "https://github.com/kevinhwang91/nvim-bqf",
-    branch = "main",
+    version = "main",
   },
   -- renderer
   {

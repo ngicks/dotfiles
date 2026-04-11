@@ -3,19 +3,6 @@ local M = {}
 
 local util = require "ngpack.util"
 
----@param spec NgPackSpecPlain
-local function pack_version(spec)
-  if spec.version ~= nil and spec.version ~= "" then
-    return spec.version
-  end
-  if spec.branch ~= nil and spec.branch ~= "" then
-    return spec.branch
-  end
-  if spec.commit ~= nil and spec.commit ~= "" then
-    return spec.commit
-  end
-end
-
 ---@param src string
 ---@return string
 local function repository_name(src)
@@ -74,7 +61,7 @@ end
 
 ---@return (string|vim.VersionRange)?
 function NgPackSpec:version()
-  return pack_version(self._p)
+  return self._p.version
 end
 
 ---@return any?
