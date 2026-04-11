@@ -1,4 +1,12 @@
 local Terminal = require("toggleterm.terminal").Terminal
+local is_exiting = false
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = vim.api.nvim_create_augroup("NgToggleTermLifecycle", { clear = true }),
+  callback = function()
+    is_exiting = true
+  end,
+})
 
 ---@class NgToggleTerms
 ---@field horizontal NgToggleTerm
@@ -22,7 +30,12 @@ local function spawn(term)
   if term.job_id and vim.fn.jobwait({ term.job_id }, 0)[1] == -1 then
     return
   end
-  term:spawn()
+  vim.schedule(function()
+    if is_exiting then
+      return
+    end
+    term:spawn()
+  end)
 end
 
 ---@param tb NgToggleTermArgs
@@ -31,7 +44,13 @@ function NgToggleTerm:new(tb)
     vim.cmd "startinsert!"
   end
   tb.t.on_exit = function(t)
+    if is_exiting then
+      return
+    end
     vim.schedule(function()
+      if is_exiting then
+        return
+      end
       spawn(t)
     end)
   end
@@ -39,6 +58,9 @@ function NgToggleTerm:new(tb)
 end
 
 function NgToggleTerm:prepare()
+  if is_exiting then
+    return
+  end
   spawn(self.t)
 end
 
