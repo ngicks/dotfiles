@@ -39,7 +39,6 @@ end
 ---@class NgPackSpec
 ---@field _p NgPackSpecPlain
 ---@field _opts? NgPackOpts
----@field _loaded? boolean
 ---@field _initialized? boolean
 ---@field _configured? boolean
 local NgPackSpec = {}
@@ -131,15 +130,6 @@ function NgPackSpec:main_name()
   return pack_main_name(self._p)
 end
 
-function NgPackSpec:ensure_loaded()
-  if self._loaded then
-    return
-  end
-
-  vim.cmd("packadd " .. vim.fn.fnameescape(self:pack_name()))
-  self._loaded = true
-end
-
 ---@param spec NgPackSpecPlain
 ---@return any|nil
 local function pack_require(spec)
@@ -174,8 +164,6 @@ function NgPackSpec:setup()
   if self._configured then
     return
   end
-
-  self:ensure_loaded()
 
   local opts = self:opts()
 
@@ -226,7 +214,6 @@ local function run_build(spec, ev)
   local build = spec._p.build
 
   if type(build) == "function" then
-    spec:ensure_loaded()
     build(ev)
     return
   end
@@ -236,7 +223,6 @@ local function run_build(spec, ev)
   end
 
   if build:sub(1, 1) == ":" then
-    spec:ensure_loaded()
     vim.cmd(build:sub(2))
     return
   end
