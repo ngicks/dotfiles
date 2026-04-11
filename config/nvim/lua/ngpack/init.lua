@@ -39,6 +39,12 @@ function NgPackSpec:new(plain)
   return setmetatable({ _p = vim.deepcopy(plain) }, NgPackSpec)
 end
 
+-- just unwrap. Editing returned plain spec is not advised.
+---@return NgPackSpecPlain
+function NgPackSpec:unwrap()
+  return self._p
+end
+
 ---@return vim.pack.Spec
 function NgPackSpec:to_pack()
   return {
@@ -155,7 +161,7 @@ function NgPackSpec:setup()
   local opts = self:opts()
 
   if type(self._p.config) == "function" then
-    self._p.config(self._p, opts or {})
+    self._p.config(self, opts or {})
   elseif (self._p.config == true) or (opts ~= nil and self._p.config == nil) then
     local mod = self:require()
     if mod ~= nil then
@@ -201,7 +207,7 @@ local function run_build(spec, ev)
   local build = spec._p.build
 
   if type(build) == "function" then
-    build(ev)
+    build(spec, ev)
     return
   end
 
@@ -255,7 +261,7 @@ local function run_init(spec)
   end
 
   if type(spec._p.init) == "function" then
-    spec._p.init(spec._p)
+    spec._p.init(spec)
   end
 
   spec._initialized = true
