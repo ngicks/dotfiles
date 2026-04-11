@@ -76,9 +76,10 @@ M.defaults = function()
     },
   }
 
-  local nvchad_ui = pack_util.plugin_dir "ui"
-  if nvchad_ui then
-    table.insert(lua_lsp_settings.Lua.workspace.library, nvchad_ui .. "/lua/nvchad_types")
+  local nvchad_ui = vim.fs.joinpath(pack_util.plug_dir(), "ui")
+  local s = vim.uv.fs_stat(nvchad_ui)
+  if s then
+    table.insert(lua_lsp_settings.Lua.workspace.library, vim.fs.joinpath(nvchad_ui, "lua", "nvchad_types"))
   end
 
   -- Use new vim.lsp.config API for Neovim 0.11+

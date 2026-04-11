@@ -49,13 +49,4 @@ function M.plug_dir()
   return vim.fs.joinpath(vim.fn.stdpath "data", "site", "pack", "core", "opt")
 end
 
----@param name string
----@return string|nil
-function M.plugin_dir(name)
-  local base = vim.fs.joinpath(vim.fn.stdpath "data", "site", "pack")
-  ---@type string[]
-  local results = vim.fn.globpath(base, "*/*/" .. name, false, true)
-  return results[1]
-end
-
 return M
