@@ -372,4 +372,15 @@ end
 
 M.load = load
 
+---@return vim.pack.Spec[]
+local function list_pack()
+  local packs = {}
+  for _, spec in ipairs(ngpacks) do
+    table.insert(packs, spec:to_pack())
+  end
+  return packs
+end
+
+M.list_pack = list_pack
+
 return M
