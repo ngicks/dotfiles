@@ -20,4 +20,8 @@ M.term = {
   },
 }
 
+M.lsp = {
+  signature = false,
+}
+
 return M
