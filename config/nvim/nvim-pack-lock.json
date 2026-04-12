@@ -12,10 +12,6 @@
       "rev": "884b990dcdbe07520a0892da6ba3e8d202b46337",
       "src": "https://github.com/nvchad/base46"
     },
-    "claude-code.nvim": {
-      "rev": "55c0cb59828fbc3bec744288286a46f5d5750b83",
-      "src": "https://github.com/greggh/claude-code.nvim"
-    },
     "cmp-async-path": {
       "rev": "f8af3f726e07f2e9d37672eaa9102581aefce149",
       "src": "https://codeberg.org/FelipeLema/cmp-async-path.git"
@@ -57,7 +53,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "0eb2ae9f8bd57fed6242d76d2273df4a1be31cc8",
+      "rev": "bd4a18d0a919791316609071612b3e2670676a8f",
       "src": "https://github.com/junegunn/fzf"
     },
     "gitsigns.nvim": {
@@ -81,7 +77,7 @@
       "src": "https://github.com/nvzone/menu"
     },
     "mini.nvim": {
-      "rev": "69b7433355664cf76898eb86a12a019f39bd86d1",
+      "rev": "4182d64727fb4876407af65c181b85428a4a70d1",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "minty": {
