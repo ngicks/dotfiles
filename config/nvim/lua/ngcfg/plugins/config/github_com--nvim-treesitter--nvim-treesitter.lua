@@ -3,7 +3,9 @@ local M = {}
 
 local treesitter_path = vim.fs.joinpath(vim.fn.stdpath "data", "/treesitter")
 
-M.build = ":TSUpdate"
+M.pack_changed = function()
+  vim.cmd "TSUpdate"
+end
 
 M.opts = function()
   pcall(function()

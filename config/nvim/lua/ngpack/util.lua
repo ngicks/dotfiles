@@ -49,4 +49,35 @@ function M.plug_dir()
   return vim.fs.joinpath(vim.fn.stdpath "data", "site", "pack", "core", "opt")
 end
 
+-- Executes a shell command using the environemnt's shell(`$SHELL`) or `sh`.
+---@param command string
+---@param opts vim.SystemOpts?
+---@param on_exit? fun(out: vim.SystemCompleted) when provided, command runs asynchronously without :wait call
+---                and execute_shell returns true immediately
+---@return boolean
+function M.execute_shell(command, opts, on_exit)
+  local shell = vim.env.SHELL
+  if shell == nil or shell == "" then
+    shell = "sh"
+  end
+
+  local proc = vim.system({ shell, "-c", command }, opts, on_exit)
+
+  if on_exit ~= nil then
+    return true
+  end
+
+  local result = proc:wait()
+  if result.code ~= 0 then
+    local msg = ("command failed: %s"):format(command)
+    if result.stderr and #result.stderr > 0 then
+      msg = msg .. ": " .. result.stderr
+    end
+    vim.notify(msg, vim.log.levels.ERROR)
+    return false
+  end
+
+  return true
+end
+
 return M

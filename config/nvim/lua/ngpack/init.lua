@@ -193,62 +193,61 @@ end
 
 M.from_plain = from_plain
 
----@param spec NgPackSpec
----@param ev  vim.api.keyset.create_autocmd.callback_args
-local function run_build(spec, ev)
-  if spec._p.build == nil then
-    return
-  end
-
-  if ev.data.kind ~= "install" and ev.data.kind ~= "update" then
-    return
-  end
-
-  local build = spec._p.build
-
-  if type(build) == "function" then
-    build(spec, ev)
-    return
-  end
-
-  if type(build) ~= "string" then
-    return
-  end
-
-  if build:sub(1, 1) == ":" then
-    vim.cmd(build:sub(2))
-    return
-  end
-
-  local result = vim.system({ "sh", "-c", build }, { cwd = ev.data.path }):wait()
-  if result.code ~= 0 then
-    local msg = ("build failed for %s"):format(spec.name)
-    if result.stderr and #result.stderr > 0 then
-      msg = msg .. ": " .. result.stderr
-    end
-    vim.notify(msg, vim.log.levels.ERROR)
-  end
-end
-
 ---@param plugins NgPackSpec[]
-local function register_build_hooks(plugins)
+local function register_pack_changed_hooks(plugins)
   ---@type table<string, NgPackSpec>
-  local by_src = {}
+  local by_src_pre = {}
+  ---@type table<string, NgPackSpec>
+  local by_src_post = {}
   for _, spec in ipairs(plugins) do
-    if spec._p.build ~= nil then
-      by_src[spec:src()] = spec
+    if spec._p.pack_changed_pre ~= nil then
+      by_src_pre[spec:src()] = spec
+    end
+    if spec._p.pack_changed ~= nil then
+      by_src_post[spec:src()] = spec
     end
   end
 
-  vim.api.nvim_create_autocmd("PackChanged", {
-    group = vim.api.nvim_create_augroup("NgPackBuildHooks", { clear = true }),
+  ---@param pre boolean
+  ---@param spec NgPackSpec
+  ---@param ev vim.api.keyset.create_autocmd.callback_args
+  local call_cb = function(pre, spec, ev)
+    local cb = (pre and spec._p.pack_changed_pre) or (not pre and spec._p.pack_changed) or nil
+    if cb == nil then
+      return
+    end
+    local ok, err = pcall(function()
+      cb(spec, ev.data, ev)
+    end)
+    if not ok then
+      vim.notify(
+        ("callback failed: package %s, event = %s, err = %s"):format(spec:src(), ev.event, err),
+        vim.log.levels.ERROR
+      )
+    end
+  end
+
+  vim.api.nvim_create_autocmd("PackChangedPre", {
+    group = vim.api.nvim_create_augroup("NgPackPackChangedPreHooks", { clear = true }),
     callback = function(ev)
       -- https://neovim.io/doc/user/pack/#PackChanged
       ---@type vim.pack.Spec
       local raw_spec = ev.data.spec
-      local spec = by_src[raw_spec.src]
+      local spec = by_src_pre[raw_spec.src]
       if spec ~= nil then
-        run_build(spec, ev)
+        call_cb(true, spec, ev)
+      end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("PackChanged", {
+    group = vim.api.nvim_create_augroup("NgPackPackChangedHooks", { clear = true }),
+    callback = function(ev)
+      ---@type vim.pack.Spec
+      local raw_spec = ev.data.spec
+      local spec = by_src_post[raw_spec.src]
+      if spec ~= nil then
+        call_cb(false, spec, ev)
       end
     end,
   })
@@ -311,11 +310,6 @@ local function setup(specs)
     return
   end
 
-  setup_commands()
-  vim.schedule(function()
-    require("ngpack.lock").report_desync(false)
-  end)
-
   ngpacks = from_plain(specs)
 
   for _, spec in ipairs(ngpacks) do
@@ -324,7 +318,7 @@ local function setup(specs)
     end
   end
 
-  register_build_hooks(ngpacks)
+  register_pack_changed_hooks(ngpacks)
 
   for _, spec in ipairs(ngpacks) do
     run_init(spec)
@@ -336,12 +330,17 @@ local function setup(specs)
     table.insert(pack_specs, spec:to_pack())
   end
 
-  vim.pack.add(pack_specs, { load = false, confirm = false })
+  vim.pack.add(pack_specs, { confirm = false })
 
   setup_phase(ngpacks, "core")
 
   vim.schedule(function()
     setup_phase(ngpacks, "ui")
+  end)
+
+  setup_commands()
+  vim.schedule(function()
+    require("ngpack.lock").report_desync(false)
   end)
 
   already_setup = true

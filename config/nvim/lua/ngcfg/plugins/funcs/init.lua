@@ -31,7 +31,7 @@ end
 ---@param plugins NgPackSpecPlain[]
 ---@param default_spec NgPackSpecPlainDefault
 ---@return NgPackSpecPlain[]
-M.merge = function(plugins, default_spec)
+function M.merge(plugins, default_spec)
   ---@type NgPackSpecPlain[]
   local merged = {}
 
@@ -46,7 +46,7 @@ M.merge = function(plugins, default_spec)
     if not success then
       vim.notify("missing plugin config: " .. path, vim.log.levels.WARN)
     else
-      for _, f in ipairs { "init", "opts", "config", "main", "build" } do
+      for _, f in ipairs { "init", "opts", "config", "main", "pack_changed_pre", "pack_changed" } do
         if conf[f] ~= nil then
           spec[f] = conf[f]
         end

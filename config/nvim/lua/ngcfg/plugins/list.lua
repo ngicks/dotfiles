@@ -1,11 +1,11 @@
 -- General rule:
 --
 -- lists every plugin in setup order.
--- init, opts, config, main and build get often big and fat.
--- init.lua creates separate config for each plugin under ./config
--- and merges functions of same name for listed plugins.
+-- Each config file is splitted into ./config
+-- because often config gets big and fat.
+-- Fields, "init", "opts", "config", "main", "pack_changed_pre", "pack_changed"
+-- are merged before passed to ngpack module
 --
--- keep dependency order flat in this file.
 -- phase:
 --   "core" = loaded/configured during startup
 --   "ui"   = loaded/configured via vim.schedule after startup
@@ -29,8 +29,11 @@ return {
     src = "https://github.com/nvchad/base46",
     phase = "core",
     version = "",
-    build = function()
-      require("base46").load_all_highlights()
+    pack_changed = function(_s, data)
+      if data.kind ~= "delete" then
+        -- basically "delete" is inpossible because I only manage by this table.
+        require("base46").load_all_highlights()
+      end
     end,
   },
   {

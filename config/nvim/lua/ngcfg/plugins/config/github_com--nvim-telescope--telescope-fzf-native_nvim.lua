@@ -1,7 +1,8 @@
 ---@type NgPackPluginConfigModule
 local M = {}
 
-local function library_path()
+---@param spec NgPackSpec
+local function library_path(spec)
   local sysname = vim.uv.os_uname().sysname
   local lib_name
   if sysname == "Darwin" then
@@ -11,20 +12,18 @@ local function library_path()
   else
     lib_name = "libfzf.so"
   end
-  local root = require("ngpack.util").plugin_dir "telescope-fzf-native.nvim"
-  if not root then
-    return nil
-  end
-  return root .. "/build/" .. lib_name
+  return vim.fs.joinpath(require("ngpack.util").plug_dir(), spec:name(), "build", lib_name)
 end
 
-local function ensure_built()
-  local lib = library_path()
-  return lib ~= nil and vim.uv.fs_stat(lib) ~= nil
+---@param spec NgPackSpec
+---@return boolean
+local function ensure_built(spec)
+  local lib = library_path(spec)
+  return vim.uv.fs_stat(lib) ~= nil
 end
 
-M.config = function()
-  if ensure_built() then
+M.config = function(spec)
+  if ensure_built(spec) then
     local ok, telescope = pcall(require, "telescope")
     if not ok then
       return
@@ -39,6 +38,23 @@ M.config = function()
   end
 end
 
-M.build = "make"
+M.pack_changed_pre = function(spec, data, ev)
+  if data.kind ~= "update" then
+    return
+  end
+  local lib = library_path(spec)
+  local ok, err = vim.uv.fs_unlink(lib)
+  if not ok then
+    vim.notify(("removing %s failed: %s"):format(lib, err), vim.log.levels.ERROR)
+  end
+end
+
+M.pack_changed = function(_s, data)
+  if not data.active or data.kind == "delete" then
+    return
+  end
+
+  require("ngpack.util").execute_shell("make", { cwd = data.path })
+end
 
 return M
