@@ -67,7 +67,10 @@ end
 
 ---@return (string|vim.VersionRange)?
 function NgPackSpec:version()
-  return self._p.version
+  if self._p.version ~= nil and self._p.version ~= "" then
+    return self._p.version
+  end
+  return nil
 end
 
 ---@return any?
