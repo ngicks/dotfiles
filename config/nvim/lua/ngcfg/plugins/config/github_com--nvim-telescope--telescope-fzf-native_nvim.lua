@@ -56,8 +56,6 @@ M.pack_changed_pre = function(spec, data, ev)
 end
 
 M.pack_changed = function(_s, data)
-  vim.notify("PackChanged callback", vim.log.levels.INFO)
-
   if not data.active or data.kind == "delete" then
     return
   end
