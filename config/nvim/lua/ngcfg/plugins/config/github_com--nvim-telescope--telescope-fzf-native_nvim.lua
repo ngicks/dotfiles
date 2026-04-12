@@ -1,6 +1,11 @@
 ---@type NgPackPluginConfigModule
 local M = {}
 
+---@param cwd string
+local function build(cwd)
+  require("ngpack.util").execute_shell("make", { cwd = cwd })
+end
+
 ---@param spec NgPackSpec
 local function library_path(spec)
   local sysname = vim.uv.os_uname().sysname
@@ -23,18 +28,19 @@ local function ensure_built(spec)
 end
 
 M.config = function(spec)
-  if ensure_built(spec) then
-    local ok, telescope = pcall(require, "telescope")
-    if not ok then
-      return
-    end
-    require "fzf_lib"
-    local ok_ext, err = pcall(telescope.load_extension, "fzf")
-    if not ok_ext then
-      vim.notify("telescope-fzf-native.nvim: failed to load extension: " .. err, vim.log.levels.ERROR)
-    end
-  else
+  if not ensure_built(spec) then
     vim.notify("telescope-fzf-native.nvim: native extension is not built yet", vim.log.levels.WARN)
+    build(vim.fs.joinpath(require("ngpack.util").plug_dir(), spec:name()))
+  end
+
+  local ok, telescope = pcall(require, "telescope")
+  if not ok then
+    return
+  end
+  require "fzf_lib"
+  local ok_ext, err = pcall(telescope.load_extension, "fzf")
+  if not ok_ext then
+    vim.notify("telescope-fzf-native.nvim: failed to load extension: " .. err, vim.log.levels.ERROR)
   end
 end
 
@@ -50,11 +56,13 @@ M.pack_changed_pre = function(spec, data, ev)
 end
 
 M.pack_changed = function(_s, data)
+  vim.notify("PackChanged callback", vim.log.levels.INFO)
+
   if not data.active or data.kind == "delete" then
     return
   end
 
-  require("ngpack.util").execute_shell("make", { cwd = data.path })
+  build(data.path)
 end
 
 return M
