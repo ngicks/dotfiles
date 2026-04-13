@@ -4,6 +4,8 @@
 /.mcp.json
 
 /nvim.log
+# pointing XDG_CONFIG_HOME generates this.
+/config/zsh-abbr/
 
 build/podman-static/podman-static
 build/krun/crun
