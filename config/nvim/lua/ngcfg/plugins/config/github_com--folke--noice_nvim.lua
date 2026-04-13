@@ -1,6 +1,10 @@
 ---@type NgPackPluginConfigModule
 local M = {}
 
+M.init = function()
+  vim.o.showmode = true
+end
+
 M.opts = {
   lsp = {
     hover = {
@@ -17,6 +21,12 @@ M.opts = {
     bottom_search = true,
     command_palette = true,
     long_message_to_split = true,
+  },
+  routes = {
+    {
+      view = "mini",
+      filter = { event = "msg_showmode" },
+    },
   },
 }
 
