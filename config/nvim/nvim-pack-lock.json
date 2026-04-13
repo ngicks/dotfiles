@@ -53,7 +53,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "bd4a18d0a919791316609071612b3e2670676a8f",
+      "rev": "06e70570e2088605d61f18b127356e5680f7f599",
       "src": "https://github.com/junegunn/fzf"
     },
     "gitsigns.nvim": {
@@ -77,7 +77,7 @@
       "src": "https://github.com/nvzone/menu"
     },
     "mini.nvim": {
-      "rev": "4182d64727fb4876407af65c181b85428a4a70d1",
+      "rev": "c67822c53e8e282fe863343e88aa0a8ca3534059",
       "src": "https://github.com/nvim-mini/mini.nvim"
     },
     "minty": {
@@ -118,7 +118,7 @@
       "src": "https://github.com/theHamsta/nvim-dap-virtual-text"
     },
     "nvim-lspconfig": {
-      "rev": "cb5bc0b2b35a6d513e3298d285db81453e791f4f",
+      "rev": "8a9378a822719346a0288fa004dab302ca3c0a8f",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-luadev": {
@@ -163,7 +163,7 @@
       "src": "https://github.com/nosduco/remote-sshfs.nvim"
     },
     "render-markdown.nvim": {
-      "rev": "54d4b5431e9634ee3d8d30784e017239b5b89d41",
+      "rev": "0fd43fb4b1f073931c4b481f5f3b7cea3749e190",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "sops.nvim": {
