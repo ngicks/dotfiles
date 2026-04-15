@@ -5,9 +5,7 @@ local terminals = require "ngcfg.pkg.toggleterm.terminals"
 
 ---@return nil
 function M.setup()
-  terminals.horizontal:prepare()
-  terminals.vertical:prepare()
-  terminals.floating:prepare()
+  terminals.setup()
 end
 
 ---@return NgToggleTerms

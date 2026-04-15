@@ -61,6 +61,17 @@ function NgToggleTerm:prepare()
   if is_exiting then
     return
   end
+
+  if self.size ~= nil then
+    vim.api.nvim_create_autocmd({ "VimResized", "WinResized" }, {
+      callback = function()
+        if self.t:is_open() then
+          self.t:resize(self.size(self.t))
+        end
+      end,
+    })
+  end
+
   spawn(self.t)
 end
 
@@ -76,7 +87,7 @@ local M = {}
 
 local h = NgToggleTerm:new {
   size = function()
-    return 20
+    return math.max(10, math.floor(vim.o.lines * 0.3))
   end,
   t = Terminal:new {
     direction = "horizontal",
@@ -87,7 +98,7 @@ M.horizontal = h
 
 local v = NgToggleTerm:new {
   size = function()
-    return vim.o.columns * 0.3
+    return math.max(10, math.floor(vim.o.lines * 0.3))
   end,
   t = Terminal:new {
     direction = "vertical",
@@ -106,5 +117,11 @@ local f = NgToggleTerm:new {
 }
 
 M.floating = f
+
+function M.setup()
+  h:prepare()
+  v:prepare()
+  f:prepare()
+end
 
 return M
