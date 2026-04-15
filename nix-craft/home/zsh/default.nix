@@ -1,61 +1,39 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 let
-  loginscriptPath = ./loginscript;
+  envLoading = ''
+    local env_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/env"
+    if [[ -d "$env_dir" ]]; then
+      if ls "$env_dir"/ | grep -e '.*\.env' > /dev/null 2>&1; then
+        for f in "$env_dir"/*.env; do
+          set -a
+          . "$f"
+          set +a
+        done
+      fi
 
-  # Part 2: Read all .sh files from loginscript/
-  loginscriptFiles = builtins.filter
-    (name: lib.hasSuffix ".sh" name)
-    (builtins.attrNames (builtins.readDir loginscriptPath));
+      if ls "$env_dir"/ | grep -e '.*\.sh' > /dev/null 2>&1; then
+        for f in "$env_dir"/*.sh; do
+          . "$f"
+        done
+      fi
+    fi
+  '';
 
-  sortedFiles = builtins.sort (a: b: a < b) loginscriptFiles;
-
-  initScriptContent = lib.concatMapStringsSep "\n"
-    (file: builtins.readFile "${loginscriptPath}/${file}")
-    sortedFiles;
-
-  loginscriptLoading = ''
-    if [[ -d "$HOME/.config/loginscript" ]]; then
-      for f in $HOME/.config/loginscript/*.sh; do
+  interactiveEnvLoading = ''
+    local interactive_env_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/env/interactive"
+    if [[ -d "$interactive_env_dir" ]]; then
+      for f in "$interactive_env_dir"/*.sh; do
         [[ -f "$f" ]] && . "$f"
       done
     fi
   '';
 
-  envLoading = ''
-    if [[ -d "$HOME/.config/env" ]]; then
-      if ls $HOME/.config/env/ | grep -e '.*\.env' > /dev/null 2>&1; then
-        for f in $HOME/.config/env/*.env; do
-          set -a
-          . $f
-          set +a
-        done
-      fi
-
-      if ls $HOME/.config/env/ | grep -e '.*\.sh' > /dev/null 2>&1; then
-        for f in $HOME/.config/env/*.sh; do
-          . $f
-        done
-      fi
-    fi
-  '';
-
-  dailyUpdateCheck = ''
-    if command -v dotfiles_should_update >/dev/null 2>&1; then
-      if dotfiles_should_update; then
-        pushd $HOME/.dotfiles > /dev/null
-        deno task update:daily > /dev/null
-        popd > /dev/null
-      else
-        echo "update deferred"
-        echo "If you want update to happen again immediately, remove $HOME/.cache/dotfiles/.update_daily"
-        echo ""
-        echo "next update occurrs after $(dotfiles_next_update_time)"
-      fi
-    else
-      # Fallback if function not defined
-      pushd $HOME/.dotfiles > /dev/null
-      deno task update:daily > /dev/null
-      popd > /dev/null
+  makeLoader = dir: ''
+    local loginscript_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/loginscript/${dir}"
+    if [[ -d "$loginscript_dir" ]]; then
+      for f in "$loginscript_dir"/*.sh; do
+        [[ -f "$f" ]] && . "$f"
+      done
     fi
   '';
 in
@@ -70,61 +48,28 @@ in
       };
     };
 
-    initContent = ''
+    envExtra = ''
       # this script may change ''${XDG_CONFIG_HOME}
       if [[ -f "$HOME/.config/env/.first_rc" ]]; then
-        . $HOME/.config/env/.first_rc
+        . "$HOME/.config/env/.first_rc"
       fi
 
-      bindkey -e
-      bindkey '^[[1;5D' backward-word  # Ctrl+Left
-      bindkey '^[[1;5C' forward-word   # Ctrl+Right
-      # missing in devenv container
-      bindkey '^[[3~' delete-char      # Delete key
+      local loginscript_func="''${XDG_CONFIG_HOME:-$HOME/.config}/loginscript/func.sh"
+      if [[ -f "$loginscript_func" ]]; then
+        . "$loginscript_func"
+      fi
 
-      function fzf-select-history() {
-        BUFFER=''$(history -n -r 1 | fzf --query "''$LBUFFER" --reverse)
-        CURSOR=''$#BUFFER
-        zle reset-prompt
-      }
-      zle -N fzf-select-history
-      bindkey '^r' fzf-select-history
-
-      eval "$(zoxide init zsh)"
-
-      function fzf-zoxide() {
-        local selected_dir=''$(zoxide query --list | fzf --reverse)
-        if [ -n "''$selected_dir" ]; then
-          BUFFER="cd ''${selected_dir}"
-          zle accept-line
-        fi
-        zle clear-screen
-      }
-      zle -N fzf-zoxide
-      setopt noflowcontrol
-      bindkey '^q' fzf-zoxide
-
-      # Export a variable only if not in container with existing value
-      export_unless_container_override() {
-          local var_name="$1"
-          local var_value="$2"
-          if [[ "''${IN_CONTAINER:-}" == "1" ]] && [[ -n "''${(P)var_name:-}" ]]; then
-              return 0
-          fi
-          export "$var_name"="$var_value"
-      }
-
-      # 1. Load config
-      ${initScriptContent}
-
-      # 2. Load config from ~/.config/loginscript/
-      ${loginscriptLoading}
-
-      # 3. Load environment-specific config (~/.config/env/*)
+      ${makeLoader "env"}
       ${envLoading}
+    '';
 
-      # 4. Daily update check
-      ${dailyUpdateCheck}
+    profileExtra = ''
+      ${makeLoader "login"}
+    '';
+
+    initExtra = ''
+      ${makeLoader "interactive"}
+      ${interactiveEnvLoading}
     '';
   };
 

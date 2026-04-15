@@ -10,4 +10,3 @@ case ":${KUBECONFIG}:" in
         fi
         ;;
 esac
-

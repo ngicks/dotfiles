@@ -1,7 +1,3 @@
-#!/bin/bash
-# Define function to check if dotfiles update should run
-# This avoids unnecessary Deno startup overhead on every shell initialization
-
 dotfiles_should_update() {
   local MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.update_daily"
   local NO_AUTO_UPDATE_MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
@@ -11,15 +7,13 @@ dotfiles_should_update() {
     return 1
   fi
 
-  # If marker file doesn't exist, update is needed
   if [[ ! -f "$MARKER_FILE" ]]; then
     return 0
   fi
 
-  # Get current time
-  local CURRENT_TIME=$(date +%s)
+  local CURRENT_TIME
+  CURRENT_TIME=$(date +%s)
 
-  # Handle OS-specific stat command to get file modification time
   local FILE_TIME
   case "$(uname -s)" in
     Linux*)
@@ -29,15 +23,12 @@ dotfiles_should_update() {
       FILE_TIME=$(stat -f %m "$MARKER_FILE" 2>/dev/null || echo 0)
       ;;
     *)
-      # Unknown OS, run update to be safe
       return 0
       ;;
   esac
 
-  # Calculate time difference
   local TIME_DIFF=$((CURRENT_TIME - FILE_TIME))
 
-  # Return 0 (true) if interval has passed, 1 (false) otherwise
   if [[ $TIME_DIFF -gt $INTERVAL ]]; then
     return 0
   else
@@ -45,7 +36,6 @@ dotfiles_should_update() {
   fi
 }
 
-# Function to get next update time (returns string)
 dotfiles_next_update_time() {
   local MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.update_daily"
   local NO_AUTO_UPDATE_MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
@@ -61,7 +51,6 @@ dotfiles_next_update_time() {
     return
   fi
 
-  # Handle OS-specific stat command to get file modification time
   local FILE_TIME
   case "$(uname -s)" in
     Linux*)
@@ -76,11 +65,9 @@ dotfiles_next_update_time() {
       ;;
   esac
 
-  # Calculate next update time
   local NEXT_TIME=$((FILE_TIME + INTERVAL))
-
-  # Format and return the next update time
   local NEXT_DATE
+
   case "$(uname -s)" in
     Linux*)
       NEXT_DATE=$(date -d "@$NEXT_TIME" "+%Y-%m-%d %H:%M:%S")
@@ -92,3 +79,16 @@ dotfiles_next_update_time() {
 
   printf "%s" "$NEXT_DATE"
 }
+
+if [[ -o login ]]; then
+  if dotfiles_should_update; then
+    pushd "$HOME/.dotfiles" > /dev/null
+    deno task update:daily > /dev/null
+    popd > /dev/null
+  else
+    echo "update deferred"
+    echo "If you want update to happen again immediately, remove $HOME/.cache/dotfiles/.update_daily"
+    echo ""
+    echo "next update occurrs after $(dotfiles_next_update_time)"
+  fi
+fi

@@ -11,7 +11,3 @@ esac
 if [ ! -d "$MOON_HOME" ]; then
     mkdir -p "${MOON_HOME}"
 fi
-
-if command -v moon &>/dev/null; then
-    eval "$(moon shell-completion --shell zsh)"
-fi

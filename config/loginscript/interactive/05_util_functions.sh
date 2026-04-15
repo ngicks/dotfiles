@@ -1,18 +1,12 @@
 # pim - pipe and vim. pipe stdin to tmpfile and open it with "${EDITOR:-${VISUAL:-vim}}"
 pim() {
-  # Create temp file
   local tmpfile
   tmpfile=$(mktemp "${TMPDIR:-/tmp}/pim.XXXXXX")
 
-  # Read stdin into temp file
   cat > "$tmpfile"
 
-  # Change to temp file's directory
   pushd "$(dirname "$tmpfile")" || return 1
-
-  # Open in editor (priority: EDITOR > VISUAL > vim)
   "${EDITOR:-${VISUAL:-vim}}" "$tmpfile"
-
   popd
 }
 
@@ -39,8 +33,6 @@ osc52copy() {
 
   local seq
   if [ -n "$TMUX" ]; then
-    # Raw OSC52 — tmux intercepts this via `set-clipboard on` and
-    # forwards to the outer terminal. Works in regular panes AND popups.
     seq=$(printf '\033]52;c;%s\a' "$encoded")
     tmux set-buffer -- "$data"
   else
