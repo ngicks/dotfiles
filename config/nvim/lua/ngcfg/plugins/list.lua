@@ -251,4 +251,7 @@ return {
   {
     src = "https://github.com/folke/lazydev.nvim",
   },
+  {
+    src = "https://github.com/folke/snacks.nvim",
+  },
 }
