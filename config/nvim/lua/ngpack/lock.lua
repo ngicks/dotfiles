@@ -256,4 +256,31 @@ function M.complete_desync()
   return names
 end
 
+---@return boolean
+function M.should_auto_report()
+  return vim.env.IN_CONTAINER ~= "1"
+end
+
+function M.setup_user_command()
+  vim.api.nvim_create_user_command("PackLockDesync", function()
+    M.report_desync(true)
+  end, {
+    desc = "Report desync between nvim-pack-lock.json and installed plugin repositories",
+  })
+
+  vim.api.nvim_create_user_command("PackLockDropDesync", function(args)
+    M.drop_desync {
+      names = args.fargs,
+      restart = args.bang,
+    }
+  end, {
+    bang = true,
+    nargs = "*",
+    complete = function()
+      return M.complete_desync()
+    end,
+    desc = "Remove desynced lock entries; use ! to restart after rewriting the lockfile",
+  })
+end
+
 return M
