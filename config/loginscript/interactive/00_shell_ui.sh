@@ -1,3 +1,7 @@
+if [[ -z "${ZSH_NAME:-}" ]]; then
+  return 0
+fi
+
 bindkey -e
 bindkey '^[[1;5D' backward-word  # Ctrl+Left
 bindkey '^[[1;5C' forward-word   # Ctrl+Right
