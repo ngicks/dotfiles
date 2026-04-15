@@ -5,6 +5,8 @@ set -e
 cd ./nix-craft/
 nix run .#home-manager --extra-experimental-features "nix-command flakes" -- switch -b backup --flake .#default --impure --extra-experimental-features "nix-command flakes"
 
+rm -f "${HOME}/.zcompdump"*
+
 # may need refresh
 
 # nix run .#home-manager --refresh --extra-experimental-features "nix-command flakes" -- switch -b backup --flake .#default --impure --extra-experimental-features "nix-command flakes"

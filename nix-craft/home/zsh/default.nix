@@ -1,5 +1,14 @@
 { ... }:
 let
+  compinitSnippet = ''
+    autoload -U compinit
+    if [[ -n "''${ZDOTDIR:-}" ]]; then
+      compinit -C -d "''${ZDOTDIR}/.zcompdump"
+    else
+      compinit -C -d "$HOME/.zcompdump"
+    fi
+  '';
+
   envLoading = ''
     local env_dir="''${XDG_CONFIG_HOME:-$HOME/.config}/env"
     if [[ -d "$env_dir" ]]; then
@@ -40,6 +49,7 @@ in
 {
   programs.zsh = {
     enable = true;
+    completionInit = compinitSnippet;
     zsh-abbr = {
       enable = true;
       abbreviations = {
