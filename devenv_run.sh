@@ -2,4 +2,4 @@
 
 set -Cue
 
-$(dirname $0)/devenv/scripts/run.sh
+$(dirname $0)/devenv/scripts/run.sh "$@"
