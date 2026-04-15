@@ -233,9 +233,6 @@ return {
   {
     src = "https://github.com/lemarsu/sops.nvim",
   },
-  {
-    src = "https://github.com/akinsho/toggleterm.nvim",
-  },
   -- memo
   {
     src = "https://github.com/glidenote/memolist.vim",

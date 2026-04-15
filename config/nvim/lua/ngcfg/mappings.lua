@@ -92,25 +92,15 @@ map("n", "<leader>v", function()
   require("nvchad.term").new { pos = "vsp" }
 end, { desc = "terminal new vertical term" })
 
-local terminals = require("ngcfg.pkg.toggleterm").terminals()
-
 -- toggleable terminal
-map({ "n", "t" }, "<M-h>", function()
-  terminals.horizontal:toggle()
-end, { desc = "terminal toggle horizontal term" })
+map({ "n", "t" }, "<M-h>", function() end, { desc = "terminal toggle horizontal term" })
 
-map({ "n", "t" }, "<M-v>", function()
-  terminals.vertical:toggle()
-end, { desc = "terminal toggle vertical term" })
+map({ "n", "t" }, "<M-v>", function() end, { desc = "terminal toggle vertical term" })
 
-map({ "n", "t" }, "<M-f>", function()
-  terminals.floating:toggle()
-end, { desc = "terminal toggle floating term" })
+map({ "n", "t" }, "<M-f>", function() end, { desc = "terminal toggle floating term" })
 
 -- lazygit
-map("n", "<leader>gg", function()
-  require("ngcfg.pkg.toggleterm").lazygit():toggle()
-end, { noremap = true, silent = true, desc = "Toggle lazygit floating window" })
+map("n", "<leader>gg", function() end, { noremap = true, silent = true, desc = "Toggle lazygit floating window" })
 
 -- whichkey
 map("n", "<leader>wK", "<cmd>WhichKey <CR>", { desc = "whichkey all keymaps" })

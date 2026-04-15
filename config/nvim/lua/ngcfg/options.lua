@@ -4,5 +4,4 @@ vim.schedule(function()
   require("ngcfg.pkg.autoreload").setup {
     interval_ms = 2000,
   }
-  require("ngcfg.pkg.toggleterm").setup()
 end)
