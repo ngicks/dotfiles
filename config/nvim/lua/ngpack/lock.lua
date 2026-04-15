@@ -77,8 +77,10 @@ end
 ---@param lock vim.pack.Lock
 local function write_lockfile(lock)
   local path = get_lockfile_path()
-  local data = vim.json.encode(lock, { indent = "  ", sort_keys = true }) .. "\n"
-  vim.fn.writefile({ data }, path, "b")
+  local fd = assert(vim.uv.fs_open(path, "w", 438))
+  local data = vim.json.encode(lock, { indent = "  ", sort_keys = true })
+  assert(vim.uv.fs_write(fd, data .. "\n"))
+  assert(vim.uv.fs_close(fd))
 end
 
 ---@param items NgPackLockDesync[]
