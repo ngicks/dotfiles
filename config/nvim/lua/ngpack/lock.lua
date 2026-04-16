@@ -12,6 +12,9 @@ local util = require "ngpack.util"
 ---@field names? string[]
 ---@field restart? boolean
 
+---@class NgPackLockPruneOrphansOpts
+---@field names? string[]
+
 ---Return the vim.pack lockfile path under the current config directory.
 ---@return string
 local function get_lockfile_path()
@@ -256,6 +259,92 @@ function M.complete_desync()
   return names
 end
 
+---List plugin directories present on disk but absent from the pack lockfile.
+---@return string[]|nil names
+---@return string? err
+function M.list_orphans()
+  local lock, err = read_lockfile()
+  if lock == nil then
+    return nil, err
+  end
+
+  local plug_dir = util.plug_dir()
+  if vim.fn.isdirectory(plug_dir) ~= 1 then
+    return {}, nil
+  end
+
+  local names = {}
+  for name, entry_type in vim.fs.dir(plug_dir) do
+    if (entry_type == "directory" or entry_type == "link") and lock.plugins[name] == nil then
+      names[#names + 1] = name
+    end
+  end
+
+  table.sort(names)
+  return names, nil
+end
+
+---Remove plugin directories present on disk but absent from the pack lockfile.
+---@param opts? NgPackLockPruneOrphansOpts
+---@return string[]|nil removed
+---@return string? err
+function M.prune_orphans(opts)
+  opts = opts or {}
+
+  local names, err = M.list_orphans()
+  if names == nil then
+    vim.notify(err or "failed", vim.log.levels.ERROR)
+    return nil, err
+  end
+
+  local selected = {} ---@type table<string, boolean>
+  local requested = opts.names or {}
+  if #requested == 0 then
+    for _, name in ipairs(names) do
+      selected[name] = true
+    end
+  else
+    for _, name in ipairs(requested) do
+      selected[name] = true
+    end
+  end
+
+  local removed = {}
+
+  for _, name in ipairs(names) do
+    if selected[name] then
+      vim.pack.del { name }
+      removed[#removed + 1] = name
+      selected[name] = nil
+    end
+  end
+
+  if #removed == 0 then
+    if next(selected) ~= nil then
+      local missing = vim.tbl_keys(selected)
+      table.sort(missing)
+      vim.notify(
+        ("requested plugins are not currently orphaned on disk: %s"):format(table.concat(missing, ", ")),
+        vim.log.levels.WARN
+      )
+    else
+      vim.notify("no orphaned plugin directories to remove", vim.log.levels.INFO)
+    end
+    return {}
+  end
+
+  table.sort(removed)
+  vim.notify(
+    ("removed %d orphaned plugin director%s: %s"):format(
+      #removed,
+      #removed == 1 and "y" or "ies",
+      table.concat(removed, ", ")
+    ),
+    vim.log.levels.WARN
+  )
+  return removed
+end
+
 ---@return boolean
 function M.should_auto_report()
   return vim.env.IN_CONTAINER ~= "1"
@@ -280,6 +369,18 @@ function M.setup_user_command()
       return M.complete_desync()
     end,
     desc = "Remove desynced lock entries; use ! to restart after rewriting the lockfile",
+  })
+
+  vim.api.nvim_create_user_command("PackLockPruneOrphans", function(args)
+    M.prune_orphans {
+      names = args.fargs,
+    }
+  end, {
+    nargs = "*",
+    complete = function()
+      return M.list_orphans() or {}
+    end,
+    desc = "Remove plugin directories on disk that are not present in nvim-pack-lock.json",
   })
 end
 
