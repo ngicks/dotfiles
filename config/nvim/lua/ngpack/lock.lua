@@ -259,13 +259,13 @@ function M.complete_desync()
   return names
 end
 
----List plugin directories present on disk but absent from the pack lockfile.
+---List plugin directories present on disk but absent from the config pack list.
 ---@return string[]|nil names
 ---@return string? err
 function M.list_orphans()
-  local lock, err = read_lockfile()
-  if lock == nil then
-    return nil, err
+  local plugs = {} ---@type table<string, vim.pack.Spec>
+  for _, plug in pairs(require("ngpack").list_pack()) do
+    plugs[plug.name] = plug
   end
 
   local plug_dir = util.plug_dir()
@@ -275,7 +275,7 @@ function M.list_orphans()
 
   local names = {}
   for name, entry_type in vim.fs.dir(plug_dir) do
-    if (entry_type == "directory" or entry_type == "link") and lock.plugins[name] == nil then
+    if (entry_type == "directory" or entry_type == "link") and plugs[name] == nil then
       names[#names + 1] = name
     end
   end
