@@ -25,6 +25,8 @@ binstall = true
 # zenn
 "npm:zenn-cli" = "latest"
 
+"pipx:apm-cli" = "latest"
+
 "ruff" = "latest"
 
 # Helm
