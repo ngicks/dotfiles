@@ -12,7 +12,7 @@ in
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
 
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 
   home.sessionPath = [
     "$HOME/.nix-profile/bin"

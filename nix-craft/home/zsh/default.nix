@@ -77,7 +77,7 @@ in
       ${makeLoader "login"}
     '';
 
-    initExtra = ''
+    initContent = ''
       ${makeLoader "interactive"}
       ${interactiveEnvLoading}
     '';
