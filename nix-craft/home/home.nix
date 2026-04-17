@@ -99,6 +99,8 @@ in
     buf            # Protobuf build tool
     protoc-gen-go  # Go protobuf generator
     protoc-gen-go-grpc # Go gRPC generator
+    protoc-gen-connect-go # Connect-RPC Go generator
+    protoc-gen-es # ES/TS protobuf generator
     grpc-gateway   # grpc-gateway generators
 
     # IaC/Automation

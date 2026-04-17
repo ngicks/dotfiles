@@ -21,13 +21,9 @@ binstall = true
 
 # mcp / tools for llm
 "npm:@upstash/context7-mcp" = "latest"
-"npm:@bufbuild/protoc-gen-es" = "latest"
 
 # zenn
 "npm:zenn-cli" = "latest"
-
-# protoc tool but can't be managed in nix 
-"pipx:betterproto2_compiler" = "latest"
 
 "ruff" = "latest"
 
