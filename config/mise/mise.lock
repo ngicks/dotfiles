@@ -72,6 +72,10 @@ backend = "cargo:tree-sitter-cli"
 version = "0.9.0"
 backend = "go:github.com/chrishrb/go-grip"
 
+[[tools."go:github.com/chrishrb/go-grip"]]
+version = "0.9.1"
+backend = "go:github.com/chrishrb/go-grip"
+
 [[tools."go:github.com/golangci/golangci-lint/cmd/golangci-lint"]]
 version = "1.64.8"
 backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
@@ -88,25 +92,21 @@ backend = "go:github.com/mattn/memo"
 version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
-[[tools."npm:@bufbuild/protoc-gen-es"]]
-version = "2.11.0"
-backend = "npm:@bufbuild/protoc-gen-es"
-
 [[tools."npm:@google/gemini-cli"]]
 version = "0.37.1"
 backend = "npm:@google/gemini-cli"
 
-[[tools."npm:@openai/codex"]]
-version = "0.118.0"
-backend = "npm:@openai/codex"
+[[tools."npm:@google/gemini-cli"]]
+version = "0.38.1"
+backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
 version = "0.120.0"
 backend = "npm:@openai/codex"
 
-[[tools."npm:@upstash/context7-mcp"]]
-version = "2.1.7"
-backend = "npm:@upstash/context7-mcp"
+[[tools."npm:@openai/codex"]]
+version = "0.121.0"
+backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
 version = "2.1.8"
@@ -115,10 +115,6 @@ backend = "npm:@upstash/context7-mcp"
 [[tools."npm:zenn-cli"]]
 version = "0.4.7"
 backend = "npm:zenn-cli"
-
-[[tools."pipx:betterproto2_compiler"]]
-version = "0.9.0"
-backend = "pipx:betterproto2_compiler"
 
 [[tools.ruff]]
 version = "0.15.10"
