@@ -16,4 +16,12 @@ $runner \
   "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
   --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
   --workdir /mise" \
-  "-lc" "mise up && mise install -f ${go_tools[*]} && mise prune -y && mise lock --global"
+  "-lc" "mise up && mise install -f ${go_tools[*]} && mise prune -y"
+
+# Not sure, often it leaves old lock entries.
+
+$runner \
+  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
+  --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
+  --workdir /mise" \
+  "-lc" "mise lock --global"
