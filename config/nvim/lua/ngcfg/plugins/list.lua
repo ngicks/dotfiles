@@ -129,7 +129,7 @@ return {
     dep = { "https://github.com/MunifTanjim/nui.nvim" },
   },
   {
-    src = "https://github.com/sindrets/diffview.nvim",
+    src = "https://github.com/dlyongemallo/diffview.nvim",
     version = "",
   },
   -- git stuff
