@@ -1,20 +1,19 @@
 ///|
-pub fn cache_dir_path() -> String {
-  image_dir().0
-}
-
-///|
-pub async fn save(no_build : Bool, is_experimental : Bool) -> Unit raise Error {
+pub async fn save(
+  paths : Paths,
+  no_build : Bool,
+  is_experimental : Bool,
+) -> Unit raise Error {
   let tag = get_tag(is_experimental)
-  let image_name = "localhost/devenv/devenv:\{tag}"
+  let image_name = repo_tag(tag)
   if !no_build {
     build(is_experimental)
   } else {
     println("skipping build, saving existing image \{image_name}")
   }
 
-  ensure_dir(image_dir().0)
-  let file_path = image_path(tag)
+  ensure_dir(paths.image_dir())
+  let file_path = paths.image_path(tag)
   if @fs.exists(file_path) {
     println("already saved: \{file_path}")
     return
@@ -25,14 +24,17 @@ pub async fn save(no_build : Bool, is_experimental : Bool) -> Unit raise Error {
 
   @async.with_task_group(group => {
     let (podman_stdout, podman_writer) = @process.read_from_process()
+    defer podman_stdout.close()
+
     let (gzip_stdin, gzip_writer) = @process.write_to_process()
+    defer gzip_writer.close()
+
     let gzip_output = @process.redirect_to_file(
       tmp_path,
       create=0o644,
       truncate=true,
     )
-    defer podman_stdout.close()
-    defer gzip_writer.close()
+
     let podman = @process.spawn(
       group,
       "podman",
@@ -61,5 +63,6 @@ pub async fn save(no_build : Bool, is_experimental : Bool) -> Unit raise Error {
     @fs.remove(file_path)
   }
   run_checked("mv", [tmp_path, file_path])
+  write_image_meta(file_path, image_name)
   println("saved \{file_path}")
 }

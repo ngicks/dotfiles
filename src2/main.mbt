@@ -68,9 +68,14 @@ async fn dispatch(matches : @argparse.Matches) -> Unit {
   match matches.subcommand {
     Some(("build", sub)) => @devenv.build(has_flag(sub, "exp"))
     Some(("save", sub)) =>
-      @devenv.save(has_flag(sub, "no-build"), has_flag(sub, "exp"))
+      @devenv.save(
+        @devenv.PathsBuilder::new().build(),
+        has_flag(sub, "no-build"),
+        has_flag(sub, "exp"),
+      )
     Some(("pull", sub)) =>
       @devenv.pull(
+        @devenv.PathsBuilder::new().build(),
         required_value(sub, "remote"),
         has_flag(sub, "no-build"),
         has_flag(sub, "exp"),

@@ -27,16 +27,17 @@ fn remote_moon_command(subargs : Array[String]) -> String {
 
 ///|
 pub async fn pull(
+  paths : Paths,
   remote : String,
   no_build : Bool,
   is_experimental : Bool,
 ) -> Unit raise Error {
   let tag = get_tag(is_experimental)
-  let file_name = image_file_name(tag)
-  let local_path = image_path(tag)
-  let image_name = "localhost/devenv/devenv:\{tag}"
+  let local_path = paths.image_path(tag)
+  let file_name = Path::basename(local_path)
+  let image_name = repo_tag(tag)
 
-  ensure_dir(image_dir().0)
+  ensure_dir(paths.image_dir())
 
   let remote_args = ["daemon", "build", "--save", "--wait"]
   if is_experimental {

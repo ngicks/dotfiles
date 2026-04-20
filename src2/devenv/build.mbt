@@ -1,4 +1,13 @@
 ///|
+/// repository name for images
+pub let repository = "localhost/devenv/devenv"
+
+///|
+pub fn repo_tag(tag : String) -> String {
+  repository + ":" + tag
+}
+
+///|
 pub async fn git_tag() -> String raise Error {
   let (exit_code, stdout) = @process.collect_stdout("git", [
     "describe", "--tags", "--abbrev=0",
@@ -26,11 +35,7 @@ pub async fn get_tag(is_experimental : Bool) -> String raise Error {
 
 ///|
 pub async fn is_already_built(ver : String) -> Bool {
-  let exit_code = @process.run("podman", [
-    "image",
-    "inspect",
-    "localhost/devenv/devenv:" + ver,
-  ])
+  let exit_code = @process.run("podman", ["image", "inspect", repo_tag(ver)])
   exit_code == 0
 }
 
@@ -49,7 +54,7 @@ pub async fn build_ver(
     "-f",
     "./devenv/Containerfile",
     "-t",
-    "localhost/devenv/devenv:" + ver,
+    repo_tag(ver),
     "--no-cache",
   ]
   // proxy env vars
@@ -60,17 +65,13 @@ pub async fn build_ver(
       ]
       for v in proxy_vars {
         let val = @env.get_env_var(v).unwrap_or("")
-        args.push("--build-arg=" + v + "=" + val)
+        args..push("--build-arg").push(v + "=" + val)
       }
     }
     None => ()
   }
   // SSL cert secret
-  let cert = @env.get_env_var("SSL_CERT_FILE").unwrap_or(
-    "/etc/ssl/certs/ca-certificates.crt",
-  )
-  args.push("--secret")
-  args.push("id=cert,src=" + cert)
+  args..push("--secret").push("id=cert,src=" + ca_file_path())
   let exit_code = @process.run("podman", args)
   if exit_code != 0 {
     raise Failure::Failure("build failed")
@@ -80,7 +81,7 @@ pub async fn build_ver(
 ///|
 pub async fn build(is_experimental : Bool) -> Unit raise Error {
   let ver = get_tag(is_experimental)
-  println("building localhost/devenv/devenv:" + ver)
+  println("building " + repo_tag(ver))
   if is_already_built(ver) {
     println("already built")
     return
