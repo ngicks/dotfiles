@@ -26,6 +26,7 @@ end
 ---@class NgPackSpec
 ---@field _p NgPackSpecPlain
 ---@field _opts? NgPackOpts
+---@field _enable? boolean
 ---@field _initialized? boolean
 ---@field _configured? boolean
 local NgPackSpec = {}
@@ -81,6 +82,28 @@ end
 ---@return NgPackPhase
 function NgPackSpec:phase()
   return self._p.phase or "ui"
+end
+
+---@return boolean
+function NgPackSpec:enable()
+  if self._enable ~= nil then
+    return self._enable
+  end
+
+  local e = self._p.enable
+  if e == nil then
+    self._enable = true
+    return self._enable
+  end
+
+  local c = util.callable(e)
+  if c ~= nil then
+    self._enable = c(self) and true or false
+  else
+    self._enable = e and true or false
+  end
+
+  return self._enable
 end
 
 ---@return string name specified in a plain spec. or inferred from src.
@@ -293,30 +316,41 @@ local function setup(specs)
 
   ngpacks = from_plain(specs)
 
+  -- ngpacks keeps every declared plugin (so list_pack() still sees disabled
+  -- plugins and their on-disk dirs are not treated as orphans). enabled drives
+  -- actual loading: pack.add, init, setup, pack_changed hooks, lazy map.
+  ---@type NgPackSpec[]
+  local enabled = {}
   for _, spec in ipairs(ngpacks) do
+    if spec:enable() then
+      table.insert(enabled, spec)
+    end
+  end
+
+  for _, spec in ipairs(enabled) do
     if spec:phase() == "lazy" then
       lazy_specs[spec:main_name()] = spec
     end
   end
 
-  register_pack_changed_hooks(ngpacks)
+  register_pack_changed_hooks(enabled)
 
-  for _, spec in ipairs(ngpacks) do
+  for _, spec in ipairs(enabled) do
     run_init(spec)
   end
 
   ---@type vim.pack.Spec[]
   local pack_specs = {}
-  for _, spec in ipairs(ngpacks) do
+  for _, spec in ipairs(enabled) do
     table.insert(pack_specs, spec:to_pack())
   end
 
   vim.pack.add(pack_specs, { confirm = false })
 
-  setup_phase(ngpacks, "core")
+  setup_phase(enabled, "core")
 
   vim.schedule(function()
-    setup_phase(ngpacks, "ui")
+    setup_phase(enabled, "ui")
   end)
 
   local lock = require "ngpack.lock"

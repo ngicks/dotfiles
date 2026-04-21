@@ -6,6 +6,7 @@
 ---@field opts? NgPackOpts|fun(spec: NgPackSpec): NgPackOpts
 ---@field config? boolean|fun(spec: NgPackSpec, opts: NgPackOpts)
 ---@field main? string
+---@field enable? boolean|fun(spec: NgPackSpec): boolean when false (or returns false), the plugin is skipped: not added to vim.pack, no init/setup, no pack_changed hooks. Defaults to true.
 ---@field pack_changed_pre? fun(spec: NgPackSpec, data: EventDataPackChanged, ev: vim.api.keyset.create_autocmd.callback_args) invoked at "PackChangedPre"
 ---@field pack_changed? fun(spec: NgPackSpec, data: EventDataPackChanged, ev: vim.api.keyset.create_autocmd.callback_args) invoked at "PackChanged"
 

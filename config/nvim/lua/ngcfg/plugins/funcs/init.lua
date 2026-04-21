@@ -46,7 +46,7 @@ function M.merge(plugins, default_spec)
     if not success then
       vim.notify("missing plugin config: " .. path, vim.log.levels.WARN)
     else
-      for _, f in ipairs { "init", "opts", "config", "main", "pack_changed_pre", "pack_changed" } do
+      for _, f in ipairs { "init", "opts", "config", "main", "enable", "pack_changed_pre", "pack_changed" } do
         if conf[f] ~= nil then
           spec[f] = conf[f]
         end
