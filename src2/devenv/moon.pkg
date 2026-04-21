@@ -8,11 +8,12 @@ import {
   "moonbitlang/core/json" @json,
   "moonbitlang/core/option",
   "moonbitlang/core/string" @string,
+  "moonbitlang/core/encoding/utf8" @utf8,
   "moonbitlang/async/socket" @socket,
   "moonbitlang/async/stdio" @stdio,
   "moonbitlang/async/process" @process,
   "moonbitlang/x/path" @path,
-  "gmlewis/sha256" @sha256,
+  "Tigls/mb-hash/sha2" @sha2,
   "ngicks/dotfiles/os_path" @os_path,
 }
 

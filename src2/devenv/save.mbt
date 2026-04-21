@@ -62,7 +62,10 @@ pub async fn save(
   if @fs.exists(file_path) {
     @fs.remove(file_path)
   }
+
+  let meta = ImageMeta::from_path(tmp_path)
+  @fs.write_file(paths.image_meta_path(tag), meta.to_json())
+
   run_checked("mv", [tmp_path, file_path])
-  write_image_meta(file_path, image_name)
   println("saved \{file_path}")
 }

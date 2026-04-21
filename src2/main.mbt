@@ -18,26 +18,26 @@ fn cli() -> @argparse.Command {
         ],
         positionals=[@argparse.PositionArg("remote")],
       ),
-      @argparse.Command(
-        "daemon",
-        arg_required_else_help=true,
-        subcommand_required=true,
-        subcommands=[
-          @argparse.Command("serve"),
-          @argparse.Command("detach"),
-          @argparse.Command("build", flags=[
-            @argparse.FlagArg("no-build"),
-            @argparse.FlagArg("exp", short='e'),
-            @argparse.FlagArg("save"),
-            @argparse.FlagArg("wait"),
-          ]),
-          @argparse.Command("job", positionals=[@argparse.PositionArg("job-id")]),
-          @argparse.Command("log", positionals=[@argparse.PositionArg("job-id")]),
-          @argparse.Command("wait", positionals=[
-            @argparse.PositionArg("job-id"),
-          ]),
-        ],
-      ),
+      //@argparse.Command(
+      //  "daemon",
+      //  arg_required_else_help=true,
+      //  subcommand_required=true,
+      //  subcommands=[
+      //    @argparse.Command("serve"),
+      //    @argparse.Command("detach"),
+      //    @argparse.Command("build", flags=[
+      //      @argparse.FlagArg("no-build"),
+      //      @argparse.FlagArg("exp", short='e'),
+      //      @argparse.FlagArg("save"),
+      //      @argparse.FlagArg("wait"),
+      //    ]),
+      //    @argparse.Command("job", positionals=[@argparse.PositionArg("job-id")]),
+      //    @argparse.Command("log", positionals=[@argparse.PositionArg("job-id")]),
+      //    @argparse.Command("wait", positionals=[
+      //      @argparse.PositionArg("job-id"),
+      //    ]),
+      //  ],
+      //),
       @argparse.Command("internal-job", flags=[
         @argparse.FlagArg("no-build"),
         @argparse.FlagArg("exp", short='e'),

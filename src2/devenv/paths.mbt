@@ -36,6 +36,11 @@ pub fn Paths::image_path(self : Self, tag : String) -> String {
 }
 
 ///|
+pub fn Paths::image_meta_path(self : Self, tag : String) -> String {
+  self.image_path(tag) + ".meta.json"
+}
+
+///|
 pub fn Paths::ca_file(self : Self) -> String {
   self.ca_file
 }
