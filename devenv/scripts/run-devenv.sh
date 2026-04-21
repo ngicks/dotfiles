@@ -46,6 +46,7 @@ fi
 SSL_CERT_FILE=${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}
 
 NVIM_STD_DATA=${XDG_DATA_HOME:-$HOME/.local/share}/nvim
+NVIM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/nvim
 
 MISE_CONFIG_DIR=$HOME/.dotfiles/config/mise
 MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
@@ -95,12 +96,13 @@ podman container run -it --rm --init \
   ${timezone_opts}\
   \
   --mount type=bind,src=${XDG_CONFIG_HOME:-$HOME/.config}/env,dst=/root/.config/env,ro\
+  --mount type=bind,src=${NVIM_CONFIG_DIR},dst=/root/.config/nvim,ro\
   \
   --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim\
   --mount type=bind,src=${NVIM_STD_DATA},dst=${NVIM_STD_DATA},ro\
   \
-  --env MISE_GLOBAL_CONFIG_FILE=/root/.config/mise_host/mise.toml \
-  --mount type=bind,src=${MISE_CONFIG_DIR},dst=/root/.config/mise_host,ro\
+  --env MISE_GLOBAL_CONFIG_FILE=/root/.config/mise/mise.toml \
+  --mount type=bind,src=${MISE_CONFIG_DIR},dst=/root/.config/mise,ro\
   --env MISE_DATA_DIR=${MISE_DATA_DIR}\
   --mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR}$(ro)\
   \
