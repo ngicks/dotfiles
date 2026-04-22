@@ -1,0 +1,19 @@
+name: .dotfiles
+version: 1.0.0
+description: APM project for .dotfiles
+author: ngicks
+targets:
+  - codex
+  - claude
+dependencies:
+  apm:
+    - git: https://github.com/moonbitlang/moonbit-agent-guide
+      path: moonbit-agent-guide
+    - git: https://github.com/moonbitlang/moonbit-agent-guide
+      path: moonbit-c-binding
+    - git: https://github.com/moonbitlang/moonbit-agent-guide
+      path: moonbit-proof
+    - git: https://github.com/moonbitlang/moonbit-agent-guide
+      path: moonbit-refactoring
+  mcp: []
+scripts: {}

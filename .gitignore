@@ -1,7 +1,11 @@
+.agents
 .claude
 .serena
-/config/nvim/playground
 /.mcp.json
+# APM dependencies
+apm_modules/
+
+/config/nvim/playground
 
 /nvim.log
 # pointing XDG_CONFIG_HOME generates this.
