@@ -25,6 +25,9 @@ For each subcommand, ask for a short description if not provided. Default to `<N
 
 ## Templates
 
+This is templates but you **must** **strictly** follow the order of elements.
+DO NOT REORDER THINGS.
+
 ### `main.go`
 
 ```go
@@ -40,6 +43,7 @@ import (
 
 	"github.com/ngicks/go-common/contextkey"
 	"{{MODULE}}/commands"
+    "{{MODULE}}/cmd/internal/cmdsignals"
 )
 
 func main() {
@@ -55,8 +59,7 @@ func main() {
 
 	ctx, stop := signal.NotifyContext(
 		context.Background(),
-		syscall.SIGINT,
-		syscall.SIGTERM,
+        cmdsignals.ExitSignals[:]...,
 	)
 	defer stop()
 
@@ -103,7 +106,11 @@ var (
 func runRoot(cmd *cobra.Command, args []string) error {
     return cmd.Help()
 }
+
+// TODO: you may add initialization logic for root internal service construct here.
 ```
+
+The TODO comment line is marker for implementor: just leave it there.
 
 ### `commands/<parent>.go` (parent group command — no `RunE`)
 
@@ -122,7 +129,11 @@ var {{parentCamel}}Cmd = &cobra.Command{
     Use:   "{{parent-name}}",
     Short: "{{Parent short description}}",
 }
+
+// TODO: you may add initialization logic for sub internal service construct here.
 ```
+
+The TODO comment line is marker for implementor: just leave it there.
 
 ### `commands/{{parent}}_{{child}}.go` (child leaf command, wired to parent)
 
@@ -147,7 +158,10 @@ var {{parentCamel}}{{ChildPascal}}Cmd = &cobra.Command{
 }
 
 func run{{ParentPascal}}{{ChildPascal}}(cmd *cobra.Command, args []string) error {
-    fmt.Println("TODO: implement {{parent-name}} {{child-name}}")
+    // TODO: implement {{parent-name}} {{child-name}}
+    // Just only wire up subcommands, flags, positional arguments to an actual
+    // configuration of an internal service.
+    // DO NOT too much in here.
     return nil
 }
 ```
@@ -160,18 +174,136 @@ Key differences from flat subcommands:
 - Child `init()` wires to **parent var**, not `rootCmd`
 - 3rd level follows the same pattern: `commands/server_start_foo.go`, wired to `serverStartCmd`
 
+### Internal helpers
+
+#### {{MODULE}}/cmd/internal/cmdsignals
+
+Always place this helper and use this in
+
+`signals.go`:
+
+```go
+package cmdsignals
+
+import (
+	"os"
+	"syscall"
+)
+
+// ExitSignals are the signals that should cancel top-level CLI execution.
+var ExitSignals = [...]os.Signal{
+	os.Interrupt,
+	syscall.SIGTERM,
+}
+```
+
+#### {{MODULE}}/cmd/internal/stdiopipe
+
+Use this
+
+`stdiopipe.go`:
+
+```go
+// Package stdiopipe provides a cancellable reader backed by os.Stdin.
+package stdiopipe
+
+import (
+	"context"
+	"io"
+	"os"
+	"sync"
+)
+
+var (
+	onceStdin  sync.Once
+	onceStdout sync.Once
+	onceStderr sync.Once
+)
+
+// Stdin returns an [io.ReadCloser] which is piped to [os.Stdin] through an [io.Pipe].
+//
+// This is necessary because Read calls on [os.Stdin] cannot be unblocked by closing it.
+//
+// Only one invocation is allowed per process; a second call will panic.
+func Stdin(ctx context.Context) io.ReadCloser {
+	var pr *io.PipeReader
+	called := false
+	onceStdin.Do(func() {
+		called = true
+		var pw *io.PipeWriter
+		pr, pw = io.Pipe()
+		go func() {
+			<-ctx.Done()
+			pr.CloseWithError(ctx.Err())
+		}()
+		go func() {
+			_, err := io.Copy(pw, os.Stdin)
+			pw.CloseWithError(err)
+		}()
+	})
+	if !called {
+		panic("stdiopipe: Stdin is called more than once")
+	}
+	return pr
+}
+
+func stdout(ctx context.Context, label string, out *os.File, once *sync.Once) io.WriteCloser {
+	var pw *io.PipeWriter
+	called := false
+	once.Do(func() {
+		called = true
+		var pr *io.PipeReader
+		pr, pw = io.Pipe()
+		go func() {
+			<-ctx.Done()
+			pw.CloseWithError(ctx.Err())
+		}()
+		go func() {
+			_, err := io.Copy(out, pr)
+			pr.CloseWithError(err)
+		}()
+	})
+	if !called {
+		panic("stdiopipe: " + label + " is called more than once")
+	}
+	return pw
+}
+
+// Stdout returns an [io.WriteCloser] which is piped to [os.Stdout] through an [io.Pipe].
+//
+// This is necessary because Write calls on [os.Stdout] cannot be unblocked by closing it.
+//
+// Only one invocation is allowed per process; a second call will panic.
+func Stdout(ctx context.Context) io.WriteCloser {
+	return stdout(ctx, "Stdout", os.Stdout, &onceStdout)
+}
+
+// Stderr returns an [io.WriteCloser] which is piped to [os.Stderr] through an [io.Pipe].
+//
+// This is necessary because Write calls on [os.Stderr] cannot be unblocked by closing it.
+//
+// Only one invocation is allowed per process; a second call will panic.
+func Stderr(ctx context.Context) io.WriteCloser {
+	return stdout(ctx, "Stderr", os.Stderr, &onceStderr)
+}
+```
+
 ### `go.mod`
 
 ```
 module {{MODULE}}
 
-go 1.26.0
+go 1.26.0 // latest major with .0
 
 require (
     github.com/ngicks/go-common/contextkey v0.2.0
     github.com/spf13/cobra v1.10.2
 )
 ```
+
+- Version notation is just for display; use latest possible version.
+- Go version must stay .0 of latest major version.
+  - The user may instruct to use exact versions like "use go1.26.2", in that case set that value.
 
 ## Naming Conventions
 
