@@ -7,13 +7,19 @@ targets:
   - claude
 dependencies:
   apm:
-    - git: https://github.com/moonbitlang/moonbit-agent-guide
-      path: moonbit-agent-guide
-    - git: https://github.com/moonbitlang/moonbit-agent-guide
+    - git: github.com/moonbitlang/skills
+      path: moonbit-agent-guide/moonbit-agent-guide
+    - git: github.com/moonbitlang/skills
+      path: moonbit-agent-guide/moonbit-proof
+    - git: github.com/moonbitlang/skills
+      path: moonbit-agent-guide/moonbit-refactoring
+    - git: github.com/moonbitlang/skills
       path: moonbit-c-binding
-    - git: https://github.com/moonbitlang/moonbit-agent-guide
-      path: moonbit-proof
-    - git: https://github.com/moonbitlang/moonbit-agent-guide
-      path: moonbit-refactoring
+    - git: github.com/moonbitlang/skills
+      path: moonbit-extract-spec-test
+    - git: github.com/moonbitlang/skills
+      path: moonbit-lang
+    - git: github.com/moonbitlang/skills
+      path: moonbit-spec-test-development
   mcp: []
 scripts: {}
