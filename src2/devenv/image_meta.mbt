@@ -11,7 +11,6 @@ pub async fn ImageMeta::from_path(path : String) -> ImageMeta raise Error {
   let file = @fs.open(path, mode=@fs.ReadOnly)
   defer file.close()
   let size = file.size()
-
   let sha256 = sha256(file)
   ImageMeta::{ name: @path.Path::basename(path).to_string(), size, sha256 }
 }
