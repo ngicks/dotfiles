@@ -89,6 +89,7 @@ in
     sops           # Secret encryption
     age            # Encryption tool
     nerdctl        # containerd CLI
+    skopeo         # OCI/container image inspection and copy
 
     # Git Tools
     gh             # GitHub CLI
