@@ -71,6 +71,7 @@ in
 
       ${makeLoader "env"}
       ${envLoading}
+      ${makeLoader "env-post"}
     '';
 
     profileExtra = ''

@@ -36,3 +36,7 @@ safe_hook_pair() {
     [[ -n "$1" ]] && safe_hook_append precmd_functions "$1"
     [[ -n "$2" ]] && safe_hook_append preexec_functions "$2"
 }
+
+no_proxy() {
+    unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
+}
