@@ -10,8 +10,6 @@ $runner \
 
 # Not sure, often it leaves old lock entries. split invocation.
 
-$runner \
-  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
-  --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
-  --workdir /mise" \
-  "-lc" "mise lock --global"
+pushd config/mise
+  zsh -lc "mise lock"
+popd
