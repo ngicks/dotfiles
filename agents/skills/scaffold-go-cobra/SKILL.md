@@ -14,35 +14,84 @@ Before generating files, gather the following from the user. If provided inline 
 | Parameter         | Required | Default                    | Example                    |
 | ----------------- | -------- | -------------------------- | -------------------------- |
 | Project name      | yes      | -                          | `mytool`                   |
-| Output directory  | yes      | -                          | `tools/mytool`             |
+| Module root       | yes      | -                          | `tools/mytool`             |
 | Go module path    | no       | `github.com/watage/<name>` | `github.com/watage/mytool` |
 | Short description | no       | `<name> CLI tool.`         | `My awesome tool.`         |
 | Subcommands       | no       | _(none)_                   | `serve`, `migrate`         |
 
+**Module root** is the directory that will contain `go.mod`. The binary's package always lives at `<module-root>/cmd/<name>/`, never directly at the module root. See "Project layout" below for the exact tree.
+
 Subcommands can be nested using **dot notation** (`server.start`, `server.stop`) or natural language ("a server group containing start and stop"). When a dotted subcommand is given, the part before the dot becomes a parent group command and the part after becomes a child leaf command.
 
 For each subcommand, ask for a short description if not provided. Default to `<Name> subcommand.`.
+
+## Project layout
+
+The skill always generates this exact tree. `<module-root>` is the path from the Interview; `<name>` is the project name. Subcommand files in `commands/` depend on what the user requested, but everything else is fixed.
+
+```
+<module-root>/
+├── go.mod
+└── cmd/
+    ├── <name>/
+    │   ├── main.go
+    │   └── commands/
+    │       ├── root.go
+    │       ├── <subcmd>.go              # one per flat subcommand
+    │       ├── <parent>.go              # one per parent group (no RunE)
+    │       └── <parent>_<child>.go      # one per nested leaf
+    └── internal/
+        ├── cmdsignals/
+        │   └── signals.go         # always generated
+        └── stdiopipe/              # only when a subcommand needs cancellable stdio
+            └── stdiopipe.go
+```
+
+Worked example — `mytool` at `tools/mytool` with subcommands `serve` (long-running, needs cancellable stdout), `db.migrate`, `db.query`:
+
+```
+tools/mytool/
+├── go.mod
+└── cmd/
+    ├── mytool/
+    │   ├── main.go
+    │   └── commands/
+    │       ├── root.go
+    │       ├── serve.go
+    │       ├── db.go              # parent group, no RunE
+    │       ├── db_migrate.go      # leaf, init() wires to dbCmd
+    │       └── db_query.go        # leaf, init() wires to dbCmd
+    └── internal/
+        ├── cmdsignals/
+        │   └── signals.go
+        └── stdiopipe/              # included because `serve` needs it
+            └── stdiopipe.go
+```
+
+Why this shape:
+
+- Binary entrypoint and its `commands/` package live under `cmd/<name>/` so a future second binary can be added as a sibling `cmd/<other>/` without moving any existing files.
+- Shared helpers (`cmdsignals`, `stdiopipe`) live at `cmd/internal/` — siblings of `cmd/<name>/` — so they are reusable across binaries while still scoped to the `cmd/` tree by Go's `internal/` rules.
+- Never put `commands/` directly at the module root. See "Anti-patterns" at the bottom.
 
 ## Templates
 
 This is templates but you **must** **strictly** follow the order of elements.
 DO NOT REORDER THINGS.
 
-### `cmd/{{COMMAND_NAME}}/main.go`
+### `cmd/{{NAME}}/main.go`
 
 ```go
 package main
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
-	"syscall"
 
 	"github.com/ngicks/go-common/contextkey"
-	"{{MODULE}}/cmd/{{COMMAND_NAME}}/commands"
+	"{{MODULE}}/cmd/{{NAME}}/commands"
     "{{MODULE}}/cmd/internal/cmdsignals"
 )
 
@@ -73,7 +122,7 @@ func main() {
 }
 ```
 
-### `cmd/{{COMMAND_NAME}}/commands/root.go`
+### `cmd/{{NAME}}/commands/root.go`
 
 ```go
 package commands
@@ -112,7 +161,7 @@ func runRoot(cmd *cobra.Command, args []string) error {
 
 The TODO comment line is marker for implementor: just leave it there.
 
-### `cmd/{{COMMAND_NAME}}/commands/<parent>.go` (parent group command — no `RunE`)
+### `cmd/{{NAME}}/commands/<parent>.go` (parent group command — no `RunE`)
 
 When a subcommand has children (e.g. `server.start`), the parent is a grouping command with no run logic. Cobra shows help by default.
 
@@ -133,18 +182,14 @@ var {{parentCamel}}Cmd = &cobra.Command{
 // TODO: you may add initialization logic for sub internal service construct here.
 ```
 
-The TODO comment line is marker for implementor: just leave it there.
+The TODO comment line is marker for an implementor: just leave it there.
 
-### `cmd/{{COMMAND_NAME}}/commands/{{parent}}_{{child}}.go` (child leaf command, wired to parent)
+### `cmd/{{NAME}}/commands/{{parent}}_{{child}}.go` (child leaf command, wired to parent)
 
 ```go
 package commands
 
-import (
-	"fmt"
-
-	"github.com/spf13/cobra"
-)
+import "github.com/spf13/cobra"
 
 func init() {
 	{{parentCamel}}Cmd.AddCommand({{parentCamel}}{{ChildPascal}}Cmd)
@@ -159,12 +204,14 @@ var {{parentCamel}}{{ChildPascal}}Cmd = &cobra.Command{
 
 func run{{ParentPascal}}{{ChildPascal}}(cmd *cobra.Command, args []string) error {
     // TODO: implement {{parent-name}} {{child-name}}
-    // Just only wire up subcommands, flags, positional arguments to an actual
-    // configuration of an internal service.
-    // DO NOT too much in here.
+    // This function should only wire flags and positional arguments into the
+    // configuration of an internal service, then invoke it.
+    // Do not put business logic here.
     return nil
 }
 ```
+
+The comment lines are marker for an implementor: just leave it there.
 
 Key differences from flat subcommands:
 
@@ -176,11 +223,11 @@ Key differences from flat subcommands:
 
 ### Internal helpers
 
-#### {{MODULE}}/cmd/internal/cmdsignals
+`cmdsignals` is always generated — `main.go` imports it. Import path: `{{MODULE}}/cmd/internal/cmdsignals`.
 
-Always place this helper and use this in
+`stdiopipe` is **only generated on demand** — when a subcommand actually needs cancellable stdio (e.g. a long-running `serve` or a streaming command that must unblock on `ctx.Done()`). Do not generate it speculatively. Import path when used: `{{MODULE}}/cmd/internal/stdiopipe`.
 
-`signals.go`:
+#### `cmd/internal/cmdsignals/signals.go`
 
 ```go
 package cmdsignals
@@ -197,11 +244,7 @@ var ExitSignals = [...]os.Signal{
 }
 ```
 
-#### {{MODULE}}/cmd/internal/stdiopipe
-
-Use this
-
-`stdiopipe.go`:
+#### `cmd/internal/stdiopipe/stdiopipe.go`
 
 ```go
 // Package stdiopipe provides a cancellable reader backed by os.Stdin.
@@ -305,8 +348,6 @@ require (
 - Go version must stay .0 of latest major version.
   - The user may instruct to use exact versions like "use go1.26.2", in that case set that value.
 
-### Final
-
 ## Naming Conventions
 
 ### Flat subcommands
@@ -347,15 +388,21 @@ require (
 
 ## Generation Steps
 
-1. Resolve all parameters (interview or extract from user message)
-2. Create output directory and `commands/` subdirectory
-3. Write `go.mod` using the Write tool
-4. Write `main.go` using the Write tool
-5. Write `commands/root.go` with `rootCmd` var and `Execute` function
-6. Write one `commands/<subcmd>.go` per subcommand (each with its own `init()` for `AddCommand` wiring)
-7. For nested commands, generate **parent files before child files** (children reference parent vars via `init()`)
-8. Run `cd <output-dir> && go mod tidy` to resolve dependencies
-9. Report the generated file list to the user
+Refer to "Project layout" for the canonical tree. Every path below is relative to the **module root** (the directory containing `go.mod`).
+
+1. Resolve all parameters (interview or extract from user message).
+2. Write `go.mod` at the module root.
+3. Write `cmd/<name>/main.go`.
+4. Write `cmd/<name>/commands/root.go` with `rootCmd` var and `Execute` function.
+5. Write one `cmd/<name>/commands/<subcmd>.go` per flat subcommand (each with its own `init()` for `rootCmd.AddCommand(...)` wiring).
+6. For nested commands, write the **parent file before child files** (children reference parent vars via `init()`):
+   - Parent: `cmd/<name>/commands/<parent>.go` with no `RunE`/`Args`.
+   - Child: `cmd/<name>/commands/<parent>_<child>.go`, init() calls `<parentCamel>Cmd.AddCommand(...)`.
+7. Write `cmd/internal/cmdsignals/signals.go` (always — `main.go` imports it). Write `cmd/internal/stdiopipe/stdiopipe.go` **only if** a generated subcommand needs cancellable stdio; skip otherwise.
+8. Run `cd <module-root> && go mod tidy` to resolve dependencies.
+9. Report the generated file list to the user.
+
+Use the **Write** tool for every file — Write creates parent directories as needed, so do not run `mkdir` separately.
 
 ## Important
 
@@ -363,3 +410,14 @@ require (
 - Keep generated code minimal — no extra helpers, no unused imports
 - If the user provides flags, add them as a separate `init()` block in the subcommand file (persistent flags on `rootCmd`, local flags on `xxxCmd`)
 - `main.go` always sets up a `slog.Logger` (JSON handler, debug level, with source) and stores it in context via `contextkey.WithSlogLogger`
+
+## Anti-patterns
+
+Do not generate any of these. They look superficially shorter but break the layout contract.
+
+- **`commands/` at the module root** (i.e. `<module-root>/commands/...` instead of `<module-root>/cmd/<name>/commands/...`). Adding a second binary later forces a rename of every import path. The `cmd/<name>/` wrapper costs nothing today and avoids that churn.
+- **`main.go` at the module root**. Same reason — the entrypoint must live at `cmd/<name>/main.go` so a sibling `cmd/<other>/main.go` can be added without moving anything.
+- **`internal/` at the module root** for the helpers in this skill. They go at `cmd/internal/` so they are scoped to binaries under `cmd/` and shared across them. (A separate module-root `internal/` for non-CLI library code is fine and unrelated.)
+- **Importing `{{MODULE}}/commands`** anywhere. The only correct import for the commands package is `{{MODULE}}/cmd/<name>/commands`. If you find yourself writing the shorter form, the layout is wrong — fix the layout, not the import.
+- **Skipping `cmdsignals`**. It is always generated — `main.go` imports it.
+- **Generating `stdiopipe` speculatively**. Only generate it when a concrete subcommand actually needs cancellable stdio. An unused helper file is dead weight.
