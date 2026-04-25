@@ -59,9 +59,8 @@ DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT:-$HOME/.deno/bin}
 
 UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 
-NPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/npm
-NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_DIR}/npmrc
-NPM_CACHE_DIR=${XDG_CACHE_HOME:-$HOME/.cache}/npm
+NPM_CONFIG_USERCONFIG=${XDG_CONFIG_HOME:-$HOME/.config}/npm/npmrc
+NPM_CONFIG_CACHE=${XDG_CACHE_HOME:-$HOME/.cache}/npm
 
 timezone_opts=""
 if [ -n "${TZ:-}" ]; then
@@ -117,9 +116,10 @@ podman container run -it --rm --init \
   --env CARGO_HOME=${CARGO_HOME}\
   --mount type=bind,src=${CARGO_HOME},dst=${CARGO_HOME}$(ro)\
   \
-  --env NPM_CONFIG_GLOBALCONFIG=${NPM_CONFIG_GLOBALCONFIG}\
-  --mount type=bind,src=${NPM_CONFIG_DIR},dst=${NPM_CONFIG_DIR}$(ro)\
-  --mount type=bind,src=${NPM_CACHE_DIR},dst=${NPM_CACHE_DIR}\
+  --env NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}\
+  --mount type=bind,src=${NPM_CONFIG_USERCONFIG},dst=${NPM_CONFIG_USERCONFIG}$(ro)\
+  --env NPM_CONFIG_CACHE=${NPM_CONFIG_CACHE}\
+  --mount type=bind,src=${NPM_CONFIG_CACHE},dst=${NPM_CONFIG_CACHE}\
   \
   --env GOBIN=${GOBIN}\
   --env GOPATH=${GOPATH}\
