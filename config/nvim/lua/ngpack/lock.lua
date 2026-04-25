@@ -10,9 +10,11 @@ local util = require "ngpack.util"
 
 ---@class NgPackLockDropOpts
 ---@field names? string[]
----@field restart? boolean
 
 ---@class NgPackLockPruneOrphansOpts
+---@field names? string[]
+
+---@class NgPackLockPruneDesyncOpts
 ---@field names? string[]
 
 ---Return the vim.pack lockfile path under the current config directory.
@@ -185,7 +187,7 @@ function M.report_desync(report_nominal)
   return items
 end
 
----Remove desynced lock entries and optionally restart Neovim.
+---Remove desynced lock entries and re-resolve via vim.pack.add.
 ---@param opts? NgPackLockDropOpts
 ---@return string[]|nil removed
 ---@return string? err
@@ -241,8 +243,20 @@ function M.drop_desync(opts)
     vim.log.levels.WARN
   )
 
-  if opts.restart then
-    vim.cmd.restart()
+  local removed_set = {} ---@type table<string, boolean>
+  for _, name in ipairs(removed) do
+    removed_set[name] = true
+  end
+
+  local pack_specs = {} ---@type vim.pack.Spec[]
+  for _, plug in ipairs(require("ngpack").list_enabled_pack()) do
+    if removed_set[plug.name] then
+      pack_specs[#pack_specs + 1] = plug
+    end
+  end
+
+  if #pack_specs > 0 then
+    vim.pack.add(pack_specs, { confirm = false })
   end
 
   return removed
@@ -345,6 +359,66 @@ function M.prune_orphans(opts)
   return removed
 end
 
+---Remove plugin directories whose installed revisions diverge from the lockfile.
+---@param opts? NgPackLockPruneDesyncOpts
+---@return string[]|nil removed
+---@return string? err
+function M.prune_desync(opts)
+  opts = opts or {}
+
+  local items, err = collect_desync()
+  if items == nil then
+    vim.notify(err or "failed", vim.log.levels.ERROR)
+    return nil, err
+  end
+
+  local selected = {} ---@type table<string, boolean>
+  local requested = opts.names or {}
+  if #requested == 0 then
+    for _, item in ipairs(items) do
+      selected[item.name] = true
+    end
+  else
+    for _, name in ipairs(requested) do
+      selected[name] = true
+    end
+  end
+
+  local removed = {}
+  for _, item in ipairs(items) do
+    if selected[item.name] then
+      vim.pack.del({ item.name }, { force = true })
+      removed[#removed + 1] = item.name
+      selected[item.name] = nil
+    end
+  end
+
+  if #removed == 0 then
+    if next(selected) ~= nil then
+      local missing = vim.tbl_keys(selected)
+      table.sort(missing)
+      vim.notify(
+        ("requested plugins are not currently desynced: %s"):format(table.concat(missing, ", ")),
+        vim.log.levels.WARN
+      )
+    else
+      vim.notify("no desynced plugin directories to remove", vim.log.levels.INFO)
+    end
+    return {}
+  end
+
+  table.sort(removed)
+  vim.notify(
+    ("removed %d desynced plugin director%s: %s"):format(
+      #removed,
+      #removed == 1 and "y" or "ies",
+      table.concat(removed, ", ")
+    ),
+    vim.log.levels.WARN
+  )
+  return removed
+end
+
 ---@return boolean
 function M.should_auto_report()
   return vim.env.IN_CONTAINER ~= "1"
@@ -360,15 +434,25 @@ function M.setup_user_command()
   vim.api.nvim_create_user_command("PackLockDropDesync", function(args)
     M.drop_desync {
       names = args.fargs,
-      restart = args.bang,
     }
   end, {
-    bang = true,
     nargs = "*",
     complete = function()
       return M.complete_desync()
     end,
-    desc = "Remove desynced lock entries; use ! to restart after rewriting the lockfile",
+    desc = "Remove desynced lock entries and re-resolve them via vim.pack.add",
+  })
+
+  vim.api.nvim_create_user_command("PackLockPruneDesync", function(args)
+    M.prune_desync {
+      names = args.fargs,
+    }
+  end, {
+    nargs = "*",
+    complete = function()
+      return M.complete_desync()
+    end,
+    desc = "Remove plugin directories whose installed revisions diverge from nvim-pack-lock.json",
   })
 
   vim.api.nvim_create_user_command("PackLockPruneOrphans", function(args)

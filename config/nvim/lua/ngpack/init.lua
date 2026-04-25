@@ -397,4 +397,17 @@ end
 
 M.list_pack = list_pack
 
+---@return vim.pack.Spec[]
+local function list_enabled_pack()
+  local packs = {}
+  for _, spec in ipairs(ngpacks) do
+    if spec:enable() then
+      table.insert(packs, spec:to_pack())
+    end
+  end
+  return packs
+end
+
+M.list_enabled_pack = list_enabled_pack
+
 return M
