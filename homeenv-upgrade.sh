@@ -10,10 +10,6 @@ pushd $dir
   echo ""
   ./scripts/homeenv/system-package-manager-update.sh
   echo ""
-  echo "mise up"
-  echo ""
-  ./scripts/homeenv/mise-up.sh
-  echo ""
   echo "nvim plugin update"
   echo ""
   ./scripts/homeenv/nvim-pack-update.sh
@@ -25,5 +21,12 @@ pushd $dir
   popd
   # commit changes if any
   # call manually home-siwtch
-  # ./scripts/homeenv/nix-run-home-manager.sh
+  ./scripts/homeenv/nix-run-home-manager.sh
+  echo ""
+  echo "mise up"
+  echo ""
+  zsh -lc "./scripts/homeenv/mise-up.sh"
+
+  # in case mise up creates new changes.
+  ./scripts/homeenv/nix-run-home-manager.sh
 popd

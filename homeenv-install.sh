@@ -16,9 +16,9 @@ pushd $dir
   echo ""
   echo "nvim plugin restore from lockfile"
   echo ""
-  ./scripts/homeenv/nvim-pack-restore.sh
+  zsh -lc "./scripts/homeenv/nvim-pack-restore.sh"
   echo ""
   echo "mise install"
   echo ""
-  ./scripts/homeenv/mise-install.sh
+  zsh -lc "./scripts/homeenv/mise-install.sh"
 popd

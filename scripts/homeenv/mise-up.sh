@@ -8,7 +8,7 @@ $runner \
   --workdir /mise" \
   "-lc" "mise up && mise install -f 'go:*' || true && mise install -f 'pipx:*' || true && mise prune -y"
 
-# Not sure, often it leaves old lock entries.
+# Not sure, often it leaves old lock entries. split invocation.
 
 $runner \
   "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
