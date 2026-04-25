@@ -2,7 +2,6 @@
 {
   programs.mise = {
     enable = true;
-    enableZshIntegration = true;
   };
 
   xdg.configFile."mise" = {
