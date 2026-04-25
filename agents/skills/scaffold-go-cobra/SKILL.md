@@ -28,7 +28,7 @@ For each subcommand, ask for a short description if not provided. Default to `<N
 This is templates but you **must** **strictly** follow the order of elements.
 DO NOT REORDER THINGS.
 
-### `main.go`
+### `cmd/{{COMMAND_NAME}}/main.go`
 
 ```go
 package main
@@ -42,7 +42,7 @@ import (
 	"syscall"
 
 	"github.com/ngicks/go-common/contextkey"
-	"{{MODULE}}/commands"
+	"{{MODULE}}/cmd/{{COMMAND_NAME}}/commands"
     "{{MODULE}}/cmd/internal/cmdsignals"
 )
 
@@ -73,7 +73,7 @@ func main() {
 }
 ```
 
-### `commands/root.go`
+### `cmd/{{COMMAND_NAME}}/commands/root.go`
 
 ```go
 package commands
@@ -112,7 +112,7 @@ func runRoot(cmd *cobra.Command, args []string) error {
 
 The TODO comment line is marker for implementor: just leave it there.
 
-### `commands/<parent>.go` (parent group command — no `RunE`)
+### `cmd/{{COMMAND_NAME}}/commands/<parent>.go` (parent group command — no `RunE`)
 
 When a subcommand has children (e.g. `server.start`), the parent is a grouping command with no run logic. Cobra shows help by default.
 
@@ -135,7 +135,7 @@ var {{parentCamel}}Cmd = &cobra.Command{
 
 The TODO comment line is marker for implementor: just leave it there.
 
-### `commands/{{parent}}_{{child}}.go` (child leaf command, wired to parent)
+### `cmd/{{COMMAND_NAME}}/commands/{{parent}}_{{child}}.go` (child leaf command, wired to parent)
 
 ```go
 package commands
@@ -304,6 +304,8 @@ require (
 - Version notation is just for display; use latest possible version.
 - Go version must stay .0 of latest major version.
   - The user may instruct to use exact versions like "use go1.26.2", in that case set that value.
+
+### Final
 
 ## Naming Conventions
 
