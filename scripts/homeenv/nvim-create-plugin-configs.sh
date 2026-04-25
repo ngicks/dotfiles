@@ -11,7 +11,7 @@ set -e
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/.dotfiles}"
 
 XDG_CONFIG_HOME="$DOTFILES_DIR/config" nvim --headless \
-  -c "lua require('plugins._funcs.funcs').auto_create(require('plugins.list'))" \
+  -c "lua require('ngcfg.plugins.funcs').auto_create(require('ngcfg.plugins.list'))" \
   -c "qa"
 
 echo "Plugin config directories created/verified"
