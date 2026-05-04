@@ -16,7 +16,7 @@ local function get_servers()
 
   local scan = require("plenary.scandir").scan_dir
 
-  local files = scan(vim.fn.stdpath "config" .. "/after/lsp", { depth = 1, add_dirs = false })
+  local files = scan(vim.fs.joinpath(vim.fn.stdpath "config", "after", "lsp"), { depth = 1, add_dirs = false })
 
   for _, fileName in ipairs(files) do
     local name = vim.fs.basename(fileName)
