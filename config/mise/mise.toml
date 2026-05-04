@@ -38,8 +38,8 @@ binstall = true
 
 # Go Development
 "go:github.com/nametake/golangci-lint-langserver" = "latest"
-"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "latest"
 "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint" = "latest"
+"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "latest"
 
 "go:github.com/chrishrb/go-grip" = "latest"
 "go:github.com/mattn/memo" = "latest"
