@@ -1,6 +1,6 @@
 local M = {}
 
-M.dap = function()
+M.setup = function()
   local dap = require "dap"
 
   -- Node.js debugging via vscode-js-debug (pwa-node)

@@ -143,9 +143,16 @@ return {
     src = "https://github.com/mfussenegger/nvim-dap",
   },
   {
+    src = "https://github.com/igorlfs/nvim-dap-view",
+    dep = {
+      "https://github.com/mfussenegger/nvim-dap",
+    },
+  },
+  {
     src = "https://github.com/nvim-neotest/nvim-nio",
   },
   {
+    enable = false,
     src = "https://github.com/rcarriga/nvim-dap-ui",
     dep = {
       "https://github.com/mfussenegger/nvim-dap",

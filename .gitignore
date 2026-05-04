@@ -9,6 +9,7 @@ apm_modules/
 
 /nvim.log
 # pointing XDG_CONFIG_HOME generates this.
+/config/dlv/
 /config/go/
 /config/zsh-abbr/
 

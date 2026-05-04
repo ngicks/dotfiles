@@ -1,6 +1,6 @@
 local M = {}
 
-M.dap = function()
+M.setup = function()
   local dap = require "dap"
 
   -- Go debugging configuration

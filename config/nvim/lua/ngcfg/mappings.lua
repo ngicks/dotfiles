@@ -83,15 +83,6 @@ map(
 -- terminal
 map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
 
--- new terminals
-map("n", "<leader>h", function()
-  require("nvchad.term").new { pos = "sp" }
-end, { desc = "terminal new horizontal term" })
-
-map("n", "<leader>v", function()
-  require("nvchad.term").new { pos = "vsp" }
-end, { desc = "terminal new vertical term" })
-
 -- toggleable terminal
 map({ "n", "t" }, "<M-h>", function()
   require("ngcfg.pkg.terminal").horizontal()
@@ -227,16 +218,52 @@ map("n", "<leader>dt", function()
   require("dap").terminate()
 end, { desc = "DAP Terminate" })
 
--- DAP UI keybindings
-map("n", "<leader>du", function()
-  require("dapui").toggle()
-end, { desc = "DAP UI Toggle" })
-map("n", "<leader>de", function()
-  require("dapui").eval()
-end, { desc = "DAP UI Eval" })
-map("v", "<leader>de", function()
-  require("dapui").eval()
-end, { desc = "DAP UI Eval Selection" })
+if require("ngpack").enabled "https://github.com/rcarriga/nvim-dap-ui" then
+  -- DAP UI keybindings
+  map("n", "<leader>du", function()
+    require("dapui").toggle()
+  end, { desc = "DAP UI Toggle" })
+  map("n", "<leader>de", function()
+    require("dapui").eval()
+  end, { desc = "DAP UI Eval" })
+  map("v", "<leader>de", function()
+    require("dapui").eval()
+  end, { desc = "DAP UI Eval Selection" })
 
--- DAP Virtual Text keybindings
-map("n", "<leader>dv", "<cmd>DapVirtualTextToggle<cr>", { desc = "DAP Virtual Text Toggle" })
+  -- DAP Virtual Text keybindings
+  map("n", "<leader>dv", "<cmd>DapVirtualTextToggle<cr>", { desc = "DAP Virtual Text Toggle" })
+end
+
+if require("ngpack").enabled "https://github.com/igorlfs/nvim-dap-view" then
+  -- see https://igorlfs.github.io/nvim-dap-view/home
+  -- DAP View keybindings
+  map("n", "<leader>du", "<cmd>DapViewToggle<cr>", { desc = "DAP View Toggle" })
+  map({ "v", "n" }, "<leader>dw", "<cmd>DapViewWatch<cr>", { desc = "DAP View Watch" })
+  for _, set in ipairs {
+    { key = "w", section = "watches" },
+    { key = "s", section = "scopes" },
+    { key = "e", section = "exceptions" },
+    { key = "b", section = "breakpoints" },
+    { key = "t", section = "threads" },
+    { key = "r", section = "repl" },
+  } do
+    map(
+      "n",
+      "<leader>dj" .. set.key,
+      "<cmd>DapViewJump " .. set.section .. "<cr>",
+      { desc = "DAP View Jump to " .. set.section }
+    )
+    map(
+      "n",
+      "<leader>ds" .. set.key,
+      "<cmd>DapViewShow " .. set.section .. "<cr>",
+      { desc = "DAP View Show to " .. set.section }
+    )
+  end
+
+  -- DapViewNavigate is omitted since it has default keymap
+  -- https://igorlfs.github.io/nvim-dap-view/keymaps
+
+  map({ "v", "n" }, "<leader>dh", "<cmd>DapViewHover<cr>", { desc = "DAP View Hover" })
+  map("n", "<leader>dv", "<cmd>DapViewVirtualTextToggle<cr>", { desc = "DAP View VirtualTextToggle" })
+end

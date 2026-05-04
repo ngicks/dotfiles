@@ -306,6 +306,8 @@ local already_setup = false
 ---@type NgPackSpec[]
 local ngpacks = {}
 ---@type table<string, NgPackSpec>
+local all_specs = {}
+---@type table<string, NgPackSpec>
 local lazy_specs = {}
 
 ---@param specs NgPackSpecPlain[]
@@ -325,6 +327,10 @@ local function setup(specs)
     if spec:enable() then
       table.insert(enabled, spec)
     end
+  end
+
+  for _, spec in ipairs(ngpacks) do
+    all_specs[spec:src()] = spec
   end
 
   for _, spec in ipairs(enabled) do
@@ -409,5 +415,17 @@ local function list_enabled_pack()
 end
 
 M.list_enabled_pack = list_enabled_pack
+
+---@param src string src URL
+---@return boolean
+local function enabled(src)
+  local spec = all_specs[src]
+  if spec then
+    return spec:enable()
+  end
+  return false
+end
+
+M.enabled = enabled
 
 return M
