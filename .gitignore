@@ -1,6 +1,7 @@
-.agents
-.claude
-.serena
+/.agents
+/.claude
+/.codex
+/.serena
 /.mcp.json
 # APM dependencies
 apm_modules/
