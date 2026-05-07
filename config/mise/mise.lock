@@ -88,16 +88,20 @@ backend = "go:github.com/mattn/memo"
 version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
+[[tools."go:golang.org/dl/gotip"]]
+version = "latest"
+backend = "go:golang.org/dl/gotip"
+
 [[tools."npm:@google/gemini-cli"]]
-version = "0.39.1"
+version = "0.41.2"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.125.0"
+version = "0.128.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "2.2.0"
+version = "2.2.4"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
@@ -105,7 +109,7 @@ version = "0.4.7"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.9.2"
+version = "0.12.4"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]
