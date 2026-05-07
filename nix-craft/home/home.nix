@@ -2,7 +2,6 @@
 
 let
   run-in-tmux-popup = pkgs.callPackage ../pkgs/run-in-tmux-popup.nix { };
-  lsp-gw = pkgs.callPackage ../pkgs/lsp-gw.nix { };
   goimports = pkgs.runCommand "goimports" { } ''
     mkdir -p $out/bin
     ln -s ${pkgs.gotools}/bin/goimports $out/bin/goimports
@@ -186,6 +185,5 @@ in
 
     # Custom-built packages
     run-in-tmux-popup  # pinentry in tmux/zellij popup
-    lsp-gw             # Neovim LSP gateway CLI
   ];
 }
