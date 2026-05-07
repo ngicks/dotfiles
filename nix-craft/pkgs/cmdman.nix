@@ -5,16 +5,16 @@
 
 buildGoModule rec {
   pname = "cmdman";
-  version = "unstable-2026-05-07";
+  version = "0.0.1";
 
   src = fetchFromGitHub {
     owner = "ngicks";
     repo = "cmdman";
-    rev = "5138c0dba1c3e8743fc4f043c43ae539dfc013a6";
+    rev = "v${version}";
     hash = "sha256-Nw2lD/vmbhMlnl2SAoWHQQcj1x3s+7ZDmOFyxlsoqcQ=";
   };
 
-  vendorHash = lib.fakeHash;
+  vendorHash = "sha256-RdrU/GjFujEpGoE+ua3mJa5EcYGgF0TsGq0CLn8ovd0=";
   proxyVendor = true;
 
   subPackages = [
