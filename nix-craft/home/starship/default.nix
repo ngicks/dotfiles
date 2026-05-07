@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
-  # Hostname color script: computes color from hostname hash
-  hostnameColorScript = pkgs.writeShellScript "starship-hostname-color" ''
+  # Inner compute path: forks ~5 subprocesses, only run on cache miss.
+  hostnameComputeScript = pkgs.writeShellScript "starship-hostname-compute" ''
     hostname=$(uname -n)
     hash=$(echo -n "$hostname" | sha256sum | cut -c1-6)
 
@@ -24,6 +24,30 @@ let
     fi
 
     printf '\033[48;2;163;174;210m\033[38;2;%sm▒\033[48;2;%sm\033[38;2;%d;%d;%dm[ %s ]\033[48;2;118;159;240m\033[38;2;%sm\033[0m' "$bg" "$bg" "$r" "$g" "$b" "$hostname" "$bg"
+  '';
+
+  # Per-prompt entry point. Layered cache: env var -> file -> compute.
+  hostnameColorScript = pkgs.writeShellScript "starship-hostname-color" ''
+    if [ -n "''${_STARSHIP_HOSTNAME_CACHE:-}" ]; then
+      printf '%s' "$_STARSHIP_HOSTNAME_CACHE"
+      exit 0
+    fi
+
+    cache_dir="''${XDG_RUNTIME_DIR:-/tmp}/starship-cache-$(id -u)"
+    cache_file="$cache_dir/host-color"
+
+    if [ -r "$cache_file" ]; then
+      cat "$cache_file"
+      exit 0
+    fi
+
+    output=$(${hostnameComputeScript})
+
+    if mkdir -p "$cache_dir" 2>/dev/null; then
+      printf '%s' "$output" > "$cache_file" 2>/dev/null || true
+    fi
+
+    printf '%s' "$output"
   '';
 in {
   programs.starship = {
@@ -115,4 +139,10 @@ $character
       };
     };
   };
+
+  programs.zsh.initContent = lib.mkAfter ''
+    if [ -z "''${_STARSHIP_HOSTNAME_CACHE:-}" ]; then
+      export _STARSHIP_HOSTNAME_CACHE="$(${hostnameColorScript})"
+    fi
+  '';
 }
