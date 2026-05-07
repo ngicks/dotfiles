@@ -1,62 +1,12 @@
 { config, lib, pkgs, ... }:
-let
-  # Inner compute path: forks ~5 subprocesses, only run on cache miss.
-  hostnameComputeScript = pkgs.writeShellScript "starship-hostname-compute" ''
-    hostname=$(uname -n)
-    hash=$(echo -n "$hostname" | sha256sum | cut -c1-6)
-
-    if [ "''${#hostname}" -gt 18 ]; then
-        hostname="$(echo $hostname | cut -c1-15)..."
-    fi
-
-    r=$((16#''${hash:0:2}))
-    g=$((16#''${hash:2:2}))
-    b=$((16#''${hash:4:2}))
-
-    # W3C AERT brightness formula
-    brightness=$(( (r * 299 + g * 587 + b * 114) / 1000 ))
-
-    # Background based on hostname color brightness (inverted)
-    if [ $brightness -gt 128 ]; then
-      bg="30;28;60"      # dark background for bright hostname color
-    else
-      bg="192;192;192"   # light background for dark hostname color
-    fi
-
-    printf '\033[48;2;163;174;210m\033[38;2;%sm▒\033[48;2;%sm\033[38;2;%d;%d;%dm[ %s ]\033[48;2;118;159;240m\033[38;2;%sm\033[0m' "$bg" "$bg" "$r" "$g" "$b" "$hostname" "$bg"
-  '';
-
-  # Per-prompt entry point. Layered cache: env var -> file -> compute.
-  hostnameColorScript = pkgs.writeShellScript "starship-hostname-color" ''
-    if [ -n "''${_STARSHIP_HOSTNAME_CACHE:-}" ]; then
-      printf '%s' "$_STARSHIP_HOSTNAME_CACHE"
-      exit 0
-    fi
-
-    cache_dir="''${XDG_RUNTIME_DIR:-/tmp}/starship-cache-$(id -u)"
-    cache_file="$cache_dir/host-color"
-
-    if [ -r "$cache_file" ]; then
-      cat "$cache_file"
-      exit 0
-    fi
-
-    output=$(${hostnameComputeScript})
-
-    if mkdir -p "$cache_dir" 2>/dev/null; then
-      printf '%s' "$output" > "$cache_file" 2>/dev/null || true
-    fi
-
-    printf '%s' "$output"
-  '';
-in {
+{
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
 
     settings = {
       format = ''
-$status[](fg:#d5dee3 bg:#a3aed2)$username''${custom.hostname}$directory[](fg:#769ff0 bg:#394260)$git_branch$git_status[](fg:#394260 bg:#212736)$nodejs$rust$golang$php[](fg:#212736 bg:#1d2230)$time[ ](fg:#1d2230)
+$status[](fg:#d5dee3 bg:#a3aed2)$username''${env_var.STARSHIP_HOSTNAME}$directory[](fg:#769ff0 bg:#394260)$git_branch$git_status[](fg:#394260 bg:#212736)$nodejs$rust$golang$php[](fg:#212736 bg:#1d2230)$time[ ](fg:#1d2230)
 $character
 '';
 
@@ -76,11 +26,11 @@ $character
         format = "[ $user]($style)";
       };
 
-      # Custom hostname: [ hostname ] with computed colors
-      custom.hostname = {
-        command = "${hostnameColorScript}";
-        when = true;
-        format = "[$output](bg:#a3aed2 fg:#090c0c)";
+      # Hostname color string is precomputed into $_STARSHIP_HOSTNAME_CACHE
+      # by .zshenv; env_var splices it in with no per-prompt subprocess.
+      env_var.STARSHIP_HOSTNAME = {
+        variable = "_STARSHIP_HOSTNAME_CACHE";
+        format = "[$env_value](bg:#a3aed2 fg:#090c0c)";
       };
 
       directory = {
@@ -140,9 +90,4 @@ $character
     };
   };
 
-  programs.zsh.initContent = lib.mkAfter ''
-    if [ -z "''${_STARSHIP_HOSTNAME_CACHE:-}" ]; then
-      export _STARSHIP_HOSTNAME_CACHE="$(${hostnameColorScript})"
-    fi
-  '';
 }
