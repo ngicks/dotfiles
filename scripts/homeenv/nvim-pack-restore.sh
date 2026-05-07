@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-
 dir=$(cd "$(dirname "$0")/../.." && pwd)
 
 XDG_CONFIG_HOME="$dir/config" \
