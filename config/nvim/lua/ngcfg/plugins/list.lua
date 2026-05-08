@@ -29,6 +29,14 @@ return {
     src = "https://github.com/nvchad/base46",
     phase = "core",
     version = "",
+    config = function()
+      local defaults = vim.g.base46_cache .. "defaults"
+      local statusline = vim.g.base46_cache .. "statusline"
+      if vim.fn.filereadable(defaults) == 1 and vim.fn.filereadable(statusline) == 1 then
+        return
+      end
+      require("base46").load_all_highlights()
+    end,
     pack_changed = function(_s, data)
       if data.kind ~= "delete" then
         -- basically "delete" is inpossible because I only manage by this table.

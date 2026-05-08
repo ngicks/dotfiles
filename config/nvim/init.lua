@@ -45,19 +45,6 @@ end
 
 require("ngpack").setup(require "ngcfg.plugins")
 
-local function ensure_base46_cache()
-  local defaults = vim.g.base46_cache .. "defaults"
-  local statusline = vim.g.base46_cache .. "statusline"
-  if vim.fn.filereadable(defaults) == 1 and vim.fn.filereadable(statusline) == 1 then
-    return
-  end
-
-  vim.cmd "packadd base46"
-  require("base46").load_all_highlights()
-end
-
-ensure_base46_cache()
-
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
