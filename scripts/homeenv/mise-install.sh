@@ -11,16 +11,16 @@ echo ""
 echo "mise install"
 echo ""
 
-$run_in_new_shell "$HOME.dotfiles/config/mise" mise install
+$run_in_new_shell "$HOME/.dotfiles/config/mise" mise install
 
 echo ""
 echo "mise install -f if missing"
 echo ""
 
-$run_in_new_shell "$HOME.dotfiles/config/mise" $mise_install_f
+$run_in_new_shell "$HOME/.dotfiles/config/mise" $mise_install_f
 
 echo ""
 echo "mise prune"
 echo ""
 
-$run_in_new_shell "$HOME.dotfiles/config/mise" mise prune -y
+$run_in_new_shell "$HOME/.dotfiles/config/mise" mise prune -y
