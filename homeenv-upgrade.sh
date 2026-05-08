@@ -25,7 +25,7 @@ pushd $dir
   echo ""
   echo "mise up"
   echo ""
-  zsh -lc "./scripts/homeenv/mise-up.sh"
+  ./scripts/homeenv/mise-up.sh
 
   # in case mise up creates new changes.
   ./scripts/homeenv/nix-run-home-manager.sh
