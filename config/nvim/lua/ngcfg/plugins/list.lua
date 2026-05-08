@@ -144,6 +144,7 @@ return {
   },
   {
     src = "https://github.com/igorlfs/nvim-dap-view",
+    version = "",
     dep = {
       "https://github.com/mfussenegger/nvim-dap",
     },
