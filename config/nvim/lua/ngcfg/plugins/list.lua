@@ -182,6 +182,7 @@ return {
   -- telescope
   {
     src = "https://github.com/nvim-telescope/telescope.nvim",
+    version = "",
   },
   {
     src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
@@ -189,6 +190,7 @@ return {
   },
   {
     src = "https://github.com/nvim-telescope/telescope-live-grep-args.nvim",
+    version = "",
     dep = { "https://github.com/nvim-telescope/telescope.nvim" },
   },
   {
