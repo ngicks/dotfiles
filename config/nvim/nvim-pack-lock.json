@@ -222,9 +222,8 @@
       "version": ">=0.0.0"
     },
     "trouble.nvim": {
-      "rev": "748ca2789044607f19786b1d837044544c55e80a",
-      "src": "https://github.com/folke/trouble.nvim",
-      "version": ">=0.0.0"
+      "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",
+      "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
       "rev": "cb75908a86720172594b30de147272c1b3a7f452",

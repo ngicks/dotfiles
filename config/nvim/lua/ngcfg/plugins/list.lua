@@ -178,6 +178,7 @@ return {
   },
   { -- display lsp symbols, diagnoses
     src = "https://github.com/folke/trouble.nvim",
+    version = "",
   },
   -- telescope
   {
