@@ -1,10 +1,10 @@
 /.agents
 /.claude
 /.codex
-/.serena
-/.mcp.json
 # APM dependencies
 apm_modules/
+/.mcp.json
+AGENTS.md
 
 /config/nvim/playground
 

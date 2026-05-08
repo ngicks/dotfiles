@@ -5,6 +5,7 @@ author: ngicks
 targets:
 dependencies:
   apm:
+    - github.com/moonbitlang/skills
     - github.com/ngicks/agents-package/hooks/golangci-lint-fmt-after-edit
     - github.com/ngicks/agents-package/hooks/golangci-lint-run-after-edit
     - github.com/ngicks/agents-package/instructions/base-env.instructions.md
@@ -13,6 +14,5 @@ dependencies:
     - github.com/ngicks/agents-package/instructions/moonbit/moonbit-basics.instructions.md
     - github.com/ngicks/agents-package/skills/go-edit-cobra
     - github.com/ngicks/agents-package/skills/go-check-outdated-patterns
-    - github.com/moonbitlang/skills
   mcp: []
 scripts: {}
