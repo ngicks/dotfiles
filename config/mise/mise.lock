@@ -77,7 +77,7 @@ version = "1.64.8"
 backend = "go:github.com/golangci/golangci-lint/cmd/golangci-lint"
 
 [[tools."go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"]]
-version = "2.11.4"
+version = "2.12.2"
 backend = "go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
 
 [[tools."go:github.com/mattn/memo"]]
@@ -89,7 +89,7 @@ version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
 [[tools."go:golang.org/dl/gotip"]]
-version = "latest"
+version = "0.0.0-20260507145323-1987c81edec5"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@google/gemini-cli"]]
@@ -97,11 +97,11 @@ version = "0.41.2"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.129.0"
+version = "0.130.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "2.2.4"
+version = "2.2.5"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
@@ -109,7 +109,7 @@ version = "0.4.7"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.12.4"
+version = "0.13.0"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]
