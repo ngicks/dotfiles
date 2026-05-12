@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-05-08T17:54:14.589102+00:00'
+generated_at: '2026-05-08T18:04:23.875622+00:00'
 apm_version: 0.12.4
 dependencies:
 - repo_url: moonbitlang/skills
@@ -45,6 +45,7 @@ dependencies:
   resolved_commit: c6d54eb752d5e4ed6676de1137ef7d45e23456ad
   virtual_path: instructions/base-env.instructions.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .claude/rules/base-env.md
   deployed_file_hashes:
@@ -55,6 +56,7 @@ dependencies:
   resolved_commit: c6d54eb752d5e4ed6676de1137ef7d45e23456ad
   virtual_path: instructions/go/go-basics.instructions.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .claude/rules/go-basics.md
   deployed_file_hashes:
@@ -65,6 +67,7 @@ dependencies:
   resolved_commit: c6d54eb752d5e4ed6676de1137ef7d45e23456ad
   virtual_path: instructions/go/go-design-preference.instructions.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .claude/rules/go-design-preference.md
   deployed_file_hashes:
@@ -75,6 +78,7 @@ dependencies:
   resolved_commit: c6d54eb752d5e4ed6676de1137ef7d45e23456ad
   virtual_path: instructions/moonbit/moonbit-basics.instructions.md
   is_virtual: true
+  package_type: apm_package
   deployed_files:
   - .claude/rules/moonbit-basics.md
   deployed_file_hashes:
@@ -100,6 +104,16 @@ dependencies:
   - .agents/skills/go-edit-cobra
   - .claude/skills/go-edit-cobra
   content_hash: sha256:b8a896506b43fc07517f4d8706d059964ffe56a61b140e1aeb0263ec867a17c7
+- repo_url: ngicks/agents-package
+  host: github.com
+  resolved_commit: c6d54eb752d5e4ed6676de1137ef7d45e23456ad
+  virtual_path: skills/go-review-checklist
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/go-review-checklist
+  - .claude/skills/go-review-checklist
+  content_hash: sha256:803eafe81d54641d0d543e1fdd9b84be15804dc7045eed7f36764d142c7ad641
 local_deployed_files:
 - .claude/rules/local.md
 local_deployed_file_hashes:

@@ -14,5 +14,6 @@ dependencies:
     - github.com/ngicks/agents-package/instructions/moonbit/moonbit-basics.instructions.md
     - github.com/ngicks/agents-package/skills/go-edit-cobra
     - github.com/ngicks/agents-package/skills/go-check-outdated-patterns
+    - github.com/ngicks/agents-package/skills/go-review-checklist
   mcp: []
 scripts: {}
