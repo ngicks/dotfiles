@@ -11,7 +11,6 @@ _cid=$(cmdman run --rm -t -C "$1" -- zsh)
 # let hook refresh
 cmdman send-keys "$_cid" "C-c"
 cmdman send-keys "$_cid" "C-c"
-cmdman send-keys "$_cid" "C-c"
 cmdman send-keys "$_cid" "${*:2} && exit 0 || exit \$?"
 cmdman send-keys "$_cid" "Enter"
 if [[ -t 0 ]]; then
