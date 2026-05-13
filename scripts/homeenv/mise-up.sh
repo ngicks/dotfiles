@@ -37,9 +37,6 @@ echo ""
 echo "mise lock"
 echo ""
 
-$run_in_container \
-  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
-  --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
-  --workdir /mise" \
-  "-lc" "mise lock"
+$run_in_new_shell "$HOME/.dotfiles/config/mise" \
+  mise lock $(mise ls --json | jq -r 'to_entries | map("\(.key)@\(.value[0].requested_version)") | join(" ")')
 
