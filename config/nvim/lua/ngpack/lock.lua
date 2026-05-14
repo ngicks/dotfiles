@@ -94,6 +94,28 @@ local function add_desync(items, item)
   items[#items + 1] = item
 end
 
+-- removes pack local data dir.
+---@param name string pack name
+---@return boolean ok
+local function delete_pack_data(name)
+  local packs = vim.pack.get({ name }, { info = false })
+
+  if #packs == 0 or packs[1].path == nil then
+    vim.notify(("name not found by vim.pack.get: %s"):format(name), vim.log.levels.ERROR)
+    return false
+  end
+
+  local target_path = packs[1].path
+
+  local ok = vim.fn.delete(target_path, "rf") == 0
+  if ok ~= 0 then
+    vim.notify(("removal failed: %s for pack name %q"):format(target_path, name), vim.log.levels.ERROR)
+    return false
+  end
+
+  return true
+end
+
 ---Collect only revision drift between lockfile state and installed plugin repos.
 ---@return NgPackLockDesync[]|nil
 ---@return string? err
@@ -387,9 +409,11 @@ function M.prune_desync(opts)
   local removed = {}
   for _, item in ipairs(items) do
     if selected[item.name] then
-      vim.pack.del({ item.name }, { force = true })
-      removed[#removed + 1] = item.name
+      local ok = delete_pack_data(item.name)
       selected[item.name] = nil
+      if ok then
+        removed[#removed + 1] = item.name
+      end
     end
   end
 
