@@ -1,17 +1,17 @@
 { lib
-, buildGoModule
+, buildGo126Module
 , fetchFromGitHub
 }:
 
-buildGoModule rec {
+buildGo126Module rec {
   pname = "cmdman";
-  version = "0.0.1";
+  version = "0.0.2";
 
   src = fetchFromGitHub {
     owner = "ngicks";
     repo = "cmdman";
     rev = "v${version}";
-    hash = "sha256-Nw2lD/vmbhMlnl2SAoWHQQcj1x3s+7ZDmOFyxlsoqcQ=";
+    hash = "sha256-wHJHvYs5aHxQMxH7oHzno6hFg4jd9BhclRn2pyyoa64=";
   };
 
   vendorHash = "sha256-RdrU/GjFujEpGoE+ua3mJa5EcYGgF0TsGq0CLn8ovd0=";
