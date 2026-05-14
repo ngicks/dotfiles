@@ -427,11 +427,7 @@ function M.prune_desync(opts)
 
   table.sort(removed)
   vim.notify(
-    ("removed %d desynced plugin director%s: %s"):format(
-      #removed,
-      #removed == 1 and "y" or "ies",
-      table.concat(removed, ", ")
-    ),
+    ("removed %d desynced plugin directories: %s"):format(#removed, table.concat(removed, ", ")),
     vim.log.levels.WARN
   )
   return removed
