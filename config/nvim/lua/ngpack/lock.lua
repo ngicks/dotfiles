@@ -88,12 +88,6 @@ local function write_lockfile(lock)
   assert(vim.uv.fs_close(fd))
 end
 
----@param items NgPackLockDesync[]
----@param item NgPackLockDesync
-local function add_desync(items, item)
-  items[#items + 1] = item
-end
-
 -- removes pack local data dir.
 ---@param name string pack name
 ---@return boolean ok
@@ -150,7 +144,7 @@ local function collect_desync()
           item.expected = lock_data.rev
           item.actual = head
           item.message = ("rev mismatch: lock=%s disk=%s"):format(lock_data.rev, head)
-          add_desync(items, item)
+          items[#items + 1] = item
         end
       end
     end
