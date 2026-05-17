@@ -5,13 +5,13 @@
 
 buildGo126Module rec {
   pname = "cmdman";
-  version = "0.0.2";
+  version = "0.0.3";
 
   src = fetchFromGitHub {
     owner = "ngicks";
     repo = "cmdman";
     rev = "v${version}";
-    hash = "sha256-wHJHvYs5aHxQMxH7oHzno6hFg4jd9BhclRn2pyyoa64=";
+    hash = "sha256-01gm/pbKhIISeX4bB8LoEXgZAyZNFNy/00h4yowdeV0=";
   };
 
   vendorHash = "sha256-RdrU/GjFujEpGoE+ua3mJa5EcYGgF0TsGq0CLn8ovd0=";
