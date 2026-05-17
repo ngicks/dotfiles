@@ -5,13 +5,13 @@
 
 buildGo126Module rec {
   pname = "crabswarm";
-  version = "0.0.1";
+  version = "0.0.2";
 
   src = fetchFromGitHub {
     owner = "ngicks";
     repo = "crabswarm";
     rev = "v${version}";
-    hash = "sha256-2zD+5QEUNEHlm7ukH3hgJFKgc3sQiqg4LXDAceBH864=";
+    hash = "sha256-GZPjt6XZ6GErimvn6zGn7klXFGubZFip14M3pQwU3WA=";
   };
 
   vendorHash = "sha256-C8kLcEVSeVMLXKCIvYOhOTrmixjPBpw3jhzdebAW69k=";
