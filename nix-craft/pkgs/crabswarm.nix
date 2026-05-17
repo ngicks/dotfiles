@@ -10,8 +10,8 @@ buildGo126Module rec {
   src = fetchFromGitHub {
     owner = "ngicks";
     repo = "crabswarm";
-    rev = "2a8232df5368eff910c4a0ca767ab2d416b08e35";
-    hash = "sha256-y+A+3PGxV4VU4W8pvpZ/sPAFZAtqg3B9HLwrvkjwt+Y=";
+    rev = "v${version}";
+    hash = "sha256-2zD+5QEUNEHlm7ukH3hgJFKgc3sQiqg4LXDAceBH864=";
   };
 
   vendorHash = "sha256-C8kLcEVSeVMLXKCIvYOhOTrmixjPBpw3jhzdebAW69k=";
