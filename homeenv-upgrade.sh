@@ -19,9 +19,11 @@ pushd $dir
   pushd ./nix-craft/
     nix flake update
   popd
-  # commit changes if any
-  # call manually home-siwtch
+  echo ""
+  echo "nix switching"
+  echo ""
   ./scripts/homeenv/nix-run-home-manager.sh
+
   echo ""
   echo "mise up"
   echo ""
