@@ -3,6 +3,7 @@
 let
   run-in-tmux-popup = pkgs.callPackage ../pkgs/run-in-tmux-popup.nix { };
   cmdman = pkgs.callPackage ../pkgs/cmdman.nix { };
+  crabswarm = pkgs.callPackage ../pkgs/crabswarm.nix { };
   goimports = pkgs.runCommand "goimports" { } ''
     mkdir -p $out/bin
     ln -s ${pkgs.gotools}/bin/goimports $out/bin/goimports
@@ -187,5 +188,6 @@ in
     # Custom-built packages
     run-in-tmux-popup  # pinentry in tmux/zellij popup
     cmdman             # background command daemonizer
+    crabswarm          # multi-agent coding orchestrator
   ];
 }
