@@ -10,10 +10,6 @@ pushd $dir
   echo ""
   ./scripts/homeenv/system-package-manager-update.sh
   echo ""
-  echo "nvim plugin update"
-  echo ""
-  ./scripts/homeenv/nvim-pack-update.sh
-  echo ""
   echo "nix flake update"
   echo ""
   pushd ./nix-craft/
@@ -24,6 +20,12 @@ pushd $dir
   echo ""
   ./scripts/homeenv/nix-run-home-manager.sh
 
+ 
+  echo ""
+  echo "rustup install stable"
+  echo ""
+  rustup install stable
+
   echo ""
   echo "mise up"
   echo ""
@@ -31,4 +33,9 @@ pushd $dir
 
   # in case mise up creates new changes.
   ./scripts/homeenv/nix-run-home-manager.sh
+
+  echo ""
+  echo "nvim plugin update"
+  echo ""
+  ./scripts/homeenv/nvim-pack-update.sh
 popd

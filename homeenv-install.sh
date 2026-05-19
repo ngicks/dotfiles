@@ -13,12 +13,19 @@ pushd $dir
   echo "switch home manager"
   echo ""
   ./scripts/homeenv/nix-run-home-manager.sh
+
   echo ""
-  echo "nvim plugin restore from lockfile"
+  echo "rustup install stable"
   echo ""
-  ./scripts/homeenv/nvim-pack-restore.sh
+  rustup install stable
+
   echo ""
   echo "mise install"
   echo ""
   ./scripts/homeenv/mise-install.sh
+
+  echo ""
+  echo "nvim plugin restore from lockfile"
+  echo ""
+  ./scripts/homeenv/nvim-pack-restore.sh
 popd
