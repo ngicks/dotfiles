@@ -20,12 +20,6 @@ pushd $dir
   echo ""
   ./scripts/homeenv/nix-run-home-manager.sh
 
- 
-  echo ""
-  echo "rustup install stable"
-  echo ""
-  rustup install stable
-
   echo ""
   echo "mise up"
   echo ""
