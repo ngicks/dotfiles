@@ -121,6 +121,7 @@ in
     marksman
     taplo
     pyright
+    (lib.hiPrio rust-analyzer)    # wins over rustup's proxy binary
     typescript-language-server
     typescript                    # peer dep for ts_ls
 
