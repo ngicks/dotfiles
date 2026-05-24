@@ -8,6 +8,7 @@ local nonCustomizedServers = {
   "taplo", -- toml
   "pyright",
   "clangd",
+  "rust_analyzer",
   "moonbit-lsp",
 }
 
