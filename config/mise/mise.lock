@@ -88,6 +88,14 @@ backend = "go:github.com/mattn/memo"
 version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
+[[tools."go:github.com/ngicks/cmdman/cmd/cmdman"]]
+version = "0.0.5"
+backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
+
+[[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
+version = "0.0.3"
+backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
+
 [[tools."go:golang.org/dl/gotip"]]
 version = "0.0.0-20260507145323-1987c81edec5"
 backend = "go:golang.org/dl/gotip"
@@ -101,7 +109,7 @@ version = "0.133.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "2.3.0"
+version = "3.0.0"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
@@ -109,7 +117,7 @@ version = "0.4.8"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.14.1"
+version = "0.14.2"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]

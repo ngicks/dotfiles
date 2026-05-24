@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "1c8ab17ce3b4a2ff8fe88dca966d557d3e1b37bc",
+      "rev": "e4871fdf697057e036690d6ad9ebba334711cfb6",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -58,7 +58,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "6fefe025461b168eac2546ccba3403b70eb5da16",
+      "rev": "a24deef77bc1b9f1b5293b951288662dc2f7704a",
       "src": "https://github.com/junegunn/fzf",
       "version": ">=0.0.0"
     },
