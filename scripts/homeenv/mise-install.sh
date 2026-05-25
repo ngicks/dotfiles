@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-run_in_new_shell=$(cd $(dirname $0) && pwd -P)/run-in-new-interactive-shell.sh
 mise_install_f=$(cd $(dirname $0) && pwd -P)/mise-install-f-if-missing.sh
 
 echo ""
