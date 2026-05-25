@@ -30,7 +30,7 @@ while IFS=$'\t' read -r tool install_path; do
     echo "ok: $tool"
   else
     echo "reinstalling: $tool"
-    mise install -f "$tool" || true
+    mise install --locked -f "$tool" || true
   fi
 done < <(
   mise ls -J | jq -r '
