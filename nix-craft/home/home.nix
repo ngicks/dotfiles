@@ -29,6 +29,13 @@ in
     executable = true;
   };
 
+  # golangci-lint v2 must outrank mise's v1/v2 and any stale $GOBIN copy on PATH.
+  # Drop the nix binary into the existing ~/.local/bin/override dir, which
+  # env/99_override.sh already prepends to PATH, so the bare `golangci-lint`
+  # resolves here. (mise keeps its v1/v2 go-backend entries for nvim's detection.)
+  home.file.".local/bin/override/golangci-lint".source =
+    "${pkgs.golangci-lint}/bin/golangci-lint";
+
   xdg.configFile."nix" = {
     source = ../../config/nix;
     recursive = true;
@@ -140,6 +147,7 @@ in
     goimports # extracted from gotools. See above.
     gofumpt
     go-tools       # staticcheck
+    golangci-lint  # v2; prioritized over mise/$GOBIN via ~/.local/bin/override (see env/99_override.sh)
     delve
     gotests
     gomodifytags
