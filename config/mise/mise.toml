@@ -37,17 +37,17 @@ binstall = true
 "cargo:tree-sitter-cli" = "latest"
 
 # Go Development
-"go:golang.org/dl/gotip" = "latest"
-"go:github.com/nametake/golangci-lint-langserver" = "latest"
-"go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint" = "latest"
-"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "latest"
+"go:golang.org/dl/gotip" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/nametake/golangci-lint-langserver" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/golangci/golangci-lint/v2/cmd/golangci-lint" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/golangci/golangci-lint/cmd/golangci-lint" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
-"go:github.com/chrishrb/go-grip" = "latest"
-"go:github.com/mattn/memo" = "latest"
+"go:github.com/chrishrb/go-grip" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/mattn/memo" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 # Own rapidly-evolving prototypes
-"go:github.com/ngicks/crabswarm/cmd/crabswarm" = "latest"
-"go:github.com/ngicks/cmdman/cmd/cmdman" = "latest"
+"go:github.com/ngicks/crabswarm/cmd/crabswarm" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/ngicks/cmdman/cmd/cmdman" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 [shell_alias]
 golangci-lint-v1 = "mise exec 'go:github.com/golangci/golangci-lint/cmd/golangci-lint' -- golangci-lint "
