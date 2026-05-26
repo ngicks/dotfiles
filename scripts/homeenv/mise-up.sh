@@ -3,7 +3,6 @@
 set -euo pipefail
 
 run_in_container=$(cd $(dirname $0)/../../ && pwd -P)/devenv/scripts/run-devenv.sh
-run_in_new_shell=$(cd $(dirname $0) && pwd -P)/run-in-new-interactive-shell.sh
 
 mise_install_f=$(cd $(dirname $0) && pwd -P)/mise-install-f-if-missing.sh
 
@@ -21,9 +20,12 @@ echo ""
 echo "mise install -f if missing"
 echo ""
 
-IN_CONTAINER=1 \
-  MISE_GLOBAL_CONFIG_FILE=$HOME/.dotfiles/config/mise/mise.toml \
-  $run_in_new_shell "$HOME/.dotfiles/config/mise" $mise_install_f
+$run_in_container \
+  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
+  --mount type=bind,src=$mise_install_f,dst=/mise-install-f-if-missing.sh,ro \
+  --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
+  --workdir /mise" \
+  "-lc" "/mise-install-f-if-missing.sh"
 
 echo ""
 echo "mise prune"
@@ -39,6 +41,6 @@ echo ""
 echo "mise lock"
 echo ""
 
-$run_in_new_shell "$HOME/.dotfiles/config/mise" \
+pushd "$HOME/.dotfiles/config/mise"
   mise lock $(mise ls --json | jq -r 'to_entries | map("\(.key)@\(.value[0].requested_version)") | join(" ")')
-
+popd
