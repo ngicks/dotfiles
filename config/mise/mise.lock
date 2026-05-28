@@ -93,7 +93,7 @@ version = "0.0.6"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.3"
+version = "0.0.4"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:golang.org/dl/gotip"]]
@@ -101,11 +101,11 @@ version = "0.0.0-20260507145323-1987c81edec5"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.43.0"
+version = "0.44.0"
 backend = "npm:@google/gemini-cli"
 
 [[tools."npm:@openai/codex"]]
-version = "0.133.0"
+version = "0.134.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -117,7 +117,7 @@ version = "0.4.8"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.14.2"
+version = "0.15.0"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]

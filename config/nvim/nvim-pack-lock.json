@@ -58,7 +58,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "a24deef77bc1b9f1b5293b951288662dc2f7704a",
+      "rev": "ce4bef75954bebd87e0886435bcf8c6904328ab0",
       "src": "https://github.com/junegunn/fzf",
       "version": ">=0.0.0"
     },
@@ -128,7 +128,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap-view": {
-      "rev": "2fe10567913fca43f352791ac83d19b9fdeacc95",
+      "rev": "a03a085b020197f441f6c63383f0cb7321729f6e",
       "src": "https://github.com/igorlfs/nvim-dap-view"
     },
     "nvim-dap-virtual-text": {
