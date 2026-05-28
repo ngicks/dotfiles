@@ -32,4 +32,7 @@ pushd $dir
   echo "nvim plugin update"
   echo ""
   ./scripts/homeenv/nvim-pack-update.sh
+
+  # switch for updated nvim config
+  ./scripts/homeenv/nix-run-home-manager.sh
 popd
