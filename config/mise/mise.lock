@@ -100,10 +100,6 @@ backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 version = "0.0.0-20260507145323-1987c81edec5"
 backend = "go:golang.org/dl/gotip"
 
-[[tools."npm:@google/gemini-cli"]]
-version = "0.44.0"
-backend = "npm:@google/gemini-cli"
-
 [[tools."npm:@openai/codex"]]
 version = "0.134.0"
 backend = "npm:@openai/codex"

@@ -16,7 +16,6 @@ binstall = true
 
 [tools]
 # LLM
-"npm:@google/gemini-cli" = "latest"
 "npm:@openai/codex" = "latest"
 
 # mcp / tools for llm
