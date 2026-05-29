@@ -35,4 +35,7 @@ pushd $dir
 
   # switch for updated nvim config
   ./scripts/homeenv/nix-run-home-manager.sh
+
+  # sometimes missing some clis?
+  ./scripts/homeenv/mise-install-f-if-missing.sh
 popd
