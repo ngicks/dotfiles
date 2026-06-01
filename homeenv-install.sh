@@ -20,6 +20,11 @@ pushd $dir
   ./scripts/homeenv/mise-install.sh
 
   echo ""
+  echo "generate shell completions"
+  echo ""
+  ./scripts/homeenv/generate-completions.sh
+
+  echo ""
   echo "nvim plugin restore from lockfile"
   echo ""
   ./scripts/homeenv/nvim-pack-restore.sh

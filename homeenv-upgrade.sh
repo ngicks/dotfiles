@@ -38,4 +38,9 @@ pushd $dir
 
   # sometimes missing some clis?
   ./scripts/homeenv/mise-install-f-if-missing.sh
+
+  echo ""
+  echo "generate shell completions"
+  echo ""
+  ./scripts/homeenv/generate-completions.sh
 popd

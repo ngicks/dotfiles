@@ -1,6 +1,11 @@
 { ... }:
 let
   compinitSnippet = ''
+    # Lazily-autoloaded CLI completions generated at install/upgrade time by
+    # scripts/homeenv/generate-completions.sh. Must be prepended to fpath
+    # *before* compinit so the _<tool> files get picked up.
+    fpath=("''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions" $fpath)
+
     autoload -U compinit
     if [[ -n "''${ZDOTDIR:-}" ]]; then
       compinit -C -d "''${ZDOTDIR}/.zcompdump"
