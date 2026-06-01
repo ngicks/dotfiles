@@ -1,24 +1,28 @@
 { ... }:
 let
   compinitSnippet = ''
-    # Lazily-autoloaded CLI completions generated at install/upgrade time by
-    # scripts/homeenv/generate-completions.sh. Must be prepended to fpath
-    # *before* compinit so the _<tool> files get picked up.
+    # CLI completions are generated at install/upgrade time by
+    # scripts/homeenv/generate-completions.sh into this dir; it must be on fpath
+    # *before* compinit so the _<tool> files can be autoloaded.
     local _comp_dir="''${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
     fpath=("$_comp_dir" $fpath)
 
     autoload -Uz compinit
     local _zcompdump="''${ZDOTDIR:-$HOME}/.zcompdump"
-    # `compinit -C` trusts the cached .zcompdump and never rescans fpath, so a
-    # freshly generated _<tool> file stays invisible until the dump is rebuilt.
-    # Rebuild fully when the dump is missing or older than the newest completion
-    # file (zsh `om[1]` = most-recently-modified); else take the fast cached path.
-    local _newest_comp=( "$_comp_dir"/_*(Nom[1]) )
-    if [[ ! -f "$_zcompdump" || ( -n "$_newest_comp" && "$_newest_comp" -nt "$_zcompdump" ) ]]; then
-      compinit -d "$_zcompdump"
-    else
-      compinit -C -d "$_zcompdump"
-    fi
+    # Load the cached dump fast. `compinit -C` never rescans fpath, so a dump
+    # written before these files existed -- or by a shell that lacked _comp_dir
+    # on fpath -- silently lacks them and is trusted forever. Guard against that:
+    # if any generated _<tool> failed to register, rebuild the dump once. Steady
+    # state stays on the fast path; a stale/poisoned dump (or a newly generated
+    # completion) self-heals on the next shell.
+    compinit -C -d "$_zcompdump"
+    local _cf
+    for _cf in "$_comp_dir"/_*(N:t); do
+      if (( ! $+_comps[''${_cf#_}] )); then
+        compinit -d "$_zcompdump"
+        break
+      fi
+    done
   '';
 
   envLoading = ''
