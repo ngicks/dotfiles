@@ -1,0 +1,66 @@
+name: devenv
+commands:
+  nvim:
+    args: 
+      - nvim
+    tty: true
+  shell:
+    args: 
+      - zsh
+    tty: true
+  claude:
+    args:  
+      - $HOME/.dotfiles/devenv_run.sh 
+      - ""
+      - -lc
+      - claude
+    tty: true
+  codex:
+    args: 
+      - $HOME/.dotfiles/devenv_run.sh
+      - ""
+      - -lc
+      - codex
+    tty: true
+mux:
+  layouts:
+    - name: default
+      root:
+        dir: h
+        splits: [50%, 50%]
+        panes:
+          - dir: v
+            splits: [1, 20%]
+            panes:
+              - nvim
+              - shell
+          - dir: v
+            splits: [50%, 50%]
+            panes:
+              - command: claude
+                focus: true
+              - codex
+    - name: claude-focused
+      root:
+        dir: h
+        splits: [50%, 50%]
+        panes:
+          - dir: v
+            splits: [1, 20%]
+            panes:
+              - nvim
+              - shell
+          - command: claude
+            focus: true
+    - name: codex-focused
+      root:
+        dir: h
+        splits: [50%, 50%]
+        panes:
+          - dir: v
+            splits: [1, 20%]
+            panes:
+              - nvim
+              - shell
+          - command: codex
+            focus: true

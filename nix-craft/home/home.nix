@@ -43,6 +43,7 @@ in
 
 
   imports = [
+    ./cmdman
     ./fzf
     ./lazygit
     ./mise
