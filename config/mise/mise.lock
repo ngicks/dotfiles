@@ -89,7 +89,7 @@ version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
 [[tools."go:github.com/ngicks/cmdman/cmd/cmdman"]]
-version = "0.0.9"
+version = "0.0.10"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
@@ -97,7 +97,7 @@ version = "0.0.5"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:golang.org/dl/gotip"]]
-version = "0.0.0-20260507145323-1987c81edec5"
+version = "0.0.0-20260602183950-e6b0832d5570"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@openai/codex"]]

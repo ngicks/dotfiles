@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "1ff9593c4286b78bc42fffbb7b7220173904d963",
+      "rev": "3d948ae75e2dac5b7590cfdf91dd9de1b8098f2c",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -128,7 +128,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap-view": {
-      "rev": "a03a085b020197f441f6c63383f0cb7321729f6e",
+      "rev": "3f328fc8d59835b09b65f85cd62cb255bf93dce5",
       "src": "https://github.com/igorlfs/nvim-dap-view"
     },
     "nvim-dap-virtual-text": {
