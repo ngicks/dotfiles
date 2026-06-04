@@ -1,5 +1,6 @@
-if [[ -n "${HTTP_PROXY:-}${HTTPS_PROXY:-}" && -n "${XDG_RUNTIME_DIR:-}" ]]; then
-  __proxy_check_flag="${XDG_RUNTIME_DIR}/proxy_check_done"
+if [[ -n "${HTTP_PROXY:-}${HTTPS_PROXY:-}${http_proxy:-}${https_proxy:-}" ]]; then
+  __proxy_check_dir="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
+  __proxy_check_flag="${__proxy_check_dir}/proxy_check_done"
   if [[ -f "$__proxy_check_flag" ]]; then
     read __proxy_check_result < "$__proxy_check_flag"
   else
@@ -13,5 +14,5 @@ if [[ -n "${HTTP_PROXY:-}${HTTPS_PROXY:-}" && -n "${XDG_RUNTIME_DIR:-}" ]]; then
     unset __proxy_check_url
   fi
   [[ "$__proxy_check_result" == "0" ]] && no_proxy
-  unset __proxy_check_flag __proxy_check_result
+  unset __proxy_check_dir __proxy_check_flag __proxy_check_result
 fi
