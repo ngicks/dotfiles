@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -uo pipefail
 
 run_in_container=$(cd $(dirname $0)/../../ && pwd -P)/devenv/scripts/run-devenv.sh
 

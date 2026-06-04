@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -uo pipefail
 
 mise_install_f=$(cd $(dirname $0) && pwd -P)/mise-install-f-if-missing.sh
 
