@@ -6,7 +6,7 @@ commands:
     tty: true
   shell:
     args: 
-      - zsh
+      - $HOME/.nix-profile/bin/zsh
     tty: true
   claude:
     args:  
