@@ -96,6 +96,9 @@ podman container run -it --rm --init \
   \
   --mount type=bind,src=${XDG_CONFIG_HOME:-$HOME/.config}/env,dst=/root/.config/env,ro\
   \
+  --env XDG_RUNTIME_DIR=/run/user/1000/\
+  --mount type=tmpfs,dst=/run/user/1000/,tmpfs-size=10m\
+  \
   --mount type=bind,src=${NVIM_CONFIG_DIR},dst=/root/.config/nvim,ro\
   --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim,ro\
   --mount type=bind,src=${NVIM_STD_DATA},dst=${NVIM_STD_DATA},ro\
