@@ -47,6 +47,7 @@ binstall = true
 # Own rapidly-evolving prototypes
 "go:github.com/ngicks/crabswarm/cmd/crabswarm" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/cmdman/cmd/cmdman" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 [shell_alias]
 golangci-lint-v1 = "mise exec 'go:github.com/golangci/golangci-lint/cmd/golangci-lint' -- golangci-lint "
