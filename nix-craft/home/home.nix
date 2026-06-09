@@ -22,6 +22,11 @@ in
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/.config/mise/mise.toml:$HOME/.dotfiles/config/mise/mise.toml";
       LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
       LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+
+      # Point Playwright at the nix-provided browsers (read-only nix store) and
+      # skip the host-requirement check, which fails on non-NixOS/WSL.
+      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+      PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 
   home.file.".local/bin/pinentry.sh" = {
@@ -64,6 +69,7 @@ in
   home.packages = with pkgs; [
     # core runtimes
     nodejs
+    pnpm           # JS package manager (frontend dep management)
     deno
     bun
     (python3.withPackages (ps: [ ps.setuptools ]))
@@ -139,6 +145,12 @@ in
 
     # DAP
     vscode-js-debug               # js-debug binary for Node.js debugging
+
+    # Frontend / Browser testing
+    # Playwright browsers (chromium/firefox/webkit) for the playwright npm pkg
+    # managed via pnpm. Driver pinned at v${pkgs.playwright-driver.version}; keep the project's
+    # `playwright` dep on the same version or browsers won't be found.
+    playwright-driver.browsers
 
     # Rust Tools
     cargo-binstall # Prebuilt Rust binary installer (used by mise cargo backend)
