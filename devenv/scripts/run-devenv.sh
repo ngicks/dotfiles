@@ -62,6 +62,28 @@ UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 NPM_CONFIG_USERCONFIG=${XDG_CONFIG_HOME:-$HOME/.config}/npm/npmrc
 NPM_CONFIG_CACHE=${XDG_CACHE_HOME:-$HOME/.cache}/npm
 
+# The whole gitrepo tree is mounted into the container at its host path so that
+# the pnpm content-addressable store (kept under __global_storage) and every
+# project living under gitrepo share a single mount. pnpm hardlinks packages
+# from the store into node_modules, and hardlinks only work within one
+# filesystem -- one bind mount of gitrepo keeps the store and the projects on
+# the same mount so hardlinking (rather than copying) works.
+GITREPO_ROOT=${GITREPO_ROOT:-$HOME/gitrepo}
+PNPM_CONFIG_DIR=${XDG_CONFIG_HOME:-$HOME/.config}/pnpm
+
+# Resolve the shared store from the host's pnpm (its store-dir is configured in
+# the loginscript env). `pnpm store path` prints the versioned dir
+# (.../store/v11); the store-dir handed to the container is its parent so the
+# container's own pnpm appends its store-layout version. Fall back to the
+# well-known path when pnpm is not on PATH (e.g. during `mise up`).
+if pnpm_store_path=$(pnpm store path 2>/dev/null) && [ -n "${pnpm_store_path}" ]; then
+  PNPM_STORE_DIR=${pnpm_store_path%/*}
+else
+  PNPM_STORE_DIR=${GITREPO_ROOT}/__global_storage/pnpm/store
+fi
+
+mkdir -p "${GITREPO_ROOT}" "${PNPM_STORE_DIR}" "${PNPM_CONFIG_DIR}"
+
 timezone_opts=""
 if [ -n "${TZ:-}" ]; then
   timezone_opts="${timezone_opts} --env TZ=${TZ}"
@@ -99,6 +121,8 @@ podman container run -it --rm --init \
   --env XDG_RUNTIME_DIR=/run/user/1000/\
   --mount type=tmpfs,dst=/run/user/1000/,tmpfs-size=10m\
   \
+  --mount type=bind,src=${GITREPO_ROOT},dst=${GITREPO_ROOT}\
+  \
   --mount type=bind,src=${NVIM_CONFIG_DIR},dst=/root/.config/nvim,ro\
   --mount type=bind,src=${NVIM_STD_DATA},dst=/root/.local/share/nvim,ro\
   --mount type=bind,src=${NVIM_STD_DATA},dst=${NVIM_STD_DATA},ro\
@@ -123,6 +147,9 @@ podman container run -it --rm --init \
   --mount type=bind,src=${NPM_CONFIG_USERCONFIG},dst=${NPM_CONFIG_USERCONFIG}$(ro)\
   --env NPM_CONFIG_CACHE=${NPM_CONFIG_CACHE}\
   --mount type=bind,src=${NPM_CONFIG_CACHE},dst=${NPM_CONFIG_CACHE}\
+  \
+  --env pnpm_config_store_dir=${PNPM_STORE_DIR}\
+  --mount type=bind,src=${PNPM_CONFIG_DIR},dst=/root/.config/pnpm,ro\
   \
   --env GOBIN=${GOBIN}\
   --env GOPATH=${GOPATH}\
