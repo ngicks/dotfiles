@@ -207,5 +207,10 @@ in
 
     # Custom-built packages
     run-in-tmux-popup  # pinentry in tmux/zellij popup
+  ] ++ lib.optionals stdenv.isLinux [
+    # KVM/libvirt tooling for devenv containers. The launcher can opt into
+    # /dev/kvm and persistent libvirt image storage with DEVENV_KVM=1.
+    libvirt        # virsh, libvirtd
+    qemu_kvm       # qemu-system-* with KVM support
   ];
 }
