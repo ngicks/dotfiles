@@ -66,3 +66,27 @@ mux:
               - shell
           - command: codex
             focus: true
+    - name: claude-focused-portrait
+      root:
+        dir: v
+        splits: [50%, 50%]
+        panes:
+          - command: claude
+            focus: true
+          - dir: h
+            splits: [1, 20%]
+            panes:
+              - nvim
+              - shell
+    - name: codex-focused-portrait
+      root:
+        dir: v
+        splits: [50%, 50%]
+        panes:
+          - command: codex 
+            focus: true
+          - dir: h
+            splits: [1, 20%]
+            panes:
+              - nvim
+              - shell
