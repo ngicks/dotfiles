@@ -46,10 +46,21 @@ in
     recursive = true;
   };
 
+  xdg.configFile."containers" = {
+    source = ../../config/containers;
+    recursive = true;
+  };
+
+  xdg.configFile."systemd" = {
+    source = ../../config/systemd;
+    recursive = true;
+  };
+
 
   imports = [
     ./cmdman
     ./fzf
+    ./forwardproxy
     ./lazygit
     ./mise
     ./nvim
@@ -169,6 +180,7 @@ in
 
     # System/Build Tools
     gnupg          # GPG encryption
+    pinentry-qt    # Qt pinentry for GPG
     gnumake        # Make build tool
     gcc            # GNU C compiler
     glibc

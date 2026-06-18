@@ -1,0 +1,46 @@
+# syntax=docker/dockerfile:1
+#
+# Credential-less Kerberos/Negotiate forward proxy.
+#
+# Holds NO long-term secret at runtime. The domain password lives only in a
+# gpg-encrypted store; at start it is decrypted through a forwarded, dedicated
+# single-key gpg-agent extra socket, piped straight into kinit to mint a Kerberos
+# TGT, then discarded. kpx authenticates to the upstream proxy using the *ticket*
+# (Negotiate) -- it never sees the password. The ticket is renewed from itself
+# until the realm's renewable lifetime ends, then one fresh pinentry re-mints it.
+
+# Fetch the pinned, prebuilt kpx release binary (statically linked) and verify it
+# against upstream's published checksums. Building from source isn't an option:
+# kpx's go.mod has `replace` directives, which `go install module@version` refuses.
+# Upstream ships linux amd64 only -- there is no arm64 release binary.
+ARG KPX_VERSION=1.12.3
+
+FROM docker.io/library/alpine:3.21 AS build
+ARG KPX_VERSION
+RUN apk add --no-cache curl
+RUN set -eu; \
+    base="https://github.com/momiji/kpx/releases/download/v${KPX_VERSION}"; \
+    asset="kpx_${KPX_VERSION}_linux_amd64.tar.gz"; \
+    curl -fsSL -o "/tmp/${asset}" "${base}/${asset}"; \
+    curl -fsSL -o /tmp/sums.txt "${base}/kpx_${KPX_VERSION}_checksums.txt"; \
+    cd /tmp && grep "${asset}" sums.txt | sha256sum -c -; \
+    mkdir -p /tmp/x && tar -xzf "${asset}" -C /tmp/x; \
+    install -m 0755 /tmp/x/kpx /kpx
+
+FROM docker.io/library/alpine:3.21
+# krb5  : kinit / ticket-cache handling
+# gnupg : gpg client that talks to the forwarded host agent socket
+RUN apk add --no-cache krb5 gnupg
+COPY --from=build /kpx /usr/local/bin/kpx
+
+ENV GNUPGHOME=/root/.gnupg
+# Never let gpg spawn its own agent -- it MUST use the forwarded host socket.
+RUN install -d -m 700 "$GNUPGHOME" \
+ && printf 'no-autostart\ntrust-model always\n' > "$GNUPGHOME/gpg.conf"
+
+COPY resource/kpx.yaml.template /etc/kpx/kpx.yaml.template
+COPY resource/entrypoint.sh     /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 3128
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

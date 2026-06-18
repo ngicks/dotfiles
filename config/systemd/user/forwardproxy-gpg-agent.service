@@ -1,0 +1,29 @@
+# Dedicated gpg-agent for the forward proxy (systemd --user).
+# Installed by Home Manager to ~/.config/systemd/user/forwardproxy-gpg-agent.service.
+#
+# Runs a separate agent over a separate keyring that holds only the proxy key,
+# and binds a deterministic extra socket the proxy container mounts.
+[Unit]
+Description=Dedicated single-key gpg-agent for forwardproxy
+Documentation=man:gpg-agent(1)
+ConditionPathExists=%h/.config/forwardproxy/gnupg
+
+[Service]
+Type=forking
+Environment=FP_GNUPGHOME=%h/.config/forwardproxy/gnupg
+# Socket lives in the runtime dir (tmpfs, 0700, auto-cleared), not in the
+# persistent keyring. systemd creates %t/forwardproxy and removes it on stop.
+RuntimeDirectory=forwardproxy
+RuntimeDirectoryMode=0700
+# GUI pinentry needs a display. With keep-display in gpg-agent.conf the agent
+# uses its own startup display, so import DISPLAY/WAYLAND_DISPLAY/XAUTHORITY
+# into the user manager from the graphical login.
+ExecStart=%h/.nix-profile/bin/gpg-agent \
+    --homedir %h/.config/forwardproxy/gnupg \
+    --extra-socket %t/forwardproxy/S.gpg-agent.extra \
+    --daemon
+ExecStop=%h/.nix-profile/bin/gpgconf --homedir %h/.config/forwardproxy/gnupg --kill gpg-agent
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

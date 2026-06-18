@@ -8,6 +8,7 @@ opt_scripts=(
   00-timezone.sh
   05-kvm.sh
   10-core.sh
+  15-proxy.sh
   20-gitrepo.sh
   30-nvim.sh
   40-mise.sh

@@ -60,3 +60,22 @@ for u in $(ls ${user_service_dir}); do
   ln -s ${HOME}/.local/containers/lib/systemd/user/${u} ${HOME}/.config/systemd/user/${u}
 done
 
+quadlet=${HOME}/.local/containers/libexec/podman/quadlet
+if [[ -x ${quadlet} ]]; then
+  generator_name=podman-user-generator
+  generator_dir=/usr/local/lib/systemd/user-generators
+  if sudo mkdir -p ${generator_dir} 2>/dev/null; then
+    sudo ln -sfn ${quadlet} ${generator_dir}/${generator_name}
+    echo "installed quadlet user generator: ${generator_dir}/${generator_name}"
+  else
+    generator_dir=/run/systemd/user-generators
+    sudo mkdir -p ${generator_dir}
+    sudo ln -sfn ${quadlet} ${generator_dir}/${generator_name}
+    echo "installed quadlet user generator: ${generator_dir}/${generator_name}"
+    echo "warning: /run is tmpfs; rerun this installer after reboot if the generator disappears" >&2
+  fi
+else
+  echo "warning: quadlet binary not found: ${quadlet}" >&2
+fi
+
+systemctl --user daemon-reload || true

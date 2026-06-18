@@ -15,16 +15,16 @@ uvx = true
 binstall = true
 
 [tools]
-# LLM
+# LLM stuff
+## cli tools
 "npm:@openai/codex" = "latest"
-
-# mcp / tools for llm
+"github:microsoft/waza" = "latest"
+"pipx:apm-cli" = "latest"
+## mcp
 "npm:@upstash/context7-mcp" = "latest"
 
 # zenn
 "npm:zenn-cli" = "latest"
-
-"pipx:apm-cli" = "latest"
 
 "ruff" = "latest"
 

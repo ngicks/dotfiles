@@ -1,0 +1,20 @@
+# Non-secret kpx config, rendered into tmpfs by entrypoint.sh.
+# Verify keys against your kpx version (momiji/kpx): `kpx -c <file>`.
+bind: @BIND@
+port: @PORT@
+
+proxies:
+  upstream:
+    type: kerberos
+    spn: @SPN@
+    realm: @REALM@
+    host: @UPSTREAM_HOST@
+    port: @UPSTREAM_PORT@
+    # Use the OS ticket cache (KRB5CCNAME) minted by kinit -- no password here.
+    credential: kerberos
+
+rules:
+  - host: "*"
+    proxy: upstream
+
+# acl: is appended at runtime from PROXY_ACL (empty => kpx allows all clients).
