@@ -68,6 +68,45 @@ url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-tes
 version = "0.26.9"
 backend = "cargo:tree-sitter-cli"
 
+[[tools."github:microsoft/waza"]]
+version = "0.33.0"
+backend = "github:microsoft/waza"
+
+[tools."github:microsoft/waza"."platforms.linux-arm64"]
+checksum = "sha256:552ba4f45e5f73e3e9c0c93429e2c59e21f1a4de8b9895f98f54deea7f03dfa8"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430176"
+
+[tools."github:microsoft/waza"."platforms.linux-arm64-musl"]
+checksum = "sha256:552ba4f45e5f73e3e9c0c93429e2c59e21f1a4de8b9895f98f54deea7f03dfa8"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430176"
+
+[tools."github:microsoft/waza"."platforms.linux-x64"]
+checksum = "sha256:c1a31a15d959d2cd536feb41cf7b20f94b0434a8e86949d3de3d21c1e3fb6ff3"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430171"
+
+[tools."github:microsoft/waza"."platforms.linux-x64-musl"]
+checksum = "sha256:c1a31a15d959d2cd536feb41cf7b20f94b0434a8e86949d3de3d21c1e3fb6ff3"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430171"
+
+[tools."github:microsoft/waza"."platforms.macos-arm64"]
+checksum = "sha256:0467f019fd7f53fb6dec09d810a957db707bd69d72f3966861b23ef6155a11e5"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-darwin-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430175"
+
+[tools."github:microsoft/waza"."platforms.macos-x64"]
+checksum = "sha256:af40ce5667c5c67584243324d7d8011752575f1e5747b1bef1aac269bad2579c"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-darwin-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430177"
+
+[tools."github:microsoft/waza"."platforms.windows-x64"]
+checksum = "sha256:f4b65386476a7bcfc224c4e9ae372b963320c495447e6d5d4e382023173b05b9"
+url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-windows-amd64.exe"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430180"
+
 [[tools."go:github.com/chrishrb/go-grip"]]
 version = "0.9.2"
 backend = "go:github.com/chrishrb/go-grip"
@@ -101,11 +140,11 @@ version = "0.0.2"
 backend = "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"
 
 [[tools."go:golang.org/dl/gotip"]]
-version = "0.0.0-20260602183950-e6b0832d5570"
+version = "0.0.0-20260618194738-ed70cd925632"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@openai/codex"]]
-version = "0.139.0"
+version = "0.140.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -113,7 +152,7 @@ version = "3.2.1"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
-version = "0.5.0"
+version = "0.5.1"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
