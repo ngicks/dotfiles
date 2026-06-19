@@ -16,6 +16,7 @@ Image=localhost/devenv/forwardproxy:0.1.0
 # Host networking lets host tools use http://127.0.0.1:3128. Keep the default
 # bind localhost-only; widen BIND/PROXY_ACL in forwardproxy.env only where needed.
 Network=host
+LogDriver=journald
 
 # Forward the dedicated agent's restricted extra socket into the path the
 # container's gpg expects. The dedicated keyring should hold only the proxy key.

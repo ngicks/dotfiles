@@ -11,6 +11,9 @@ ConditionPathExists=%h/.config/forwardproxy/gnupg
 [Service]
 Type=forking
 Environment=FP_GNUPGHOME=%h/.config/forwardproxy/gnupg
+# Do not inherit shell/tmux/zellij pinentry routing into this daemon. The proxy
+# prompt must use GUI pinentry; terminal pinentry has no service TTY here.
+Environment=PINENTRY_USER_DATA=
 # Socket lives in the runtime dir (tmpfs, 0700, auto-cleared), not in the
 # persistent keyring. systemd creates %t/forwardproxy and removes it on stop.
 RuntimeDirectory=forwardproxy
@@ -21,6 +24,8 @@ RuntimeDirectoryMode=0700
 ExecStart=%h/.nix-profile/bin/gpg-agent \
     --homedir %h/.config/forwardproxy/gnupg \
     --extra-socket %t/forwardproxy/S.gpg-agent.extra \
+    --keep-display \
+    --keep-tty \
     --daemon
 ExecStop=%h/.nix-profile/bin/gpgconf --homedir %h/.config/forwardproxy/gnupg --kill gpg-agent
 Restart=on-failure

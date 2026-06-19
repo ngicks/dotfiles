@@ -51,6 +51,11 @@ in
     recursive = true;
   };
 
+  xdg.configFile."environment.d" = {
+    source = ../../config/environment.d;
+    recursive = true;
+  };
+
   xdg.configFile."systemd" = {
     source = ../../config/systemd;
     recursive = true;

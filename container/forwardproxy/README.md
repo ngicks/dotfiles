@@ -62,6 +62,8 @@ config/systemd/user/forwardproxy-gpg-agent.service
                             Home Manager-installed dedicated gpg-agent unit
 config/systemd/user/forwardproxy.service.d/10-office-only.conf
                             skips the generated Quadlet service off-office
+config/environment.d/podman.conf
+                            points Quadlet/systemd generators at static podman
 config/forwardproxy/forwardproxy.env.example
                             template for local, untracked office settings
 ```
@@ -111,8 +113,11 @@ printf '%s' 'DOMAIN_PASSWORD' | \
 ## 3. Configure office-only runtime settings
 
 Home Manager installs the Quadlet file, dedicated gpg-agent unit, and the
-office-only systemd drop-in from `config/`. Machine-specific values stay outside
-git in `~/.config/forwardproxy/forwardproxy.env`.
+office-only systemd drop-in from `config/`. It also installs
+`environment.d/podman.conf`, setting `PODMAN` to the static podman path under
+`${XDG_DATA_HOME:-$HOME/.local/share}/containers/bin/podman` for the user
+manager/generator environment. Machine-specific values stay outside git in
+`~/.config/forwardproxy/forwardproxy.env`.
 
 On machines/networks where this proxy should run:
 
@@ -196,6 +201,13 @@ the networks you actually need.
 - pinentry never appears / `cannot open display`: the agent service has no
   `DISPLAY`. Import it into the user manager (step 3) and confirm `keep-display`
   is in the dedicated `gpg-agent.conf`.
+- `not a tty` from pinentry/decrypt: restart `forwardproxy-gpg-agent.service`
+  after updating. The unit clears `PINENTRY_USER_DATA` so tmux/zellij/TTY
+  pinentry routing is not inherited by the daemon; the dedicated agent should
+  use GUI pinentry.
+- no container logs in `journalctl --user -u forwardproxy`: confirm the
+  generated Quadlet unit includes `--log-driver=journald` after
+  `systemctl --user daemon-reload`.
 - `kinit` fails: check `REALM`/`PRINCIPAL`/`KDC` (or DNS SRV records for the
   realm), and that the password is correct. `klist` inside the container
   (`podman exec forwardproxy klist`) shows the current ticket.

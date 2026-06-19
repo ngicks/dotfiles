@@ -18,6 +18,7 @@ Image=localhost/devenv/forwardproxy:0.1.0
 # Host networking lets host tools use http://127.0.0.1:3128. Keep the default
 # bind localhost-only; widen BIND/PROXY_ACL in forwardproxy.env only where needed.
 Network=host
+LogDriver=journald
 
 # Forward the dedicated agent's restricted extra socket into the path the
 # container's gpg expects. The dedicated keyring should hold only the proxy key.
@@ -33,7 +34,7 @@ Volume=%h/.config/forwardproxy/pubkey.asc:/secrets/pubkey.asc:ro,Z
 # Required office-specific settings are loaded from an untracked file. The
 # systemd drop-in skips startup when the file is absent or the upstream host is
 # not resolvable from the current network.
-EnvironmentFile=-%h/.config/forwardproxy/forwardproxy.env
+EnvironmentFile=%h/.config/forwardproxy/forwardproxy.env
 
 # Safe defaults. Override in forwardproxy.env for the office environment.
 Environment=BIND=127.0.0.1
@@ -43,6 +44,7 @@ Environment=UPSTREAM_PORT=8080
 Environment=PROXY_SPN=HTTP
 
 [Service]
+EnvironmentFile=%h/.config/containers/path.env
 Restart=always
 # Allow time for host-side pinentry on (re)start.
 TimeoutStartSec=120
