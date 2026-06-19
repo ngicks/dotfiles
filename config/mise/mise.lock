@@ -69,43 +69,43 @@ version = "0.26.9"
 backend = "cargo:tree-sitter-cli"
 
 [[tools."github:microsoft/waza"]]
-version = "0.33.0"
+version = "azd-ext-microsoft-azd-waza_0.37.0"
 backend = "github:microsoft/waza"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64"]
-checksum = "sha256:552ba4f45e5f73e3e9c0c93429e2c59e21f1a4de8b9895f98f54deea7f03dfa8"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430176"
+checksum = "sha256:368dca120f852fcee1b9c87fdfed942ac453342f98d5135d0bb0ffa03ef9da37"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463422"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64-musl"]
-checksum = "sha256:552ba4f45e5f73e3e9c0c93429e2c59e21f1a4de8b9895f98f54deea7f03dfa8"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430176"
+checksum = "sha256:368dca120f852fcee1b9c87fdfed942ac453342f98d5135d0bb0ffa03ef9da37"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463422"
 
 [tools."github:microsoft/waza"."platforms.linux-x64"]
-checksum = "sha256:c1a31a15d959d2cd536feb41cf7b20f94b0434a8e86949d3de3d21c1e3fb6ff3"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430171"
+checksum = "sha256:1760c3d7aaf85f3ca9c76a98b0947dc60076e57528771abcbb9d952ba9db5848"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463356"
 
 [tools."github:microsoft/waza"."platforms.linux-x64-musl"]
-checksum = "sha256:c1a31a15d959d2cd536feb41cf7b20f94b0434a8e86949d3de3d21c1e3fb6ff3"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430171"
+checksum = "sha256:1760c3d7aaf85f3ca9c76a98b0947dc60076e57528771abcbb9d952ba9db5848"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463356"
 
 [tools."github:microsoft/waza"."platforms.macos-arm64"]
-checksum = "sha256:0467f019fd7f53fb6dec09d810a957db707bd69d72f3966861b23ef6155a11e5"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-darwin-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430175"
+checksum = "sha256:6074a37fcce3a6bacd80932ba32ba4e8e72fc543abb09c11e15d50fcc3000bef"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-darwin-arm64.zip"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463360"
 
 [tools."github:microsoft/waza"."platforms.macos-x64"]
-checksum = "sha256:af40ce5667c5c67584243324d7d8011752575f1e5747b1bef1aac269bad2579c"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-darwin-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430177"
+checksum = "sha256:4309786a500ac386094c4d20ce84f5163bfcb9d2ecf4fb81aea0f2f2d174e12f"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-darwin-amd64.zip"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463357"
 
 [tools."github:microsoft/waza"."platforms.windows-x64"]
-checksum = "sha256:f4b65386476a7bcfc224c4e9ae372b963320c495447e6d5d4e382023173b05b9"
-url = "https://github.com/microsoft/waza/releases/download/v0.33.0/waza-windows-amd64.exe"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/426430180"
+checksum = "sha256:e607b170d930300f691dcd2e5357c48974453565247329ded19fc9670467ebb5"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.37.0/microsoft-azd-waza-windows-amd64.zip"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451463355"
 
 [[tools."go:github.com/chrishrb/go-grip"]]
 version = "0.9.2"
@@ -132,7 +132,7 @@ version = "0.0.12"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.7"
+version = "0.0.8"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"]]
@@ -144,7 +144,7 @@ version = "0.0.0-20260618194738-ed70cd925632"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@openai/codex"]]
-version = "0.140.0"
+version = "0.141.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -160,40 +160,40 @@ version = "0.20.0"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]
-version = "0.15.17"
+version = "0.15.18"
 backend = "aqua:astral-sh/ruff"
 
 [tools.ruff."platforms.linux-arm64"]
-checksum = "sha256:211d610dd81ef472d3b1404b28eaa19a62cb41ab9374584847307b97821a4ab8"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-aarch64-unknown-linux-musl.tar.gz"
+checksum = "sha256:941eb7a7b8bc11f195a08393bb45def1656003031cff89af3805ca89cfd066b4"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-aarch64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruff."platforms.linux-arm64-musl"]
-checksum = "sha256:211d610dd81ef472d3b1404b28eaa19a62cb41ab9374584847307b97821a4ab8"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-aarch64-unknown-linux-musl.tar.gz"
+checksum = "sha256:941eb7a7b8bc11f195a08393bb45def1656003031cff89af3805ca89cfd066b4"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-aarch64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruff."platforms.linux-x64"]
-checksum = "sha256:cbf85fc152b7fc25cb27f0233b325e9c72cb26965152050164e7608b72515189"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:9ca54aec52cfdbe1e708cc975e41e3e736a2c1ebe76668575efe09e0701465c8"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-x86_64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruff."platforms.linux-x64-musl"]
-checksum = "sha256:cbf85fc152b7fc25cb27f0233b325e9c72cb26965152050164e7608b72515189"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:9ca54aec52cfdbe1e708cc975e41e3e736a2c1ebe76668575efe09e0701465c8"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-x86_64-unknown-linux-musl.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruff."platforms.macos-arm64"]
-checksum = "sha256:81f372886fb7a0056949356c615fa689a091cf79b0b54ed914c810cdbc6d85e9"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-aarch64-apple-darwin.tar.gz"
+checksum = "sha256:f0cc66c2df37f2a11c99a85b59b8fde21b37f61df062404a0afaed387b56dad0"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-aarch64-apple-darwin.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruff."platforms.macos-x64"]
-checksum = "sha256:5522e517bd67ee8c2cb0d6a8298388d8edc8621a0bc5dc773f65e06c953693f6"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-x86_64-apple-darwin.tar.gz"
+checksum = "sha256:229d2c192718fde76794185ab9339515b75a55cc1337e4ca9d60309e2c506900"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-x86_64-apple-darwin.tar.gz"
 provenance = "github-attestations"
 
 [tools.ruff."platforms.windows-x64"]
-checksum = "sha256:08b6cb2bd20f3d19e3cf6e768d8d8105c8337de1c52e90c7dc1deea483d68c86"
-url = "https://github.com/astral-sh/ruff/releases/download/0.15.17/ruff-x86_64-pc-windows-msvc.zip"
+checksum = "sha256:2c38db5fef5984c93db7bdc395c20c5c3470fafdd8deb72150db4d2da7870d07"
+url = "https://github.com/astral-sh/ruff/releases/download/0.15.18/ruff-x86_64-pc-windows-msvc.zip"
 provenance = "github-attestations"
