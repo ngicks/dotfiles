@@ -185,8 +185,11 @@ in
 
     # System/Build Tools
     gnupg          # GPG encryption
-    pinentry-qt    # Qt pinentry for GPG
-    pinentry-curses # terminal pinentry; used by forwardproxy's dedicated tmux agent
+    pinentry-qt    # Qt pinentry for GPG (also bundles a bin/pinentry-curses)
+    # terminal pinentry; used by forwardproxy's dedicated tmux agent. pinentry-qt
+    # ships its own bin/pinentry-curses, so hiPrio lets this dedicated package win
+    # the buildEnv collision instead of failing the home-manager-path build.
+    (lib.hiPrio pinentry-curses)
     gnumake        # Make build tool
     gcc            # GNU C compiler
     glibc

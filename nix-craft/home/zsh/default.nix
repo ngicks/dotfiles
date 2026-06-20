@@ -8,7 +8,28 @@ let
     fpath=("$_comp_dir" $fpath)
 
     autoload -Uz compinit
-    local _zcompdump="''${ZDOTDIR:-$HOME}/.zcompdump"
+
+    # Key the dump by zsh version + a hash of the effective fpath instead of a
+    # single global ~/.zcompdump. The same $HOME is shared by multiple zsh
+    # environments with different fpath values (apt/system zsh in a normal tmux
+    # pane, Nix/home-manager zsh in a cmdman devenv mux, nested container
+    # shells). `compinit -C` trusts whatever dump it finds regardless of which
+    # fpath produced it, so a shell whose fpath lacks a function file still
+    # tries to autoload it and fails with e.g.
+    #   _python-argcomplete: function definition file not found
+    # A per-fpath dump keeps each environment's cached metadata consistent with
+    # its own completion search path. sha256sum is GNU-only; fall back so this
+    # stays portable to darwin and minimal environments.
+    local _fpath_hash
+    if (( $+commands[sha256sum] )); then
+      _fpath_hash="$(print -rl -- $fpath | sha256sum)"
+    elif (( $+commands[shasum] )); then
+      _fpath_hash="$(print -rl -- $fpath | shasum -a 256)"
+    else
+      _fpath_hash="$(print -rl -- $fpath | cksum)"
+    fi
+    _fpath_hash="''${_fpath_hash%% *}"
+    local _zcompdump="''${ZDOTDIR:-$HOME}/.zcompdump-''${ZSH_VERSION}-''${_fpath_hash[1,12]}"
     # Load the cached dump fast. `compinit -C` never rescans fpath, so a dump
     # written before these files existed -- or by a shell that lacked _comp_dir
     # on fpath -- silently lacks them and is trusted forever. Guard against that:
