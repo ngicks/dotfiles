@@ -12,6 +12,7 @@ opt_scripts=(
   20-gitrepo.sh
   30-nvim.sh
   40-mise.sh
+  45-apm.sh
   50-runtimes.sh
   60-node.sh
   70-go.sh
