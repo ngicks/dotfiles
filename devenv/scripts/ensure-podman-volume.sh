@@ -16,6 +16,8 @@ volumes=(
   claude-config
   gemini-config
   codex-config
+  gh-config
+  glab-config
 )
 
 for volume in "${volumes[@]}"; do
