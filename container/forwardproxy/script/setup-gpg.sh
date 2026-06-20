@@ -2,18 +2,23 @@
 # Create a DEDICATED gpg keyring + key that holds ONLY the proxy-secret key, so
 # the agent socket forwarded into the container can decrypt nothing else.
 #
-# The dedicated agent caches NOTHING (ttl 0) and asks via GUI pinentry on every
-# proxy (re)start. keep-display/keep-tty make it ignore the container client's
-# empty DISPLAY/TTY and use the daemon's own display for the prompt.
+# The dedicated agent caches NOTHING (ttl 0) and prompts on every proxy
+# (re)start. Because the agent is a daemon with no terminal (and the host may
+# have no GUI display, e.g. WSL2), its pinentry-program is the pinentry-tmux
+# wrapper: it spawns a dedicated tmux server, registers that pane's tty with the
+# agent (GPG_TTY + updatestartuptty), and draws curses pinentry there. keep-tty
+# pins every prompt to that pane regardless of the client's empty TTY.
 #
 # Env knobs:
-#   FP_DIR       base dir       (default ~/.config/forwardproxy)
-#   FP_PINENTRY  pinentry path  (default ~/.nix-profile/bin/pinentry-qt)
+#   FP_DIR              base dir            (default ~/.config/forwardproxy)
+#   FP_PINENTRY_CURSES  curses pinentry     (default ~/.nix-profile/bin/pinentry-curses)
 set -eCu
 
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 FP_DIR="${FP_DIR:-$HOME/.config/forwardproxy}"
 FP_GNUPGHOME="${FP_GNUPGHOME:-$FP_DIR/gnupg}"
-FP_PINENTRY="${FP_PINENTRY:-$HOME/.nix-profile/bin/pinentry-qt}"
+FP_PINENTRY_CURSES="${FP_PINENTRY_CURSES:-$HOME/.nix-profile/bin/pinentry-curses}"
+FP_PINENTRY="$FP_DIR/pinentry-tmux"   # the wrapper, installed below; agent runs this
 KEY_UID="forwardproxy (proxy secret) <forwardproxy@localhost>"
 
 require_protected_secret_keys() {
@@ -50,20 +55,29 @@ has_encryption_subkey() {
     | awk -F: '$1 == "ssb" && $12 ~ /e/ { found = 1 } END { exit found ? 0 : 1 }'
 }
 
-if [ ! -x "$FP_PINENTRY" ]; then
-  echo "warning: GUI pinentry not found at $FP_PINENTRY" >&2
-  echo "         add pkgs.pinentry-qt to nix-craft/home/home.nix and rebuild," >&2
-  echo "         or set FP_PINENTRY=/path/to/pinentry-qt." >&2
+if [ ! -x "$FP_PINENTRY_CURSES" ]; then
+  echo "warning: curses pinentry not found at $FP_PINENTRY_CURSES" >&2
+  echo "         add pkgs.pinentry-curses to nix-craft/home/home.nix and rebuild," >&2
+  echo "         or set FP_PINENTRY_CURSES=/path/to/pinentry-curses." >&2
+fi
+if [ ! -f "$script_dir/pinentry-tmux" ]; then
+  echo "error: pinentry-tmux wrapper not found next to this script" >&2
+  exit 1
 fi
 
 mkdir -p "$FP_DIR"
 install -d -m 700 "$FP_GNUPGHOME"
 
-# No caching: prompt via GUI pinentry on every decryption (i.e. every proxy
-# start). keep-display/keep-tty: ignore the forwarded client's env, use ours.
+# Install the pinentry-program the agent runs. It owns the dedicated tmux server
+# and the GPG_TTY/updatestartuptty handshake; the agent only needs its path.
+install -m 0755 "$script_dir/pinentry-tmux" "$FP_PINENTRY"
+
+# No caching: prompt on every decryption (i.e. every proxy start). keep-tty makes
+# the agent ignore the forwarded client's empty TTY and use the startup tty the
+# wrapper registers (the dedicated tmux pane). No keep-display: this is terminal,
+# not GUI, pinentry.
 cat >| "$FP_GNUPGHOME/gpg-agent.conf" <<EOF
 pinentry-program $FP_PINENTRY
-keep-display
 keep-tty
 default-cache-ttl 0
 max-cache-ttl 0
@@ -100,11 +114,12 @@ cat <<EOF
 
 dedicated keyring : $FP_GNUPGHOME
 public key        : $FP_DIR/pubkey.asc
-pinentry          : $FP_PINENTRY  (asked on every proxy start, nothing cached)
+pinentry          : $FP_PINENTRY  (dedicated tmux, asked on every proxy start, nothing cached)
+                    answer prompts with: tmux -S "\${XDG_RUNTIME_DIR:-/tmp}/forwardproxy/pinentry.tmux.sock" attach
 
-Next, encrypt your domain password to this key (it becomes the ONLY thing kpx
-uses to mint a Kerberos ticket; nothing else is stored). Pipe it in so it never
-lands on disk -- printf avoids a trailing newline:
+Next, encrypt your domain password to this key (it becomes the ONLY secret used
+to mint a Kerberos ticket via kinit; nothing else is stored). Pipe it in so it
+never lands on disk -- printf avoids a trailing newline:
 
   printf '%s' 'DOMAIN_PASSWORD' | \\
     gpg --homedir '$FP_GNUPGHOME' -e -r '$KEY_UID' -o '$FP_DIR/secret.gpg'

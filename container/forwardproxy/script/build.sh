@@ -2,11 +2,11 @@
 # Build the forwardproxy image with a FIXED tag read from ./tag.
 #
 # Build context is container/forwardproxy (the Containerfile COPYs from resource/
-# and downloads the pinned kpx release binary). No proxy build-args here:
+# and installs squid + heimdal from Alpine packages). No proxy build-args here:
 # podman/buildah forwards the host's proxy env into build RUN steps by default and
 # does not bake it into the image, so passing it explicitly is unnecessary.
 #
-# Keep ./tag in sync with Image= in script/forwardproxy.container.
+# Keep ./tag in sync with Image= in config/containers/systemd/forwardproxy.container.
 set -eCu
 
 script_dir=$(cd "$(dirname "$0")" && pwd -P)

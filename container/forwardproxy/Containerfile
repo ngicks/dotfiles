@@ -1,45 +1,32 @@
 # syntax=docker/dockerfile:1
 #
-# Credential-less Kerberos/Negotiate forward proxy.
+# Credential-less Kerberos/Negotiate forward proxy (local Squid -> corporate Squid).
 #
 # Holds NO long-term secret at runtime. The domain password lives only in a
 # gpg-encrypted store; at start it is decrypted through a forwarded, dedicated
 # single-key gpg-agent extra socket, piped straight into kinit to mint a Kerberos
-# TGT, then discarded. kpx authenticates to the upstream proxy using the *ticket*
-# (Negotiate) -- it never sees the password. The ticket is renewed from itself
-# until the realm's renewable lifetime ends, then one fresh pinentry re-mints it.
-
-# Fetch the pinned, prebuilt kpx release binary (statically linked) and verify it
-# against upstream's published checksums. Building from source isn't an option:
-# kpx's go.mod has `replace` directives, which `go install module@version` refuses.
-# Upstream ships linux amd64 only -- there is no arm64 release binary.
-ARG KPX_VERSION=1.12.3
-
-FROM docker.io/library/alpine:3.21 AS build
-ARG KPX_VERSION
-RUN apk add --no-cache curl
-RUN set -eu; \
-    base="https://github.com/momiji/kpx/releases/download/v${KPX_VERSION}"; \
-    asset="kpx_${KPX_VERSION}_linux_amd64.tar.gz"; \
-    curl -fsSL -o "/tmp/${asset}" "${base}/${asset}"; \
-    curl -fsSL -o /tmp/sums.txt "${base}/kpx_${KPX_VERSION}_checksums.txt"; \
-    cd /tmp && grep "${asset}" sums.txt | sha256sum -c -; \
-    mkdir -p /tmp/x && tar -xzf "${asset}" -C /tmp/x; \
-    install -m 0755 /tmp/x/kpx /kpx
+# TGT, then discarded. A local Squid forwards everything to the corporate proxy
+# (cache_peer ... login=NEGOTIATE auth-no-keytab) and authenticates with the
+# *ticket* from the credential cache (KRB5CCNAME) -- never the password, never a
+# keytab. The ticket is renewed from itself until the realm's renewable lifetime
+# ends, then one fresh pinentry re-mints it.
 
 FROM docker.io/library/alpine:3.21
-# krb5  : kinit / ticket-cache handling
-# gnupg : gpg client that talks to the forwarded host agent socket
-RUN apk add --no-cache krb5 gnupg
-COPY --from=build /kpx /usr/local/bin/kpx
+# squid   : the forward proxy. cache_peer login=NEGOTIATE speaks Kerberos/SPNEGO
+#           to the corporate proxy; Alpine builds squid against Heimdal GSSAPI.
+# heimdal : kinit / klist + the same Kerberos implementation squid's GSSAPI uses,
+#           so the ticket kinit mints is the one squid reads from the cache.
+# gnupg   : gpg client that talks to the forwarded host agent socket.
+RUN apk add --no-cache squid heimdal gnupg \
+ && install -d -m 0755 /var/cache/squid /var/log/squid
 
 ENV GNUPGHOME=/root/.gnupg
 # Never let gpg spawn its own agent -- it MUST use the forwarded host socket.
 RUN install -d -m 700 "$GNUPGHOME" \
  && printf 'no-autostart\ntrust-model always\n' > "$GNUPGHOME/gpg.conf"
 
-COPY resource/kpx.yaml.template /etc/kpx/kpx.yaml.template
-COPY resource/entrypoint.sh     /usr/local/bin/entrypoint.sh
+COPY resource/squid.conf.template /etc/squid/squid.conf.template
+COPY resource/entrypoint.sh       /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 3128

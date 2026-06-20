@@ -1,0 +1,79 @@
+#!/bin/sh
+# pinentry-tmux -- dedicated-tmux pinentry plumbing for the forwardproxy gpg-agent.
+#
+# The dedicated agent runs as a systemd --user daemon with NO controlling
+# terminal, and the host may have no usable GUI display (e.g. headless WSL2), so
+# neither a plain terminal nor a GUI pinentry has anywhere to draw its prompt.
+# The fix is a DEDICATED tmux server (its own socket, isolated from your normal
+# tmux) holding one idle pane, whose tty is registered with the agent (GPG_TTY +
+# `gpg-connect-agent updatestartuptty`). With keep-tty the agent then draws every
+# prompt -- including container-triggered ones -- on that pane. Answer it with:
+#
+#     tmux -S "${XDG_RUNTIME_DIR:-/tmp}/forwardproxy/pinentry.tmux.sock" attach
+#
+# Two modes:
+#   pinentry-tmux arm   ExecStartPost on the agent: spawn the server + register
+#                       the tty BEFORE any prompt, so even the first prompt lands
+#                       in the dedicated pane (no first-start race).
+#   pinentry-tmux       pinentry-program: ensure the server is up (re-arm if it
+#                       died), then draw the real curses pinentry on the pane.
+#
+# Overridable via env (the systemd unit sets the first two):
+#   FP_GNUPGHOME        dedicated keyring  (default ~/.config/forwardproxy/gnupg)
+#   FP_PINENTRY_CURSES  real curses pinentry        (default pinentry-curses)
+#   FP_PINENTRY_TERM    TERM/ttytype for the prompt (default screen)
+set -eu
+
+FP_GNUPGHOME="${FP_GNUPGHOME:-$HOME/.config/forwardproxy/gnupg}"
+PINENTRY="${FP_PINENTRY_CURSES:-pinentry-curses}"
+TERM_NAME="${FP_PINENTRY_TERM:-screen}"
+RUNDIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/forwardproxy"
+SOCK="$RUNDIR/pinentry.tmux.sock"
+
+need() {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "pinentry-tmux: required program not found in PATH: $1" >&2
+    exit 1
+  }
+}
+
+# Pane tty of the dedicated server, or empty if it is not running.
+pane_tty() { tmux -S "$SOCK" display-message -p -t fp '#{pane_tty}' 2>/dev/null || true; }
+
+# Ensure the dedicated tmux server + a single held pane exist (idempotent), then
+# register that pane's tty (+ TERM) with the agent so keep-tty prompts land on
+# it. gpg-connect-agent reads GPG_TTY/TERM from the env, so this sets the agent's
+# startup tty without the caller needing that tty as its own controlling one.
+ensure_server() {
+  need tmux
+  mkdir -p "$RUNDIR"
+  if ! tmux -S "$SOCK" has-session -t fp 2>/dev/null; then
+    # Held pane: just keep the pty alive. -f /dev/null ignores your tmux.conf so
+    # the dedicated server stays minimal and predictable.
+    tmux -S "$SOCK" -f /dev/null new-session -d -s fp -x 100 -y 30 \
+      'exec sleep 2147483647'
+  fi
+  tty=$(pane_tty)
+  if [ -n "$tty" ] && command -v gpg-connect-agent >/dev/null 2>&1; then
+    GPG_TTY="$tty" TERM="$TERM_NAME" \
+      gpg-connect-agent --homedir "$FP_GNUPGHOME" updatestartuptty /bye \
+      >/dev/null 2>&1 || true
+  fi
+}
+
+if [ "${1:-}" = "arm" ]; then
+  ensure_server
+  exit 0
+fi
+
+# pinentry-program mode: the agent execs us with no args and speaks Assuan on our
+# stdio. Make sure the server is up, then hand off to the real pinentry, forcing
+# it onto the dedicated pane (belt-and-suspenders on top of keep-tty/arm).
+need "$PINENTRY"
+ensure_server
+tty=$(pane_tty)
+if [ -n "$tty" ]; then
+  set -- --ttyname "$tty" --ttytype "$TERM_NAME" "$@"
+fi
+export TERM="$TERM_NAME"
+exec "$PINENTRY" "$@"

@@ -186,6 +186,7 @@ in
     # System/Build Tools
     gnupg          # GPG encryption
     pinentry-qt    # Qt pinentry for GPG
+    pinentry-curses # terminal pinentry; used by forwardproxy's dedicated tmux agent
     gnumake        # Make build tool
     gcc            # GNU C compiler
     glibc

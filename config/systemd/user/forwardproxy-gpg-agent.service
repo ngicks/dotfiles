@@ -12,21 +12,32 @@ ConditionPathExists=%h/.config/forwardproxy/gnupg
 Type=forking
 Environment=FP_GNUPGHOME=%h/.config/forwardproxy/gnupg
 # Do not inherit shell/tmux/zellij pinentry routing into this daemon. The proxy
-# prompt must use GUI pinentry; terminal pinentry has no service TTY here.
+# prompt is handled by the pinentry-tmux wrapper, not the popup wrappers.
 Environment=PINENTRY_USER_DATA=
-# Socket lives in the runtime dir (tmpfs, 0700, auto-cleared), not in the
-# persistent keyring. systemd creates %t/forwardproxy and removes it on stop.
+# The pinentry-tmux wrapper (gpg-agent.conf pinentry-program) needs tmux,
+# gpg-connect-agent and the curses pinentry on PATH; the agent passes this env
+# down to it. Point it at the real curses pinentry binary too.
+Environment=PATH=%h/.nix-profile/bin:/usr/local/bin:/usr/bin:/bin
+Environment=FP_PINENTRY_CURSES=%h/.nix-profile/bin/pinentry-curses
+# Sockets live in the runtime dir (tmpfs, 0700, auto-cleared), not in the
+# persistent keyring: the agent's extra socket AND the wrapper's dedicated tmux
+# server socket. systemd creates %t/forwardproxy and removes it on stop.
 RuntimeDirectory=forwardproxy
 RuntimeDirectoryMode=0700
-# GUI pinentry needs a display. With keep-display in gpg-agent.conf the agent
-# uses its own startup display, so import DISPLAY/WAYLAND_DISPLAY/XAUTHORITY
-# into the user manager from the graphical login.
+# keep-tty (gpg-agent.conf): the agent ignores the container client's empty TTY
+# and uses its startup tty -- the dedicated tmux pane registered by the arm step
+# below. No display is needed; answer the prompt by attaching to the wrapper's
+# tmux socket under %t/forwardproxy.
 ExecStart=%h/.nix-profile/bin/gpg-agent \
     --homedir %h/.config/forwardproxy/gnupg \
     --extra-socket %t/forwardproxy/S.gpg-agent.extra \
-    --keep-display \
     --keep-tty \
     --daemon
+# Arm the dedicated tmux pinentry server NOW (not lazily at first prompt) and
+# register its tty with the just-started agent (updatestartuptty), so even the
+# very first prompt lands in the dedicated pane. Leading '-': a hiccup here must
+# not fail the agent; the pinentry-program re-arms on demand.
+ExecStartPost=-%h/.config/forwardproxy/pinentry-tmux arm
 ExecStop=%h/.nix-profile/bin/gpgconf --homedir %h/.config/forwardproxy/gnupg --kill gpg-agent
 Restart=on-failure
 

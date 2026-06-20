@@ -1,0 +1,35 @@
+# Non-secret Squid config for the credential-less forward proxy, rendered into
+# tmpfs by entrypoint.sh. Verify against your squid version: `squid -k parse -f`.
+#
+# This local Squid listens on @BIND@:@PORT@ and forwards EVERYTHING to the
+# corporate Squid parent, authenticating with Kerberos Negotiate (SPNEGO).
+# The client ACL (acl localnet + http_access) is appended at runtime from
+# PROXY_ACL; keep the deny-by-default at the end intact.
+visible_hostname forwardproxy
+
+# Local listener for host tools and (with host networking) containers.
+http_port @BIND@:@PORT@
+
+# The corporate proxy, reached via Kerberos Negotiate using the ticket cache:
+#   login=NEGOTIATE  send 'Proxy-Authorization: Negotiate <SPNEGO>' to the peer
+#   auth-no-keytab   use the existing credential cache (KRB5CCNAME) minted by
+#                    kinit, NOT a keytab on disk -- so no long-term secret is kept
+# Squid asks the KDC for HTTP/<peer-host>, so @UPSTREAM_HOST@ must be the FQDN the
+# upstream's service principal is built for (address the proxy by FQDN).
+cache_peer @UPSTREAM_HOST@ parent @UPSTREAM_PORT@ 0 no-query default name=upstream login=NEGOTIATE auth-no-keytab
+
+# Forward-only: always go through the parent, never attempt direct egress.
+never_direct allow all
+cache_peer_access upstream allow all
+
+# This is a forwarder, not a cache.
+cache deny all
+
+# Single-purpose container: stay as the (root) user that owns the ticket cache so
+# Squid's GSSAPI can read KRB5CCNAME. Log to the container's stdio (journald).
+cache_effective_user root
+pid_filename none
+access_log stdio:/dev/stdout
+cache_log stdio:/dev/stderr
+
+# --- client access control: acl localnet + http_access appended from PROXY_ACL ---
