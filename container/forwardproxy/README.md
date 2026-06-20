@@ -59,8 +59,9 @@ script/                     host-side scripts/examples (not shipped in the image
   build.sh
   setup-gpg.sh
   pinentry-tmux             agent pinentry-program; installed into ~/.config/forwardproxy
-config/containers/systemd/forwardproxy.container
-                            Home Manager-installed Quadlet unit
+config/containers-quadlet/forwardproxy.container
+                            Home Manager-installed Quadlet unit (QUADLET_UNIT_DIRS
+                            in environment.d/podman.conf points the generator here)
 config/systemd/user/forwardproxy-gpg-agent.service
                             Home Manager-installed dedicated gpg-agent unit
 config/systemd/user/forwardproxy.service.d/10-office-only.conf
@@ -118,9 +119,13 @@ printf '%s' 'DOMAIN_PASSWORD' | \
 
 Home Manager installs the Quadlet file, dedicated gpg-agent unit, and the
 office-only systemd drop-in from `config/`. It also installs
-`environment.d/podman.conf`, setting `PODMAN` to the static podman path under
-`${XDG_DATA_HOME:-$HOME/.local/share}/containers/bin/podman` for the user
-manager/generator environment. Machine-specific values stay outside git in
+`environment.d/podman.conf`, which sets `PODMAN` to the static podman path under
+`${XDG_DATA_HOME:-$HOME/.local/share}/containers/bin/podman` and points
+`QUADLET_UNIT_DIRS` at `~/.config/containers-quadlet` for the user
+manager/generator environment. The Quadlet unit lives in that dir (not the
+default `~/.config/containers/systemd`) because the static podman installer
+replaces `~/.config/containers` with a symlink to its bundled `etc/containers`.
+Machine-specific values stay outside git in
 `~/.config/forwardproxy/forwardproxy.env`.
 
 On machines/networks where this proxy should run:

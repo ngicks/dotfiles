@@ -1,5 +1,6 @@
 # Quadlet for the credential-less forward proxy (rootless / systemd --user).
-# Installed by Home Manager to ~/.config/containers/systemd/forwardproxy.container.
+# Installed by Home Manager to ~/.config/containers-quadlet/forwardproxy.container;
+# QUADLET_UNIT_DIRS (config/environment.d/podman.conf) points the generator here.
 #
 # Machine-specific office settings live outside git:
 #   ~/.config/forwardproxy/forwardproxy.env

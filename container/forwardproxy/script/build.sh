@@ -6,7 +6,7 @@
 # podman/buildah forwards the host's proxy env into build RUN steps by default and
 # does not bake it into the image, so passing it explicitly is unnecessary.
 #
-# Keep ./tag in sync with Image= in config/containers/systemd/forwardproxy.container.
+# Keep ./tag in sync with Image= in config/containers-quadlet/forwardproxy.container.
 set -eCu
 
 script_dir=$(cd "$(dirname "$0")" && pwd -P)
