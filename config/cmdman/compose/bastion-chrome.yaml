@@ -1,0 +1,40 @@
+name: bastion-chrome
+work_dir: $HOME
+
+commands:
+  unlock:
+    args:
+      - $HOME/.nix-profile/bin/zsh
+      - -lic
+      - ssh -T "${SSH_BASTION}" true
+    env:
+      - SSH_BASTION=${SSH_BASTION:-bastion}
+    tty: true
+  proxy:
+    args:
+      - $HOME/.nix-profile/bin/zsh
+      - -lc
+      - ssh -ND 1090 "${SSH_BASTION}"
+    env:
+      - SSH_BASTION=${SSH_BASTION:-bastion}
+    after:
+      unlock:
+        condition: completed_successfully
+  chrome:
+    args:
+      - $HOME/.nix-profile/bin/zsh
+      - -lc
+      - google-chrome --proxy-server="socks5://localhost:1090"
+    after:
+      proxy:
+        condition: running
+mux:
+  layouts:
+    - name: default
+      root:
+        dir: v
+        splits: [50%, 50%]
+        panes:
+          - command: unlock
+            focus: true
+          - command: proxy
