@@ -132,7 +132,7 @@ version = "0.0.12"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.8"
+version = "0.0.9"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"]]
@@ -156,7 +156,7 @@ version = "0.5.1"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.20.0"
+version = "0.21.0"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]

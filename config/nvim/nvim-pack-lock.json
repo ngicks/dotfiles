@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "c65ddb4724cc772a77e9eca1478bff451867b2e2",
+      "rev": "f30b9be897dae930f60ff64eff495797f196ebcb",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -86,7 +86,7 @@
       "src": "https://github.com/nvzone/menu"
     },
     "mini.nvim": {
-      "rev": "a995fe9cd4193fb492b5df69175a351a74b3d36b",
+      "rev": "1345d191bb3da9c7b0e977f4387c5761f9bff68d",
       "src": "https://github.com/nvim-mini/mini.nvim",
       "version": ">=0.0.0"
     },
@@ -119,7 +119,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap": {
-      "rev": "531771530d4f82ad2d21e436e3cc052d68d7aebb",
+      "rev": "9e848e09a697ee95302a3ef2dd43fd6eb709e570",
       "src": "https://github.com/mfussenegger/nvim-dap"
     },
     "nvim-dap-ui": {
@@ -237,7 +237,7 @@
       "src": "https://github.com/kristijanhusak/vim-dadbod-completion"
     },
     "vim-dadbod-ui": {
-      "rev": "07e92e22114cc5b1ba4938d99897d85b58e20475",
+      "rev": "afd07819d8efcefc3317205b855ad4e3513b0011",
       "src": "https://github.com/kristijanhusak/vim-dadbod-ui"
     },
     "volt": {
