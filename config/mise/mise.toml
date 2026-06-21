@@ -3,6 +3,13 @@ experimental = true
 auto_install = true
 lockfile = true
 
+# My own tools!
+minimum_release_age_excludes = [
+  "go:github.com/ngicks/crabswarm/cmd/crabswarm",
+  "go:github.com/ngicks/cmdman/cmd/cmdman",
+  "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers",
+]
+
 trusted_config_paths = [
   '~/.config/mise/mise.toml',
   '~/.dotfiles/config/mise/mise.toml',
