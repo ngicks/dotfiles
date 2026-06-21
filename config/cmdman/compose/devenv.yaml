@@ -16,6 +16,7 @@ commands:
       - ""
       - -lc
       - claude
+    scale: 3
     tty: true
   codex:
     args: 
@@ -23,6 +24,7 @@ commands:
       - ""
       - -lc
       - codex
+    scale: 3
     tty: true
 mux:
   layouts:
@@ -90,3 +92,72 @@ mux:
             panes:
               - nvim
               - shell
+    - name: claude-two-right
+      root:
+        dir: h
+        splits: [50%, 50%]
+        panes:
+          - dir: v
+            splits: [1, 20%]
+            panes:
+              - nvim
+              - shell
+          - dir: v
+            splits: [50%, 50%]
+            panes:
+              - command: claude
+                scale: 1
+                focus: true
+              - command: claude
+                scale: 2
+    - name: claude-3col
+      root:
+        dir: h
+        splits: [1, 1, 1]
+        panes:
+          - command: claude
+            scale: 1
+            focus: true
+          - command: claude
+            scale: 2
+          - command: claude
+            scale: 3
+    - name: codex-3col
+      root:
+        dir: h
+        splits: [1, 1, 1]
+        panes:
+          - command: codex
+            scale: 1
+            focus: true
+          - command: codex
+            scale: 2
+          - command: codex
+            scale: 3
+    - name: all-agents
+      root:
+        dir: h
+        splits: [1, 1, 1]
+        panes:
+          - dir: v
+            splits: [1, 1]
+            panes:
+              - command: claude
+                scale: 1
+                focus: true
+              - command: codex
+                scale: 1
+          - dir: v
+            splits: [1, 1]
+            panes:
+              - command: claude
+                scale: 2
+              - command: codex
+                scale: 2
+          - dir: v
+            splits: [1, 1]
+            panes:
+              - command: claude
+                scale: 3
+              - command: codex
+                scale: 3
