@@ -14,11 +14,10 @@
 #   FP_PINENTRY_CURSES  curses pinentry     (default ~/.nix-profile/bin/pinentry-curses)
 set -eCu
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
 FP_DIR="${FP_DIR:-$HOME/.config/forwardproxy}"
 FP_GNUPGHOME="${FP_GNUPGHOME:-$FP_DIR/gnupg}"
 FP_PINENTRY_CURSES="${FP_PINENTRY_CURSES:-$HOME/.nix-profile/bin/pinentry-curses}"
-FP_PINENTRY="$FP_DIR/pinentry-tmux"   # the wrapper, installed below; agent runs this
+FP_PINENTRY="$FP_DIR/pinentry-tmux"   # HM-installed wrapper (config/forwardproxy); agent runs this
 KEY_UID="forwardproxy (proxy secret) <forwardproxy@localhost>"
 
 require_protected_secret_keys() {
@@ -60,17 +59,18 @@ if [ ! -x "$FP_PINENTRY_CURSES" ]; then
   echo "         add pkgs.pinentry-curses to nix-craft/home/home.nix and rebuild," >&2
   echo "         or set FP_PINENTRY_CURSES=/path/to/pinentry-curses." >&2
 fi
-if [ ! -f "$script_dir/pinentry-tmux" ]; then
-  echo "error: pinentry-tmux wrapper not found next to this script" >&2
+# The pinentry-program the agent runs is now installed declaratively by Home
+# Manager from config/forwardproxy/pinentry-tmux (recursive xdg.configFile), so it
+# stays in sync with the repo. Require it here instead of copying it in.
+if [ ! -x "$FP_PINENTRY" ]; then
+  echo "error: pinentry-tmux wrapper not found at $FP_PINENTRY" >&2
+  echo "       run 'home-manager switch' first; it installs the wrapper from" >&2
+  echo "       config/forwardproxy/pinentry-tmux into ~/.config/forwardproxy." >&2
   exit 1
 fi
 
 mkdir -p "$FP_DIR"
 install -d -m 700 "$FP_GNUPGHOME"
-
-# Install the pinentry-program the agent runs. It owns the dedicated tmux server
-# and the GPG_TTY/updatestartuptty handshake; the agent only needs its path.
-install -m 0755 "$script_dir/pinentry-tmux" "$FP_PINENTRY"
 
 # No caching: prompt on every decryption (i.e. every proxy start). keep-tty makes
 # the agent ignore the forwarded client's empty TTY and use the startup tty the

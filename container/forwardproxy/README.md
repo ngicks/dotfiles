@@ -58,7 +58,6 @@ resource/                   files COPYed into the image
 script/                     host-side scripts/examples (not shipped in the image)
   build.sh
   setup-gpg.sh
-  pinentry-tmux             agent pinentry-program; installed into ~/.config/forwardproxy
 config/containers-quadlet/forwardproxy.container
                             Home Manager-installed Quadlet unit (QUADLET_UNIT_DIRS
                             in environment.d/podman.conf points the generator here)
@@ -70,6 +69,10 @@ config/environment.d/podman.conf
                             points Quadlet/systemd generators at static podman
 config/forwardproxy/forwardproxy.env.example
                             template for local, untracked office settings
+config/forwardproxy/pinentry-tmux
+                            agent pinentry-program (dedicated-tmux pinentry
+                            plumbing); Home Manager-installed to
+                            ~/.config/forwardproxy, so it stays in sync with the repo
 ```
 
 ## 1. Build the image
@@ -95,11 +98,13 @@ is also required (already in the dotfiles).
 
 `setup-gpg.sh` builds a separate keyring under `~/.config/forwardproxy/gnupg`
 holding a single **passphrase-protected** proxy key with an encryption subkey,
-**installs the `pinentry-tmux` wrapper** into `~/.config/forwardproxy/`, writes an
-agent config with **no caching** (prompts on every proxy start) that uses it, and
-exports the public key. Set `FP_PINENTRY_CURSES` to override the real curses
-pinentry path. Enter a non-empty passphrase when GPG asks; the script fails if the
-dedicated key is left unprotected.
+writes an agent config with **no caching** (prompts on every proxy start) that
+points at the **Home Manager-installed `pinentry-tmux` wrapper**, and exports the
+public key. (The wrapper itself is no longer copied by this script — it ships from
+`config/forwardproxy/pinentry-tmux` via Home Manager, so run `home-manager switch`
+first; the script errors if it isn't present.) Set `FP_PINENTRY_CURSES` to
+override the real curses pinentry path. Enter a non-empty passphrase when GPG
+asks; the script fails if the dedicated key is left unprotected.
 
 ```sh
 ./container/forwardproxy/script/setup-gpg.sh
