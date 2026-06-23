@@ -6,7 +6,7 @@ commands:
     args:
       - $HOME/.nix-profile/bin/zsh
       - -lic
-      - ssh -T "${SSH_BASTION}" true
+      - ssh-add -T "${SSH_BASTION}"
     env:
       - SSH_BASTION=${SSH_BASTION:-bastion}
     tty: true
