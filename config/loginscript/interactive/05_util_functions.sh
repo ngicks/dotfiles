@@ -19,7 +19,7 @@ devenv_prep() {
 }
 
 gcd() {
-  cd $(FZF_DEFAULT_COMMAND="fd --type d --hidden --no-ignore '^\.git\$' ${GITREPO_ROOT:-$HOME/gitrepo} --exec dirname {}" fzf --reverse)
+  cd "$(crabswarm git list --full-path | fzf --reverse)"
 }
 
 # osc52copy - copy stdin to system clipboard via OSC52 escape sequence.
