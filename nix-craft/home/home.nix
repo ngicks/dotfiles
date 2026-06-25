@@ -238,5 +238,9 @@ in
     # /dev/kvm and persistent libvirt image storage with DEVENV_KVM=1.
     libvirt        # virsh, libvirtd
     qemu_kvm       # qemu-system-* with KVM support
+    # nixpkgs builds vagrant with `withLibvirt` defaulting to isLinux, so the
+    # vagrant-libvirt (KVM/QEMU) provider is bundled here -- no `vagrant plugin
+    # install` and no extra plugin package needed. Relies on libvirt/qemu_kvm above.
+    vagrant
   ];
 }
