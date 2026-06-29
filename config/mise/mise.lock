@@ -65,7 +65,7 @@ checksum = "sha256:0720a57213521a627d74cb2fe3da16197fd5c8dd382c01cdb0b20682a5df9
 url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-testing_3.14.0_windows_amd64.zip"
 
 [[tools."cargo:tree-sitter-cli"]]
-version = "0.26.9"
+version = "0.26.10"
 backend = "cargo:tree-sitter-cli"
 
 [[tools."github:microsoft/waza"]]
@@ -138,6 +138,10 @@ backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 [[tools."go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"]]
 version = "0.0.2"
 backend = "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"
+
+[[tools."go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy"]]
+version = "0.0.1"
+backend = "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy"
 
 [[tools."go:golang.org/dl/gotip"]]
 version = "0.0.0-20260618194738-ed70cd925632"
