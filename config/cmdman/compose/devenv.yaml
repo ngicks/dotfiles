@@ -11,6 +11,9 @@ commands:
     stop_signal: SIGHUP
     tty: true
   claude:
+    env_file:
+      - path: .kvm.env
+        required: false
     args:  
       - $HOME/.dotfiles/devenv_run.sh 
       - ""
@@ -19,6 +22,9 @@ commands:
     scale: 3
     tty: true
   codex:
+    env_file:
+      - path: .kvm.env
+        required: false
     args: 
       - $HOME/.dotfiles/devenv_run.sh
       - ""
