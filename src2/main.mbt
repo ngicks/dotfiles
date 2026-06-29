@@ -1,48 +1,98 @@
 ///|
+/// The `devenv` subcommands (`build`, `pull`). `with_wait` adds a `--wait`
+/// flag, which only makes sense for the client (the server runs jobs async).
+fn devenv_subcommands(with_wait~ : Bool) -> Array[@argparse.Command] {
+  let build_flags = [
+    @argparse.FlagArg("exp", short='e', about="experimental build"),
+  ]
+  let pull_flags = [
+    @argparse.FlagArg("exp", short='e', about="experimental build"),
+  ]
+  if with_wait {
+    build_flags.push(
+      @argparse.FlagArg("wait", about="block until the job finishes"),
+    )
+    pull_flags.push(
+      @argparse.FlagArg("wait", about="block until the job finishes"),
+    )
+  }
+  [
+    @argparse.Command(
+      "build",
+      about="build the devenv image",
+      flags=build_flags,
+    ),
+    @argparse.Command(
+      "pull",
+      about="build on a remote and pull the resulting image",
+      flags=pull_flags,
+      positionals=[
+        @argparse.PositionArg("remote", about="ssh target to build on"),
+      ],
+    ),
+  ]
+}
+
+///|
+/// A `devenv` command grouping the build/pull subcommands.
+fn devenv_command(with_wait~ : Bool) -> @argparse.Command {
+  @argparse.Command(
+    "devenv",
+    about="devenv image operations",
+    arg_required_else_help=true,
+    subcommand_required=true,
+    subcommands=devenv_subcommands(with_wait~),
+  )
+}
+
+///|
+/// The top-level CLI: server / client / standalone.
 fn cli() -> @argparse.Command {
   @argparse.Command(
     "dotfiles",
+    about="dotfiles management CLI",
     arg_required_else_help=true,
     subcommand_required=true,
     subcommands=[
-      @argparse.Command("build", flags=[@argparse.FlagArg("exp", short='e')]),
-      @argparse.Command("save", flags=[
-        @argparse.FlagArg("exp", short='e'),
-        @argparse.FlagArg("no-build"),
-      ]),
       @argparse.Command(
-        "pull",
-        flags=[
-          @argparse.FlagArg("exp", short='e'),
-          @argparse.FlagArg("no-build"),
+        "server",
+        about="run the dotfiles server",
+        arg_required_else_help=true,
+        subcommand_required=true,
+        subcommands=[
+          @argparse.Command(
+            "serve",
+            about="serve the dotfiles HTTP API (REST/JSON over TCP)",
+            options=[
+              @argparse.OptionArg(
+                "url",
+                long="url",
+                about="listen address, e.g. 127.0.0.1:9787 (default: 127.0.0.1:9787)",
+              ),
+            ],
+          ),
         ],
-        positionals=[@argparse.PositionArg("remote")],
       ),
-      //@argparse.Command(
-      //  "daemon",
-      //  arg_required_else_help=true,
-      //  subcommand_required=true,
-      //  subcommands=[
-      //    @argparse.Command("serve"),
-      //    @argparse.Command("detach"),
-      //    @argparse.Command("build", flags=[
-      //      @argparse.FlagArg("no-build"),
-      //      @argparse.FlagArg("exp", short='e'),
-      //      @argparse.FlagArg("save"),
-      //      @argparse.FlagArg("wait"),
-      //    ]),
-      //    @argparse.Command("job", positionals=[@argparse.PositionArg("job-id")]),
-      //    @argparse.Command("log", positionals=[@argparse.PositionArg("job-id")]),
-      //    @argparse.Command("wait", positionals=[
-      //      @argparse.PositionArg("job-id"),
-      //    ]),
-      //  ],
-      //),
-      @argparse.Command("internal-job", flags=[
-        @argparse.FlagArg("no-build"),
-        @argparse.FlagArg("exp", short='e'),
-        @argparse.FlagArg("save"),
-      ]),
+      @argparse.Command(
+        "client",
+        about="request operations from a running dotfiles server",
+        arg_required_else_help=true,
+        subcommand_required=true,
+        subcommands=[devenv_command(with_wait=true)],
+      ),
+      @argparse.Command(
+        "standalone",
+        about="run operations directly, without a server",
+        arg_required_else_help=true,
+        subcommand_required=true,
+        subcommands=[
+          devenv_command(with_wait=false),
+          @argparse.Command(
+            "update-daily",
+            about="git pull the checkout and rebuild the image if it changed",
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -50,6 +100,14 @@ fn cli() -> @argparse.Command {
 ///|
 fn has_flag(matches : @argparse.Matches, name : String) -> Bool {
   matches.flags.get_or_default(name, false)
+}
+
+///|
+fn optional_value(matches : @argparse.Matches, name : String) -> String? {
+  match matches.values.get(name) {
+    Some([value, ..]) => Some(value)
+    _ => None
+  }
 }
 
 ///|
@@ -64,46 +122,61 @@ fn required_value(
 }
 
 ///|
-async fn dispatch(matches : @argparse.Matches) -> Unit {
+async fn dispatch_server(matches : @argparse.Matches) -> Unit raise Error {
   match matches.subcommand {
-    Some(("build", sub)) => @devenv.build(has_flag(sub, "exp"))
-    Some(("save", sub)) =>
-      @devenv.save(
-        @devenv.PathsBuilder::new().build(),
-        has_flag(sub, "no-build"),
-        has_flag(sub, "exp"),
-      )
+    Some(("serve", sub)) => {
+      let url = optional_value(sub, "url")
+      @server.serve(url?)
+    }
+    _ => raise Failure::Failure("missing server subcommand")
+  }
+}
+
+///|
+async fn dispatch_client(matches : @argparse.Matches) -> Unit raise Error {
+  guard matches.subcommand is Some(("devenv", devenv)) else {
+    raise Failure::Failure("missing client subcommand")
+  }
+  match devenv.subcommand {
+    Some(("build", sub)) =>
+      @client.devenv_build(has_flag(sub, "exp"), has_flag(sub, "wait"))
     Some(("pull", sub)) =>
-      @devenv.pull(
-        @devenv.PathsBuilder::new().build(),
+      @client.devenv_pull(
         required_value(sub, "remote"),
-        has_flag(sub, "no-build"),
         has_flag(sub, "exp"),
+        has_flag(sub, "wait"),
       )
-    Some(("daemon", daemon)) =>
-      match daemon.subcommand {
-        Some(("serve", _)) => @devenv.daemon_serve()
-        Some(("detach", _)) => ignore(@devenv.daemon_detach())
-        Some(("build", sub)) =>
-          @devenv.daemon_build(
-            has_flag(sub, "no-build"),
+    _ => raise Failure::Failure("missing devenv subcommand")
+  }
+}
+
+///|
+async fn dispatch_standalone(matches : @argparse.Matches) -> Unit raise Error {
+  let repo_dir = @devenv.current_dir()
+  match matches.subcommand {
+    Some(("devenv", devenv)) =>
+      match devenv.subcommand {
+        Some(("build", sub)) => @devenv.build(repo_dir, has_flag(sub, "exp"))
+        Some(("pull", sub)) =>
+          @devenv.pull(
+            repo_dir,
+            required_value(sub, "remote"),
             has_flag(sub, "exp"),
-            has_flag(sub, "save"),
-            has_flag(sub, "wait"),
           )
-        Some(("job", sub)) => @devenv.daemon_job(required_value(sub, "job-id"))
-        Some(("log", sub)) => @devenv.daemon_log(required_value(sub, "job-id"))
-        Some(("wait", sub)) =>
-          @devenv.daemon_wait(required_value(sub, "job-id"))
-        _ => fail("missing daemon subcommand")
+        _ => raise Failure::Failure("missing devenv subcommand")
       }
-    Some(("internal-job", sub)) =>
-      @devenv.internal_job(
-        has_flag(sub, "no-build"),
-        has_flag(sub, "exp"),
-        has_flag(sub, "save"),
-      )
-    _ => fail("missing command")
+    Some(("update-daily", _)) => @devenv.update_daily(repo_dir)
+    _ => raise Failure::Failure("missing standalone subcommand")
+  }
+}
+
+///|
+async fn dispatch(matches : @argparse.Matches) -> Unit raise Error {
+  match matches.subcommand {
+    Some(("server", sub)) => dispatch_server(sub)
+    Some(("client", sub)) => dispatch_client(sub)
+    Some(("standalone", sub)) => dispatch_standalone(sub)
+    _ => raise Failure::Failure("missing command")
   }
 }
 

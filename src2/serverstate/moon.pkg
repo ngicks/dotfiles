@@ -1,7 +1,6 @@
 import {
   "moonbitlang/async/fs",
-  "moonbitlang/async/process",
-  "moonbitlang/core/env",
+  "moonbitlang/core/json",
   "ngicks/dotfiles/os_path",
 }
 

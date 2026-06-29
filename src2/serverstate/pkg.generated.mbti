@@ -1,0 +1,34 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "ngicks/dotfiles/serverstate"
+
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/json",
+}
+
+// Values
+pub async fn clear() -> Unit
+
+pub fn current_pid() -> Int
+
+pub async fn read() -> Info?
+
+pub fn state_dir() -> String
+
+pub fn state_path() -> String
+
+pub async fn write(Info) -> Unit
+
+// Errors
+
+// Types and methods
+pub struct Info {
+  pid : Int
+  url : String
+} derive(Eq, ToJson, @debug.Debug, @json.FromJson)
+pub fn Info::new(Int, String) -> Self
+
+// Type aliases
+
+// Traits
+

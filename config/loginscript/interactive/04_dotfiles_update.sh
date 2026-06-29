@@ -82,9 +82,16 @@ dotfiles_next_update_time() {
 
 if [[ -o login ]]; then
   if dotfiles_should_update; then
-    pushd "$HOME/.dotfiles" > /dev/null
-    deno task update:daily > /dev/null
-    popd > /dev/null
+    if command -v moon > /dev/null 2>&1; then
+      pushd "$HOME/.dotfiles" > /dev/null
+      # Migrated from `deno task update:daily` to the moonbit CLI. The command
+      # itself stamps the 16h-interval marker on success.
+      moon run src2 --target native -- standalone update-daily
+      popd > /dev/null
+    else
+      # Don't touch the marker: keep warning every login until moon is installed.
+      echo "dotfiles: moon (moonbit toolchain) not found on PATH; skipping daily update" >&2
+    fi
   else
     echo "update deferred"
     echo "If you want update to happen again immediately, remove $HOME/.cache/dotfiles/.update_daily"

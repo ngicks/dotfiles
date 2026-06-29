@@ -1,59 +1,50 @@
 ///|
+/// Run `command` on `remote` over SSH.
 async fn ssh_exec(remote : String, command : String) -> Unit raise Error {
   run_checked("ssh", [remote, command])
 }
 
 ///|
-async fn rsync_exec(
-  remote : String,
-  remote_path : String,
-  local_path : String,
-) -> Unit raise Error {
-  run_checked("rsync", [
-    "-av",
-    "--partial",
-    "--append-verify",
-    "\{remote}:\{remote_path}",
-    local_path,
-  ])
+/// Build the shell command that drives the dotfiles CLI on a remote host.
+///
+/// Sources the login shell so `moon`/`mise` are on PATH, enters the checkout,
+/// and runs the standalone build through `moon run`.
+fn remote_build_command(subargs : Array[String]) -> String {
+  let parts = [
+    ". ~/.zshrc",
+    "cd ~/.dotfiles",
+    "moon run src2 -- " + subargs.join(" "),
+  ]
+  parts.join(" && ")
 }
 
 ///|
-fn remote_moon_command(subargs : Array[String]) -> String {
-  let args = [". ~/.zshrc", "cd ~/.dotfiles", "moon run src2 --"]
-  args.append(subargs)
-  args.join(" && ")
-}
-
-///|
+/// Build the devenv image on `remote` and copy it into local container storage.
+///
+/// The remote build is triggered over SSH, then `oci-image-copy` streams the
+/// resulting image directly between the two hosts' container stores over SSH
+/// (skopeo + sftp), avoiding any intermediate tarball.
 pub async fn pull(
-  paths : Paths,
+  repo_dir : String,
   remote : String,
-  no_build : Bool,
   is_experimental : Bool,
 ) -> Unit raise Error {
-  let tag = get_tag(is_experimental)
-  let local_path = paths.image_path(tag)
-  let file_name = Path::basename(local_path)
-  let image_name = repo_tag(tag)
-
-  ensure_dir(paths.image_dir())
-
-  let remote_args = ["daemon", "build", "--save", "--wait"]
+  let tag = get_tag(repo_dir, is_experimental)
+  let image = repo_tag(tag)
+  let build_args = ["standalone", "devenv", "build"]
   if is_experimental {
-    remote_args.push("--exp")
+    build_args.push("--exp")
   }
-  if no_build {
-    remote_args.push("--no-build")
-  }
-  println("running background-capable remote build on \{remote}")
-  ssh_exec(remote, remote_moon_command(remote_args))
-
-  let remote_cache_path = "~/.cache/dotfiles/devenv/image/\{file_name}"
-  println("pulling \{file_name} from \{remote}")
-  rsync_exec(remote, remote_cache_path, local_path)
-
-  println("loading \{file_name} into podman")
-  run_checked("podman", ["load", "-i", local_path])
-  println("loaded \{image_name}")
+  println("triggering remote build on \{remote}")
+  ssh_exec(remote, remote_build_command(build_args))
+  println("copying \{image} from \{remote} via oci-image-copy")
+  run_checked("oci-image-copy", [
+    "pull",
+    image,
+    "--remote",
+    "ssh://" + remote,
+    "--local",
+    "containers-storage:",
+  ])
+  println("pulled \{image}")
 }

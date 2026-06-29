@@ -1,11 +1,12 @@
 import {
   "moonbitlang/async",
   "moonbitlang/core/argparse",
-  "moonbitlang/core/builtin",
-  "ngicks/dotfiles/devenv" @devenv,
+  "ngicks/dotfiles/devenv",
+  "ngicks/dotfiles/server",
+  "ngicks/dotfiles/client",
 }
 
-supported_targets = "+native"
+supported_targets = "native"
 
 options(
   "is-main": true,

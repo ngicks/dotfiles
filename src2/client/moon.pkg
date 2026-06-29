@@ -1,0 +1,6 @@
+import {
+  "moonbitlang/async/http",
+  "ngicks/dotfiles/serverstate",
+}
+
+supported_targets = "+native"
