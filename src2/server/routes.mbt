@@ -11,7 +11,7 @@ fn build_app(daemon : Daemon, info : @serverstate.Info) -> @mocket.Mocket {
       "url": info.url,
       "repo": daemon.repo.dir,
       "origin": daemon.repo.origin,
-      "gh_auto_build": daemon.gh,
+      "auto_build": daemon.auto_build,
       "jobs": daemon.jobs.length(),
     })
   })

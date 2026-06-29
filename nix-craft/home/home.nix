@@ -69,6 +69,7 @@ in
   imports = [
     ./cmdman
     ./crabswarm
+    ./dotfiles-server
     ./fzf
     ./forwardproxy
     ./lazygit

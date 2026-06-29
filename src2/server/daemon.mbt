@@ -1,13 +1,13 @@
 ///|
-/// How often the upstream poller checks for new commits, in milliseconds.
-let poll_interval_ms = 300_000
+/// How often the upstream poller checks for new commits, in milliseconds (30 min).
+let poll_interval_ms = 1_800_000
 
 ///|
-/// Server runtime state: the checkout it manages, whether `gh` auto-build is
-/// enabled, the job registry, and the singleflight machinery.
+/// Server runtime state: the checkout it manages, whether auto-build is enabled,
+/// the job registry, and the singleflight machinery.
 priv struct Daemon {
   repo : RepoConfig
-  gh : Bool
+  auto_build : Bool
   queue : @aqueue.Queue[Job]
   cond : @cond_var.Cond
   jobs : Map[String, Job]
@@ -16,10 +16,10 @@ priv struct Daemon {
 }
 
 ///|
-fn Daemon::new(repo : RepoConfig, gh : Bool) -> Daemon {
+fn Daemon::new(repo : RepoConfig, auto_build : Bool) -> Daemon {
   {
     repo,
-    gh,
+    auto_build,
     queue: @aqueue.Queue::Queue(kind=@aqueue.Kind::Unbounded),
     cond: @cond_var.Cond::Cond(),
     jobs: {},
@@ -101,13 +101,13 @@ async fn Daemon::worker(self : Daemon) -> Unit {
 }
 
 ///|
-/// Background poller. When `gh` is available and authenticated, it periodically
-/// pulls the checkout and auto-builds on new commits. Without `gh` it stays
-/// idle, so the server only pulls when a job is asked for explicitly.
+/// Background poller. When auto-build is enabled it periodically pulls the
+/// checkout and rebuilds the devenv image on new commits. When disabled it stays
+/// idle, so the server only acts on explicitly requested jobs.
 async fn Daemon::poll_loop(self : Daemon) -> Unit {
-  if !self.gh {
+  if !self.auto_build {
     println(
-      "gh unavailable/unauthenticated: auto-build disabled (explicit jobs only)",
+      "auto-build disabled (set \{auto_build_env_var}=1 in ~/.config/dotfiles-server/.env to enable); explicit jobs only",
     )
     return
   }

@@ -14,10 +14,11 @@ let default_address = "127.0.0.1:9787"
 /// worker and the upstream poller, then serves until cancelled.
 pub async fn serve(url? : String) -> Unit raise Error {
   @async.with_task_group(group => {
+    load_dotenv()
     let repo = RepoConfig::resolve()
     repo.ensure_clone()
-    let gh = gh_available()
-    let daemon = Daemon::new(repo, gh)
+    let auto_build = auto_build_enabled()
+    let daemon = Daemon::new(repo, auto_build)
     // Daemon tasks live for the server's lifetime; no_wait so they are
     // cancelled (not awaited) if `listen` ever returns.
     group.spawn_bg(() => daemon.worker(), no_wait=true)
@@ -33,7 +34,7 @@ pub async fn serve(url? : String) -> Unit raise Error {
     println("dotfiles server listening on http://\{address}")
     println("  repo:          \{repo.dir}")
     println("  origin:        \{repo.origin}")
-    println("  gh auto-build: \{gh}")
+    println("  auto-build:    \{auto_build}")
     app.listen(address)
   })
 }

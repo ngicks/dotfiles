@@ -13,6 +13,8 @@ AGENTS.md
 /config/dlv/
 /config/go/
 /config/zsh-abbr/
+# real server env; only the .example is tracked
+/config/dotfiles-server/.env
 
 build/podman-static/podman-static
 build/krun/crun

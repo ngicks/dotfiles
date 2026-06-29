@@ -80,21 +80,3 @@ async fn RepoConfig::update(self : RepoConfig) -> Bool raise Error {
   let after = @devenv.git_head(self.dir)
   before != after
 }
-
-///|
-/// Whether `gh` is installed and authenticated.
-///
-/// Uses `gh auth token`, which checks for a stored token offline (no network
-/// round-trip, unlike `gh auth status`). Guarded by a timeout so a misbehaving
-/// `gh` can never block server startup.
-async fn gh_available() -> Bool {
-  let result = @async.with_timeout_opt(3000, () => {
-    // collect_stdout (not run) so the printed token is captured and
-    // discarded rather than inherited onto the server's stdout/log.
-    let (code, _) = @process.collect_stdout("gh", ["auth", "token"])
-    code == 0
-  }) catch {
-    _ => None
-  }
-  result.unwrap_or(false)
-}
