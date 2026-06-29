@@ -1,10 +1,18 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "ngicks/dotfiles/client"
 
-// Values
-pub async fn devenv_build(Bool, Bool) -> Unit
+import {
+  "ngicks/dotfiles/serverstate",
+}
 
-pub async fn devenv_pull(String, Bool, Bool) -> Unit
+// Values
+pub async fn devenv_build(Bool) -> @serverstate.Ticket
+
+pub async fn devenv_pull(String, Bool) -> @serverstate.Ticket
+
+pub async fn status(@serverstate.Ticket) -> @serverstate.JobStatus
+
+pub async fn wait(@serverstate.Ticket) -> @serverstate.JobStatus
 
 // Errors
 

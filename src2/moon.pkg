@@ -5,6 +5,7 @@ import {
   "ngicks/dotfiles/devenv",
   "ngicks/dotfiles/server",
   "ngicks/dotfiles/client",
+  "ngicks/dotfiles/serverstate",
 }
 
 supported_targets = "native"

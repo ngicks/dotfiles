@@ -30,13 +30,19 @@ priv struct Job {
 }
 
 ///|
-/// JSON view of a job suitable for an API response.
-fn Job::status_json(self : Job) -> Json {
+/// The job's wire-format ticket: the handle clients hold to query it later.
+fn Job::ticket(self : Job) -> @serverstate.Ticket {
+  { id: self.id }
+}
+
+///|
+/// The job's wire-format status snapshot, suitable for an API response.
+fn Job::to_status(self : Job) -> @serverstate.JobStatus {
   let (status, message) = match self.state {
     Queued => ("queued", "")
     Running => ("running", "")
     Succeeded => ("succeeded", "")
     Failed(m) => ("failed", m)
   }
-  { "id": self.id, "kind": self.kind, "status": status, "message": message }
+  { id: self.id, kind: self.kind, status, message }
 }

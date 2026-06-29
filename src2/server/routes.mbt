@@ -18,7 +18,20 @@ fn build_app(daemon : Daemon, info : @serverstate.Info) -> @mocket.Mocket {
   app.get("/jobs/:id", event => {
     let id = event.params.get("id").map(v => v.to_owned()).unwrap_or("")
     match daemon.jobs.get(id) {
-      Some(job) => json_response(200, job.status_json())
+      Some(job) => json_response(200, job.to_status().to_json())
+      None => json_response(404, { "error": "job not found", "id": id })
+    }
+  })
+  app.get("/jobs/:id/wait", event => {
+    let id = event.params.get("id").map(v => v.to_owned()).unwrap_or("")
+    match daemon.jobs.get(id) {
+      Some(job) =>
+        try {
+          daemon.wait_for(job)
+          json_response(200, job.to_status().to_json())
+        } catch {
+          e => json_response(500, { "error": e.to_string() })
+        }
       None => json_response(404, { "error": "job not found", "id": id })
     }
   })
@@ -28,10 +41,7 @@ fn build_app(daemon : Daemon, info : @serverstate.Info) -> @mocket.Mocket {
       let exp = json_bool_field(body, "experimental")
       let key = if exp { "devenv-build:exp" } else { "devenv-build:rel" }
       let job = daemon.submit("devenv-build", key, BuildJob(experimental=exp))
-      if json_bool_field(body, "wait") {
-        daemon.wait_for(job)
-      }
-      json_response(200, job.status_json())
+      json_response(200, job.ticket().to_json())
     } catch {
       e => json_response(500, { "error": e.to_string() })
     }
@@ -48,10 +58,7 @@ fn build_app(daemon : Daemon, info : @serverstate.Info) -> @mocket.Mocket {
             "devenv-pull:\{remote}",
             PullJob(remote~, experimental=exp),
           )
-          if json_bool_field(body, "wait") {
-            daemon.wait_for(job)
-          }
-          json_response(200, job.status_json())
+          json_response(200, job.ticket().to_json())
         }
       }
     } catch {

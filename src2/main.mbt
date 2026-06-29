@@ -133,17 +133,35 @@ async fn dispatch_server(matches : @argparse.Matches) -> Unit raise Error {
 }
 
 ///|
+/// Print a submitted job's ticket, then optionally block for its result.
+async fn report_job(
+  ticket : @serverstate.Ticket,
+  wait : Bool,
+) -> Unit raise Error {
+  println("job \{ticket.id} submitted")
+  if wait {
+    let result = @client.wait(ticket)
+    println("job \{result.id}: \{result.status}")
+    if result.message != "" {
+      println(result.message)
+    }
+  }
+}
+
+///|
 async fn dispatch_client(matches : @argparse.Matches) -> Unit raise Error {
   guard matches.subcommand is Some(("devenv", devenv)) else {
     raise Failure::Failure("missing client subcommand")
   }
   match devenv.subcommand {
     Some(("build", sub)) =>
-      @client.devenv_build(has_flag(sub, "exp"), has_flag(sub, "wait"))
+      report_job(
+        @client.devenv_build(has_flag(sub, "exp")),
+        has_flag(sub, "wait"),
+      )
     Some(("pull", sub)) =>
-      @client.devenv_pull(
-        required_value(sub, "remote"),
-        has_flag(sub, "exp"),
+      report_job(
+        @client.devenv_pull(required_value(sub, "remote"), has_flag(sub, "exp")),
         has_flag(sub, "wait"),
       )
     _ => raise Failure::Failure("missing devenv subcommand")

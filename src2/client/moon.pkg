@@ -1,5 +1,6 @@
 import {
   "moonbitlang/async/http",
+  "moonbitlang/core/json",
   "ngicks/dotfiles/serverstate",
 }
 

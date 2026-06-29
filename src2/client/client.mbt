@@ -11,32 +11,71 @@ async fn server_url() -> String raise Error {
 }
 
 ///|
-/// POST a JSON body to `path` on the server and print status + response body.
-async fn post_json(path : String, body : Json) -> Unit raise Error {
-  let url = server_url() + path
-  let (resp, data) = @http.post(url, body.stringify(), headers={
+/// POST a JSON body to `path` and return the parsed response body.
+///
+/// Raises on a non-2xx status, surfacing the server's error body.
+async fn post_json(path : String, body : Json) -> Json raise Error {
+  let (resp, data) = @http.post(server_url() + path, body.stringify(), headers={
     "content-type": "application/json",
   })
-  println("HTTP \{resp.code} \{resp.reason}")
-  println(data.text())
+  let payload = data.json()
+  if resp.code >= 400 {
+    raise Failure::Failure(
+      "\{path} failed: HTTP \{resp.code} \{resp.reason}: \{payload.stringify()}",
+    )
+  }
+  payload
 }
 
 ///|
-/// Ask the server to build the devenv image.
-pub async fn devenv_build(experimental : Bool, wait : Bool) -> Unit raise Error {
-  post_json("/devenv/build", { "experimental": experimental, "wait": wait })
+/// GET `path` and return the parsed response body.
+///
+/// Raises on a non-2xx status, surfacing the server's error body.
+async fn get_json(path : String) -> Json raise Error {
+  let (resp, data) = @http.get(server_url() + path)
+  let payload = data.json()
+  if resp.code >= 400 {
+    raise Failure::Failure(
+      "\{path} failed: HTTP \{resp.code} \{resp.reason}: \{payload.stringify()}",
+    )
+  }
+  payload
 }
 
 ///|
-/// Ask the server to build the devenv image on `remote` and pull it locally.
+/// Submit a devenv image build. Returns a ticket to query with `status`/`wait`.
+pub async fn devenv_build(
+  experimental : Bool,
+) -> @serverstate.Ticket raise Error {
+  @json.from_json(post_json("/devenv/build", { "experimental": experimental }))
+}
+
+///|
+/// Submit a remote build + pull. Returns a ticket to query with `status`/`wait`.
 pub async fn devenv_pull(
   remote : String,
   experimental : Bool,
-  wait : Bool,
-) -> Unit raise Error {
-  post_json("/devenv/pull", {
-    "remote": remote,
-    "experimental": experimental,
-    "wait": wait,
-  })
+) -> @serverstate.Ticket raise Error {
+  @json.from_json(
+    post_json("/devenv/pull", {
+      "remote": remote,
+      "experimental": experimental,
+    }),
+  )
+}
+
+///|
+/// Current status of the job identified by `ticket` (non-blocking).
+pub async fn status(
+  ticket : @serverstate.Ticket,
+) -> @serverstate.JobStatus raise Error {
+  @json.from_json(get_json("/jobs/\{ticket.id}"))
+}
+
+///|
+/// Block until the job identified by `ticket` finishes, then return its result.
+pub async fn wait(
+  ticket : @serverstate.Ticket,
+) -> @serverstate.JobStatus raise Error {
+  @json.from_json(get_json("/jobs/\{ticket.id}/wait"))
 }
