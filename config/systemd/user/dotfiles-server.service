@@ -17,6 +17,14 @@ Environment=PATH=%h/.local/share/moonbit/bin:%h/.local/share/mise/shims:%h/.loca
 RuntimeDirectory=dotfiles-server
 RuntimeDirectoryMode=0700
 
+# A login shell raises the soft open-file limit to 10240, but a systemd user
+# service keeps systemd's 1024 default, and podman propagates that soft limit
+# into the build container. The parallel nix/home-manager build (gcc, the Go
+# toolchain, linkers) then exhausts 1024 fds and crashes mid-compile (the
+# SIGSEGV compiler ICEs), while the same build from a shell succeeds. Give the
+# service the same open-file headroom the manual build gets.
+LimitNOFILE=1048576
+
 ExecStartPre=%h/.local/share/moonbit/bin/moon build --target native
 ExecStart=%h/.local/share/moonbit/bin/moon run src2 --target native -- server serve
 Restart=on-failure
