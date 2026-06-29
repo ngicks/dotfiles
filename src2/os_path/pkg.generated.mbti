@@ -2,6 +2,12 @@
 package "ngicks/dotfiles/os_path"
 
 // Values
+pub fn dirname(String) -> String
+
+pub fn join(String, String) -> String
+
+pub fn join_all(Array[String]) -> String
+
 pub fn user_cache_dir() -> String raise
 
 pub fn user_config_dir() -> String raise

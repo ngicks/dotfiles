@@ -19,9 +19,9 @@ pub async fn git_head(repo_dir : String) -> String raise Error {
 /// (not the platform cache dir), so both sides agree on every OS.
 fn daily_marker_dir() -> String raise Error {
   let cache = @env.get_env_var("XDG_CACHE_HOME").unwrap_or(
-    @os_path.user_home_dir() + "/.cache",
+    @os_path.join(@os_path.user_home_dir(), ".cache"),
   )
-  cache + "/dotfiles"
+  @os_path.join(cache, "dotfiles")
 }
 
 ///|
@@ -32,7 +32,7 @@ async fn touch_daily_marker() -> Unit raise Error {
     @fs.mkdir(dir, permission=0o755, recursive=true)
   }
   @fs.write_file(
-    dir + "/.update_daily",
+    @os_path.join(dir, ".update_daily"),
     "",
     create_mode=@fs.CreateMode::CreateOrTruncate,
     permission=0o644,

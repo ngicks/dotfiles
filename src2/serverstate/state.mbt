@@ -26,22 +26,15 @@ pub fn Info::new(pid : Int, url : String) -> Info {
 
 ///|
 /// Directory that holds the server state file, namespaced under the runtime base.
+/// `join` tolerates a trailing separator on `XDG_RUNTIME_DIR`.
 pub fn state_dir() -> String {
-  let base = @os_path.user_runtime_dir()
-  // Some environments set XDG_RUNTIME_DIR with a trailing slash; trim it so the
-  // composed path stays clean in user-facing messages.
-  let base = if base.has_suffix("/") {
-    base[:base.length() - 1].to_owned()
-  } else {
-    base
-  }
-  base + "/dotfiles-server"
+  @os_path.join(@os_path.user_runtime_dir(), "dotfiles-server")
 }
 
 ///|
 /// Absolute path of the server state file.
 pub fn state_path() -> String {
-  state_dir() + "/server-state"
+  @os_path.join(state_dir(), "server-state")
 }
 
 ///|

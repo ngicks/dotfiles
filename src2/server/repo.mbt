@@ -12,7 +12,11 @@ priv struct RepoConfig {
 /// repository the server was launched from (its cwd); if that is not a git
 /// checkout, an already-existing server clone's origin is used as a fallback.
 async fn RepoConfig::resolve() -> RepoConfig raise Error {
-  let dir = @os_path.user_data_dir() + "/dotfiles-server/dotfiles"
+  let dir = @os_path.join_all([
+    @os_path.user_data_dir(),
+    "dotfiles-server",
+    "dotfiles",
+  ])
   let origin = match detect_origin(@devenv.current_dir()) {
     Some(o) => o
     None =>
@@ -51,11 +55,11 @@ async fn detect_origin(repo_dir : String) -> String? {
 ///|
 /// Clone the checkout if it does not exist yet. No-op once present.
 async fn RepoConfig::ensure_clone(self : RepoConfig) -> Unit raise Error {
-  if @fs.exists(self.dir + "/.git") {
+  if @fs.exists(@os_path.join(self.dir, ".git")) {
     return
   }
   println("cloning \{self.origin} -> \{self.dir}")
-  let parent = parent_dir(self.dir)
+  let parent = @os_path.dirname(self.dir)
   if !@fs.exists(parent) {
     @fs.mkdir(parent, permission=0o755, recursive=true)
   }
@@ -75,15 +79,6 @@ async fn RepoConfig::update(self : RepoConfig) -> Bool raise Error {
   }
   let after = @devenv.git_head(self.dir)
   before != after
-}
-
-///|
-/// Parent directory of `path` (everything before the last `/`).
-fn parent_dir(path : String) -> String {
-  match path.rev_find("/") {
-    Some(i) => path[:i].to_owned()
-    None => "."
-  }
 }
 
 ///|
