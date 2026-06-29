@@ -47,7 +47,12 @@ pub fn state_path() -> String {
 ///|
 /// Persist `info` to the state file, creating the runtime directory if needed.
 pub async fn write(info : Info) -> Unit raise Error {
-  @fs.mkdir(state_dir(), permission=0o700, recursive=true)
+  // `mkdir(recursive=true)` still errors if the leaf exists, and systemd's
+  // RuntimeDirectory= pre-creates this dir, so only create it when absent.
+  let dir = state_dir()
+  if !@fs.exists(dir) {
+    @fs.mkdir(dir, permission=0o700, recursive=true)
+  }
   @fs.write_file(
     state_path(),
     info.to_json().stringify(),

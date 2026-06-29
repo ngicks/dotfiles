@@ -28,7 +28,9 @@ fn daily_marker_dir() -> String raise Error {
 /// Stamp the daily-update marker (`.update_daily`) with the current time.
 async fn touch_daily_marker() -> Unit raise Error {
   let dir = daily_marker_dir()
-  @fs.mkdir(dir, permission=0o755, recursive=true)
+  if !@fs.exists(dir) {
+    @fs.mkdir(dir, permission=0o755, recursive=true)
+  }
   @fs.write_file(
     dir + "/.update_daily",
     "",

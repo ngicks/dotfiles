@@ -16,14 +16,18 @@ Wants=network-online.target
 # builds and runs through `moon`, so without it there is nothing to start. A
 # Condition (not Assert) leaves the unit cleanly inactive instead of looping on
 # Restart=on-failure. `moon install` then `systemctl --user start` activates it.
-ConditionPathIsExecutable=%h/.local/share/moonbit/bin/moon
+ConditionFileIsExecutable=%h/.local/share/moonbit/bin/moon
 
 [Service]
 Type=simple
 WorkingDirectory=%h/.dotfiles
-# systemd-user units do not inherit the interactive shell PATH. List every tool
-# the build and the server shell out to: moon (build/run), the C toolchain and
-# git/gh/ssh (nix profile), oci-image-copy (go bin), and mise shims for the rest.
+# systemd-user units do not inherit the interactive shell env. moon needs
+# MOON_HOME to find its registry index and toolchain (otherwise it falls back to
+# ~/.moon and fails dependency resolution with status 255). Mirror 00_moonbit.sh.
+Environment=MOON_HOME=%h/.local/share/moonbit
+# Likewise list every tool the build and server shell out to: moon (build/run),
+# the C toolchain and git/gh/ssh (nix profile), oci-image-copy (go bin), and
+# mise shims for the rest.
 Environment=PATH=%h/.local/share/moonbit/bin:%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
 # The state file (pid + url) lives in %t/dotfiles-server. systemd creates it
 # 0700 on start and removes it on stop, so a stale state file never outlives the

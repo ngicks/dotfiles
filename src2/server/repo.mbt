@@ -55,7 +55,10 @@ async fn RepoConfig::ensure_clone(self : RepoConfig) -> Unit raise Error {
     return
   }
   println("cloning \{self.origin} -> \{self.dir}")
-  @fs.mkdir(parent_dir(self.dir), permission=0o755, recursive=true)
+  let parent = parent_dir(self.dir)
+  if !@fs.exists(parent) {
+    @fs.mkdir(parent, permission=0o755, recursive=true)
+  }
   let code = @process.run("git", ["clone", self.origin, self.dir])
   if code != 0 {
     raise Failure::Failure("git clone failed")
