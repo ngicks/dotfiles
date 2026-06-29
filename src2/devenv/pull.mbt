@@ -8,7 +8,7 @@ async fn ssh_exec(remote : String, command : String) -> Unit raise Error {
 /// Build the shell command that drives the dotfiles CLI on a remote host.
 ///
 /// Sources the login shell so `moon`/`mise` are on PATH, enters the checkout,
-/// and runs the standalone build through `moon run`.
+/// and runs the CLI through `moon run`.
 fn remote_build_command(subargs : Array[String]) -> String {
   let parts = [
     ". ~/.zshrc",
@@ -21,9 +21,12 @@ fn remote_build_command(subargs : Array[String]) -> String {
 ///|
 /// Build the devenv image on `remote` and copy it into local container storage.
 ///
-/// The remote build is triggered over SSH, then `oci-image-copy` streams the
-/// resulting image directly between the two hosts' container stores over SSH
-/// (skopeo + sftp), avoiding any intermediate tarball.
+/// The build is submitted to the remote's own daemon over SSH (so it persists if
+/// this SSH session is interrupted), and once it finishes `oci-image-copy`
+/// streams the resulting image directly between the two hosts' container stores
+/// over SSH (skopeo + sftp), avoiding any intermediate tarball.
+///
+/// Requires a `dotfiles server serve` running on `remote`.
 pub async fn pull(
   repo_dir : String,
   remote : String,
@@ -31,7 +34,13 @@ pub async fn pull(
 ) -> Unit raise Error {
   let tag = get_tag(repo_dir, is_experimental)
   let image = repo_tag(tag)
-  let build_args = ["standalone", "devenv", "build"]
+  // Drive the remote build through that host's own daemon (`client`), never
+  // `standalone`: the build then runs in the remote's persistent server and
+  // survives this SSH session dropping. `--wait` blocks the session until the
+  // daemon finishes so the image exists before we copy it; if the connection is
+  // interrupted the remote keeps building, and re-running `pull` reuses the
+  // in-flight (or already-built) image instead of starting over.
+  let build_args = ["client", "devenv", "build", "--wait"]
   if is_experimental {
     build_args.push("--exp")
   }
