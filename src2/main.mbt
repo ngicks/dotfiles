@@ -89,7 +89,7 @@ fn cli() -> @argparse.Command {
           devenv_command(with_wait=false),
           @argparse.Command(
             "update-daily",
-            about="git pull the checkout and rebuild the image if it changed",
+            about="run the daily update (git pull + sync host config)",
           ),
         ],
       ),
@@ -165,7 +165,7 @@ async fn dispatch_standalone(matches : @argparse.Matches) -> Unit raise Error {
           )
         _ => raise Failure::Failure("missing devenv subcommand")
       }
-    Some(("update-daily", _)) => @devenv.update_daily(repo_dir)
+    Some(("update-daily", _)) => @daily.update_daily(repo_dir)
     _ => raise Failure::Failure("missing standalone subcommand")
   }
 }

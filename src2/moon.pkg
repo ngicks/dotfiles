@@ -1,6 +1,7 @@
 import {
   "moonbitlang/async",
   "moonbitlang/core/argparse",
+  "ngicks/dotfiles/daily",
   "ngicks/dotfiles/devenv",
   "ngicks/dotfiles/server",
   "ngicks/dotfiles/client",

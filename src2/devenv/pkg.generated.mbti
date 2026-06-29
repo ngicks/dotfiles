@@ -24,8 +24,6 @@ pub fn repo_tag(String) -> String
 
 pub let repository : String
 
-pub async fn update_daily(String) -> Unit
-
 // Errors
 
 // Types and methods

@@ -1,40 +1,22 @@
-# dotfiles server (systemd --user).
-# Symlink to ~/.config/systemd/user/dotfiles-server.service, then:
-#   systemctl --user daemon-reload
-#   systemctl --user enable --now dotfiles-server.service
-#
-# Serves the dotfiles REST/JSON API on 127.0.0.1:9787 by default. Clients
-# (`dotfiles client ...`) discover it via the state file written under the
-# runtime dir. The unit BUILDS the server before starting it, so a broken tree
-# fails the unit instead of silently running a stale binary.
 [Unit]
 Description=dotfiles server (devenv build/pull REST API)
 Documentation=https://github.com/ngicks/dotfiles
 After=network-online.target
 Wants=network-online.target
-# Skip (don't fail/retry) when the moonbit toolchain isn't installed: the unit
-# builds and runs through `moon`, so without it there is nothing to start. A
-# Condition (not Assert) leaves the unit cleanly inactive instead of looping on
-# Restart=on-failure. `moon install` then `systemctl --user start` activates it.
+
+# Skip when moonbit tool chain isn't available. 
 ConditionFileIsExecutable=%h/.local/share/moonbit/bin/moon
 
 [Service]
 Type=simple
 WorkingDirectory=%h/.dotfiles
-# systemd-user units do not inherit the interactive shell env. moon needs
-# MOON_HOME to find its registry index and toolchain (otherwise it falls back to
-# ~/.moon and fails dependency resolution with status 255). Mirror 00_moonbit.sh.
+
 Environment=MOON_HOME=%h/.local/share/moonbit
-# Likewise list every tool the build and server shell out to: moon (build/run),
-# the C toolchain and git/gh/ssh (nix profile), oci-image-copy (go bin), and
-# mise shims for the rest.
-Environment=PATH=%h/.local/share/moonbit/bin:%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:/usr/local/bin:/usr/bin:/bin
-# The state file (pid + url) lives in %t/dotfiles-server. systemd creates it
-# 0700 on start and removes it on stop, so a stale state file never outlives the
-# server even though the process is torn down with SIGTERM.
+Environment=PATH=%h/.local/share/moonbit/bin:%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:%h/.local/containers/libexec/podman:%h/.local/containers/lib/podman:%h/.local/containers/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
 RuntimeDirectory=dotfiles-server
 RuntimeDirectoryMode=0700
-# Build first; a compile failure should fail the unit, not start a stale server.
+
 ExecStartPre=%h/.local/share/moonbit/bin/moon build --target native
 ExecStart=%h/.local/share/moonbit/bin/moon run src2 --target native -- server serve
 Restart=on-failure

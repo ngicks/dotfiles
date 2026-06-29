@@ -9,6 +9,20 @@ pub fn repo_tag(tag : String) -> String {
 }
 
 ///|
+/// The current `HEAD` commit of the repository at `repo_dir`.
+pub async fn git_head(repo_dir : String) -> String raise Error {
+  let (exit_code, stdout) = @process.collect_stdout(
+    "git",
+    ["rev-parse", "HEAD"],
+    cwd=repo_dir,
+  )
+  if exit_code != 0 {
+    raise Failure::Failure("git rev-parse HEAD failed in \{repo_dir}")
+  }
+  stdout.text().trim().to_owned()
+}
+
+///|
 /// The latest git tag of the repository at `repo_dir`, with any leading `v` stripped.
 pub async fn git_tag(repo_dir : String) -> String raise Error {
   let (exit_code, stdout) = @process.collect_stdout(
