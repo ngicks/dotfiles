@@ -24,6 +24,7 @@ specs=(
   "golangci-lint|completion zsh"
   "helm|completion zsh"
   "kubectl|completion zsh"
+  "oci-image-copy|completion zsh"
   # clap-backed, different subcommand
   "mise|completion zsh"
   "ruff|generate-shell-completion zsh"

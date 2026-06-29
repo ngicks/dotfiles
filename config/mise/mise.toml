@@ -8,6 +8,7 @@ minimum_release_age_excludes = [
   "go:github.com/ngicks/crabswarm/cmd/crabswarm",
   "go:github.com/ngicks/cmdman/cmd/cmdman",
   "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers",
+  "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy",
 ]
 
 trusted_config_paths = [
@@ -55,6 +56,7 @@ binstall = true
 "go:github.com/ngicks/crabswarm/cmd/crabswarm" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/cmdman/cmd/cmdman" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 [shell_alias]
 golangci-lint-v1 = "mise exec 'go:github.com/golangci/golangci-lint/cmd/golangci-lint' -- golangci-lint "
