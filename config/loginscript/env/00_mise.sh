@@ -6,4 +6,9 @@ if command -v mise > /dev/null 2>&1; then
   elif [ -n "${BASH_VERSION:-}" ]; then
     eval "$(mise activate bash)"
   fi
+
+  # `mise up` and `mise prune` breaks PATH for
+  # long-lived apps
+  # Adds shims as fallback
+  eval "$(mise activate --shims)"
 fi
