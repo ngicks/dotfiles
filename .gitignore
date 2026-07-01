@@ -24,3 +24,5 @@ target/
 _build/
 .mooncakes/
 .moonagent/
+
+.kvm.env

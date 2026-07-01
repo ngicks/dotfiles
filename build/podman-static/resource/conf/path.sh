@@ -26,3 +26,5 @@ case ":${PATH}:" in
         export PATH="$_c_libexec:$PATH"
         ;;
 esac
+
+unset _c_bin _c_lib _c_libexec
