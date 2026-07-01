@@ -69,43 +69,43 @@ version = "0.26.10"
 backend = "cargo:tree-sitter-cli"
 
 [[tools."github:microsoft/waza"]]
-version = "0.37.0"
+version = "azd-ext-microsoft-azd-waza_0.38.0"
 backend = "github:microsoft/waza"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64"]
-checksum = "sha256:65aa01ef5052bc06629dcea26c3b12b432907b08e3f063e769796e6c1f7895c8"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462071"
+checksum = "sha256:98cbd7263e125a9d1e1e678f7b5a223f190d2bc58781db4ef6fafed5db5c6bc6"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462308048"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64-musl"]
-checksum = "sha256:65aa01ef5052bc06629dcea26c3b12b432907b08e3f063e769796e6c1f7895c8"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462071"
+checksum = "sha256:98cbd7263e125a9d1e1e678f7b5a223f190d2bc58781db4ef6fafed5db5c6bc6"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462308048"
 
 [tools."github:microsoft/waza"."platforms.linux-x64"]
-checksum = "sha256:9170008bd5c367d81777572e74a2a796367ff49a5e941291a55e480cd584f971"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462072"
+checksum = "sha256:c13482c865523d590168b042a0b2ed1a1e9fd363be6503edec659a474369e839"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462307981"
 
 [tools."github:microsoft/waza"."platforms.linux-x64-musl"]
-checksum = "sha256:9170008bd5c367d81777572e74a2a796367ff49a5e941291a55e480cd584f971"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462072"
+checksum = "sha256:c13482c865523d590168b042a0b2ed1a1e9fd363be6503edec659a474369e839"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462307981"
 
 [tools."github:microsoft/waza"."platforms.macos-arm64"]
-checksum = "sha256:617b45884597f53efdc454794f14522d4d8c8daa479b2e67980eafc88082353d"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-darwin-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462068"
+checksum = "sha256:11e984352ebb7a8d375293154fadea3ef1547a74b45aa4f428ef48894a9ffc6e"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-darwin-arm64.zip"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462307982"
 
 [tools."github:microsoft/waza"."platforms.macos-x64"]
-checksum = "sha256:cea6c2f4ec72b589e2316a875fae70b26513d7259145f1b3a9ec0a407d8a5e6c"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-darwin-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462070"
+checksum = "sha256:3acf5a5416ef463819687d21379d258571449827f452626397835a7dc05e5fed"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-darwin-amd64.zip"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462307983"
 
 [tools."github:microsoft/waza"."platforms.windows-x64"]
-checksum = "sha256:ca6f3e3c77addba64f7e1661894030f68b74b621a6cd305956b1a54a2b369d77"
-url = "https://github.com/microsoft/waza/releases/download/v0.37.0/waza-windows-amd64.exe"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/451462080"
+checksum = "sha256:4709a0e00ec51d681c036c4c9de78bb5bd1ddccb572a5ef1a8aef579d405e793"
+url = "https://github.com/microsoft/waza/releases/download/azd-ext-microsoft-azd-waza_0.38.0/microsoft-azd-waza-windows-amd64.zip"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/462307980"
 
 [[tools."go:github.com/chrishrb/go-grip"]]
 version = "0.9.2"

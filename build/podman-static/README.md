@@ -22,7 +22,7 @@ Build the tool with (`build/podman-static/` is the module root; the resources
 are embedded, so the binary is self-contained):
 
 ```sh
-CGO_ENABLED=0 go build -o podman-static-dist ./app
+CGO_ENABLED=0 go build -o podman-static-dist .
 ```
 
 ### build
@@ -88,14 +88,14 @@ tooling required:
 `build/podman-static/` is the Go module root.
 
 ```
-resources.go                  //go:embed resource -> the `resource` package
-app/main.go                   thin flag entrypoint (std `flag`), delegates to services
-internal/build/               orchestrates VM -> docker build -> assemble; writeArtifact
+main.go                       thin flag entrypoint (std `flag`), delegates to services
+resources.go                  //go:embed resource -> Conf/EnvironmentD/Tag (package main)
+build/                        orchestrates VM -> docker build -> assemble; writeArtifact
+install/                      extractArtifact + interpolate + systemd/symlink wiring
 internal/lima/                Lima VM lifecycle + in-VM command execution (dns-provision.sh)
 internal/repo/                host-side git checkout of podman-static
 internal/asset/               assembles the podman-linux-amd64 tree in Go
 internal/interp/              ${HOME}/${XDG_DATA_HOME} interpolation
-internal/install/             extractArtifact + interpolate + systemd/symlink wiring
 internal/cli/                 prompts
 resource/                     embedded at build time (see resources.go)
   conf/                       config overlaid into etc/containers

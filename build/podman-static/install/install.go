@@ -55,20 +55,31 @@ func (e Env) podmanBase() string {
 	return filepath.Join(e.DataHome, "podman")
 }
 
-// Options configures Run.
-type Options struct {
+// Option configures Run.
+type Option struct {
 	TarPath string // required: the .tar.zst produced by build
 	Tag     string // required: version tag, used as the install subdir name
 	Env     Env
 }
 
-// Run performs the full installation.
-func Run(ctx context.Context, o Options) error {
+// Validate reports whether the required fields are set. Run calls it before use.
+func (o Option) Validate() error {
 	if o.TarPath == "" {
 		return fmt.Errorf("tar path is required")
 	}
 	if o.Tag == "" {
 		return fmt.Errorf("tag is required")
+	}
+	if o.Env.Home == "" {
+		return fmt.Errorf("env HOME is required")
+	}
+	return nil
+}
+
+// Run performs the full installation.
+func Run(ctx context.Context, o Option) error {
+	if err := o.Validate(); err != nil {
+		return err
 	}
 	base := o.Env.podmanBase()
 	builtDir := filepath.Join(base, o.Tag)

@@ -1,9 +1,9 @@
 // Command podman-static-dist builds and installs a static podman distribution.
 //
 // It is a thin entrypoint: it parses flags with the standard library `flag`
-// package and delegates to the build/install services. The conf/environment.d/
-// tag resources are embedded (see the resource package), so the binary is
-// self-contained.
+// package straight into each service's Option struct, validates, and delegates.
+// The conf/environment.d/tag resources are embedded (see resources.go), so the
+// binary is self-contained.
 package main
 
 import (
@@ -15,10 +15,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	resource "github.com/ngicks/podman-static-dist"
-	"github.com/ngicks/podman-static-dist/internal/build"
+	"github.com/ngicks/podman-static-dist/build"
+	"github.com/ngicks/podman-static-dist/install"
 	"github.com/ngicks/podman-static-dist/internal/cli"
-	"github.com/ngicks/podman-static-dist/internal/install"
 	"github.com/ngicks/podman-static-dist/internal/lima"
 )
 
@@ -51,59 +50,34 @@ func run(ctx context.Context, args []string) error {
 }
 
 func runBuild(ctx context.Context, args []string) error {
+	// Seed the VM defaults so the flags below bind directly onto them; an
+	// unset flag keeps the default, a set flag overrides it.
+	o := build.Option{Vm: lima.Defaults()}
+
 	fs := flag.NewFlagSet("build", flag.ContinueOnError)
-	out := fs.String("o", "", "output .tar.zst path (required)")
-	tag := fs.String("tag", "", "podman-static tag to build (default: embedded resource/tag)")
-	recreate := fs.Bool("recreate", false, "recreate the Lima VM before building")
+	fs.StringVar(&o.OutputPath, "o", "", "output .tar.zst path (required)")
+	fs.StringVar(&o.Tag, "tag", "", "podman-static tag to build (default: embedded resource/tag)")
+	fs.BoolVar(&o.Recreate, "recreate", false, "recreate the Lima VM before building")
 	yes := fs.Bool("yes", false, "do not prompt before creating the VM")
-	vmName := fs.String("vm-name", "", "Lima instance name")
-	cpus := fs.Int("cpus", 0, "VM vCPUs")
-	memory := fs.String("memory", "", "VM memory, e.g. 8GiB")
-	disk := fs.String("disk", "", "VM disk, e.g. 60GiB")
-	work := fs.String("work", "", "host work dir shared with the VM")
+	fs.StringVar(&o.Vm.Name, "vm-name", o.Vm.Name, "Lima instance name")
+	fs.IntVar(&o.Vm.Cpus, "cpus", o.Vm.Cpus, "VM vCPUs")
+	fs.StringVar(&o.Vm.Memory, "memory", o.Vm.Memory, "VM memory, e.g. 8GiB")
+	fs.StringVar(&o.Vm.Disk, "disk", o.Vm.Disk, "VM disk, e.g. 60GiB")
+	fs.StringVar(&o.Vm.HostWork, "work", o.Vm.HostWork, "host work dir shared with the VM")
 	if err := fs.Parse(args); err != nil {
 		return ignoreHelp(err)
 	}
-	if *out == "" {
-		return errors.New("-o output path is required")
-	}
-	tagVal, err := resolveTag(*tag)
-	if err != nil {
-		return err
-	}
-	confFS, err := resource.Conf()
-	if err != nil {
-		return err
-	}
-	envFS, err := resource.EnvironmentD()
-	if err != nil {
-		return err
-	}
 
-	vm := lima.Defaults()
-	if *vmName != "" {
-		vm.Name = *vmName
+	tagVal, err := resolveTag(o.Tag)
+	if err != nil {
+		return err
 	}
-	if *cpus != 0 {
-		vm.Cpus = *cpus
+	o.Tag = tagVal
+	if o.ConfFS, err = Conf(); err != nil {
+		return err
 	}
-	if *memory != "" {
-		vm.Memory = *memory
-	}
-	if *disk != "" {
-		vm.Disk = *disk
-	}
-	if *work != "" {
-		vm.HostWork = *work
-	}
-
-	o := build.Options{
-		Tag:        tagVal,
-		ConfFS:     confFS,
-		EnvFS:      envFS,
-		OutputPath: *out,
-		Recreate:   *recreate,
-		Vm:         vm,
+	if o.EnvFS, err = EnvironmentD(); err != nil {
+		return err
 	}
 	if !*yes {
 		o.Confirm = func(prompt string) (bool, error) {
@@ -114,24 +88,24 @@ func runBuild(ctx context.Context, args []string) error {
 }
 
 func runInstall(ctx context.Context, args []string) error {
+	var o install.Option
+
 	fs := flag.NewFlagSet("install", flag.ContinueOnError)
-	tarPath := fs.String("tar", "", "path to the .tar.zst artifact (required)")
-	tag := fs.String("tag", "", "install tag / subdir name (default: embedded resource/tag)")
+	fs.StringVar(&o.TarPath, "tar", "", "path to the .tar.zst artifact (required)")
+	fs.StringVar(&o.Tag, "tag", "", "install tag / subdir name (default: embedded resource/tag)")
 	if err := fs.Parse(args); err != nil {
 		return ignoreHelp(err)
 	}
-	if *tarPath == "" {
-		return errors.New("-tar path is required")
-	}
-	tagVal, err := resolveTag(*tag)
+
+	tagVal, err := resolveTag(o.Tag)
 	if err != nil {
 		return err
 	}
-	env, err := install.ResolveEnv(os.LookupEnv)
-	if err != nil {
+	o.Tag = tagVal
+	if o.Env, err = install.ResolveEnv(os.LookupEnv); err != nil {
 		return err
 	}
-	return install.Run(ctx, install.Options{TarPath: *tarPath, Tag: tagVal, Env: env})
+	return install.Run(ctx, o)
 }
 
 // resolveTag returns the -tag override if set, otherwise the embedded default.
@@ -139,7 +113,7 @@ func resolveTag(tag string) (string, error) {
 	if tag != "" {
 		return tag, nil
 	}
-	return resource.Tag()
+	return Tag()
 }
 
 // ignoreHelp turns flag.ErrHelp (from -h) into a clean exit.

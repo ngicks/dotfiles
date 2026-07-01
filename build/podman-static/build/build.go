@@ -21,8 +21,8 @@ import (
 
 const repoUrl = "https://github.com/mgoltzsche/podman-static"
 
-// Options configures Run.
-type Options struct {
+// Option configures Run.
+type Option struct {
 	Tag        string      // required: podman-static tag to build (e.g. v5.8.4)
 	ConfFS     fs.FS       // required: conf/ overlaid into the tree (embedded resources)
 	EnvFS      fs.FS       // optional: environment.d/ files delivered in the tree
@@ -34,10 +34,24 @@ type Options struct {
 	Confirm func(prompt string) (bool, error)
 }
 
+// Validate reports whether the required fields are set. Run calls it before use.
+func (o Option) Validate() error {
+	if o.Tag == "" {
+		return fmt.Errorf("tag is required")
+	}
+	if o.ConfFS == nil {
+		return fmt.Errorf("conf fs is required")
+	}
+	if o.OutputPath == "" {
+		return fmt.Errorf("output path is required")
+	}
+	return nil
+}
+
 // Run performs the full build.
-func Run(ctx context.Context, o Options) error {
-	if o.Tag == "" || o.ConfFS == nil || o.OutputPath == "" {
-		return fmt.Errorf("tag, conf fs and output path are required")
+func Run(ctx context.Context, o Option) error {
+	if err := o.Validate(); err != nil {
+		return err
 	}
 
 	cli, err := lima.FindCliFromPath()

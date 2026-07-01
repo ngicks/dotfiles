@@ -96,7 +96,7 @@ func TestExtractInterpolateTransform(t *testing.T) {
 }
 
 // packSeekable writes srcDir as the seekable zstd tar that build produces
-// (mirrors internal/build.writeArtifact for a self-contained fixture).
+// (mirrors build.writeArtifact for a self-contained fixture).
 func packSeekable(t *testing.T, srcDir, outPath string) {
 	t.Helper()
 	out, err := os.Create(outPath)

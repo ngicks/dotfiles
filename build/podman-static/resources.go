@@ -1,7 +1,7 @@
-// Package resource embeds the build/install resource files — the config overlaid
-// into the tree (conf/), the environment.d fragments, and the default tag — so
-// the built tool is self-contained and needs no resource dir at runtime.
-package resource
+// This file embeds the build/install resource files — the config overlaid into
+// the tree (conf/), the environment.d fragments, and the default tag — so the
+// built tool is self-contained and needs no resource dir at runtime.
+package main
 
 import (
 	"embed"

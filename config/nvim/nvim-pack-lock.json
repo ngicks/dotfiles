@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "d5c09986681a671613aef0226ef409c01561d64c",
+      "rev": "eabcae3e45abf9938518501435378cd0c62a45cb",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -159,7 +159,7 @@
       "src": "https://github.com/petertriho/nvim-scrollbar"
     },
     "nvim-tree.lua": {
-      "rev": "85d1145ac71c1b8e1423862c78165a1f609faf60",
+      "rev": "531b807b8f0d6f75016a0ee1e0cd5ce2086e9d95",
       "src": "https://github.com/nvim-tree/nvim-tree.lua",
       "version": ">=0.0.0"
     },
