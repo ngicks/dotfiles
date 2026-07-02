@@ -4,7 +4,7 @@
 //
 // The heavy build runs in the VM (one `docker build --output=type=local`); the
 // host reads the exported filesystem back over the shared mount and does the
-// layout + compression in Go (see internal/asset and writeArtifact).
+// layout + compression in Go (see internal/buildpodman).
 package build
 
 import (
@@ -14,9 +14,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ngicks/podman-static-dist/internal/asset"
+	"github.com/ngicks/podman-static-dist/internal/buildpodman"
 	"github.com/ngicks/podman-static-dist/internal/lima"
-	"github.com/ngicks/podman-static-dist/internal/repo"
 )
 
 const repoUrl = "https://github.com/mgoltzsche/podman-static"
@@ -32,6 +31,13 @@ type Option struct {
 	// Confirm, when set, is asked before provisioning a fresh (slow) VM. A
 	// false return aborts the build.
 	Confirm func(prompt string) (bool, error)
+}
+
+// Defaults returns an Option seeded with the default VM configuration. Callers
+// bind flags onto it and set the required fields (Tag, ConfFS, OutputPath)
+// before calling Run.
+func Defaults() Option {
+	return Option{Vm: lima.Defaults()}
 }
 
 // Validate reports whether the required fields are set. Run calls it before use.
@@ -67,75 +73,100 @@ func Run(ctx context.Context, o Option) error {
 		vm.HostWork = defaultHostWork(o.OutputPath)
 	}
 
-	// Confirm before creating a fresh VM (first build / -recreate): it is slow.
-	if o.Confirm != nil {
-		status, err := cli.Status(ctx, vm.Name)
+	status, err := cli.Status(ctx, vm.Name)
+	if err != nil {
+		return err
+	}
+
+	// A persistent instance keeps the mount it was created with. If this build's
+	// work dir differs from the reused instance's, reusing it would build against
+	// a stale directory (Lima does not re-apply mounts on reuse), so recreate —
+	// alongside an explicit -recreate.
+	recreate := o.Recreate
+	if status != "" && !recreate {
+		mount, err := cli.MountLocation(ctx, vm.Name)
 		if err != nil {
 			return err
 		}
-		if status == "" || o.Recreate {
-			ok, err := o.Confirm(fmt.Sprintf("Lima VM %q must be %s (this is slow). Proceed?",
-				vm.Name, ternary(status == "", "created", "recreated")))
-			if err != nil {
-				return err
-			}
-			if !ok {
-				return fmt.Errorf("aborted by user")
-			}
+		if mount != "" && !sameDir(mount, vm.HostWork) {
+			recreate = true
 		}
 	}
 
-	if _, err := cli.Ensure(ctx, vm, o.Recreate); err != nil {
+	// Confirm before a fresh create/recreate: it is slow.
+	if o.Confirm != nil && (status == "" || recreate) {
+		ok, err := o.Confirm(fmt.Sprintf("Lima VM %q must be %s (this is slow). Proceed?",
+			vm.Name, ternary(status == "", "created", "recreated")))
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return fmt.Errorf("aborted by user")
+		}
+	}
+
+	if _, err := cli.Ensure(ctx, vm, recreate); err != nil {
 		return fmt.Errorf("provisioning VM: %w", err)
 	}
 
 	// Check out podman-static on the host (git lives here, not in the VM). The
 	// work tree sits on the shared mount, so the in-VM docker build reads it.
 	repoDir := filepath.Join(vm.HostWork, "podman-static")
-	if err := repo.Sync(ctx, repoDir, repoUrl, o.Tag); err != nil {
+	if err := buildpodman.Sync(ctx, repoDir, repoUrl, o.Tag); err != nil {
 		return fmt.Errorf("checking out podman-static: %w", err)
 	}
 
 	// The Lima docker template runs rootless docker, so no sudo is needed.
-	if err := cli.RunScript(ctx, vm.Name, buildScript(vm.MountPoint)); err != nil {
+	if err := cli.RunScript(
+		ctx,
+		vm.Name,
+		buildScript(lima.GuestPath("podman-static")),
+	); err != nil {
 		return fmt.Errorf("building in VM: %w", err)
 	}
 
-	// The VM wrote the exported filesystem into MountPoint/rootfs, visible on
-	// the host at HostWork/rootfs.
-	rootfs := filepath.Join(vm.HostWork, "rootfs")
-	assetDir := filepath.Join(vm.HostWork, "podman-linux-amd64")
-	if err := asset.Assemble(ctx, asset.Params{
-		RootfsDir: rootfs,
-		RepoDir:   repoDir,
-		ConfFS:    o.ConfFS,
-		EnvFS:     o.EnvFS,
-		DestDir:   assetDir,
+	// `make singlearch-tar` assembled the full distribution tree under the repo's
+	// build dir (on the shared mount); we only overlay our config on top of it.
+	assetDir := filepath.Join(repoDir, "build/asset/podman-linux-amd64")
+	if err := buildpodman.Overlay(ctx, buildpodman.OverlayParams{
+		AssetDir: assetDir,
+		ConfFS:   o.ConfFS,
+		EnvFS:    o.EnvFS,
 	}); err != nil {
-		return fmt.Errorf("assembling asset tree: %w", err)
+		return fmt.Errorf("overlaying config: %w", err)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(o.OutputPath), 0o755); err != nil {
 		return err
 	}
-	if err := writeArtifact(assetDir, o.OutputPath); err != nil {
+	if err := buildpodman.WriteArtifact(assetDir, o.OutputPath); err != nil {
 		return fmt.Errorf("writing artifact: %w", err)
 	}
 	return nil
 }
 
-// buildScript is the bash run inside the VM: export the tar-archive stage
-// filesystem of the already-checked-out repo to the shared mount. The repo is
-// checked out on the host (see repo.Sync), so this needs docker but not git;
-// the Lima docker template is rootless, so docker runs without sudo.
-func buildScript(mountPoint string) string {
+// buildScript is the bash run inside the VM: it delegates the whole distribution
+// layout to upstream's Makefile — `make singlearch-tar` builds the tar-archive
+// image and assembles build/asset/podman-linux-<arch>, and `make create-builder`
+// first creates the buildx builder the Makefile targets by name.
+//
+// make is installed on demand: Lima's docker template does not ship it, and
+// provisioning it at boot races the template's own apt install for the dpkg
+// lock, so we install it here once the VM is idle (DPkg::Lock::Timeout waits out
+// any straggler). Only that one-time install uses sudo (passwordless in the
+// docker template); the build itself runs rootless. The repo is checked out on
+// the host (see Sync), so the VM needs docker + make but not git.
+func buildScript(repoPath string) string {
 	return fmt.Sprintf(`
-WORK=%q
-REPO="$WORK/podman-static"
-rm -rf "$WORK/rootfs"
-docker build --platform=linux/amd64 --output=type=local,dest="$WORK/rootfs" \
-  --target tar-archive "$REPO"
-`, mountPoint)
+set -eu
+command -v make >/dev/null 2>&1 || {
+  sudo apt-get -o DPkg::Lock::Timeout=300 update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::Lock::Timeout=300 install -y make
+}
+cd %q
+make create-builder
+make singlearch-tar PLATFORM=linux/amd64
+`, repoPath)
 }
 
 // defaultHostWork places the VM's shared work dir next to the output artifact.
@@ -145,6 +176,16 @@ func defaultHostWork(outputPath string) string {
 		abs = outputPath
 	}
 	return filepath.Join(filepath.Dir(abs), ".podman-static-build")
+}
+
+// sameDir reports whether a and b resolve to the same directory.
+func sameDir(a, b string) bool {
+	aa, erra := filepath.Abs(a)
+	bb, errb := filepath.Abs(b)
+	if erra != nil || errb != nil {
+		return filepath.Clean(a) == filepath.Clean(b)
+	}
+	return aa == bb
 }
 
 func ternary(cond bool, a, b string) string {

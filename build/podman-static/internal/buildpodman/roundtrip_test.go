@@ -1,4 +1,4 @@
-package install
+package buildpodman
 
 import (
 	"archive/tar"
@@ -10,12 +10,10 @@ import (
 
 	seekable "github.com/SaveTheRbtz/zstd-seekable-format-go/pkg"
 	"github.com/klauspost/compress/zstd"
-
-	"github.com/ngicks/podman-static-dist/internal/interp"
 )
 
 // TestExtractInterpolateTransform exercises the real cross-package chain the
-// installer runs (extractArtifact -> interpolateTree -> transformUserUnitsInDir)
+// installer runs (ExtractArtifact -> InterpolateTree -> TransformUserUnitsInDir)
 // against a seekable-zstd artifact laid out as build produces it, including a
 // generator symlink to confirm tarfs + os.CopyFS preserve it.
 func TestExtractInterpolateTransform(t *testing.T) {
@@ -49,7 +47,7 @@ func TestExtractInterpolateTransform(t *testing.T) {
 	packSeekable(t, src, art)
 
 	built := t.TempDir()
-	if err := extractArtifact(art, built); err != nil {
+	if err := ExtractArtifact(art, built); err != nil {
 		t.Fatal(err)
 	}
 
@@ -65,15 +63,15 @@ func TestExtractInterpolateTransform(t *testing.T) {
 		t.Errorf("generator link target = %q", tgt)
 	}
 
-	env := interp.Env{Home: "/home/u", XdgDataHome: "/home/u/.local/share"}
-	if err := interpolateTree(
+	env := InterpEnv{Home: "/home/u", XdgDataHome: "/home/u/.local/share"}
+	if err := InterpolateTree(
 		context.Background(),
 		filepath.Join(built, "etc/containers"),
 		env,
 	); err != nil {
 		t.Fatal(err)
 	}
-	if err := transformUserUnitsInDir(
+	if err := TransformUserUnitsInDir(
 		filepath.Join(built, "usr/local/lib/systemd/user"),
 		"/home/u/.config/containers/path.env",
 		"/home/u/.local/containers/bin/podman",
@@ -96,7 +94,7 @@ func TestExtractInterpolateTransform(t *testing.T) {
 }
 
 // packSeekable writes srcDir as the seekable zstd tar that build produces
-// (mirrors build.writeArtifact for a self-contained fixture).
+// (mirrors WriteArtifact for a self-contained fixture).
 func packSeekable(t *testing.T, srcDir, outPath string) {
 	t.Helper()
 	out, err := os.Create(outPath)

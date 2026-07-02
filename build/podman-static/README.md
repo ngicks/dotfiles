@@ -37,21 +37,25 @@ docker is provisioned *inside* the VM by Lima's `docker` template (rootless).
    create/recreate unless `-yes` is given.
 2. On the host: clones/checks out podman-static at `-tag` into the shared work
    dir (using the host's `git`, so the VM needs only docker).
-3. Inside the VM:
-   `docker build --platform=linux/amd64 --output=type=local --target tar-archive`
-   against that checkout (rootless docker, no sudo).
-4. On the host (in Go): assembles the `podman-linux-amd64` tree (replicating
-   upstream's `.podman-from-container` + `tar` targets), overlays the embedded
-   `conf/` **un-interpolated** and stages the embedded `environment.d/`, then
-   writes a **seekable** zstd tarball (`tar.Writer.AddFS` over a seekable-zstd
-   writer) to the mandatory `-o` path.
+3. Inside the VM: `make singlearch-tar PLATFORM=linux/amd64` against that
+   checkout — upstream's Makefile builds the `tar-archive` image and assembles
+   the whole `build/asset/podman-linux-amd64` tree (rootless docker, no sudo;
+   `make` is provisioned into the VM, git is not needed there).
+4. On the host (in Go): overlays the embedded `conf/` **un-interpolated** and
+   stages the embedded `environment.d/` on top of that tree, then writes a
+   **seekable** zstd tarball (`tar.Writer.AddFS` over a seekable-zstd writer) to
+   the mandatory `-o` path.
 
 The tag defaults to the embedded `resource/tag` (override with `-tag`). The
 `conf`/`environment.d`/`tag` resources are baked into the binary at `go build`
 time, so editing `resource/` requires a rebuild.
 
-VM flags: `-vm-name`, `-cpus`, `-memory` (e.g. `8GiB`), `-disk` (e.g. `60GiB`),
-`-work` (host dir shared with the VM; defaults next to `-o`).
+VM flags: `-vm-name` (Lima instance name) and `-work` (host dir shared with the
+VM; defaults next to `-o`). The VM's shape is otherwise fixed internally, not a
+user knob: it uses Lima's `docker` template, vCPUs match the host, disk is
+`60GiB`, and memory is the lesser of `8GiB` or half the host's RAM. (These were
+misleading as flags — a persistent instance keeps whatever size it was created
+with and silently ignores a changed value on reuse.)
 
 The VM is provisioned with a fixed DNS fix embedded from
 `internal/lima/dns-provision.sh`: rootless docker runs `dockerd` in a
@@ -90,12 +94,13 @@ tooling required:
 ```
 main.go                       thin flag entrypoint (std `flag`), delegates to services
 resources.go                  //go:embed resource -> Conf/EnvironmentD/Tag (package main)
-build/                        orchestrates VM -> docker build -> assemble; writeArtifact
-install/                      extractArtifact + interpolate + systemd/symlink wiring
+build/                        public pkg: orchestrates VM -> make singlearch-tar -> Overlay -> WriteArtifact
+install/                      public pkg: ExtractArtifact -> interpolate -> systemd/symlink wiring
+internal/buildpodman/         shared, exported building blocks used by build & install:
+                              Overlay, WriteArtifact, ExtractArtifact,
+                              InterpEnv/InterpolateTree, TransformUserUnitsInDir,
+                              Sync (host-side git checkout of podman-static)
 internal/lima/                Lima VM lifecycle + in-VM command execution (dns-provision.sh)
-internal/repo/                host-side git checkout of podman-static
-internal/asset/               assembles the podman-linux-amd64 tree in Go
-internal/interp/              ${HOME}/${XDG_DATA_HOME} interpolation
 internal/cli/                 prompts
 resource/                     embedded at build time (see resources.go)
   conf/                       config overlaid into etc/containers

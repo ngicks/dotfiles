@@ -1,4 +1,4 @@
-package build
+package buildpodman
 
 import (
 	"archive/tar"
@@ -14,11 +14,11 @@ import (
 // its own frame, wrecking the ratio and bloating the seek table.
 const frameSize = 1 << 20
 
-// writeArtifact packs srcDir into a seekable zstd tar at outPath. It layers
+// WriteArtifact packs srcDir into a seekable zstd tar at outPath. It layers
 // tar.Writer over a seekable-zstd writer and populates it with tar.Writer.AddFS
 // (which since Go 1.25 preserves symlinks via os.DirFS's fs.ReadLinkFS). The
 // seek table is written by the seekable writer's Close.
-func writeArtifact(srcDir, outPath string) (err error) {
+func WriteArtifact(srcDir, outPath string) (err error) {
 	out, err := os.Create(outPath)
 	if err != nil {
 		return err

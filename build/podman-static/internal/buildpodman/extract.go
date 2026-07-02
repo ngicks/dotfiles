@@ -1,4 +1,4 @@
-package install
+package buildpodman
 
 import (
 	"os"
@@ -8,12 +8,12 @@ import (
 	"github.com/ngicks/go-fsys-helper/tarfs"
 )
 
-// extractArtifact expands the seekable zstd tar at tarPath into destDir. The
+// ExtractArtifact expands the seekable zstd tar at tarPath into destDir. The
 // seekable reader exposes the decompressed tar as an io.ReaderAt, tarfs presents
 // that as an fs.FS (HandleSymlink keeps the generator symlinks), and os.CopyFS
 // materializes it. destDir is removed first because os.CopyFS opens files with
 // O_EXCL and refuses to overwrite an existing tree.
-func extractArtifact(tarPath, destDir string) (err error) {
+func ExtractArtifact(tarPath, destDir string) (err error) {
 	f, err := os.Open(tarPath)
 	if err != nil {
 		return err

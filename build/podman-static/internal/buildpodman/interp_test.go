@@ -1,4 +1,4 @@
-package interp
+package buildpodman
 
 import "testing"
 
@@ -7,7 +7,7 @@ func lookup(m map[string]string) func(string) (string, bool) {
 }
 
 func TestResolveDefaultsXdgDataHome(t *testing.T) {
-	env, err := Resolve(lookup(map[string]string{"HOME": "/home/u"}))
+	env, err := resolveInterpEnv(lookup(map[string]string{"HOME": "/home/u"}))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -17,7 +17,9 @@ func TestResolveDefaultsXdgDataHome(t *testing.T) {
 }
 
 func TestResolveHonorsXdgDataHome(t *testing.T) {
-	env, err := Resolve(lookup(map[string]string{"HOME": "/home/u", "XDG_DATA_HOME": "/data"}))
+	env, err := resolveInterpEnv(
+		lookup(map[string]string{"HOME": "/home/u", "XDG_DATA_HOME": "/data"}),
+	)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -27,13 +29,13 @@ func TestResolveHonorsXdgDataHome(t *testing.T) {
 }
 
 func TestResolveRequiresHome(t *testing.T) {
-	if _, err := Resolve(lookup(map[string]string{})); err == nil {
+	if _, err := resolveInterpEnv(lookup(map[string]string{})); err == nil {
 		t.Error("Resolve should fail without HOME")
 	}
 }
 
 func TestExpandOnlyTouchesBracedHomeAndDataHome(t *testing.T) {
-	env := Env{Home: "/home/u", XdgDataHome: "/home/u/.local/share"}
+	env := InterpEnv{Home: "/home/u", XdgDataHome: "/home/u/.local/share"}
 	cases := []struct{ in, want string }{
 		// replaced
 		{"${HOME}/.local/containers/bin", "/home/u/.local/containers/bin"},

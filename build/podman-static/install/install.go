@@ -15,7 +15,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/ngicks/podman-static-dist/internal/interp"
+	"github.com/ngicks/podman-static-dist/internal/buildpodman"
 )
 
 // Env holds the caller's resolved environment. XDG paths are synthesized from
@@ -62,6 +62,12 @@ type Option struct {
 	Env     Env
 }
 
+// Defaults returns the base Option. Callers bind flags onto it and set Env (see
+// ResolveEnv) before calling Run; install has no non-zero static defaults.
+func Defaults() Option {
+	return Option{}
+}
+
 // Validate reports whether the required fields are set. Run calls it before use.
 func (o Option) Validate() error {
 	if o.TarPath == "" {
@@ -84,18 +90,22 @@ func Run(ctx context.Context, o Option) error {
 	base := o.Env.podmanBase()
 	builtDir := filepath.Join(base, o.Tag)
 
-	if err := extractArtifact(o.TarPath, builtDir); err != nil {
+	if err := buildpodman.ExtractArtifact(o.TarPath, builtDir); err != nil {
 		return fmt.Errorf("extracting %s: %w", o.TarPath, err)
 	}
 
-	ienv := interp.Env{Home: o.Env.Home, XdgDataHome: o.Env.DataHome}
-	if err := interpolateTree(ctx, filepath.Join(builtDir, "etc/containers"), ienv); err != nil {
+	ienv := buildpodman.InterpEnv{Home: o.Env.Home, XdgDataHome: o.Env.DataHome}
+	if err := buildpodman.InterpolateTree(
+		ctx,
+		filepath.Join(builtDir, "etc/containers"),
+		ienv,
+	); err != nil {
 		return fmt.Errorf("interpolating conf: %w", err)
 	}
 
 	envFile := filepath.Join(o.Env.ConfigHome, "containers/path.env")
 	podmanPath := filepath.Join(o.Env.Home, ".local/containers/bin/podman")
-	if err := transformUserUnitsInDir(
+	if err := buildpodman.TransformUserUnitsInDir(
 		filepath.Join(builtDir, "usr/local/lib/systemd/user"),
 		envFile,
 		podmanPath,

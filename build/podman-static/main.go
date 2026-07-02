@@ -18,7 +18,6 @@ import (
 	"github.com/ngicks/podman-static-dist/build"
 	"github.com/ngicks/podman-static-dist/install"
 	"github.com/ngicks/podman-static-dist/internal/cli"
-	"github.com/ngicks/podman-static-dist/internal/lima"
 )
 
 func main() {
@@ -50,9 +49,9 @@ func run(ctx context.Context, args []string) error {
 }
 
 func runBuild(ctx context.Context, args []string) error {
-	// Seed the VM defaults so the flags below bind directly onto them; an
-	// unset flag keeps the default, a set flag overrides it.
-	o := build.Option{Vm: lima.Defaults()}
+	// Start from the package defaults so the flags below bind directly onto
+	// them; an unset flag keeps the default, a set flag overrides it.
+	o := build.Defaults()
 
 	fs := flag.NewFlagSet("build", flag.ContinueOnError)
 	fs.StringVar(&o.OutputPath, "o", "", "output .tar.zst path (required)")
@@ -60,9 +59,6 @@ func runBuild(ctx context.Context, args []string) error {
 	fs.BoolVar(&o.Recreate, "recreate", false, "recreate the Lima VM before building")
 	yes := fs.Bool("yes", false, "do not prompt before creating the VM")
 	fs.StringVar(&o.Vm.Name, "vm-name", o.Vm.Name, "Lima instance name")
-	fs.IntVar(&o.Vm.Cpus, "cpus", o.Vm.Cpus, "VM vCPUs")
-	fs.StringVar(&o.Vm.Memory, "memory", o.Vm.Memory, "VM memory, e.g. 8GiB")
-	fs.StringVar(&o.Vm.Disk, "disk", o.Vm.Disk, "VM disk, e.g. 60GiB")
 	fs.StringVar(&o.Vm.HostWork, "work", o.Vm.HostWork, "host work dir shared with the VM")
 	if err := fs.Parse(args); err != nil {
 		return ignoreHelp(err)
@@ -88,7 +84,7 @@ func runBuild(ctx context.Context, args []string) error {
 }
 
 func runInstall(ctx context.Context, args []string) error {
-	var o install.Option
+	o := install.Defaults()
 
 	fs := flag.NewFlagSet("install", flag.ContinueOnError)
 	fs.StringVar(&o.TarPath, "tar", "", "path to the .tar.zst artifact (required)")

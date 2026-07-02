@@ -1,10 +1,4 @@
-// Package repo synchronizes a local checkout of an upstream git repository to a
-// specific tag using the host's git.
-//
-// The checkout runs on the host (where git is available) rather than inside the
-// build VM, so the VM image only needs docker — not git. The resulting work
-// tree lives on the shared mount, so the in-VM docker build reads it directly.
-package repo
+package buildpodman
 
 import (
 	"context"

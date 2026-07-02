@@ -1,6 +1,7 @@
 package lima
 
 import (
+	"runtime"
 	"strings"
 	"testing"
 
@@ -21,8 +22,15 @@ func TestInstanceYamlMarshalsValidConfig(t *testing.T) {
 	if got.Base != "template:docker" {
 		t.Errorf("Base = %q", got.Base)
 	}
-	if got.Cpus != 4 {
-		t.Errorf("Cpus = %d", got.Cpus)
+	// vCPUs match the host; disk is the fixed size; memory is host-derived.
+	if got.Cpus != runtime.NumCPU() {
+		t.Errorf("Cpus = %d, want %d (host)", got.Cpus, runtime.NumCPU())
+	}
+	if got.Disk != "60GiB" {
+		t.Errorf("Disk = %q", got.Disk)
+	}
+	if got.Memory == "" {
+		t.Errorf("Memory is empty")
 	}
 	if len(got.Mounts) != 1 {
 		t.Fatalf("Mounts = %+v", got.Mounts)

@@ -1,4 +1,4 @@
-package install
+package buildpodman
 
 import (
 	"context"
@@ -6,15 +6,13 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/ngicks/podman-static-dist/internal/interp"
 )
 
-// interpolateTree rewrites every regular file under dir in place, expanding
-// ${HOME} and ${XDG_DATA_HOME} (interp). Files without those tokens are left
-// byte-for-byte unchanged, so it is safe to run over the whole etc/containers
+// InterpolateTree rewrites every regular file under dir in place, expanding
+// ${HOME} and ${XDG_DATA_HOME} (see InterpEnv). Files without those tokens are
+// left byte-for-byte unchanged, so it is safe to run over the whole etc/containers
 // tree (upstream policy.json, registries.conf, seccomp.json, ... pass through).
-func interpolateTree(ctx context.Context, dir string, env interp.Env) error {
+func InterpolateTree(ctx context.Context, dir string, env InterpEnv) error {
 	return filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -59,8 +57,8 @@ func transformUserUnit(content, envFile, podmanPath string) string {
 	return strings.Join(out, "\n")
 }
 
-// transformUserUnitsInDir applies transformUserUnit to every regular file in dir.
-func transformUserUnitsInDir(dir, envFile, podmanPath string) error {
+// TransformUserUnitsInDir applies transformUserUnit to every regular file in dir.
+func TransformUserUnitsInDir(dir, envFile, podmanPath string) error {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return err
