@@ -2,10 +2,13 @@
 // caller's home, replacing the previous install.sh + copy_conf_interpolating.ts
 // + insert_environment_file.ts scripts.
 //
-// It extracts the tar.zst, interpolates the bundled config against the caller's
-// environment (requirement 6, synthesizing XDG_DATA_HOME when unset), rewrites
-// the systemd user units, and creates the symlinks, quadlet generator, and
-// daemon-reload that the old install.sh performed.
+// The work splits into two independently-callable entry points: Extract
+// populates the per-tag install directory (extracting the tar.zst, interpolating
+// the bundled config against the caller's environment -- requirement 6,
+// synthesizing XDG_DATA_HOME when unset -- and rewriting the systemd user
+// units), and Symlink wires that tree into the caller's home (creating the
+// symlinks, quadlet generator, and daemon-reload that the old install.sh
+// performed). Run sequences Extract then Symlink for the full installation.
 package install
 
 import (
@@ -55,7 +58,7 @@ func (e Env) podmanBase() string {
 	return filepath.Join(e.DataHome, "podman")
 }
 
-// Option configures Run.
+// Option configures Extract, Symlink, and Run.
 type Option struct {
 	TarPath string // required: the .tar.zst produced by build
 	Tag     string // required: version tag, used as the install subdir name
@@ -63,12 +66,14 @@ type Option struct {
 }
 
 // Defaults returns the base Option. Callers bind flags onto it and set Env (see
-// ResolveEnv) before calling Run; install has no non-zero static defaults.
+// ResolveEnv) before calling Extract, Symlink, or Run; install has no non-zero
+// static defaults.
 func Defaults() Option {
 	return Option{}
 }
 
-// Validate reports whether the required fields are set. Run calls it before use.
+// Validate reports whether the required fields are set. Extract and Symlink each
+// call it before use, so both are safe to invoke on their own.
 func (o Option) Validate() error {
 	if o.TarPath == "" {
 		return fmt.Errorf("tar path is required")
@@ -82,8 +87,19 @@ func (o Option) Validate() error {
 	return nil
 }
 
-// Run performs the full installation.
+// Run performs the full installation: Extract followed by Symlink.
 func Run(ctx context.Context, o Option) error {
+	if err := Extract(ctx, o); err != nil {
+		return err
+	}
+	return Symlink(ctx, o)
+}
+
+// Extract populates the per-tag install directory: it extracts the artifact,
+// interpolates the bundled conf against the caller's environment, and rewrites
+// the systemd user units. It leaves the caller's home untouched; Symlink wires
+// the result in.
+func Extract(ctx context.Context, o Option) error {
 	if err := o.Validate(); err != nil {
 		return err
 	}
@@ -112,6 +128,18 @@ func Run(ctx context.Context, o Option) error {
 	); err != nil {
 		return fmt.Errorf("transforming user units: %w", err)
 	}
+	return nil
+}
+
+// Symlink wires an extracted tree into the caller's home: it creates the
+// symlinks, installs the quadlet generator, and runs a user daemon-reload. It
+// assumes Extract has already populated the per-tag install directory.
+func Symlink(ctx context.Context, o Option) error {
+	if err := o.Validate(); err != nil {
+		return err
+	}
+	base := o.Env.podmanBase()
+	builtDir := filepath.Join(base, o.Tag)
 
 	if err := wire(o.Env, base, builtDir, o.Tag); err != nil {
 		return err
