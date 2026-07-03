@@ -132,7 +132,7 @@ version = "0.0.15"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.9"
+version = "0.0.10"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"]]
@@ -148,7 +148,7 @@ version = "0.0.0-20260618194738-ed70cd925632"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@openai/codex"]]
-version = "0.142.4"
+version = "0.142.5"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
@@ -160,7 +160,7 @@ version = "0.5.2"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.23.0"
+version = "0.23.1"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]

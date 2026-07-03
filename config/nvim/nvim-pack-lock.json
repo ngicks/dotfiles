@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "eabcae3e45abf9938518501435378cd0c62a45cb",
+      "rev": "bcf4b62b4acc36a7c3d19e423713a220c838a668",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -95,7 +95,7 @@
       "src": "https://github.com/nvzone/minty"
     },
     "moonbit.nvim": {
-      "rev": "a52214c740a6acaffc323c3f150cac999348b3fa",
+      "rev": "7fec5f61d41130046439d8c22f134bd2acfc1122",
       "src": "https://github.com/moonbit-community/moonbit.nvim"
     },
     "noice.nvim": {
