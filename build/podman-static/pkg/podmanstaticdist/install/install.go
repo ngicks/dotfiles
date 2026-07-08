@@ -30,6 +30,13 @@ type Env struct {
 	ArtifactDir string // TARGET_ARTIFACT_DIR; overrides the podman base dir
 }
 
+// ResolveEnvFromOS builds an Env from the process environment. It is the
+// entrypoint the CLI uses so env reads stay out of ./cmd; tests use ResolveEnv
+// with an injected lookup.
+func ResolveEnvFromOS() (Env, error) {
+	return ResolveEnv(os.LookupEnv)
+}
+
 // ResolveEnv builds an Env from a lookup (typically os.LookupEnv).
 func ResolveEnv(lookup func(string) (string, bool)) (Env, error) {
 	home, ok := lookup("HOME")

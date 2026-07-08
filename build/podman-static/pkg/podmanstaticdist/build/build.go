@@ -51,6 +51,9 @@ func (o Option) Validate() error {
 	if o.OutputPath == "" {
 		return fmt.Errorf("output path is required")
 	}
+	if o.Vm.Name == "" {
+		return fmt.Errorf("vm name is required")
+	}
 	return nil
 }
 
@@ -66,9 +69,6 @@ func Run(ctx context.Context, o Option) error {
 	}
 
 	vm := o.Vm
-	if vm.Name == "" {
-		vm = lima.Defaults()
-	}
 	if vm.HostWork == "" {
 		vm.HostWork = defaultHostWork(o.OutputPath)
 	}

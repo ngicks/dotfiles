@@ -4,7 +4,43 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"testing/fstest"
+
+	"github.com/ngicks/podman-static-dist/internal/lima"
 )
+
+func TestOptionValidate(t *testing.T) {
+	valid := Option{
+		Tag:        "v5.8.4",
+		ConfFS:     fstest.MapFS{},
+		OutputPath: "/out/podman.tar.zst",
+		Vm:         lima.Config{Name: "podman-static-build"},
+	}
+	if err := valid.Validate(); err != nil {
+		t.Errorf("valid option rejected: %v", err)
+	}
+
+	cases := []struct {
+		name   string
+		mutate func(*Option)
+	}{
+		{"empty tag", func(o *Option) { o.Tag = "" }},
+		{"nil conf fs", func(o *Option) { o.ConfFS = nil }},
+		{"empty output path", func(o *Option) { o.OutputPath = "" }},
+		// An empty VM name is rejected rather than silently re-defaulted: the
+		// merged config always seeds vm_name, so "" is a deliberate override.
+		{"empty vm name", func(o *Option) { o.Vm.Name = "" }},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			o := valid
+			c.mutate(&o)
+			if err := o.Validate(); err == nil {
+				t.Errorf("Validate accepted %s", c.name)
+			}
+		})
+	}
+}
 
 func TestBuildScript(t *testing.T) {
 	s := buildScript("/mnt/psbuild/podman-static")
