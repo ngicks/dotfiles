@@ -11,7 +11,7 @@
       "version": ">=0.0.0"
     },
     "base46": {
-      "rev": "884b990dcdbe07520a0892da6ba3e8d202b46337",
+      "rev": "a972909f1d7ba798b93b56631bc2cd5e96ea40da",
       "src": "https://github.com/nvchad/base46"
     },
     "cmp-async-path": {
@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "bcf4b62b4acc36a7c3d19e423713a220c838a668",
+      "rev": "1c095f26f268871a6ef06e5cc90f92573c725f95",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -58,7 +58,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "ce4bef75954bebd87e0886435bcf8c6904328ab0",
+      "rev": "6765f464a60e39afc20775f54f7ba40896bf1b81",
       "src": "https://github.com/junegunn/fzf",
       "version": ">=0.0.0"
     },
@@ -95,7 +95,7 @@
       "src": "https://github.com/nvzone/minty"
     },
     "moonbit.nvim": {
-      "rev": "7fec5f61d41130046439d8c22f134bd2acfc1122",
+      "rev": "907c8240d3d2f96fa8e8569c73973e8604a7b1e6",
       "src": "https://github.com/moonbit-community/moonbit.nvim"
     },
     "noice.nvim": {
@@ -128,7 +128,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap-view": {
-      "rev": "440ec66c2b26470ec97cd4d6667cdd4b51cbc7cb",
+      "rev": "b8c8aa91f42055d7f69012587cde4f1d99f2a701",
       "src": "https://github.com/igorlfs/nvim-dap-view"
     },
     "nvim-dap-virtual-text": {
@@ -224,7 +224,7 @@
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
-      "rev": "3e67e9d5325fd47fdbc90ca00a147db2f3525754",
+      "rev": "5cfd3c8f2c3e6603d52d8f6c0b715743bbb5270d",
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {

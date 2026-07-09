@@ -144,15 +144,15 @@ version = "0.0.1"
 backend = "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy"
 
 [[tools."go:golang.org/dl/gotip"]]
-version = "0.0.0-20260618194738-ed70cd925632"
+version = "0.0.0-20260707194042-2a89cd203549"
 backend = "go:golang.org/dl/gotip"
 
 [[tools."npm:@openai/codex"]]
-version = "0.142.5"
+version = "0.144.1"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
-version = "3.2.2"
+version = "3.2.3"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
@@ -160,7 +160,7 @@ version = "0.5.2"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.23.1"
+version = "0.24.0"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]
