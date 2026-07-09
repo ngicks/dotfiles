@@ -3,12 +3,14 @@ experimental = true
 auto_install = true
 lockfile = true
 
-# My own tools!
 minimum_release_age_excludes = [
+  # My own tools!
   "go:github.com/ngicks/crabswarm/cmd/crabswarm",
   "go:github.com/ngicks/cmdman/cmd/cmdman",
   "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers",
   "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy",
+  # codex needs updates for newer models
+  "npm:@openai/codex",
 ]
 
 trusted_config_paths = [
