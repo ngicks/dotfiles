@@ -8,6 +8,8 @@ image=$("${script_dir}/select-latest-devenv.sh")
 
 "${script_dir}/ensure-podman-volume.sh"
 
+"${script_dir}/ensure-podman-static-dist.sh"
+
 container_opts=$("${script_dir}/opts.sh")
 
 arg1=${1:-}

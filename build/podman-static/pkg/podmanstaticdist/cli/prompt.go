@@ -1,5 +1,4 @@
-// Package cli holds terminal presentation helpers (prompts, messages) kept out
-// of the thin cmd entrypoint and the services.
+// Package cli holds terminal presentation helpers kept out of the cmd entrypoint.
 package cli
 
 import (
@@ -9,8 +8,6 @@ import (
 	"strings"
 )
 
-// Confirm asks a yes/no question on out and reads the answer from in. The
-// default (empty answer or EOF) is no.
 func Confirm(in io.Reader, out io.Writer, prompt string) (bool, error) {
 	if _, err := fmt.Fprintf(out, "%s [y/N]: ", prompt); err != nil {
 		return false, err

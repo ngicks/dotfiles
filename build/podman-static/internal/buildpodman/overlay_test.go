@@ -14,17 +14,14 @@ func TestOverlay(t *testing.T) {
 	writeFile(t, filepath.Join(assetDir, "etc/containers/containers.conf"), "# upstream\n")
 	writeFile(t, filepath.Join(assetDir, "etc/containers/policy.json"), "{}\n")
 
-	conf := fstest.MapFS{
-		"containers.conf": {Data: []byte("conmon_path=[\"${HOME}/x\"]\n")},
-		"storage.conf":    {Data: []byte("graphroot = ${XDG_DATA_HOME}/g\n")},
-	}
-	env := fstest.MapFS{
-		"50-podman.conf": {Data: []byte("X=1\n")},
+	res := fstest.MapFS{
+		"etc/containers/containers.conf":   {Data: []byte("conmon_path=[\"${HOME}/x\"]\n")},
+		"etc/containers/storage.conf":      {Data: []byte("graphroot = ${XDG_DATA_HOME}/g\n")},
+		"etc/environment.d/50-podman.conf": {Data: []byte("X=1\n")},
 	}
 	if err := Overlay(context.Background(), OverlayParams{
-		AssetDir: assetDir,
-		ConfFS:   conf,
-		EnvFS:    env,
+		AssetDir:   assetDir,
+		ResourceFS: res,
 	}); err != nil {
 		t.Fatal(err)
 	}
@@ -47,10 +44,10 @@ func TestOverlay(t *testing.T) {
 	if got := readf(t, filepath.Join(assetDir, "etc/containers/policy.json")); got != "{}\n" {
 		t.Errorf("policy.json = %q; should be untouched", got)
 	}
-	// environment.d fragment delivered under usr/local/lib.
+	// environment.d fragment delivered under etc/environment.d.
 	if got := readf(
 		t,
-		filepath.Join(assetDir, "usr/local/lib/environment.d/50-podman.conf"),
+		filepath.Join(assetDir, "etc/environment.d/50-podman.conf"),
 	); got != "X=1\n" {
 		t.Errorf("environment.d = %q", got)
 	}

@@ -69,9 +69,6 @@ func runBuild(
 	})
 }
 
-// overlayBuildFlags applies the explicitly-set build flags onto cfg (flags win,
-// even when the explicit value is empty). It is split out of runBuild so the
-// cmd.Flags().Changed overlay is unit-testable without provisioning a VM.
 func overlayBuildFlags(
 	cmd *cobra.Command,
 	cfg *podmanstaticdist.Config,

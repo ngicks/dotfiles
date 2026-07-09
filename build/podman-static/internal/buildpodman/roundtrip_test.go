@@ -93,6 +93,43 @@ func TestExtractInterpolateTransform(t *testing.T) {
 	}
 }
 
+// TestReadArtifactTag round-trips the root `tag` stamp through WriteArtifact and
+// ReadArtifactTag, and confirms an unstamped archive reads back as "".
+func TestReadArtifactTag(t *testing.T) {
+	t.Run("stamped tag reads back trimmed", func(t *testing.T) {
+		src := t.TempDir()
+		writeFile(t, filepath.Join(src, "tag"), "v5.8.4\n")
+		writeFile(t, filepath.Join(src, "etc/containers/storage.conf"), "graphroot = x\n")
+		art := filepath.Join(t.TempDir(), "a.tar.zst")
+		if err := WriteArtifact(src, art); err != nil {
+			t.Fatal(err)
+		}
+		got, err := ReadArtifactTag(art)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got != "v5.8.4" {
+			t.Errorf("ReadArtifactTag = %q, want %q", got, "v5.8.4")
+		}
+	})
+
+	t.Run("absent tag reads back empty", func(t *testing.T) {
+		src := t.TempDir()
+		writeFile(t, filepath.Join(src, "etc/containers/storage.conf"), "graphroot = x\n")
+		art := filepath.Join(t.TempDir(), "a.tar.zst")
+		if err := WriteArtifact(src, art); err != nil {
+			t.Fatal(err)
+		}
+		got, err := ReadArtifactTag(art)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if got != "" {
+			t.Errorf("ReadArtifactTag = %q, want empty for an unstamped archive", got)
+		}
+	})
+}
+
 // packSeekable writes srcDir as the seekable zstd tar that build produces
 // (mirrors WriteArtifact for a self-contained fixture).
 func packSeekable(t *testing.T, srcDir, outPath string) {

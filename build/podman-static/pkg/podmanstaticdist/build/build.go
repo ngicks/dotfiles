@@ -23,8 +23,7 @@ const repoUrl = "https://github.com/mgoltzsche/podman-static"
 // Option configures Run.
 type Option struct {
 	Tag        string      // required: podman-static tag to build (e.g. v5.8.4)
-	ConfFS     fs.FS       // required: conf/ overlaid into the tree (embedded resources)
-	EnvFS      fs.FS       // optional: environment.d/ files delivered in the tree
+	Resource   fs.FS       // required: resource tree; its directories are copied over the built tree
 	OutputPath string      // required: destination .tar.zst
 	Recreate   bool        // recreate the VM before building
 	Vm         lima.Config // VM config; HostWork defaults next to OutputPath
@@ -34,7 +33,7 @@ type Option struct {
 }
 
 // Defaults returns an Option seeded with the default VM configuration. Callers
-// bind flags onto it and set the required fields (Tag, ConfFS, OutputPath)
+// bind flags onto it and set the required fields (Tag, ResourceFS, OutputPath)
 // before calling Run.
 func Defaults() Option {
 	return Option{Vm: lima.Defaults()}
@@ -45,8 +44,8 @@ func (o Option) Validate() error {
 	if o.Tag == "" {
 		return fmt.Errorf("tag is required")
 	}
-	if o.ConfFS == nil {
-		return fmt.Errorf("conf fs is required")
+	if o.Resource == nil {
+		return fmt.Errorf("resource fs is required")
 	}
 	if o.OutputPath == "" {
 		return fmt.Errorf("output path is required")
@@ -71,6 +70,10 @@ func Run(ctx context.Context, o Option) error {
 	vm := o.Vm
 	if vm.HostWork == "" {
 		vm.HostWork = defaultHostWork(o.OutputPath)
+	}
+	vm.HostWork, err = filepath.Abs(vm.HostWork)
+	if err != nil {
+		return fmt.Errorf("resolving work dir: %w", err)
 	}
 
 	status, err := cli.Status(ctx, vm.Name)
@@ -129,11 +132,16 @@ func Run(ctx context.Context, o Option) error {
 	// build dir (on the shared mount); we only overlay our config on top of it.
 	assetDir := filepath.Join(repoDir, "build/asset/podman-linux-amd64")
 	if err := buildpodman.Overlay(ctx, buildpodman.OverlayParams{
-		AssetDir: assetDir,
-		ConfFS:   o.ConfFS,
-		EnvFS:    o.EnvFS,
+		AssetDir:   assetDir,
+		ResourceFS: o.Resource,
 	}); err != nil {
 		return fmt.Errorf("overlaying config: %w", err)
+	}
+
+	// Stamp the built tag into the tree root so it rides into the archive next to
+	// etc/ and usr/; install/extract read it back to make --tag optional.
+	if err := os.WriteFile(filepath.Join(assetDir, "tag"), []byte(o.Tag+"\n"), 0o644); err != nil {
+		return fmt.Errorf("stamping tag: %w", err)
 	}
 
 	if err := os.MkdirAll(filepath.Dir(o.OutputPath), 0o755); err != nil {
@@ -171,11 +179,7 @@ make singlearch-tar PLATFORM=linux/amd64
 
 // defaultHostWork places the VM's shared work dir next to the output artifact.
 func defaultHostWork(outputPath string) string {
-	abs, err := filepath.Abs(outputPath)
-	if err != nil {
-		abs = outputPath
-	}
-	return filepath.Join(filepath.Dir(abs), ".podman-static-build")
+	return filepath.Join(filepath.Dir(outputPath), ".podman-static-build")
 }
 
 // sameDir reports whether a and b resolve to the same directory.
@@ -184,6 +188,12 @@ func sameDir(a, b string) bool {
 	bb, errb := filepath.Abs(b)
 	if erra != nil || errb != nil {
 		return filepath.Clean(a) == filepath.Clean(b)
+	}
+	if r, err := filepath.EvalSymlinks(aa); err == nil {
+		aa = r
+	}
+	if r, err := filepath.EvalSymlinks(bb); err == nil {
+		bb = r
 	}
 	return aa == bb
 }

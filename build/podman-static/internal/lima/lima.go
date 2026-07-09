@@ -18,7 +18,9 @@ import (
 	"context"
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -170,7 +172,7 @@ func mountLocation(ctx context.Context, limactl, name string) (string, error) {
 	}
 	b, err := os.ReadFile(filepath.Join(rec.Dir, "lima.yaml"))
 	if err != nil {
-		if os.IsNotExist(err) {
+		if errors.Is(err, fs.ErrNotExist) {
 			return "", nil
 		}
 		return "", err

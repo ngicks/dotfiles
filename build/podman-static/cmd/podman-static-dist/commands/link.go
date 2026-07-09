@@ -7,15 +7,14 @@ import (
 )
 
 const linkLong = `link wires an already-extracted dist tree into your home without re-extracting
-it. It is meant to run inside the devenv container, where the dist dir is a
-READ-ONLY mount and $HOME differs from the host that produced the tree.
+it. It targets the case where the dist dir is a READ-ONLY mount and/or $HOME
+differs from the host that produced the tree (e.g. inside a container).
 
-Because the host interpolated the tree against its own $HOME, link does NOT
-symlink ~/.config/containers into the tree. Instead it materializes
-~/.config/containers as a real directory: the bundled conf (containers.conf,
-storage.conf, path.env, path.sh) is rewritten against the CURRENT environment,
-and every other file under <base>/current/etc/containers is per-file symlinked.
-Re-running overwrites the materialized files and relinks — it is idempotent.
+link only creates symlinks — no interpolation happens here (that is done once, at
+extract time). It points ~/.config/containers at <base>/current/etc/containers and
+~/.local/containers at <base>/current/usr/local, per-file links the environment.d
+and systemd/user units, and installs the quadlet generator. Re-running relinks; it
+is idempotent.
 
 The base dir defaults to $TARGET_ARTIFACT_DIR, else the config's artifact_dir,
 else $XDG_DATA_HOME/podman. The current symlink is only created/updated when
@@ -26,7 +25,6 @@ func linkCmd(parent *cobra.Command, flagConfig *string) {
 	var (
 		flagBase        string
 		flagTag         string
-		flagStores      []string
 		flagSkipSystemd bool
 	)
 
@@ -37,19 +35,13 @@ func linkCmd(parent *cobra.Command, flagConfig *string) {
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return runLink(cmd, args, *flagConfig, flagBase, flagTag, flagStores, flagSkipSystemd)
+			return runLink(cmd, args, *flagConfig, flagBase, flagTag, flagSkipSystemd)
 		},
 	}
 
 	f := cmd.Flags()
 	f.StringVar(&flagBase, "base", "", "dist base directory")
 	f.StringVar(&flagTag, "tag", "", "tag for the current symlink")
-	f.StringArrayVar(
-		&flagStores,
-		"additional-image-store",
-		nil,
-		"extra read-only image store (repeatable)",
-	)
 	f.BoolVar(&flagSkipSystemd, "skip-systemd", false, "skip systemd wiring")
 
 	parent.AddCommand(cmd)
@@ -57,14 +49,11 @@ func linkCmd(parent *cobra.Command, flagConfig *string) {
 
 func runLink(
 	cmd *cobra.Command, _ []string, flagConfig,
-	flagBase, flagTag string, flagStores []string, flagSkipSystemd bool,
+	flagBase, flagTag string, flagSkipSystemd bool,
 ) error {
 	cfg, err := podmanstaticdist.LoadConfig(flagConfig)
 	if err != nil {
 		return err
-	}
-	if cmd.Flags().Changed("additional-image-store") {
-		cfg.Link.AdditionalImageStores = flagStores
 	}
 
 	return podmanstaticdist.New(cfg).Link(cmd.Context(), podmanstaticdist.LinkParams{

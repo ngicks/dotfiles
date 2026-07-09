@@ -1,7 +1,4 @@
-// Package commands defines the podman-static-dist cobra command tree: the root
-// command plus the build, install, link, version, and config subcommands. It is
-// thin wiring only — each run function loads config, overlays flags, and calls
-// into pkg/podmanstaticdist.
+// Package commands defines the podman-static-dist cobra command tree.
 package commands
 
 import (

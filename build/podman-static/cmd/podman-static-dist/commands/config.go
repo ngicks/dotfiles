@@ -9,10 +9,6 @@ import (
 	"github.com/ngicks/podman-static-dist/pkg/podmanstaticdist/cli"
 )
 
-// configLongFmt documents the resolved-config shape so users can write --format
-// templates without reading the source. The %s is filled with the shared
-// template-helper docs (cli.TemplateFuncHelp). Keep the field list in sync with
-// Config — it is a site on the add-a-field checklist.
 const configLongFmt = `config loads every layer (defaults < file < environment), applies any
 explicitly-set flags on top, and prints the fully-resolved configuration. With
 no flags it prints indented JSON; with --format it renders a Go text/template
@@ -30,19 +26,17 @@ nesting is shown as a tree so deep configs stay readable:
   Config
   ├─ .Tag          string    # podman-static tag to build/install  (tag)
   ├─ .VMName       string    # Lima instance name (build)          (vm_name)
-  ├─ .ArtifactDir  string    # dist base dir override              (artifact_dir)
-  └─ .Link                   # link sub-config                     (link)
-      └─ .AdditionalImageStores  []string  # extra image stores  (link.additional_image_stores)
+  └─ .ArtifactDir  string    # dist base dir override              (artifact_dir)
 
-Use the Go field names in --format (e.g. {{.Tag}}, or {{.Link.AdditionalImageStores}}
-for a nested field); the default JSON output uses the lower-case keys shown in
-parentheses. The template also sees these helper functions:
+Use the Go field names in --format (e.g. {{.Tag}}); the default JSON output uses
+the lower-case keys shown in parentheses. The template also sees these helper
+functions:
 
 %s`
 
 const configExample = `  podman-static-dist config
   podman-static-dist config --format '{{.Tag}}'
-  podman-static-dist config --format '{{ json .Link }}'`
+  podman-static-dist config --format '{{ json . }}'`
 
 func configCmd(parent *cobra.Command, flagConfig *string) {
 	var flagFormat string
@@ -75,7 +69,5 @@ func runConfig(cmd *cobra.Command, _ []string, flagConfig, flagFormat string) er
 	if err != nil {
 		return err
 	}
-	// Presentation (JSON / template rendering) lives in pkg/podmanstaticdist/cli;
-	// ./cmd only wires it to stdout. cmd.Println would route to stderr.
 	return cli.RenderConfig(cmd.OutOrStdout(), cfg, flagFormat)
 }

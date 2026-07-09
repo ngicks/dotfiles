@@ -8,11 +8,6 @@ import (
 	"github.com/ngicks/podman-static-dist/pkg/podmanstaticdist"
 )
 
-// TestOverlayBuildFlags pins the flags-win semantics of the build overlay: an
-// explicitly-set flag (including an explicit empty value) overwrites the loaded
-// config, while an unset flag leaves it untouched. It drives the real build
-// command's flag set through cmd.Flags().Changed rather than reaching into
-// runBuild, so the overlay is exercised without provisioning a Lima VM.
 func TestOverlayBuildFlags(t *testing.T) {
 	buildFlags := func(t *testing.T, args []string) (*cobra.Command, string, string) {
 		t.Helper()

@@ -1,6 +1,7 @@
 package build
 
 import (
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -12,7 +13,7 @@ import (
 func TestOptionValidate(t *testing.T) {
 	valid := Option{
 		Tag:        "v5.8.4",
-		ConfFS:     fstest.MapFS{},
+		Resource:   fstest.MapFS{},
 		OutputPath: "/out/podman.tar.zst",
 		Vm:         lima.Config{Name: "podman-static-build"},
 	}
@@ -25,7 +26,7 @@ func TestOptionValidate(t *testing.T) {
 		mutate func(*Option)
 	}{
 		{"empty tag", func(o *Option) { o.Tag = "" }},
-		{"nil conf fs", func(o *Option) { o.ConfFS = nil }},
+		{"nil resource fs", func(o *Option) { o.Resource = nil }},
 		{"empty output path", func(o *Option) { o.OutputPath = "" }},
 		// An empty VM name is rejected rather than silently re-defaulted: the
 		// merged config always seeds vm_name, so "" is a deliberate override.
@@ -68,6 +69,32 @@ func TestDefaultHostWork(t *testing.T) {
 	got := defaultHostWork("/home/u/out/podman.tar.zst")
 	if got != "/home/u/out/.podman-static-build" {
 		t.Errorf("defaultHostWork = %q", got)
+	}
+	got = defaultHostWork("podman.tar.zst")
+	if got != ".podman-static-build" {
+		t.Errorf("defaultHostWork relative = %q", got)
+	}
+}
+
+func TestSameDirSymlink(t *testing.T) {
+	dir := t.TempDir()
+	real := filepath.Join(dir, "real")
+	if err := os.Mkdir(real, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	alias := filepath.Join(dir, "alias")
+	if err := os.Symlink(real, alias); err != nil {
+		t.Fatal(err)
+	}
+	if !sameDir(real, alias) {
+		t.Errorf("sameDir(%q, %q) = false, want true", real, alias)
+	}
+	other := filepath.Join(dir, "other")
+	if err := os.Mkdir(other, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if sameDir(real, other) {
+		t.Errorf("sameDir(%q, %q) = true, want false", real, other)
 	}
 }
 

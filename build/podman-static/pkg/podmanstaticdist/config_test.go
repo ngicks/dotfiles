@@ -12,7 +12,6 @@ func TestPartialConfigApply(t *testing.T) {
 		Tag:         "base-tag",
 		VMName:      "base-vm",
 		ArtifactDir: "base-dir",
-		Link:        LinkConfig{AdditionalImageStores: []string{"a", "b"}},
 	}
 
 	t.Run("nil fields leave base untouched", func(t *testing.T) {
@@ -34,36 +33,6 @@ func TestPartialConfigApply(t *testing.T) {
 		if got.VMName != "new-vm" || got.ArtifactDir != "new-dir" {
 			t.Errorf("scalar overwrite failed: %+v", got)
 		}
-		// the untouched nested slice survives.
-		if !reflect.DeepEqual(got.Link.AdditionalImageStores, []string{"a", "b"}) {
-			t.Errorf("Link slice mutated by scalar apply: %+v", got.Link)
-		}
-	})
-
-	t.Run("slice overwrites wholesale, not element-merge", func(t *testing.T) {
-		got := PartialConfig{
-			Link: PartialLinkConfig{AdditionalImageStores: []string{"c"}},
-		}.Apply(base)
-		if !reflect.DeepEqual(got.Link.AdditionalImageStores, []string{"c"}) {
-			t.Errorf("slice = %v, want wholesale overwrite [c]", got.Link.AdditionalImageStores)
-		}
-	})
-
-	t.Run("nil slice leaves base slice", func(t *testing.T) {
-		got := PartialConfig{Link: PartialLinkConfig{AdditionalImageStores: nil}}.Apply(base)
-		if !reflect.DeepEqual(got.Link.AdditionalImageStores, []string{"a", "b"}) {
-			t.Errorf("nil slice overrode base: %v", got.Link.AdditionalImageStores)
-		}
-	})
-
-	t.Run("empty non-nil slice overwrites to empty", func(t *testing.T) {
-		got := PartialConfig{
-			Link: PartialLinkConfig{AdditionalImageStores: []string{}},
-		}.Apply(base)
-		if got.Link.AdditionalImageStores == nil || len(got.Link.AdditionalImageStores) != 0 {
-			t.Errorf("empty non-nil slice should overwrite to empty, got %v",
-				got.Link.AdditionalImageStores)
-		}
 	})
 }
 
@@ -78,7 +47,6 @@ func clearConfigEnv(t *testing.T) {
 		"PODMAN_STATIC_DIST_TAG",
 		"PODMAN_STATIC_DIST_VM_NAME",
 		"PODMAN_STATIC_DIST_ARTIFACT_DIR",
-		"PODMAN_STATIC_DIST_LINK_ADDITIONAL_IMAGE_STORES",
 	} {
 		t.Setenv(k, "")
 		os.Unsetenv(k)
@@ -131,7 +99,6 @@ func TestLoadConfigEnvOverridesFile(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Setenv("PODMAN_STATIC_DIST_TAG", "env-tag")
-	t.Setenv("PODMAN_STATIC_DIST_LINK_ADDITIONAL_IMAGE_STORES", "/s1,/s2")
 
 	cfg, err := LoadConfig(path)
 	if err != nil {
@@ -144,9 +111,6 @@ func TestLoadConfigEnvOverridesFile(t *testing.T) {
 	// a field set only in the file (absent from env) keeps the file value.
 	if cfg.VMName != "file-vm" {
 		t.Errorf("VMName = %q, file value should survive when env is absent", cfg.VMName)
-	}
-	if !reflect.DeepEqual(cfg.Link.AdditionalImageStores, []string{"/s1", "/s2"}) {
-		t.Errorf("env slice not applied: %v", cfg.Link.AdditionalImageStores)
 	}
 }
 

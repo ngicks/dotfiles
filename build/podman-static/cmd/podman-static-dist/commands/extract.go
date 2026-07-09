@@ -34,7 +34,12 @@ func extractCmd(parent *cobra.Command, flagConfig *string) {
 
 	f := cmd.Flags()
 	f.StringVar(&flagTar, "tar", "", "path to the .tar.zst artifact (required)")
-	f.StringVar(&flagTag, "tag", "", "install tag / subdir name (default: config/embedded)")
+	f.StringVar(
+		&flagTag,
+		"tag",
+		"",
+		"install tag / subdir name (default: archive stamp, else config/embedded)",
+	)
 	_ = cmd.MarkFlagRequired("tar")
 
 	parent.AddCommand(cmd)
@@ -45,9 +50,10 @@ func runExtract(cmd *cobra.Command, _ []string, flagConfig, flagTar, flagTag str
 	if err != nil {
 		return err
 	}
+	var tag string
 	if cmd.Flags().Changed("tag") {
-		cfg.Tag = flagTag
+		tag = flagTag
 	}
 
-	return podmanstaticdist.New(cfg).Extract(cmd.Context(), flagTar)
+	return podmanstaticdist.New(cfg).Extract(cmd.Context(), flagTar, tag)
 }

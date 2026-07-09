@@ -2,61 +2,16 @@ package install
 
 import (
 	"context"
+	"errors"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
+	"syscall"
 	"testing"
-	"testing/fstest"
 )
 
-func TestInjectAdditionalImageStores(t *testing.T) {
-	// Mirrors the embedded resource/conf/storage.conf shape: an empty list.
-	const src = `[storage.options]
-additionalimagestores = [
-]
-
-mountopt = "nodev"
-`
-
-	t.Run("empty stores leaves content unchanged", func(t *testing.T) {
-		if got := injectAdditionalImageStores(src, nil); got != src {
-			t.Errorf("expected unchanged content, got:\n%s", got)
-		}
-	})
-
-	t.Run("injects each store as a quoted entry", func(t *testing.T) {
-		got := injectAdditionalImageStores(src, []string{"/opt/store-a", "/opt/store-b"})
-		for _, want := range []string{`"/opt/store-a",`, `"/opt/store-b",`} {
-			if !strings.Contains(got, want) {
-				t.Errorf("missing %q in:\n%s", want, got)
-			}
-		}
-		// The surrounding structure must survive.
-		if !strings.Contains(got, "additionalimagestores = [") || !strings.Contains(got, "]") {
-			t.Errorf("list brackets lost:\n%s", got)
-		}
-		if !strings.Contains(got, `mountopt = "nodev"`) {
-			t.Errorf("trailing content dropped:\n%s", got)
-		}
-		// The injected paths must sit inside the list, before the closing bracket.
-		openIdx := strings.Index(got, "additionalimagestores = [")
-		closeIdx := strings.Index(got[openIdx:], "\n]")
-		storeIdx := strings.Index(got, `"/opt/store-a"`)
-		if closeIdx < 0 || storeIdx < 0 || storeIdx > openIdx+closeIdx {
-			t.Errorf("store not placed inside the list:\n%s", got)
-		}
-	})
-
-	t.Run("single-line empty list", func(t *testing.T) {
-		got := injectAdditionalImageStores("additionalimagestores = []\n", []string{"/x"})
-		if !strings.Contains(got, `"/x",`) {
-			t.Errorf("store not injected into single-line list:\n%s", got)
-		}
-	})
-}
-
-// writeTreeFile writes content at path, creating parent dirs.
 func writeTreeFile(t *testing.T, path, content string) {
 	t.Helper()
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
@@ -67,44 +22,7 @@ func writeTreeFile(t *testing.T, path, content string) {
 	}
 }
 
-// readTreeFile reads path or fails the test.
-func readTreeFile(t *testing.T, path string) string {
-	t.Helper()
-	b, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return string(b)
-}
-
-// assertRealFile asserts path exists and is a plain file (not a symlink).
-func assertRealFile(t *testing.T, path string) {
-	t.Helper()
-	fi, err := os.Lstat(path)
-	if err != nil {
-		t.Fatalf("stat %s: %v", path, err)
-	}
-	if fi.Mode()&os.ModeSymlink != 0 {
-		t.Errorf("%s is a symlink, want a real file", path)
-	}
-}
-
-// linkFixture builds a fake extracted dist tree under a temp root and returns the
-// base dir, the caller Env pointing at a sibling home, and an embedded conf FS.
-//
-// Layout (base/current -> v1, as wire creates the relative link):
-//
-//	base/v1/usr/local/bin/podman                          (tree binary)
-//	base/v1/usr/local/lib/environment.d/50-podman.conf    (linked per-file)
-//	base/v1/usr/local/lib/systemd/user/podman.socket      (systemd unit)
-//	base/v1/etc/containers/storage.conf                   (embedded-named: NOT symlinked)
-//	base/v1/etc/containers/registries.conf                (extra: per-file symlinked)
-//	base/v1/etc/containers/policy.json                    (extra: per-file symlinked)
-//
-// The embedded confFS carries interpolation tokens so the materialized files can
-// be asserted against the CURRENT environment, and a storage.conf with an empty
-// additionalimagestores list for the injection assertion.
-func linkFixture(t *testing.T) (base string, env Env, confFS fs.FS) {
+func linkFixture(t *testing.T) (base string, env Env) {
 	t.Helper()
 	root := t.TempDir()
 	base = filepath.Join(root, "base")
@@ -114,7 +32,7 @@ func linkFixture(t *testing.T) (base string, env Env, confFS fs.FS) {
 	writeTreeFile(t, filepath.Join(tagDir, "usr/local/bin/podman"), "binary\n")
 	writeTreeFile(
 		t,
-		filepath.Join(tagDir, "usr/local/lib/environment.d/50-podman.conf"),
+		filepath.Join(tagDir, "etc/environment.d/50-podman.conf"),
 		"PODMAN=1\n",
 	)
 	writeTreeFile(
@@ -122,16 +40,9 @@ func linkFixture(t *testing.T) (base string, env Env, confFS fs.FS) {
 		filepath.Join(tagDir, "usr/local/lib/systemd/user/podman.socket"),
 		"[Socket]\n",
 	)
-
-	// A host-interpolated storage.conf lives in the tree; it must be shadowed by
-	// the materialized (current-env) copy, never symlinked in — its "/HOST/leak"
-	// path must not surface in ~/.config/containers.
-	writeTreeFile(t, filepath.Join(tagDir, "etc/containers/storage.conf"),
-		"[storage.options]\nadditionalimagestores = [\n\"/HOST/leak\"\n]\n")
+	writeTreeFile(t, filepath.Join(tagDir, "etc/containers/storage.conf"), "[storage.options]\n")
 	writeTreeFile(t, filepath.Join(tagDir, "etc/containers/registries.conf"), "unqualified = []\n")
-	writeTreeFile(t, filepath.Join(tagDir, "etc/containers/policy.json"), "{}\n")
 
-	// current -> v1 (relative target, resolved against base), as wire creates it.
 	if err := os.Symlink("v1", filepath.Join(base, "current")); err != nil {
 		t.Fatal(err)
 	}
@@ -141,105 +52,58 @@ func linkFixture(t *testing.T) (base string, env Env, confFS fs.FS) {
 		DataHome:   filepath.Join(home, ".local/share"),
 		ConfigHome: filepath.Join(home, ".config"),
 	}
-	confFS = fstest.MapFS{
-		"containers.conf": &fstest.MapFile{
-			Data: []byte("home = ${HOME}\ndata = ${XDG_DATA_HOME}\n"),
-		},
-		"storage.conf": &fstest.MapFile{
-			Data: []byte("[storage.options]\nadditionalimagestores = [\n]\n"),
-		},
-		"path.env": &fstest.MapFile{Data: []byte("PATH=${HOME}/.local/containers/bin\n")},
-	}
-	return base, env, confFS
+	return base, env
 }
 
-// assertWired verifies every effect Link's happy path must produce, so both the
-// first run and the idempotent second run can reuse it.
-func assertWired(t *testing.T, base string, env Env, stores []string) {
+// assertWired checks the link contract: ~/.config/containers and
+// ~/.local/containers are wholesale symlinks into the current tree (interpolation
+// happens at extract time, not here), plus the per-file environment.d link.
+func assertWired(t *testing.T, base string, env Env) {
 	t.Helper()
 	current := filepath.Join(base, "current")
 	localContainers := filepath.Join(env.Home, ".local/containers")
 	configDir := filepath.Join(env.ConfigHome, "containers")
 
-	// (a) ~/.local/containers -> current/usr/local.
 	if got, err := os.Readlink(localContainers); err != nil ||
 		got != filepath.Join(current, "usr/local") {
 		t.Errorf("~/.local/containers link = %q (err %v), want %s",
 			got, err, filepath.Join(current, "usr/local"))
 	}
 
-	// (b) ~/.config/containers is a real directory, not a symlink.
-	fi, err := os.Lstat(configDir)
-	if err != nil {
-		t.Fatalf("stat config dir: %v", err)
-	}
-	if fi.Mode()&os.ModeSymlink != 0 || !fi.IsDir() {
-		t.Errorf("~/.config/containers is not a real directory: mode %v", fi.Mode())
+	if got, err := os.Readlink(configDir); err != nil ||
+		got != filepath.Join(current, "etc/containers") {
+		t.Errorf("~/.config/containers link = %q (err %v), want %s",
+			got, err, filepath.Join(current, "etc/containers"))
 	}
 
-	// containers.conf is materialized (real file) and interpolated against the
-	// current environment.
-	assertRealFile(t, filepath.Join(configDir, "containers.conf"))
-	wantConf := "home = " + env.Home + "\ndata = " + env.DataHome + "\n"
-	if got := readTreeFile(t, filepath.Join(configDir, "containers.conf")); got != wantConf {
-		t.Errorf("containers.conf =\n%q\nwant\n%q", got, wantConf)
-	}
-
-	// storage.conf is materialized with the additional image stores injected, and
-	// the host tree's copy did not leak in.
-	assertRealFile(t, filepath.Join(configDir, "storage.conf"))
-	gotStore := readTreeFile(t, filepath.Join(configDir, "storage.conf"))
-	for _, s := range stores {
-		if !strings.Contains(gotStore, `"`+s+`",`) {
-			t.Errorf("storage.conf missing injected store %q:\n%s", s, gotStore)
-		}
-	}
-	if strings.Contains(gotStore, "/HOST/leak") {
-		t.Errorf("host storage.conf leaked into materialized copy:\n%s", gotStore)
-	}
-
-	// Non-embedded files are per-file symlinked, targeting the stable current path.
-	for _, name := range []string{"registries.conf", "policy.json"} {
-		want := filepath.Join(current, "etc/containers", name)
-		if got, err := os.Readlink(filepath.Join(configDir, name)); err != nil || got != want {
-			t.Errorf("%s link = %q (err %v), want %s", name, got, err, want)
-		}
-	}
-
-	// environment.d is linked per-file (independent of --skip-systemd), targeting
-	// the stable ~/.local/containers path.
-	want := filepath.Join(localContainers, "lib/environment.d/50-podman.conf")
+	want := filepath.Join(current, "etc/environment.d/50-podman.conf")
 	envLink := filepath.Join(env.ConfigHome, "environment.d/50-podman.conf")
 	if got, err := os.Readlink(envLink); err != nil || got != want {
 		t.Errorf("environment.d link = %q (err %v), want %s", got, err, want)
 	}
 }
 
+// TestLinkHappyPath is the canonical Link contract: it wholesale-symlinks
+// ~/.config/containers into the current tree (no per-file materialization).
 func TestLinkHappyPath(t *testing.T) {
-	base, env, confFS := linkFixture(t)
-	stores := []string{"/opt/store-a", "/opt/store-b"}
+	base, env := linkFixture(t)
 	o := LinkOption{
-		Base:                  base,
-		AdditionalImageStores: stores,
-		SkipSystemd:           true, // keep the test independent of host systemctl.
-		Env:                   env,
-		ConfFS:                confFS,
+		Base:        base,
+		SkipSystemd: true,
+		Env:         env,
 	}
 	if err := Link(context.Background(), o); err != nil {
 		t.Fatalf("Link: %v", err)
 	}
-	assertWired(t, base, env, stores)
+	assertWired(t, base, env)
 }
 
 func TestLinkIdempotent(t *testing.T) {
-	base, env, confFS := linkFixture(t)
-	stores := []string{"/opt/store-a"}
+	base, env := linkFixture(t)
 	o := LinkOption{
-		Base:                  base,
-		AdditionalImageStores: stores,
-		SkipSystemd:           true,
-		Env:                   env,
-		ConfFS:                confFS,
+		Base:        base,
+		SkipSystemd: true,
+		Env:         env,
 	}
 	if err := Link(context.Background(), o); err != nil {
 		t.Fatalf("first Link: %v", err)
@@ -247,61 +111,45 @@ func TestLinkIdempotent(t *testing.T) {
 	if err := Link(context.Background(), o); err != nil {
 		t.Fatalf("second Link: %v", err)
 	}
-	assertWired(t, base, env, stores)
+	assertWired(t, base, env)
 }
 
-func TestLinkReplacesPriorConfigSymlink(t *testing.T) {
-	base, env, confFS := linkFixture(t)
+// TestLinkReplacesStaleConfigSymlink verifies a prior ~/.config/containers
+// symlink pointing at a stale target is repointed at the current tree.
+func TestLinkReplacesStaleConfigSymlink(t *testing.T) {
+	base, env := linkFixture(t)
 	configDir := filepath.Join(env.ConfigHome, "containers")
 
-	// Pre-create ~/.config/containers as a wholesale symlink (what the old Symlink
-	// wired). Link must convert it to a real directory (link.go materializeConfigDir).
 	if err := os.MkdirAll(filepath.Dir(configDir), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.Symlink(
-		filepath.Join(base, "current/etc/containers"),
+		filepath.Join(base, "stale/etc/containers"),
 		configDir,
 	); err != nil {
 		t.Fatal(err)
-	}
-	if fi, err := os.Lstat(configDir); err != nil || fi.Mode()&os.ModeSymlink == 0 {
-		t.Fatalf("precondition: config dir should be a symlink (err %v)", err)
 	}
 
 	o := LinkOption{
 		Base:        base,
 		SkipSystemd: true,
 		Env:         env,
-		ConfFS:      confFS,
 	}
 	if err := Link(context.Background(), o); err != nil {
 		t.Fatalf("Link: %v", err)
 	}
-
-	fi, err := os.Lstat(configDir)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if fi.Mode()&os.ModeSymlink != 0 || !fi.IsDir() {
-		t.Errorf("prior symlink not converted to real dir: mode %v", fi.Mode())
-	}
-	assertWired(t, base, env, nil)
+	assertWired(t, base, env)
 }
 
 func TestLinkReadOnlyBaseTolerated(t *testing.T) {
-	base, env, confFS := linkFixture(t)
+	base, env := linkFixture(t)
 	current := filepath.Join(base, "current")
 
 	if err := os.Chmod(base, 0o555); err != nil {
 		t.Fatal(err)
 	}
-	// Restore before t.TempDir's cleanup (LIFO) so the tree can be removed.
 	t.Cleanup(func() { _ = os.Chmod(base, 0o755) })
 
-	// chmod is ineffective under euid=0 (root bypasses dir perms). Probe the real
-	// effect instead of the euid: if we can still create a file in base, the
-	// read-only tolerance branch cannot be exercised here, so skip.
 	probe := filepath.Join(base, ".probe")
 	if f, err := os.Create(probe); err == nil {
 		_ = f.Close()
@@ -310,23 +158,19 @@ func TestLinkReadOnlyBaseTolerated(t *testing.T) {
 			"read-only tolerance branch not exercised")
 	}
 
-	// --tag would repoint current on a writable base; on a read-only base the
-	// rewrite fails but the existing current resolves, so Link tolerates it.
 	o := LinkOption{
 		Base:        base,
 		Tag:         "v2",
 		SkipSystemd: true,
 		Env:         env,
-		ConfFS:      confFS,
 	}
 	if err := Link(context.Background(), o); err != nil {
 		t.Fatalf("read-only base with a valid current should be tolerated: %v", err)
 	}
-	// current is left as-is (still -> v1), not repointed to v2.
 	if got, err := os.Readlink(current); err != nil || got != "v1" {
 		t.Errorf("current = %q (err %v), want unchanged v1", got, err)
 	}
-	assertWired(t, base, env, nil)
+	assertWired(t, base, env)
 }
 
 func TestLinkMissingCurrentNoTag(t *testing.T) {
@@ -337,15 +181,12 @@ func TestLinkMissingCurrentNoTag(t *testing.T) {
 	}
 	home := filepath.Join(root, "home")
 	o := LinkOption{
-		Base:        base, // no current symlink, and no --tag to create one.
+		Base:        base,
 		SkipSystemd: true,
 		Env: Env{
 			Home:       home,
 			DataHome:   filepath.Join(home, ".local/share"),
 			ConfigHome: filepath.Join(home, ".config"),
-		},
-		ConfFS: fstest.MapFS{
-			"containers.conf": &fstest.MapFile{Data: []byte("x\n")},
 		},
 	}
 	err := Link(context.Background(), o)
@@ -358,26 +199,264 @@ func TestLinkMissingCurrentNoTag(t *testing.T) {
 }
 
 func TestLinkSkipSystemd(t *testing.T) {
-	base, env, confFS := linkFixture(t)
+	base, env := linkFixture(t)
 	o := LinkOption{
 		Base:        base,
 		SkipSystemd: true,
 		Env:         env,
-		ConfFS:      confFS,
 	}
 	if err := Link(context.Background(), o); err != nil {
 		t.Fatalf("Link: %v", err)
 	}
-	// environment.d is wired regardless of --skip-systemd.
 	if _, err := os.Lstat(
 		filepath.Join(env.ConfigHome, "environment.d/50-podman.conf"),
 	); err != nil {
 		t.Errorf("environment.d link missing under --skip-systemd: %v", err)
 	}
-	// systemd user units are NOT wired when skipped.
 	if _, err := os.Lstat(
 		filepath.Join(env.ConfigHome, "systemd/user/podman.socket"),
-	); !os.IsNotExist(err) {
+	); !errors.Is(err, fs.ErrNotExist) {
 		t.Errorf("systemd user link created despite --skip-systemd (err %v)", err)
+	}
+}
+
+func TestDirLinkTableAndApply(t *testing.T) {
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	if err := os.MkdirAll(src, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(
+		filepath.Join(src, "50-podman.conf"),
+		[]byte("X=1\n"),
+		0o644,
+	); err != nil {
+		t.Fatal(err)
+	}
+	linkDir := filepath.Join(root, "cfg/environment.d")
+	if err := os.MkdirAll(linkDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	other := filepath.Join(linkDir, "75-other.conf")
+	if err := os.WriteFile(other, []byte("Y=2\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	var rules []linkRule
+	for name, err := range listDirent(src, func(e os.DirEntry) bool { return e.Type().IsRegular() }) {
+		if err != nil {
+			t.Fatal(err)
+		}
+		rules = append(rules, linkRule{
+			filepath.Join(linkDir, name),
+			filepath.Join("/base/lib/environment.d", name),
+		})
+	}
+	if err := applyLinks(rules); err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.Readlink(filepath.Join(linkDir, "50-podman.conf"))
+	if err != nil {
+		t.Fatalf("expected a symlink: %v", err)
+	}
+	if got != "/base/lib/environment.d/50-podman.conf" {
+		t.Errorf("link target = %q", got)
+	}
+	if _, err := os.Lstat(other); err != nil {
+		t.Errorf("unrelated fragment was removed: %v", err)
+	}
+
+	var missing []linkRule
+	for name, err := range listDirent(
+		filepath.Join(root, "absent"),
+		func(e os.DirEntry) bool { return e.Type().IsRegular() },
+	) {
+		if err != nil {
+			t.Fatalf("missing srcDir should be a no-op, got %v", err)
+		}
+		missing = append(missing, linkRule{filepath.Join(linkDir, name), "/base"})
+	}
+	if len(missing) != 0 {
+		t.Errorf("missing srcDir produced %d rules, want 0", len(missing))
+	}
+}
+
+func TestWiringRulesTable(t *testing.T) {
+	root := t.TempDir()
+	base := filepath.Join(root, "base")
+	current := filepath.Join(base, "current")
+	home := filepath.Join(root, "home")
+
+	writeTreeFile(
+		t,
+		filepath.Join(current, "etc/environment.d/50-podman.conf"),
+		"E=1\n",
+	)
+	writeTreeFile(
+		t,
+		filepath.Join(current, "usr/local/lib/systemd/user/podman.socket"),
+		"[Socket]\n",
+	)
+
+	env := Env{
+		Home:       home,
+		DataHome:   filepath.Join(home, ".local/share"),
+		ConfigHome: filepath.Join(home, ".config"),
+	}
+	localContainers := filepath.Join(home, ".local/containers")
+
+	rules, err := wiringRules(wiringParams{
+		env:     env,
+		current: current,
+		systemd: true,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assertRow := func(label string, want linkRule) {
+		if !slices.Contains(rules, want) {
+			t.Errorf("%s pair %v not in table %v", label, want, rules)
+		}
+	}
+
+	assertRow("environment.d", linkRule{
+		filepath.Join(env.ConfigHome, "environment.d/50-podman.conf"),
+		filepath.Join(current, "etc/environment.d/50-podman.conf"),
+	})
+	assertRow("systemd", linkRule{
+		filepath.Join(env.ConfigHome, "systemd/user/podman.socket"),
+		filepath.Join(localContainers, "lib/systemd/user/podman.socket"),
+	})
+	assertRow("local", linkRule{localContainers, filepath.Join(current, "usr/local")})
+	// A nil embedded (wholesale mode) emits the single config-dir symlink.
+	assertRow("config", linkRule{
+		filepath.Join(env.ConfigHome, "containers"),
+		filepath.Join(current, "etc/containers"),
+	})
+}
+
+func TestApplyLinksRefusesNonSymlink(t *testing.T) {
+	assertRefusal := func(t *testing.T, err error, path string) {
+		t.Helper()
+		if err == nil {
+			t.Fatal("expected a refusal error, got nil")
+		}
+		if !strings.Contains(err.Error(), "refus") || !strings.Contains(err.Error(), path) {
+			t.Errorf("error = %v, want it to mention the refusal and %s", err, path)
+		}
+	}
+
+	t.Run("regular file via applyLinks", func(t *testing.T) {
+		dest := filepath.Join(t.TempDir(), "conf")
+		if err := os.WriteFile(dest, []byte("real\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		err := applyLinks([]linkRule{{dest, "/some/target"}})
+		assertRefusal(t, err, dest)
+		if b, err := os.ReadFile(dest); err != nil || string(b) != "real\n" {
+			t.Errorf("real file disturbed: %q (err %v)", b, err)
+		}
+	})
+
+	t.Run("directory via replaceSymlink", func(t *testing.T) {
+		dest := filepath.Join(t.TempDir(), "confdir")
+		if err := os.Mkdir(dest, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		err := replaceSymlink("/some/target", dest)
+		assertRefusal(t, err, dest)
+		if fi, err := os.Lstat(dest); err != nil || !fi.IsDir() {
+			t.Errorf("real directory disturbed (err %v)", err)
+		}
+	})
+}
+
+func inodeOf(t *testing.T, path string) uint64 {
+	t.Helper()
+	fi, err := os.Lstat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	st, ok := fi.Sys().(*syscall.Stat_t)
+	if !ok {
+		t.Fatalf("no syscall.Stat_t for %s", path)
+	}
+	return st.Ino
+}
+
+func TestReplaceSymlinkSkipsWhenCorrect(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "target")
+	link := filepath.Join(dir, "link")
+	if err := os.Symlink(target, link); err != nil {
+		t.Fatal(err)
+	}
+	before := inodeOf(t, link)
+	if err := replaceSymlink(target, link); err != nil {
+		t.Fatalf("replaceSymlink: %v", err)
+	}
+	if after := inodeOf(t, link); after != before {
+		t.Errorf("inode changed %d -> %d, want the correct link left untouched", before, after)
+	}
+}
+
+func TestReplaceSymlinkReplacesWrongTarget(t *testing.T) {
+	dir := t.TempDir()
+	link := filepath.Join(dir, "link")
+	if err := os.Symlink(filepath.Join(dir, "old"), link); err != nil {
+		t.Fatal(err)
+	}
+	want := filepath.Join(dir, "new")
+	if err := replaceSymlink(want, link); err != nil {
+		t.Fatalf("replaceSymlink: %v", err)
+	}
+	if got, err := os.Readlink(link); err != nil || got != want {
+		t.Errorf("link target = %q (err %v), want %s", got, err, want)
+	}
+}
+
+func TestForceSymlinkSkipsWhenCorrect(t *testing.T) {
+	dir := t.TempDir()
+	target := filepath.Join(dir, "target")
+	link := filepath.Join(dir, "link")
+	if err := os.Symlink(target, link); err != nil {
+		t.Fatal(err)
+	}
+	before := inodeOf(t, link)
+	if err := forceSymlink(target, link); err != nil {
+		t.Fatalf("forceSymlink: %v", err)
+	}
+	if after := inodeOf(t, link); after != before {
+		t.Errorf("inode changed %d -> %d, want the correct link left untouched", before, after)
+	}
+}
+
+func TestForceSymlinkReplacesWrongTarget(t *testing.T) {
+	dir := t.TempDir()
+	link := filepath.Join(dir, "link")
+	if err := os.Symlink(filepath.Join(dir, "old"), link); err != nil {
+		t.Fatal(err)
+	}
+	want := filepath.Join(dir, "new")
+	if err := forceSymlink(want, link); err != nil {
+		t.Fatalf("forceSymlink: %v", err)
+	}
+	if got, err := os.Readlink(link); err != nil || got != want {
+		t.Errorf("link target = %q (err %v), want %s", got, err, want)
+	}
+}
+
+func TestNeedElevateRootFastPath(t *testing.T) {
+	if os.Geteuid() != 0 {
+		t.Skip("root fast path only exercised when tests run as euid 0")
+	}
+	dir := t.TempDir()
+	if err := os.Chmod(dir, 0o500); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = os.Chmod(dir, 0o755) })
+	if needElevate(dir) {
+		t.Errorf("needElevate(%q) = true for euid 0, want false", dir)
 	}
 }

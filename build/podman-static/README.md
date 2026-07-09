@@ -18,7 +18,7 @@ other host tooling being present.
 podman-static-dist build   -o <out.tar.zst> [--tag v5.8.4] [--recreate] [--yes] [VM flags]
 podman-static-dist extract --tar <out.tar.zst> [--tag v5.8.4]
 podman-static-dist install --tar <out.tar.zst> [--tag v5.8.4]
-podman-static-dist link    [--base <dir>] [--tag <tag>] [--additional-image-store <path>]... [--skip-systemd]
+podman-static-dist link    [--base <dir>] [--tag <tag>] [--skip-systemd]
 podman-static-dist config  [--format <template>]
 podman-static-dist version
 ```
@@ -52,15 +52,19 @@ docker is provisioned *inside* the VM by Lima's `docker` template (rootless).
    checkout — upstream's Makefile builds the `tar-archive` image and assembles
    the whole `build/asset/podman-linux-amd64` tree (rootless docker, no sudo;
    `make` is provisioned into the VM, git is not needed there).
-4. On the host (in Go): overlays the embedded `conf/` **un-interpolated** and
-   stages the embedded `environment.d/` on top of that tree, then writes a
-   **seekable** zstd tarball (`tar.Writer.AddFS` over a seekable-zstd writer) to
-   the mandatory `-o`/`--output` path.
+4. On the host (in Go): copies the embedded resource tree's top-level
+   directories (currently just `etc/` — containers conf + `environment.d`)
+   **un-interpolated** over the matching dirs of the built tree — a pure
+   copy-and-override, no special-case path mapping — stamps the resolved build
+   tag into the tree root as a `tag` file (so install/extract can recover it and
+   make their `--tag` optional), then writes a **seekable** zstd tarball
+   (`tar.Writer.AddFS` over a seekable-zstd writer) to the mandatory
+   `-o`/`--output` path.
 
-The tag resolves as `--tag` > config (`tag`) > embedded `resource/tag`; the VM
+The tag resolves as `--tag` > config (`tag`) > the embedded `tag` file; the VM
 name resolves as `--vm-name` > config (`vm_name`) > lima's default. The
-`conf`/`environment.d`/`tag` resources are baked into the binary at `go build`
-time, so editing `resource/` requires a rebuild.
+`rc/resource/` tree and the `rc/tag` file are baked into the binary at `go build`
+time, so editing either requires a rebuild.
 
 VM flags: `--vm-name` (Lima instance name) and `--work` (host dir shared with the
 VM; defaults next to `-o`). The VM's shape is otherwise fixed internally, not a
@@ -83,8 +87,9 @@ Runs only the extract+interpolate phase of `install`: it unpacks the tarball int
 the versioned dist dir and interpolates the bundled config against your
 environment, but creates **no symlinks** and performs **no systemd wiring** (that
 is `install` or `link`). Flags mirror `install`: `--tar` (required) and `--tag`
-(resolved as `--tag` > config `tag` > embedded `resource/tag`); the dist dir
-resolves the same way `install` does.
+(**optional** against a stamped archive, resolved as `--tag` > the archive's
+stamped `tag` > config `tag` / embedded default); the dist dir resolves the same
+way `install` does.
 
 ### install
 
@@ -108,29 +113,27 @@ tooling required:
   root, else via `sudo` with stdio forwarded; skipped with instructions when
   neither is available) and runs `systemctl --user daemon-reload`.
 
+The `<tag>` subdir resolves as `--tag` > the archive's stamped `tag` file > config
+`tag` / embedded default, so `--tag` is **optional** against a stamped archive
+and errors only when none of the three supplies one.
+
 ### link
 
 Wires an **already-extracted** dist tree into your home without re-extracting it.
-It is designed to run **inside the devenv container**, where the dist dir is a
-**read-only mount** and `$HOME` differs from the host that produced the tree.
+It targets the case where the dist dir is a **read-only mount** and/or `$HOME`
+differs from the host that produced the tree (e.g. inside a container).
 
-Because the host interpolated that tree against the host's `$HOME`, `link` does
-**not** symlink `~/.config/containers` into the tree (that would leak host paths).
-Instead it:
+`link` **only creates symlinks** — all config interpolation happens once, at
+**extract** time, not here. It:
 
-- force-symlinks `~/.local/containers` → `<base>/current/usr/local` (as install
-  does);
-- **materializes** `~/.config/containers` as a **real directory**: each embedded
-  conf file (`containers.conf`, `storage.conf`, `path.env`, `path.sh`) is written
-  interpolated against the **current** environment, and every other file under
-  `<base>/current/etc/containers` (`registries.conf`, `policy.json`, …) is
-  per-file symlinked. For `storage.conf`, `--additional-image-store` values are
-  injected into the `additionalimagestores` list. Re-running overwrites the
-  materialized files and relinks — it is idempotent;
+- symlinks `~/.local/containers` → `<base>/current/usr/local`;
+- symlinks `~/.config/containers` → `<base>/current/etc/containers`;
 - links the `environment.d` fragments per-file;
 - performs the systemd wiring (unit links, quadlet generator, daemon-reload)
   unless `--skip-systemd` is given or `systemctl` is not on `PATH` (auto-skipped
   with a printed notice).
+
+Re-running relinks — it is idempotent.
 
 Flags:
 
@@ -140,8 +143,6 @@ Flags:
   symlink at `<tag>`. A read-only base with an existing `current` is used as-is
   (never fails merely because it could not rewrite `current`). When omitted, the
   existing `current` symlink is used.
-- `--additional-image-store <path>` — repeatable; also settable via config
-  (`link.additional_image_stores`).
 - `--skip-systemd` — skip the systemd wiring.
 
 ### config & version
@@ -157,10 +158,9 @@ Configuration is optional; every field has a default. The layering is
 
 | Field (JSON key)            | Env var                                          | Default                     | Used by               |
 | --------------------------- | ------------------------------------------------ | --------------------------- | --------------------- |
-| `tag`                       | `PODMAN_STATIC_DIST_TAG`                          | embedded `resource/tag`     | build/install/extract |
+| `tag`                       | `PODMAN_STATIC_DIST_TAG`                          | embedded `tag`              | build/install/extract |
 | `vm_name`                   | `PODMAN_STATIC_DIST_VM_NAME`                      | `podman-static-build`       | build                 |
 | `artifact_dir`              | `PODMAN_STATIC_DIST_ARTIFACT_DIR`                 | *(unset)*                   | install/extract/link  |
-| `link.additional_image_stores` | `PODMAN_STATIC_DIST_LINK_ADDITIONAL_IMAGE_STORES` | *(none)*                    | link                  |
 
 The config file is **JSON**. Its path resolves as: `--config` flag, else
 `$PODMAN_STATIC_DIST_CONF`, else
@@ -184,13 +184,16 @@ pkg/podmanstaticdist/          the service (usable without the CLI):
   version.go                    release-controlled const Version
   config.go                     Config/PartialConfig/Apply/LoadConfig (JSON)
   service.go                    Service (New): Config + per-call params -> build/install options,
-                                owns tag/vm-name/artifact-dir/store defaults + env resolution
+                                owns tag/vm-name/artifact-dir defaults + env resolution
   build/                        orchestrates VM -> make singlearch-tar -> Overlay -> WriteArtifact
-  install/                      ExtractArtifact -> interpolate -> systemd/symlink wiring; Link (container-safe)
+  install/                      Extract (atomic unpack + interpolate) then Link, the single wiring flow
+                                (Link only symlinks; interpolation happens at extract time)
   cli/                          CLI presentation: Confirm prompt, RenderConfig
-resource/                      //go:embed conf/environment.d/tag -> Conf/EnvironmentD/Tag
-  conf/                         config overlaid into etc/containers
-  environment.d/                session env files linked into ~/.config/environment.d
+rc/                            resource embedding package:
+  rc.go                         //go:embed resource + tag -> FS/Tag (mirrors the built tree)
+  resource/                     artifact tree baked into the binary:
+    etc/containers/               conf copied over the built etc/containers, symlinked as ~/.config/containers
+    etc/environment.d/            session env fragment linked into ~/.config/environment.d
   tag                           default podman-static tag to build/install
 internal/buildpodman/          shared, exported building blocks used by build & install:
                                Overlay, WriteArtifact, ExtractArtifact,

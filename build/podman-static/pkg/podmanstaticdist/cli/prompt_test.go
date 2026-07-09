@@ -15,7 +15,7 @@ func TestConfirm(t *testing.T) {
 		{"yes\n", true},
 		{"n\n", false},
 		{"\n", false},
-		{"", false}, // EOF
+		{"", false},
 		{"nope\n", false},
 	}
 	for _, tt := range tests {
