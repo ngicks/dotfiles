@@ -132,11 +132,11 @@ version = "0.0.15"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.10"
+version = "0.0.11"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"]]
-version = "0.0.2"
+version = "0.0.3"
 backend = "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"
 
 [[tools."go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy"]]
