@@ -11,6 +11,25 @@ fn marker_dir() -> String raise Error {
 }
 
 ///|
+/// Full path of the interval marker file (`.update_daily`).
+fn marker_path() -> String raise Error {
+  @os_path.join(marker_dir(), ".update_daily")
+}
+
+///|
+/// Modification time of the interval marker as `(seconds, nanoseconds)`, or
+/// `None` when it has not been stamped yet.
+async fn marker_mtime() -> (Int64, Int)? raise Error {
+  let path = marker_path()
+  if !@fs.exists(path) {
+    return None
+  }
+  let file = @fs.open(path, mode=ReadOnly)
+  defer file.close()
+  Some(file.mtime())
+}
+
+///|
 /// Stamp the interval marker (`.update_daily`) so the login script defers the
 /// next run.
 ///
@@ -22,7 +41,7 @@ async fn touch_marker() -> Unit raise Error {
     @fs.mkdir(dir, permission=0o755, recursive=true)
   }
   @fs.write_file(
-    @os_path.join(dir, ".update_daily"),
+    marker_path(),
     "",
     create_mode=@fs.CreateMode::CreateOrTruncate,
     permission=0o644,

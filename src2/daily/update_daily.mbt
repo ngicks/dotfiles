@@ -9,9 +9,15 @@
 /// The interval / `.no_update_daily` / force gating lives in the zsh login
 /// script (`dotfiles_should_update`); this command just does the work and the
 /// stamping.
+///
+/// Concurrent invocations (N terminals opened at once all pass the zsh gate
+/// before the marker is stamped) are deduplicated by a file-lock singleflight:
+/// one process does the work, the rest wait and skip.
 pub async fn update_daily(repo_dir : String) -> Unit raise Error {
-  println("running daily update in \{repo_dir}")
-  run_tasks(repo_dir, tasks())
-  touch_marker()
-  println("daily update done")
+  singleflight(() => {
+    println("running daily update in \{repo_dir}")
+    run_tasks(repo_dir, tasks())
+    touch_marker()
+    println("daily update done")
+  })
 }

@@ -57,10 +57,7 @@ pub async fn devenv_pull(
   experimental : Bool,
 ) -> @serverstate.Ticket raise Error {
   @json.from_json(
-    post_json("/devenv/pull", {
-      "remote": remote,
-      "experimental": experimental,
-    }),
+    post_json("/devenv/pull", { "remote": remote, "experimental": experimental }),
   )
 }
 

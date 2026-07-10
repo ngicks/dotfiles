@@ -85,7 +85,9 @@ if [[ -o login ]]; then
     if command -v moon > /dev/null 2>&1; then
       pushd "$HOME/.dotfiles" > /dev/null
       # Migrated from `deno task update:daily` to the moonbit CLI. The command
-      # itself stamps the 16h-interval marker on success.
+      # itself stamps the 16h-interval marker on success. Concurrent logins are
+      # deduplicated inside the CLI via a file lock (singleflight): one process
+      # updates, the rest wait for it and skip.
       moon run src2 --target native -- standalone update-daily
       popd > /dev/null
     else

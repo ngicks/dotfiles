@@ -6,7 +6,7 @@
 /// the dotfiles checkout directory.
 pub struct Task {
   name : String
-  run : async (String) -> Unit raise
+  run : async (String) -> Unit
 }
 
 ///|
