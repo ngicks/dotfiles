@@ -1,4 +1,12 @@
 local M = {}
+
+-- prefer ts_ls over tsgo for non-deno projects when
+-- DOTFILES_NVIM_PREFER_TSLS is set to a non-empty value other than "0"/"false".
+-- tsgo (ts7) is the default until it fails to prove itself.
+function M.prefer_ts_ls()
+  local v = vim.env.DOTFILES_NVIM_PREFER_TSLS
+  return v ~= nil and v ~= "" and v ~= "0" and v ~= "false"
+end
 -- return the root directory for fname if **it is a deno project**
 -- Otherwise nil.
 --

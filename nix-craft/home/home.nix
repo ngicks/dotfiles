@@ -156,6 +156,8 @@ in
     taplo
     pyright
     (lib.hiPrio rust-analyzer)    # wins over rustup's proxy binary
+    typescript-go                 # ts7 toolchain: tsgo compiler + LSP (used for non-deno TS projects)
+    # kept until tsgo proves itself; remove once it does
     typescript-language-server
     typescript                    # peer dep for ts_ls
 
