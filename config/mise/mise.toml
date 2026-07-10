@@ -28,6 +28,7 @@ binstall = true
 # LLM stuff
 ## cli tools
 "npm:@openai/codex" = "latest"
+"npm:difit" = "latest"
 "github:microsoft/waza" = "latest"
 "pipx:apm-cli" = "latest"
 ## mcp

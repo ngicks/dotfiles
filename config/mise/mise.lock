@@ -155,6 +155,10 @@ backend = "npm:@openai/codex"
 version = "3.2.3"
 backend = "npm:@upstash/context7-mcp"
 
+[[tools."npm:difit"]]
+version = "5.0.7"
+backend = "npm:difit"
+
 [[tools."npm:zenn-cli"]]
 version = "0.5.2"
 backend = "npm:zenn-cli"
