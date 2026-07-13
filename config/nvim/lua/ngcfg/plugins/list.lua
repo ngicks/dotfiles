@@ -38,10 +38,19 @@ return {
       require("base46").load_all_highlights()
     end,
     pack_changed = function(_s, data)
-      if data.kind ~= "delete" then
-        -- basically "delete" is inpossible because I only manage by this table.
-        require("base46").load_all_highlights()
+      -- basically "delete" is inpossible because I only manage by this table.
+      if data.kind == "delete" then
+        return
       end
+      -- On a fresh (headless) install this event fires before base46 is on the
+      -- runtimepath, so require() would error; defer and tolerate absence --
+      -- config() above regenerates the missing cache on startup anyway.
+      vim.schedule(function()
+        local ok, base46 = pcall(require, "base46")
+        if ok then
+          base46.load_all_highlights()
+        end
+      end)
     end,
   },
   {
