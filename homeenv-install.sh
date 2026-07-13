@@ -6,6 +6,10 @@ dir=$(dirname $0)
 
 pushd $dir
   echo ""
+  echo "system prerequisites"
+  echo ""
+  ./scripts/homeenv/system-prerequisites.sh
+  echo ""
   echo "system package manager update"
   echo ""
   ./scripts/homeenv/system-package-manager-update.sh

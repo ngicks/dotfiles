@@ -30,6 +30,22 @@ git clone https://github.com/ryanoasis/nerd-fonts .
 
 If you are running a terminal on windows and running linux on wsl2 instances, then install fonts to windows(`install.ps1`).
 
+### zsh (BEFORE nix)
+
+Install zsh with the system package manager **before** installing nix:
+
+```
+sudo apt install -y zsh
+```
+
+The nix installer appends its profile hook only to global zsh rc files that
+exist at install time. On Debian/Ubuntu zsh reads `/etc/zsh/zshrc` (not
+`/etc/zshrc`, which the installer creates as a fallback), so installing zsh
+after nix leaves zsh login shells without nix on PATH.
+
+If you got the order wrong, `./homeenv-install.sh` (via
+`scripts/homeenv/system-prerequisites.sh`) re-adds the missing hook.
+
 ### nix
 
 https://nixos.org/download/#nix-install-windows
