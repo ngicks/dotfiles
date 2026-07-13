@@ -3,33 +3,43 @@ commands:
   nvim:
     args: 
       - nvim
+    env_file:
+      - path: .devenv.env
+        required: false
     tty: true
   shell:
     args: 
       - $HOME/.nix-profile/bin/zsh
       - -l
+    env_file:
+      - path: .devenv.env
+        required: false
     stop_signal: SIGHUP
     tty: true
   claude:
-    env_file:
-      - path: .kvm.env
-        required: false
     args:  
       - $HOME/.dotfiles/devenv_run.sh 
       - ""
       - -lc
       - claude
+    env_file:
+      - path: .devenv.env
+        required: false
+      - path: .kvm.env
+        required: false
     scale: 3
     tty: true
   codex:
-    env_file:
-      - path: .kvm.env
-        required: false
     args: 
       - $HOME/.dotfiles/devenv_run.sh
       - ""
       - -lc
       - codex
+    env_file:
+      - path: .devenv.env
+        required: false
+      - path: .kvm.env
+        required: false
     scale: 3
     tty: true
 mux:
