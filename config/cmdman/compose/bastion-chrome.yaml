@@ -6,9 +6,9 @@ commands:
     args:
       - $HOME/.nix-profile/bin/zsh
       - -lic
-      - ssh-add -T "${SSH_BASTION}"
+      - ssh-add -T "${SSH_PUBKEY}"
     env:
-      - SSH_BASTION=${SSH_BASTION:-bastion}
+      - SSH_BASTION=${SSH_PUBKEY:-$HOME/.ssh/id_ecdsa.pub}
     tty: true
   proxy:
     args:
