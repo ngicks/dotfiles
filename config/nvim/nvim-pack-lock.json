@@ -11,7 +11,7 @@
       "version": ">=0.0.0"
     },
     "base46": {
-      "rev": "a972909f1d7ba798b93b56631bc2cd5e96ea40da",
+      "rev": "cbb71c6cb56f53b30ab1a95a6d277f7e0524025b",
       "src": "https://github.com/nvchad/base46"
     },
     "cmp-async-path": {
@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "1c095f26f268871a6ef06e5cc90f92573c725f95",
+      "rev": "e51af76acc83fe728e9c9dae527bee330d90436d",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -224,7 +224,7 @@
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
-      "rev": "5cfd3c8f2c3e6603d52d8f6c0b715743bbb5270d",
+      "rev": "28019401865beffcedc744bb1506d0201b88f2f9",
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
