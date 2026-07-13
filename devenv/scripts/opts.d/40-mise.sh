@@ -12,6 +12,10 @@ MISE_CONFIG_DIR=$HOME/.dotfiles/config/mise
 MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
 
 printf "%s\n" "--env MISE_GLOBAL_CONFIG_FILE=/root/.config/mise/mise.toml"
+
+if [[ -n "${ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS:-}" ]]; then
+  printf "%s\n" "--env ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS=${ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS}"
+fi
 printf "%s\n" "--mount type=bind,src=${MISE_CONFIG_DIR},dst=/root/.config/mise,ro"
 printf "%s\n" "--env MISE_DATA_DIR=${MISE_DATA_DIR}"
 printf "%s\n" "--mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR}$(ro)"
