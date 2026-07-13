@@ -9,6 +9,12 @@ M.base46 = {
   theme = "chadracula",
   theme_toggle = { "chadracula", "rosepine-dawn" },
   transparency = true,
+  hl_override = {
+    DiffAdd = { fg = "NONE" },
+    DiffDelete = { fg = "NONE" },
+    DiffChange = { fg = "NONE" },
+    DiffText = { fg = "NONE" },
+  },
 }
 
 M.term = {
