@@ -24,7 +24,9 @@ else
   PNPM_STORE_DIR=${GITREPO_ROOT}/__global_storage/pnpm/store
 fi
 
-mkdir -p "${PNPM_STORE_DIR}" "${PNPM_CONFIG_DIR}"
+mkdir -p "${PNPM_STORE_DIR}" "${PNPM_CONFIG_DIR}" "${NPM_CONFIG_CACHE}" "${NPM_CONFIG_USERCONFIG%/*}"
+# npmrc is bind-mounted as a file; a missing src fails the whole `podman run`.
+[ -f "${NPM_CONFIG_USERCONFIG}" ] || : > "${NPM_CONFIG_USERCONFIG}"
 
 printf "%s\n" "--env NPM_CONFIG_USERCONFIG=${NPM_CONFIG_USERCONFIG}"
 printf "%s\n" "--mount type=bind,src=${NPM_CONFIG_USERCONFIG},dst=${NPM_CONFIG_USERCONFIG}$(ro)"

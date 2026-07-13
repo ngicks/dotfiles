@@ -13,6 +13,10 @@ DENO_DIR=${DENO_DIR:-$HOME/.cache/deno}
 DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT:-$HOME/.deno/bin}
 UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
 
+# A bind mount with a missing src fails the whole `podman run`; these only
+# appear once their runtime has been used, so create them.
+mkdir -p "${CARGO_HOME}" "${DENO_DIR}" "${DENO_INSTALL_ROOT}" "${UV_HOME}"
+
 printf "%s\n" "--env DENO_DIR=${DENO_DIR}"
 printf "%s\n" "--mount type=bind,src=${DENO_DIR},dst=${DENO_DIR}"
 printf "%s\n" "--env DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT}"

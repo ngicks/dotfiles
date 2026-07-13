@@ -11,6 +11,9 @@ ro() {
 MISE_CONFIG_DIR=$HOME/.dotfiles/config/mise
 MISE_DATA_DIR=${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}
 
+# A bind mount with a missing src fails the whole `podman run`; create it.
+mkdir -p "${MISE_DATA_DIR}"
+
 printf "%s\n" "--env MISE_GLOBAL_CONFIG_FILE=/root/.config/mise/mise.toml"
 
 if [[ -n "${ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS:-}" ]]; then
