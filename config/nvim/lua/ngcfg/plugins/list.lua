@@ -47,6 +47,10 @@ return {
   {
     src = "https://github.com/nvim-tree/nvim-web-devicons",
     phase = "core",
+    -- no strict-semver tag (only vX.Y and *-compat tags), which nvim 0.12.4+
+    -- vim.pack rejects; the default `*` range then errors after the
+    -- --no-checkout clone, leaving an empty dir with only .git.
+    version = "",
   },
   {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -236,6 +240,10 @@ return {
   -- editor for specific formatted files
   {
     src = "https://github.com/tpope/vim-dadbod",
+    -- tags are vX.Y (no patch component), which nvim 0.12.4+ vim.pack rejects
+    -- as semver (strict parse); the default `*` range then errors after the
+    -- --no-checkout clone, leaving an empty dir with only .git.
+    version = "",
   },
   {
     src = "https://github.com/kristijanhusak/vim-dadbod-completion",

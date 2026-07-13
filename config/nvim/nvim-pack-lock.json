@@ -174,9 +174,8 @@
       "version": ">=0.0.0"
     },
     "nvim-web-devicons": {
-      "rev": "21417212f640a1dad28a1408f04468819848f5e7",
-      "src": "https://github.com/nvim-tree/nvim-web-devicons",
-      "version": ">=0.0.0"
+      "rev": "09d1324e264c6950262dbe02a9bce2933a6800db",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {
       "rev": "50012918b2fc8357b87cff2a7f7f0446e47da174",
@@ -228,9 +227,8 @@
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
-      "rev": "6f8b99868fd5560d6eb47f82ca76ec62e3d5ae78",
-      "src": "https://github.com/tpope/vim-dadbod",
-      "version": ">=0.0.0"
+      "rev": "6d1d41da4873a445c5605f2005ad2c68c99d8770",
+      "src": "https://github.com/tpope/vim-dadbod"
     },
     "vim-dadbod-completion": {
       "rev": "a8dac0b3cf6132c80dc9b18bef36d4cf7a9e1fe6",

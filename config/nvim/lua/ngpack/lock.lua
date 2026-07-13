@@ -433,6 +433,90 @@ function M.prune_desync(opts)
   return removed
 end
 
+---@param path string
+---@return boolean
+local function is_git_only_dir(path)
+  local has_git, has_content = false, false
+  for name in vim.fs.dir(path) do
+    if name == ".git" then
+      has_git = true
+    else
+      has_content = true
+      break
+    end
+  end
+  return has_git and not has_content
+end
+
+---List plugin directories left as a bare `.git`-only clone (e.g. vim.pack
+---errored between its `clone --no-checkout` and the checkout, as happens when
+---a version range matches no strict-semver tag).
+---@return string[] names
+function M.list_broken()
+  local plug_dir = util.plug_dir()
+  if vim.fn.isdirectory(plug_dir) ~= 1 then
+    return {}
+  end
+
+  local names = {}
+  for name, entry_type in vim.fs.dir(plug_dir) do
+    if entry_type == "directory" and is_git_only_dir(vim.fs.joinpath(plug_dir, name)) then
+      names[#names + 1] = name
+    end
+  end
+
+  table.sort(names)
+  return names
+end
+
+---Delete `.git`-only plugin directories so a following vim.pack.add treats
+---them as not installed and re-clones instead of silently keeping the husk.
+---@return string[] removed
+function M.prune_broken()
+  local plug_dir = util.plug_dir()
+  local removed = {}
+  for _, name in ipairs(M.list_broken()) do
+    local path = vim.fs.joinpath(plug_dir, name)
+    if vim.fn.delete(path, "rf") == 0 then
+      removed[#removed + 1] = name
+    else
+      vim.notify(("failed to remove broken plugin dir: %s"):format(path), vim.log.levels.ERROR)
+    end
+  end
+
+  if #removed > 0 then
+    vim.notify(
+      ("removed %d broken (.git-only) plugin director%s: %s"):format(
+        #removed,
+        #removed == 1 and "y" or "ies",
+        table.concat(removed, ", ")
+      ),
+      vim.log.levels.WARN
+    )
+  end
+  return removed
+end
+
+---List declared plugins whose on-disk state is broken: directory missing or
+---left as a bare `.git`-only clone.
+---@return string[] problems human-readable "name: reason" entries
+function M.verify_installed()
+  local plug_dir = util.plug_dir()
+  local problems = {}
+
+  for _, spec in ipairs(require("ngpack").list_pack()) do
+    local path = vim.fs.joinpath(plug_dir, spec.name)
+    if vim.fn.isdirectory(path) ~= 1 then
+      problems[#problems + 1] = ("%s: not installed (%s)"):format(spec.name, path)
+    elseif is_git_only_dir(path) then
+      problems[#problems + 1] = ("%s: empty checkout, only .git left (%s)"):format(spec.name, path)
+    end
+  end
+
+  table.sort(problems)
+  return problems
+end
+
 ---@return boolean
 function M.should_auto_report()
   return vim.env.IN_CONTAINER ~= "1"
