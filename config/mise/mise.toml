@@ -31,7 +31,7 @@ binstall = true
 [plugins]
 # Short tag notation (#0.0.1) is added in https://github.com/jdx/mise/pull/10998
 # Change to it after 2026.7.7
-moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.1"
+moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 
 [tools]
 # LLM stuff
