@@ -66,8 +66,6 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 "go:github.com/mattn/memo" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 # Own rapidly-evolving prototypes
-## moon: backend is my own plugin: see above.
-"moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr" = { version = "0.0.1", tag_prefix = "dotfilesmgr/v" }
 "go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist" = { version = "0.0.1", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/crabswarm/cmd/crabswarm" = { version = "0.0.11", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/cmdman/cmd/cmdman" = { version = "0.0.15", install_env = { CGO_ENABLED = "0" } }
@@ -76,6 +74,18 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 ## pinentry in tmux/zellij popup; repo is untagged, so pin the pseudo-version.
 "go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses" = { version = "0.0.0-20260713114403-6ed9be4a10a5", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses" = { version = "0.0.0-20260713114403-6ed9be4a10a5", install_env = { CGO_ENABLED = "0" } }
+
+## moon: backend is my own plugin: see [plugins] above.
+## The build runs sandboxed in the quadlet-built image
+## (config/containers-quadlet/moonbit-installer-sandbox.build); the image bakes
+## in no CA bundle, so mount the host's — moon install fetches over TLS.
+[tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]
+version = "0.0.1"
+tag_prefix = "dotfilesmgr/v"
+sandbox = { runtime = "podman", image = "localhost/devenv/moonbit-installer-sandbox:latest", options = [
+  "--mount",
+  "type=bind,src=/etc/ssl/certs/ca-certificates.crt,dst=/etc/ssl/certs/ca-certificates.crt,ro",
+] }
 
 [shell_alias]
 golangci-lint-v1 = "mise exec 'go:github.com/golangci/golangci-lint/cmd/golangci-lint' -- golangci-lint "
