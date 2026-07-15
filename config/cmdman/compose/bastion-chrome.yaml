@@ -8,7 +8,7 @@ commands:
       - -lic
       - ssh-add -T "${SSH_PUBKEY}"
     env:
-      - SSH_BASTION=${SSH_PUBKEY:-$HOME/.ssh/id_ecdsa.pub}
+      - SSH_PUBKEY=${SSH_PUBKEY:-$HOME/.ssh/id_ecdsa.pub}
     tty: true
   proxy:
     args:
