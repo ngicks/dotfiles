@@ -44,6 +44,9 @@ for _, plugin in ipairs {
 end
 
 require("ngpack").setup(require "ngcfg.plugins")
+vim.schedule(function()
+  require("ngcfg.config.ts").install()
+end)
 
 -- load theme
 dofile(vim.g.base46_cache .. "defaults")
