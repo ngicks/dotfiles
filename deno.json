@@ -35,8 +35,10 @@
     "devenv:build": {
       "read": ["./devenv_ver"],
       "write": ["./devenv_ver"],
-      "run": ["git", "podman"],
+      "run": ["git", "podman", "mkdir"],
       "env": [
+        "HOME",
+        "XDG_CACHE_HOME",
         "HTTP_PROXY",
         "HTTPS_PROXY",
         "http_proxy",

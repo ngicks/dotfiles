@@ -65,7 +65,7 @@ checksum = "sha256:0720a57213521a627d74cb2fe3da16197fd5c8dd382c01cdb0b20682a5df9
 url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-testing_3.14.0_windows_amd64.zip"
 
 [[tools."cargo:tree-sitter-cli"]]
-version = "0.26.10"
+version = "0.26.11"
 backend = "cargo:tree-sitter-cli"
 
 [[tools."github:microsoft/waza"]]
@@ -168,7 +168,7 @@ version = "0.5.2"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
-version = "0.24.1"
+version = "0.25.0"
 backend = "pipx:apm-cli"
 
 [[tools.ruff]]
