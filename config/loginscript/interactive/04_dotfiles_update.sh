@@ -82,17 +82,17 @@ dotfiles_next_update_time() {
 
 if [[ -o login ]]; then
   if dotfiles_should_update; then
-    if command -v dotfiles-daemon > /dev/null 2>&1; then
+    if command -v dotfilesmgr > /dev/null 2>&1; then
       pushd "$HOME/.dotfiles" > /dev/null
       # Migrated from `deno task update:daily` to the moonbit CLI (managed
       # through mise). The command itself stamps the 16h-interval marker on
       # success. Concurrent logins are deduplicated inside the CLI via a file
       # lock (singleflight): one process updates, the rest wait for it and skip.
-      dotfiles-daemon standalone update-daily
+      dotfilesmgr standalone update-daily
       popd > /dev/null
     else
       # Don't touch the marker: keep warning every login until the daemon is installed.
-      echo "dotfiles: dotfiles-daemon not found on PATH; skipping daily update" >&2
+      echo "dotfiles: dotfilesmgr not found on PATH; skipping daily update" >&2
     fi
   else
     echo "update deferred"

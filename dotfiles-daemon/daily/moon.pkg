@@ -1,9 +1,0 @@
-import {
-  "moonbitlang/async/fs",
-  "moonbitlang/async/process",
-  "moonbitlang/core/env",
-  "moonbitlang/x/crypto",
-  "ngicks/dotfiles/os_path",
-}
-
-supported_targets = "+native"

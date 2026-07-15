@@ -1,12 +1,12 @@
 [Unit]
-Description=dotfiles server (devenv build/pull REST API)
+Description=dotfilesmgr server (devenv build/pull REST API)
 Documentation=https://github.com/ngicks/dotfiles
 After=network-online.target
 Wants=network-online.target
 
 # Skip when the daemon isn't installed (managed through mise; see
 # config/mise/mise.toml).
-ConditionFileIsExecutable=%h/.local/share/mise/shims/dotfiles-daemon
+ConditionFileIsExecutable=%h/.local/share/mise/shims/dotfilesmgr
 
 [Service]
 Type=simple
@@ -14,7 +14,7 @@ WorkingDirectory=%h/.dotfiles
 
 Environment=PATH=%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:%h/.local/containers/libexec/podman:%h/.local/containers/lib/podman:%h/.local/containers/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RuntimeDirectory=dotfiles-server
+RuntimeDirectory=dotfilesmgr
 RuntimeDirectoryMode=0700
 
 # A login shell raises the soft open-file limit to 10240, but a systemd user
@@ -25,7 +25,7 @@ RuntimeDirectoryMode=0700
 # service the same open-file headroom the manual build gets.
 LimitNOFILE=1048576
 
-ExecStart=%h/.local/share/mise/shims/dotfiles-daemon server serve
+ExecStart=%h/.local/share/mise/shims/dotfilesmgr server serve
 Restart=on-failure
 RestartSec=5
 

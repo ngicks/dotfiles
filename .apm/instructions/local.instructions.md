@@ -23,8 +23,6 @@ Bascially everything should be able to work with `lixnu/amd64`, `linux/arm64`, `
 ├── LICENSE
 ├── build               build scripts for external tools (may be migrated to moonbit)
 │   └── krun            krun (crun but krun enabled)
-├── builder             build tools for external tools
-│   └── podman-static-dist  podman-static with my own configuration. will be moved to ./tool
 ├── config              config files which will be symlinked under ${XDG_CONFIG_HOME:-$HOME/.config}
 │   ├── lazygit
 │   ├── loginscript     source-d from .zshrc
@@ -39,13 +37,10 @@ Bascially everything should be able to work with `lixnu/amd64`, `linux/arm64`, `
 ├── devenv              OCI Image in which LLM can work and related scripts
 ├── devenv_prep.sh      prep scripts for projects which enable some LLM related tools
 ├── devenv_run.sh       runner script for the devenv image which wraps lengthy `podman run` invocation
-├── dotfiles-daemon     moonbit project for management, currently migrating from ./src. will be moved to ./tool
 ├── homeenv-install.sh  sync current env to dotfiles
 ├── homeenv-upgrade.sh  update env and dotfiles to latest
-├── moon.mod.json       moonbit configuration for ./dotfiles-daemon. currently migrating deno to moonbit.
-├── moon.pkg.json
 ├── nix-craft           nix flake configuration
 ├── scripts             misc scripts
 ├── src                 deno project for management
-└── tool                git submodule of https://github.com/ngicks/dotfiles-tool
+└── tool                submodule, edit directly there and the user examines and pushes the change.
 ```

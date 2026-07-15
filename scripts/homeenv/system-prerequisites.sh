@@ -1,19 +1,14 @@
 #!/usr/bin/env bash
 
-# Ensure system-level prerequisites that must exist BEFORE nix is installed,
-# and repair the ones that are order-sensitive.
-#
-# zsh is the main one: the nix installer appends its profile hook only to
-# global zsh rc files that exist at install time. On Debian/Ubuntu zsh reads
-# /etc/zsh/zshrc (not /etc/zshrc, which the installer creates as a fallback),
-# so installing zsh after nix leaves login shells without nix on PATH.
-# This script installs zsh if missing and re-adds the nix hook if it is
-# absent from the rc file zsh actually reads.
-
 set -e
 
 if ! sudo echo "unlocked" ; then
   echo "[WARNING] sudo failed; skipping system prerequisites"
+  exit 0
+fi
+
+if [ "${SYSTEM_PKG_UPDATE_NOT_ALLOWED}" = "1" ]; then
+  echo "skip: system package manager update"
   exit 0
 fi
 
@@ -30,29 +25,51 @@ else
     PKG_MANAGER="unknown"
 fi
 
-if ! command -v zsh &> /dev/null; then
-  echo "zsh not found; installing via $PKG_MANAGER"
-  case "$PKG_MANAGER" in
-      apt)
-          sudo -E apt update
-          sudo -E DEBIAN_FRONTEND=noninteractive apt install -y zsh
-          ;;
-      yum|dnf)
-          sudo -E "$PKG_MANAGER" install -y zsh
-          ;;
-      pacman)
-          sudo -E pacman -S --noconfirm zsh
-          ;;
-      *)
-          echo "Error: package manager $PKG_MANAGER is not supported; install zsh manually"
-          exit 1
-          ;;
-  esac
+case "$PKG_MANAGER" in
+    apt)
+        packages=(build-essential curl git ca-certificates xz-utils unzip zsh)
+        missing=()
+        for pkg in "${packages[@]}"; do
+            if ! dpkg -s "$pkg" &> /dev/null; then
+                missing+=("$pkg")
+            fi
+        done
+        if [ "${#missing[@]}" -gt 0 ]; then
+            echo "installing via apt: ${missing[*]}"
+            sudo -E apt update
+            sudo -E DEBIAN_FRONTEND=noninteractive apt install -y "${missing[@]}"
+        fi
+        ;;
+    yum|dnf)
+        packages=(gcc gcc-c++ make curl git ca-certificates xz unzip zsh)
+        echo "installing via $PKG_MANAGER: ${packages[*]}"
+        sudo -E "$PKG_MANAGER" install -y "${packages[@]}"
+        ;;
+    pacman)
+        packages=(base-devel curl git ca-certificates xz unzip zsh)
+        echo "installing via pacman: ${packages[*]}"
+        sudo -E pacman -S --noconfirm --needed "${packages[@]}"
+        ;;
+    *)
+        echo "[WARNING] package manager $PKG_MANAGER is not supported;"
+        echo "[WARNING] install these manually: a C/C++ toolchain, curl, git, ca-certificates, xz, unzip, zsh"
+        ;;
+esac
+
+nix_daemon_profile='/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+nix_single_user_profile="${HOME}/.nix-profile/etc/profile.d/nix.sh"
+
+nix_newly_installed=false
+if ! command -v nix &> /dev/null \
+    && [ ! -e "$nix_daemon_profile" ] \
+    && [ ! -e "$nix_single_user_profile" ]; then
+  echo "nix not found; installing (multi-user/daemon mode)"
+  sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon --yes
+  nix_newly_installed=true
 fi
 
 # Repair the nix hook when zsh was installed after nix. Debian/Ubuntu zsh
 # reads /etc/zsh/zshrc; other distros and macOS read /etc/zshrc.
-nix_daemon_profile='/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 if [ -e "$nix_daemon_profile" ]; then
   if [ -d /etc/zsh ]; then
     global_zshrc="/etc/zsh/zshrc"
@@ -71,4 +88,28 @@ fi
 # End Nix
 EOF
   fi
+fi
+
+if [ "$nix_newly_installed" = true ]; then
+  echo ""
+  echo "=================================================================="
+  echo " nix was just installed but is not on PATH in this shell yet."
+  echo " Restart your shell (or open a new terminal), then re-execute:"
+  echo ""
+  echo "   ./homeenv-install.sh"
+  echo ""
+  echo "=================================================================="
+  exit 1
+fi
+
+if ! command -v nix &> /dev/null; then
+  echo ""
+  echo "=================================================================="
+  echo " nix is installed but not on PATH in this shell."
+  echo " Restart your shell (or open a new terminal), then re-execute:"
+  echo ""
+  echo "   ./homeenv-install.sh"
+  echo ""
+  echo "=================================================================="
+  exit 1
 fi
