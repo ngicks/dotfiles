@@ -10,10 +10,28 @@ M.base46 = {
   theme_toggle = { "chadracula", "rosepine-dawn" },
   transparency = true,
   hl_override = {
-    DiffAdd = { fg = "NONE" },
-    DiffDelete = { fg = "NONE" },
-    DiffChange = { fg = "NONE" },
-    DiffText = { fg = "NONE" },
+    DiffAdd = {
+      fg = "NONE",
+      bg = { "green", "black", 70 },
+    },
+    DiffDelete = {
+      fg = "NONE",
+      bg = { "red", "black", 70 },
+    },
+    DiffChange = {
+      fg = "NONE",
+      bg = { "light_grey", "black", 85 },
+    },
+    DiffText = {
+      fg = "NONE",
+      bg = { "red", "black", 55 },
+    },
+  },
+  hl_add = {
+    DiffTextAdd = {
+      fg = "NONE",
+      bg = { "green", "black", 55 },
+    },
   },
 }
 
