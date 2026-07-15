@@ -24,9 +24,6 @@ in
       LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
         # rust and realted need this
         pkgs.stdenv.cc.cc.lib
-        # Binaries that depend on OpenSSL via dlopen(3), not on compile-time can not
-        # find openssl without this.
-        pkgs.openssl
       ];
 
       # Point Playwright at the nix-provided browsers (read-only nix store) and
