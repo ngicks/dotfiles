@@ -1,6 +1,11 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
+  # moonbitlang/async loads OpenSSL with dlopen(3), so libssl is not recorded
+  # as an ELF dependency of native MoonBit executables. Give the systemd unit
+  # a stable path to the Nix library output without hard-coding its store hash.
+  home.file.".local/lib/dotfilesmgr-openssl".source = "${pkgs.openssl.out}/lib";
+
   # The dotfiles server loads ~/.config/dotfilesmgr/.env on startup; manage
   # it declaratively here. See config/dotfilesmgr/.env.example for the full
   # set of supported keys.

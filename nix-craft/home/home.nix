@@ -21,7 +21,13 @@ in
   home.sessionVariables = {
       MISE_TRUSTED_CONFIG_PATHS = "$HOME/.config/mise/mise.toml:$HOME/.dotfiles/config/mise/mise.toml";
       LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
-      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
+      LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+        # rust and realted need this
+        pkgs.stdenv.cc.cc.lib
+        # Binaries that depend on OpenSSL via dlopen(3), not on compile-time can not
+        # find openssl without this.
+        pkgs.openssl
+      ];
 
       # Point Playwright at the nix-provided browsers (read-only nix store) and
       # skip the host-requirement check, which fails on non-NixOS/WSL.

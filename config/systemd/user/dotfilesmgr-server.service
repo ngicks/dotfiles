@@ -13,6 +13,9 @@ Type=simple
 WorkingDirectory=%h/.dotfiles
 
 Environment=PATH=%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:%h/.local/containers/libexec/podman:%h/.local/containers/lib/podman:%h/.local/containers/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# moonbitlang/async loads libssl with dlopen(3), so it is absent from the
+# executable's ELF dependencies and must be discoverable at runtime.
+Environment=LD_LIBRARY_PATH=%h/.local/lib/dotfilesmgr-openssl
 
 RuntimeDirectory=dotfilesmgr
 RuntimeDirectoryMode=0700

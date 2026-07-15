@@ -135,6 +135,10 @@ backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 version = "0.0.11"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
+[[tools."go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist"]]
+version = "0.0.1"
+backend = "go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist"
+
 [[tools."go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"]]
 version = "0.0.3"
 backend = "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers"
@@ -150,6 +154,10 @@ backend = "go:golang.org/dl/gotip"
 [[tools."go:golang.org/x/pkgsite/cmd/pkgsite"]]
 version = "0.3.0"
 backend = "go:golang.org/x/pkgsite/cmd/pkgsite"
+
+[[tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]]
+version = "0.0.1"
+backend = "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"
 
 [[tools."npm:@openai/codex"]]
 version = "0.144.1"
