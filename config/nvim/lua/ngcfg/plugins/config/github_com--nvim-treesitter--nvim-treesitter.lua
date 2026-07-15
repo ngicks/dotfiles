@@ -28,6 +28,10 @@ end
 M.config = function(_, opts)
   require("nvim-treesitter").setup(opts)
 
+  -- No tree-sitter grammar exists for systemd units (incl. quadlet); the ini
+  -- grammar is close enough for section/key=value highlighting.
+  vim.treesitter.language.register("ini", "systemd")
+
   vim.api.nvim_create_autocmd("FileType", {
     group = vim.api.nvim_create_augroup("vim-treesitter-start", {}),
     callback = function()
