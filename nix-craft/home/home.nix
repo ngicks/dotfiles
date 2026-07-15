@@ -47,7 +47,7 @@ in
   };
 
   # Quadlet units live here, NOT in ~/.config/containers: the static podman
-  # installer (build/podman-static/install.sh) replaces ~/.config/containers with
+  # installer (builder/podman-static-dist/install.sh) replaces ~/.config/containers with
   # a symlink to its bundled etc/containers and aborts if it is a real directory.
   # config/environment.d/podman.conf sets QUADLET_UNIT_DIRS to this path so the
   # rootless quadlet generator picks them up.

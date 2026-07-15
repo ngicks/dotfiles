@@ -27,7 +27,7 @@ The CLI is built on [cobra][cobra]; `--config` (persistent), `--log`, and
 `--log-level` are available on every subcommand. Run any command with `--help`
 for its full flag list.
 
-Build the tool with (`build/podman-static/` is the module root; the resources
+Build the tool with (`builder/podman-static-dist/` is the module root; the resources
 are embedded, so the binary is self-contained):
 
 ```sh
@@ -192,7 +192,7 @@ tree, so its config lives beside the other devenv build assets.
 
 ## Layout
 
-`build/podman-static/` is the Go module root, in the canonical Cobra layout.
+`builder/podman-static-dist/` is the Go module root, in the canonical Cobra layout.
 
 ```
 cmd/podman-static-dist/

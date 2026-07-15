@@ -65,6 +65,22 @@ sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --no-daem
 ./homeenv-install.sh
 ```
 
+### mise moon backend plugin
+
+My own tools are managed through `mise` with the `moon:` backend prefix in
+`config/mise/mise.toml`, hosted in
+[dotfiles-tool](https://github.com/ngicks/dotfiles-tool) (vendored as the
+`./tool` submodule). `./dotfiles-daemon` and `./builder/podman-static-dist`
+will be moved there. Installing them requires
+[mise-moon-backend-plugin](https://github.com/ngicks/mise-moon-backend-plugin):
+
+```
+mise plugin install moon https://github.com/ngicks/mise-moon-backend-plugin
+```
+
+Install it once mise is on PATH (i.e. after `./homeenv-install.sh`), then re-run
+`mise install` to pick up the `moon:` tools.
+
 ### Disable daily auto-update if needed
 
 ```
@@ -77,11 +93,15 @@ All `*.sh` and `*.env` files under `${XDG_CONFIG_HOME:-$HOME/.config}/env` are l
 
 ## Build optional tools
 
-Things under `build`
+Things under `build` and `builder`
 
 ### podman-static
 
 [podman-static](https://github.com/mgoltzsche/podman-static.git)
+
+`builder/podman-static-dist` will be moved to
+[dotfiles-tool](https://github.com/ngicks/dotfiles-tool) (the `./tool`
+submodule) and installed through mise.
 
 `podman-static-dist build` writes the dist archive to its standard location
 (`${XDG_CACHE_HOME:-~/.cache}/dotfiles/build/podman-static/out/podman-static-<tag>.tar.zst`);

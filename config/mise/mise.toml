@@ -9,6 +9,7 @@ minimum_release_age_excludes = [
   "go:github.com/ngicks/cmdman/cmd/cmdman",
   "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers",
   "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy",
+  "moon:https://github.com/ngicks/dotfiles-tool#...",
   # codex needs updates for newer models
   "npm:@openai/codex",
 ]
@@ -57,6 +58,9 @@ binstall = true
 "go:github.com/mattn/memo" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 # Own rapidly-evolving prototypes
+# moon: tools need https://github.com/ngicks/mise-moon-backend-plugin installed
+# as the `moon` plugin (see README).
+"moon:https://github.com/ngicks/dotfiles-tool#..." = "latest"
 "go:github.com/ngicks/crabswarm/cmd/crabswarm" = { version = "0.0.11", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/cmdman/cmd/cmdman" = { version = "0.0.15", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers" = { version = "0.0.3", install_env = { CGO_ENABLED = "0" } }

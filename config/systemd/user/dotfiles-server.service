@@ -4,15 +4,15 @@ Documentation=https://github.com/ngicks/dotfiles
 After=network-online.target
 Wants=network-online.target
 
-# Skip when moonbit tool chain isn't available. 
-ConditionFileIsExecutable=%h/.local/share/moonbit/bin/moon
+# Skip when the daemon isn't installed (managed through mise; see
+# config/mise/mise.toml).
+ConditionFileIsExecutable=%h/.local/share/mise/shims/dotfiles-daemon
 
 [Service]
 Type=simple
 WorkingDirectory=%h/.dotfiles
 
-Environment=MOON_HOME=%h/.local/share/moonbit
-Environment=PATH=%h/.local/share/moonbit/bin:%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:%h/.local/containers/libexec/podman:%h/.local/containers/lib/podman:%h/.local/containers/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=PATH=%h/.local/share/mise/shims:%h/.local/share/go/bin:%h/.nix-profile/bin:%h/.local/bin:%h/.local/containers/libexec/podman:%h/.local/containers/lib/podman:%h/.local/containers/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 RuntimeDirectory=dotfiles-server
 RuntimeDirectoryMode=0700
@@ -25,8 +25,7 @@ RuntimeDirectoryMode=0700
 # service the same open-file headroom the manual build gets.
 LimitNOFILE=1048576
 
-ExecStartPre=%h/.local/share/moonbit/bin/moon build --target native
-ExecStart=%h/.local/share/moonbit/bin/moon run src2 --target native -- server serve
+ExecStart=%h/.local/share/mise/shims/dotfiles-daemon server serve
 Restart=on-failure
 RestartSec=5
 

@@ -16,7 +16,7 @@ AGENTS.md
 # real server env; only the .example is tracked
 /config/dotfiles-server/.env
 
-build/podman-static/podman-static
+builder/podman-static-dist/podman-static
 build/krun/crun
 build/krun/built
 

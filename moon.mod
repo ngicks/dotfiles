@@ -21,5 +21,5 @@ description = ""
 preferred_target = "native"
 
 options(
-  source: "src2",
+  source: "dotfiles-daemon",
 )

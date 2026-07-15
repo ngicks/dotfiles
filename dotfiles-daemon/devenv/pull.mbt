@@ -7,13 +7,13 @@ async fn ssh_exec(remote : String, command : String) -> Unit raise Error {
 ///|
 /// Build the shell command that drives the dotfiles CLI on a remote host.
 ///
-/// Sources the login shell so `moon`/`mise` are on PATH, enters the checkout,
-/// and runs the CLI through `moon run`.
+/// Sources the login shell so the mise shims are on PATH, enters the
+/// checkout, and runs the mise-managed CLI directly.
 fn remote_build_command(subargs : Array[String]) -> String {
   let parts = [
     ". ~/.zshrc",
     "cd ~/.dotfiles",
-    "moon run src2 -- " + subargs.join(" "),
+    "dotfiles-daemon " + subargs.join(" "),
   ]
   parts.join(" && ")
 }

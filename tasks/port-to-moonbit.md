@@ -20,7 +20,7 @@ less fragile shell orchestration.
      `homeenv-install.sh` / `homeenv-upgrade.sh`.
 
 3. `build/*`
-   - Target `build/krun/*` and `build/podman-static/*`.
+   - Target `build/krun/*` and `builder/podman-static-dist/*`.
    - This is less about shell startup speed and more about maintainability,
      OS/arch branching, argument handling, and testability.
 
