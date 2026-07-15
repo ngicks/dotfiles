@@ -127,8 +127,11 @@ in
     skopeo         # OCI/container image inspection and copy
 
     # Git Tools
-    gh             # GitHub CLI
-    glab           # GitLab CLI
+    gh                     # GitHub CLI
+    glab                   # GitLab CLI
+    git-credential-manager # Git Credential Manager (gcm)
+    pass                   # Unix password store
+    git-lfs                # Git Large File Storage
 
     # Protobuf
     protobuf       # protoc compiler
