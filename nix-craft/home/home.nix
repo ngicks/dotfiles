@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 let
-  run-in-tmux-popup = pkgs.callPackage ../pkgs/run-in-tmux-popup.nix { };
   goimports = pkgs.runCommand "goimports" { } ''
     mkdir -p $out/bin
     ln -s ${pkgs.gotools}/bin/goimports $out/bin/goimports
@@ -239,9 +238,6 @@ in
     traceroute     # Network path tracing
 
     libkrun
-
-    # Custom-built packages
-    run-in-tmux-popup  # pinentry in tmux/zellij popup
   ] ++ lib.optionals stdenv.isLinux [
     # KVM/libvirt tooling for devenv containers. The launcher can opt into
     # /dev/kvm and persistent libvirt image storage with DEVENV_KVM=1.

@@ -7,10 +7,10 @@ case "${PINENTRY_USER_DATA-}" in
   exec pinentry-curses "$@"
   ;;
 *TMUX_POPUP*)
-  exec $HOME/.nix-profile/bin/tmux-popup-pinentry-curses "$@"
+  exec $HOME/.local/share/mise/shims/tmux-popup-pinentry-curses "$@"
   ;;
 *ZELLIJ_POPUP*)
-  exec $HOME/.nix-profile/bin/zellij-popup-pinentry-curses "$@"
+  exec $HOME/.local/share/mise/shims/zellij-popup-pinentry-curses "$@"
   ;;
 esac
 
