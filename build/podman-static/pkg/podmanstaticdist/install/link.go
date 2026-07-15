@@ -76,7 +76,7 @@ func Link(ctx context.Context, o LinkOption) error {
 	}
 
 	if systemd {
-		if err := installQuadletGenerator(ctx, o.Env); err != nil {
+		if err := installQuadletGenerator(ctx, current); err != nil {
 			return err
 		}
 		daemonReload(ctx)
@@ -93,13 +93,10 @@ type wiringParams struct {
 }
 
 func wiringRules(p wiringParams) ([]linkRule, error) {
-	localContainers := filepath.Join(p.env.Home, ".local/containers")
 	configDir := filepath.Join(p.env.ConfigHome, "containers")
 
 	links := []linkRule{
-		// ~/.local/containers -> ~/.local/share/podman/current/usr/local
-		{localContainers, filepath.Join(p.current, "usr/local")},
-		// ~/.config/containers -> ~/.local/share/podman/current/etc/containers
+		// ~/.config/containers -> ~/.local/share/podman-dist/current/etc/containers
 		{configDir, filepath.Join(p.current, "etc/containers")},
 	}
 
@@ -110,7 +107,7 @@ func wiringRules(p wiringParams) ([]linkRule, error) {
 		if err != nil {
 			return nil, err
 		}
-		// ~/.config/environment.d/* -> ~/.local/share/podman/current/etc/environment.d/*
+		// ~/.config/environment.d/* -> ~/.local/share/podman-dist/current/etc/environment.d/*
 		links = append(links, linkRule{
 			filepath.Join(p.env.ConfigHome, "environment.d", name),
 			filepath.Join(p.current, "etc/environment.d", name),
@@ -125,10 +122,11 @@ func wiringRules(p wiringParams) ([]linkRule, error) {
 			if err != nil {
 				return nil, err
 			}
-			// ~/.config/systemd/user/* ->  ~/.local/containers/lib/systemd/user/*
+			// ~/.config/systemd/user/* ->
+			// ~/.local/share/podman-dist/current/usr/local/lib/systemd/user/*
 			links = append(links, linkRule{
 				filepath.Join(p.env.ConfigHome, "systemd/user", name),
-				filepath.Join(localContainers, "lib/systemd/user", name),
+				filepath.Join(p.current, "usr/local/lib/systemd/user", name),
 			})
 		}
 	}
@@ -162,8 +160,8 @@ func applyLinks(rules []linkRule) error {
 	return nil
 }
 
-func installQuadletGenerator(ctx context.Context, env Env) error {
-	quadlet := filepath.Join(env.Home, ".local/containers/libexec/podman/quadlet")
+func installQuadletGenerator(ctx context.Context, current string) error {
+	quadlet := filepath.Join(current, "usr/local/libexec/podman/quadlet")
 	if info, err := os.Stat(quadlet); err != nil || info.Mode()&0o111 == 0 {
 		fmt.Fprintf(os.Stderr, "warning: quadlet binary not found or not executable: %s\n", quadlet)
 		return nil

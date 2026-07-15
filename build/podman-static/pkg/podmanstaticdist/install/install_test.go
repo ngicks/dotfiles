@@ -22,7 +22,7 @@ func TestResolveEnvDefaults(t *testing.T) {
 	if env.DataHome != "/home/u/.local/share" || env.ConfigHome != "/home/u/.config" {
 		t.Errorf("defaults wrong: %+v", env)
 	}
-	if env.podmanBase() != "/home/u/.local/share/podman" {
+	if env.podmanBase() != "/home/u/.local/share/podman-dist" {
 		t.Errorf("podmanBase = %q", env.podmanBase())
 	}
 }
@@ -166,6 +166,38 @@ func TestExtractAtomic(t *testing.T) {
 	})
 }
 
+// Extraction performs no filtering: environment-specific config sets shipped
+// under etc/containers/__additional_<name>/ land in the dist tree like any
+// other file (their content carries concrete paths, so interpolation is a
+// no-op on them).
+func TestExtractKeepsAdditionalConfigSets(t *testing.T) {
+	home := t.TempDir()
+	base := t.TempDir()
+	env := Env{
+		Home:        home,
+		DataHome:    filepath.Join(home, ".local/share"),
+		ConfigHome:  filepath.Join(home, ".config"),
+		ArtifactDir: base,
+	}
+	o := Option{TarPath: stampedArtifact(t, "v1"), Env: env}
+	if err := Extract(context.Background(), o); err != nil {
+		t.Fatal(err)
+	}
+	variant := filepath.Join(
+		base, "v1", "etc/containers/__additional_podman-in-podman/storage.conf",
+	)
+	b, err := os.ReadFile(variant)
+	if err != nil {
+		t.Fatalf("additional config set missing after extract: %v", err)
+	}
+	if string(b) != additionalStorageConf {
+		t.Errorf("additional config was rewritten on extract:\n%s", b)
+	}
+	if _, err := os.Stat(filepath.Join(base, "v1", "etc/containers/storage.conf")); err != nil {
+		t.Errorf("storage.conf missing: %v", err)
+	}
+}
+
 // stampedArtifact writes a minimal dist tree carrying a root `tag` stamp and
 // packs it as build does, returning the artifact path.
 func stampedArtifact(t *testing.T, tag string) string {
@@ -191,9 +223,14 @@ func corruptArtifact(t *testing.T) string {
 	return art
 }
 
+// additionalStorageConf is the packed __additional_podman-in-podman variant;
+// deliberately token-free (concrete paths) like the real resource file, so a
+// byte-compare after extract proves it passed through untouched.
+const additionalStorageConf = "graphroot = /root/.local/share/containers/graphroot\n"
+
 func packArtifact(t *testing.T, tag string) string {
 	t.Helper()
-	src := tupdateSymlink
+	src := t.TempDir()
 	if tag != "" {
 		writeTreeFile(t, filepath.Join(src, "tag"), tag+"\n")
 	}
@@ -203,6 +240,11 @@ func packArtifact(t *testing.T, tag string) string {
 		t,
 		filepath.Join(src, "etc/containers/storage.conf"),
 		"graphroot = ${XDG_DATA_HOME}/g\n",
+	)
+	writeTreeFile(
+		t,
+		filepath.Join(src, "etc/containers/__additional_podman-in-podman/storage.conf"),
+		additionalStorageConf,
 	)
 	writeTreeFile(t, filepath.Join(src, "etc/environment.d/50-podman.conf"), "X=1\n")
 	writeTreeFile(t, filepath.Join(src, "usr/local/lib/systemd/user/podman.service"), "[Service]\n")

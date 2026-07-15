@@ -1,3 +1,5 @@
+// Package rc embeds the resource tree overlaid onto the built dist (etc/
+// containers conf + environment.d) and the default podman-static tag.
 package rc
 
 import (

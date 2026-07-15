@@ -43,6 +43,11 @@ RUN <<EOF
     # For sshfs.nvim
     mkdir -p ~/mnt/sshfs
 
+    # Mountpoint for the host image store (07-podman.sh); pre-created so the
+    # __additional_podman-in-podman storage.conf's additionalimagestores entry
+    # stays valid (an empty read-only store) when the mount is skipped.
+    mkdir -p ~/.local/share/containers/host-graphroot
+
     mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles"
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
 

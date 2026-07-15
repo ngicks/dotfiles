@@ -1,6 +1,7 @@
-_c_bin=${XDG_DATA_HOME}/podman-dist/current/usr/local/bin
-_c_lib=${XDG_DATA_HOME}/podman-dist/current/usr/local/lib/podman
-_c_libexec=${XDG_DATA_HOME}/podman-dist/current/usr/local/libexec/podman
+# Should be in sync with ../path.sh
+_c_bin=/root/.local/share/podman-dist/current/usr/local/bin
+_c_lib=/root/.local/share/podman-dist/current/usr/local/lib/podman
+_c_libexec=/root/.local/share/podman-dist/current/usr/local/libexec/podman
 
 case ":${PATH}:" in
     *:"$_c_bin":*)

@@ -83,6 +83,23 @@ Things under `build`
 
 [podman-static](https://github.com/mgoltzsche/podman-static.git)
 
+`podman-static-dist build` writes the dist archive to its standard location
+(`${XDG_CACHE_HOME:-~/.cache}/dotfiles/build/podman-static/out/podman-static-<tag>.tar.zst`);
+`podman-static-dist install` extracts it to
+`${XDG_DATA_HOME:-~/.local/share}/podman-dist/<tag>` and wires it into the
+host home. Nothing is baked into the devenv image.
+
+At `devenv_run.sh` time the host dist is mounted read-only into the container
+(binaries and configs; `DEVENV_PODMAN_DIST=<dir|0>` overrides the dist dir or
+skips it), and the container-specific config variants from the dist's
+`etc/containers/__additional_podman-in-podman/` (concrete `/root` paths) are
+bind-mounted over their default-named counterparts in `~/.config/containers`,
+so the container never reads the host-interpolated configs. The host image
+store is mounted as an additional read-only image store by default
+(`DEVENV_PODMAN_IMAGE_STORE=0` to skip). Running podman inside is enabled by
+default (`--device /dev/fuse`, `--security-opt label=disable`);
+`DEVENV_PODMAN=0` opts out.
+
 ## About each config
 
 Things under `.config`

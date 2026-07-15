@@ -35,7 +35,9 @@ func installCmd(parent *cobra.Command, flagConfig *string) {
 	parent.AddCommand(cmd)
 }
 
-func runInstall(cmd *cobra.Command, _ []string, flagConfig, flagTar, flagTag string) error {
+func runInstall(
+	cmd *cobra.Command, _ []string, flagConfig, flagTar, flagTag string,
+) error {
 	cfg, err := podmanstaticdist.LoadConfig(flagConfig)
 	if err != nil {
 		return err
@@ -45,5 +47,10 @@ func runInstall(cmd *cobra.Command, _ []string, flagConfig, flagTar, flagTag str
 		tag = flagTag
 	}
 
-	return podmanstaticdist.New(cfg).Install(cmd.Context(), flagTar, tag)
+	return podmanstaticdist.New(cfg).Install(cmd.Context(), podmanstaticdist.InstallParams{
+		ExtractParams: podmanstaticdist.ExtractParams{
+			TarPath: flagTar,
+			Tag:     tag,
+		},
+	})
 }

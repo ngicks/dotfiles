@@ -33,13 +33,24 @@ func buildCmd(parent *cobra.Command, flagConfig *string) {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&flagOutput, "output", "o", "", "output .tar.zst path (required)")
+	f.StringVarP(
+		&flagOutput,
+		"output",
+		"o",
+		"",
+		"output .tar.zst path "+
+			"(default: <user cache dir>/dotfiles/build/podman-static/out/podman-static-<tag>.tar.zst)",
+	)
 	f.StringVar(&flagTag, "tag", "", "podman-static tag to build (default: config/embedded)")
 	f.StringVar(&flagVMName, "vm-name", "", "Lima instance name (default: config/lima)")
-	f.StringVar(&flagWork, "work", "", "host work dir shared with the VM")
+	f.StringVar(
+		&flagWork,
+		"work",
+		"",
+		"host work dir shared with the VM (default: <user cache dir>/dotfiles/build/podman-static)",
+	)
 	f.BoolVar(&flagRecreate, "recreate", false, "recreate the Lima VM before building")
 	f.BoolVar(&flagYes, "yes", false, "do not prompt before creating the VM")
-	_ = cmd.MarkFlagRequired("output")
 
 	parent.AddCommand(cmd)
 }

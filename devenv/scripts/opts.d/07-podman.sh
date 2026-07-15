@@ -2,47 +2,42 @@
 
 set -eCu
 
-# Mount the host podman-static dist and image store into the container so the
-# in-container podman reuses host binaries and images. Opt in with DEVENV_PODMAN=1.
-PODMAN_DIST_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/podman
-PODMAN_GRAPHROOT_DIR=${XDG_DATA_HOME:-$HOME/.local/share}/containers/graphroot
-PODMAN_STATIC_DIST_BIN=${XDG_CACHE_HOME:-$HOME/.cache}/devenv/podman-static-dist/podman-static-dist
-
-if [[ "${DEVENV_PODMAN:-}" != "1" ]]; then
+if [[ "${DEVENV_PODMAN:-1}" != "1" ]]; then
   exit 0
 fi
 
-if [[ ! -d "${PODMAN_DIST_DIR}" ]]; then
-  echo "[WARNING]: DEVENV_PODMAN=1 but ${PODMAN_DIST_DIR} does not exist; podman dist and image store are not mounted" >&2
-  exit 0
-fi
-
-if [[ ! -d "${PODMAN_GRAPHROOT_DIR}" ]]; then
-  echo "[WARNING]: DEVENV_PODMAN=1 but ${PODMAN_GRAPHROOT_DIR} does not exist; podman dist and image store are not mounted" >&2
-  exit 0
-fi
-
-if [[ ! -f "${PODMAN_STATIC_DIST_BIN}" ]]; then
-  echo "[WARNING]: DEVENV_PODMAN=1 but ${PODMAN_STATIC_DIST_BIN} does not exist; run ensure-podman-static-dist.sh to build it; podman is not wired" >&2
-  exit 0
-fi
-
-# Host dist (binaries + etc), read-only.
-printf "%s\n" "--mount type=bind,src=${PODMAN_DIST_DIR},dst=/root/.local/share/podman,ro"
-# Host image store, wired in as an additional (read-only) image store.
-printf "%s\n" "--mount type=bind,src=${PODMAN_GRAPHROOT_DIR},dst=/root/.local/share/containers/host-graphroot,ro"
-# Anonymous, per-run writable inner graphroot (auto-removed by --rm); overlay-on-overlay is rejected.
+# No src = annonymous
 printf "%s\n" "--mount type=volume,dst=/root/.local/share/containers/graphroot"
-# fuse-overlayfs needs /dev/fuse.
-printf "%s\n" "--device /dev/fuse"
-# The in-container wiring CLI.
-printf "%s\n" "--mount type=bind,src=${PODMAN_STATIC_DIST_BIN},dst=/usr/local/bin/podman-static-dist,ro"
-printf "%s\n" "--env DEVENV_PODMAN=1"
-# Wire the host image store in at runtime via containers-storage's STORAGE_OPTS,
-# instead of injecting it into the materialized storage.conf. STORAGE_OPTS is
-# comma-split and REPLACES all overlay graph-driver options from storage.conf,
-# so mount_program (fuse-overlayfs) and ignore_chown_errors are re-specified
-# alongside the host image store. NOTE: storage.conf's mountopt="nodev,fsync=0"
-# cannot ride along — its value contains a comma, which STORAGE_OPTS would split
-# into a bogus option; the container falls back to fuse-overlayfs mount defaults.
-printf "%s\n" "--env STORAGE_OPTS=overlay.mount_program=/root/.local/containers/bin/fuse-overlayfs,overlay.ignore_chown_errors=true,overlay.imagestore=/root/.local/share/containers/host-graphroot"
+
+if [[ -e /dev/fuse ]]; then
+  printf "%s\n" "--device /dev/fuse"
+else
+  echo "[WARNING]: podman-in-podman is enabled but /dev/fuse does not exist; fuse-overlayfs will not work (DEVENV_PODMAN=0 to silence)" >&2
+fi
+
+printf "%s\n" "--security-opt label=disable"
+
+dist_dir=${DEVENV_PODMAN_DIST:-${XDG_DATA_HOME:-$HOME/.local/share}/podman-dist}
+if [[ "${dist_dir}" != "0" ]]; then
+  if [[ -d "${dist_dir}/current" ]]; then
+    printf "%s\n" "--mount type=bind,src=${dist_dir},dst=/root/.local/share/podman-dist,ro"
+    printf "%s\n" "--mount type=bind,src=${dist_dir}/current/etc/containers,dst=/root/.config/containers,ro"
+    for variant in "${dist_dir}/current/etc/containers/__additional_podman-in-podman"/*; do
+      [[ -f "${variant}" ]] || continue
+      printf "%s\n" "--mount type=bind,src=${variant},dst=/root/.config/containers/$(basename "${variant}"),ro"
+    done
+  else
+    echo "[WARNING]: ${dist_dir}/current does not exist (run podman-static-dist install on the host); podman is not wired into the container" >&2
+  fi
+fi
+
+if [[ "${DEVENV_PODMAN_IMAGE_STORE:-1}" == "1" ]]; then
+  graphroot=$(podman info --format '{{.Store.GraphRoot}}' 2>/dev/null || true)
+  if [[ -n "${graphroot}" && -d "${graphroot}" ]]; then
+    # Referenced as an additionalimagestores entry by the
+    # __additional_podman-in-podman storage.conf variant.
+    printf "%s\n" "--mount type=bind,src=${graphroot},dst=/root/.local/share/containers/host-graphroot,ro"
+  elif [[ -n "${DEVENV_PODMAN_IMAGE_STORE:-}" ]]; then
+    echo "[WARNING]: DEVENV_PODMAN_IMAGE_STORE=1 but host graphroot could not be resolved (podman info) or does not exist; host image store is not mounted" >&2
+  fi
+fi

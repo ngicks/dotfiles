@@ -55,19 +55,19 @@ func linkFixture(t *testing.T) (base string, env Env) {
 	return base, env
 }
 
-// assertWired checks the link contract: ~/.config/containers and
-// ~/.local/containers are wholesale symlinks into the current tree (interpolation
-// happens at extract time, not here), plus the per-file environment.d link.
+// assertWired checks the link contract: ~/.config/containers is a wholesale
+// symlink into the current tree (interpolation happens at extract time, not
+// here), plus the per-file environment.d link. Binaries have no home-side
+// link: consumers address <base>/current/usr/local directly.
 func assertWired(t *testing.T, base string, env Env) {
 	t.Helper()
 	current := filepath.Join(base, "current")
-	localContainers := filepath.Join(env.Home, ".local/containers")
 	configDir := filepath.Join(env.ConfigHome, "containers")
 
-	if got, err := os.Readlink(localContainers); err != nil ||
-		got != filepath.Join(current, "usr/local") {
-		t.Errorf("~/.local/containers link = %q (err %v), want %s",
-			got, err, filepath.Join(current, "usr/local"))
+	if _, err := os.Lstat(filepath.Join(env.Home, ".local/containers")); !errors.Is(
+		err, fs.ErrNotExist,
+	) {
+		t.Errorf("~/.local/containers staging link should no longer be created (err %v)", err)
 	}
 
 	if got, err := os.Readlink(configDir); err != nil ||
@@ -303,7 +303,6 @@ func TestWiringRulesTable(t *testing.T) {
 		DataHome:   filepath.Join(home, ".local/share"),
 		ConfigHome: filepath.Join(home, ".config"),
 	}
-	localContainers := filepath.Join(home, ".local/containers")
 
 	rules, err := wiringRules(wiringParams{
 		env:     env,
@@ -326,9 +325,13 @@ func TestWiringRulesTable(t *testing.T) {
 	})
 	assertRow("systemd", linkRule{
 		filepath.Join(env.ConfigHome, "systemd/user/podman.socket"),
-		filepath.Join(localContainers, "lib/systemd/user/podman.socket"),
+		filepath.Join(current, "usr/local/lib/systemd/user/podman.socket"),
 	})
-	assertRow("local", linkRule{localContainers, filepath.Join(current, "usr/local")})
+	for _, r := range rules {
+		if r[0] == filepath.Join(home, ".local/containers") {
+			t.Errorf("staging-link row %v still emitted", r)
+		}
+	}
 	// A nil embedded (wholesale mode) emits the single config-dir symlink.
 	assertRow("config", linkRule{
 		filepath.Join(env.ConfigHome, "containers"),
@@ -359,12 +362,12 @@ func TestApplyLinksRefusesNonSymlink(t *testing.T) {
 		}
 	})
 
-	t.Run("directory via replaceSymlink", func(t *testing.T) {
+	t.Run("directory via updateSymlink", func(t *testing.T) {
 		dest := filepath.Join(t.TempDir(), "confdir")
 		if err := os.Mkdir(dest, 0o755); err != nil {
 			t.Fatal(err)
 		}
-		err := replaceSymlink("/some/target", dest)
+		err := updateSymlink("/some/target", dest)
 		assertRefusal(t, err, dest)
 		if fi, err := os.Lstat(dest); err != nil || !fi.IsDir() {
 			t.Errorf("real directory disturbed (err %v)", err)
@@ -385,7 +388,7 @@ func inodeOf(t *testing.T, path string) uint64 {
 	return st.Ino
 }
 
-func TestReplaceSymlinkSkipsWhenCorrect(t *testing.T) {
+func TestUpdateSymlinkSkipsWhenCorrect(t *testing.T) {
 	dir := t.TempDir()
 	target := filepath.Join(dir, "target")
 	link := filepath.Join(dir, "link")
@@ -393,23 +396,23 @@ func TestReplaceSymlinkSkipsWhenCorrect(t *testing.T) {
 		t.Fatal(err)
 	}
 	before := inodeOf(t, link)
-	if err := replaceSymlink(target, link); err != nil {
-		t.Fatalf("replaceSymlink: %v", err)
+	if err := updateSymlink(target, link); err != nil {
+		t.Fatalf("updateSymlink: %v", err)
 	}
 	if after := inodeOf(t, link); after != before {
 		t.Errorf("inode changed %d -> %d, want the correct link left untouched", before, after)
 	}
 }
 
-func TestReplaceSymlinkReplacesWrongTarget(t *testing.T) {
+func TestUpdateSymlinkReplacesWrongTarget(t *testing.T) {
 	dir := t.TempDir()
 	link := filepath.Join(dir, "link")
 	if err := os.Symlink(filepath.Join(dir, "old"), link); err != nil {
 		t.Fatal(err)
 	}
 	want := filepath.Join(dir, "new")
-	if err := replaceSymlink(want, link); err != nil {
-		t.Fatalf("replaceSymlink: %v", err)
+	if err := updateSymlink(want, link); err != nil {
+		t.Fatalf("updateSymlink: %v", err)
 	}
 	if got, err := os.Readlink(link); err != nil || got != want {
 		t.Errorf("link target = %q (err %v), want %s", got, err, want)

@@ -15,7 +15,7 @@ other host tooling being present.
 ## Commands
 
 ```
-podman-static-dist build   -o <out.tar.zst> [--tag v5.8.4] [--recreate] [--yes] [VM flags]
+podman-static-dist build   [-o <out.tar.zst>] [--tag v5.8.4] [--recreate] [--yes] [VM flags]
 podman-static-dist extract --tar <out.tar.zst> [--tag v5.8.4]
 podman-static-dist install --tar <out.tar.zst> [--tag v5.8.4]
 podman-static-dist link    [--base <dir>] [--tag <tag>] [--skip-systemd]
@@ -58,8 +58,8 @@ docker is provisioned *inside* the VM by Lima's `docker` template (rootless).
    copy-and-override, no special-case path mapping — stamps the resolved build
    tag into the tree root as a `tag` file (so install/extract can recover it and
    make their `--tag` optional), then writes a **seekable** zstd tarball
-   (`tar.Writer.AddFS` over a seekable-zstd writer) to the mandatory
-   `-o`/`--output` path.
+   (`tar.Writer.AddFS` over a seekable-zstd writer) to the `-o`/`--output`
+   path (default: the standard archive location, see below).
 
 The tag resolves as `--tag` > config (`tag`) > the embedded `tag` file; the VM
 name resolves as `--vm-name` > config (`vm_name`) > lima's default. The
@@ -67,11 +67,19 @@ name resolves as `--vm-name` > config (`vm_name`) > lima's default. The
 time, so editing either requires a rebuild.
 
 VM flags: `--vm-name` (Lima instance name) and `--work` (host dir shared with the
-VM; defaults next to `-o`). The VM's shape is otherwise fixed internally, not a
-user knob: it uses Lima's `docker` template, vCPUs match the host, disk is
+VM; defaults to the standard base dir, see below). The VM's shape is otherwise
+fixed internally, not a user knob: it uses Lima's `docker` template, vCPUs match the host, disk is
 `60GiB`, and memory is the lesser of `8GiB` or half the host's RAM. (These were
 misleading as flags — a persistent instance keeps whatever size it was created
 with and silently ignores a changed value on reuse.)
+
+The standard base dir for build state is
+`<user cache dir>/dotfiles/build/podman-static` (`~/.cache/...` on Linux): it is
+the `--work` default, and `-o` defaults to
+`out/podman-static-<tag>.tar.zst` beneath it. The devenv image does **not**
+bake the archive in: install the dist on the host and
+`devenv/scripts/opts.d/07-podman.sh` bind-mounts the extracted tree into the
+container at run time.
 
 The VM is provisioned with a fixed DNS fix embedded from
 `internal/lima/dns-provision.sh`: rootless docker runs `dockerd` in a
@@ -91,13 +99,22 @@ is `install` or `link`). Flags mirror `install`: `--tar` (required) and `--tag`
 stamped `tag` > config `tag` / embedded default); the dist dir resolves the same
 way `install` does.
 
+The tree is extracted **as-is** — no filtering. Environment-specific config
+sets ship under `etc/containers/__additional_<name>/` (currently
+`__additional_podman-in-podman`: `containers.conf`, `storage.conf`, and
+`path.sh` for podman running inside the devenv container, written with
+concrete `/root` paths so host-side interpolation cannot corrupt them). They
+stay inert until a consumer activates one — the devenv runner bind-mounts each
+file over its default-named counterpart in `~/.config/containers`, so the
+container never reads the host-interpolated configs.
+
 ### install
 
 Expands the tarball and wires it into your home — no container runtime or extra
 tooling required:
 
 - extracts to `$TARGET_ARTIFACT_DIR/<tag>` (else the config's `artifact_dir/<tag>`,
-  else `${XDG_DATA_HOME:-$HOME/.local/share}/podman/<tag>`) — the seekable
+  else `${XDG_DATA_HOME:-$HOME/.local/share}/podman-dist/<tag>`) — the seekable
   stream is read as an `io.ReaderAt`, presented as an `fs.FS` by `tarfs`, and
   materialized with `os.CopyFS`;
 - **interpolates** the bundled config against your environment: only `${HOME}`
@@ -105,10 +122,12 @@ tooling required:
   `$XDG_RUNTIME_DIR`, `${PATH}`, and `${VAR:-default}` are intentionally left for
   session/runtime expansion;
 - rewrites the systemd **user** units (inserts `EnvironmentFile=` and points the
-  `podman` command at `~/.local/containers/bin/podman`);
-- creates the symlinks `.../podman/current`, `~/.config/containers`,
-  `~/.local/containers`, the per-unit links under `~/.config/systemd/user`, and
-  the per-file `environment.d` links under `~/.config/environment.d`;
+  `podman` command at `<base>/current/usr/local/bin/podman`);
+- creates the symlinks `.../podman-dist/current` and `~/.config/containers`,
+  the per-unit links under `~/.config/systemd/user` (targets under
+  `<base>/current/usr/local/lib/systemd/user` — binaries have no home-side
+  link), and the per-file `environment.d` links under
+  `~/.config/environment.d`;
 - registers the quadlet user generator in a system generator dir (directly when
   root, else via `sudo` with stdio forwarded; skipped with instructions when
   neither is available) and runs `systemctl --user daemon-reload`.
@@ -126,19 +145,21 @@ differs from the host that produced the tree (e.g. inside a container).
 `link` **only creates symlinks** — all config interpolation happens once, at
 **extract** time, not here. It:
 
-- symlinks `~/.local/containers` → `<base>/current/usr/local`;
 - symlinks `~/.config/containers` → `<base>/current/etc/containers`;
 - links the `environment.d` fragments per-file;
-- performs the systemd wiring (unit links, quadlet generator, daemon-reload)
-  unless `--skip-systemd` is given or `systemctl` is not on `PATH` (auto-skipped
-  with a printed notice).
+- performs the systemd wiring (unit links targeting
+  `<base>/current/usr/local/lib/systemd/user`, quadlet generator,
+  daemon-reload) unless `--skip-systemd` is given or `systemctl` is not on
+  `PATH` (auto-skipped with a printed notice).
 
-Re-running relinks — it is idempotent.
+Binaries are addressed directly under `<base>/current/usr/local` (PATH comes
+from the dist's `environment.d` fragment / `path.sh`); there is no home-side
+binary link. Re-running relinks — it is idempotent.
 
 Flags:
 
 - `--base <dir>` — dist base dir; defaults to `$TARGET_ARTIFACT_DIR`, else the
-  config's `artifact_dir`, else `$XDG_DATA_HOME/podman`.
+  config's `artifact_dir`, else `$XDG_DATA_HOME/podman-dist`.
 - `--tag <tag>` — when given **and** the base is writable, (re)points the `current`
   symlink at `<tag>`. A read-only base with an existing `current` is used as-is
   (never fails merely because it could not rewrite `current`). When omitted, the
@@ -193,6 +214,10 @@ rc/                            resource embedding package:
   rc.go                         //go:embed resource + tag -> FS/Tag (mirrors the built tree)
   resource/                     artifact tree baked into the binary:
     etc/containers/               conf copied over the built etc/containers, symlinked as ~/.config/containers
+                                  (__additional_podman-in-podman/: containers.conf/storage.conf/path.sh variants
+                                  for podman inside the devenv container — concrete /root paths, host image store
+                                  appended — extracted as-is; the devenv runner shadow-mounts them over the
+                                  default-named files in ~/.config/containers)
     etc/environment.d/            session env fragment linked into ~/.config/environment.d
   tag                           default podman-static tag to build/install
 internal/buildpodman/          shared, exported building blocks used by build & install:

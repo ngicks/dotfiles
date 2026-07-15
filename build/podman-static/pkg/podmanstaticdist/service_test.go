@@ -96,7 +96,10 @@ func TestServiceInstallOption(t *testing.T) {
 	}
 	// An explicit --tag lands in Tag; the config tag is recorded as the fallback
 	// used only when neither the flag nor the archive stamp supplies one.
-	o := New(Config{Tag: "cfg-tag"}).installOption(env, "/art/podman.tar.zst", "flag-tag")
+	o := New(Config{Tag: "cfg-tag"}).extractOption(
+		env,
+		ExtractParams{TarPath: "/art/podman.tar.zst", Tag: "flag-tag"},
+	)
 	if o.Tag != "flag-tag" {
 		t.Errorf("Tag = %q, want the explicit flag tag", o.Tag)
 	}
@@ -114,7 +117,7 @@ func TestServiceInstallOption(t *testing.T) {
 	// then the config fallback.
 	if got := New(
 		Config{Tag: "cfg-tag"},
-	).installOption(env, "/art/podman.tar.zst", ""); got.Tag != "" {
+	).extractOption(env, ExtractParams{TarPath: "/art/podman.tar.zst"}); got.Tag != "" {
 		t.Errorf("Tag = %q, want empty when no --tag was given", got.Tag)
 	}
 }

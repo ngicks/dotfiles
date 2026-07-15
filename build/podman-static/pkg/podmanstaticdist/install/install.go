@@ -44,7 +44,7 @@ func (e Env) podmanBase() string {
 	if e.ArtifactDir != "" {
 		return e.ArtifactDir
 	}
-	return filepath.Join(e.DataHome, "podman")
+	return filepath.Join(e.DataHome, "podman-dist")
 }
 
 type Option struct {
@@ -91,7 +91,10 @@ func (o Option) resolveTag() (string, error) {
 	return "", fmt.Errorf("tag is required: pass --tag, use a stamped archive, or set config tag")
 }
 
-func Run(ctx context.Context, o Option) error {
+// Run extracts the artifact, then links it. An empty l.Base or l.Tag defaults
+// to the env base and the resolved tag; l.Env is always taken from o.Env, so
+// both stages agree on where the tree lives.
+func Run(ctx context.Context, o Option, l LinkOption) error {
 	if err := o.Validate(); err != nil {
 		return err
 	}
@@ -105,11 +108,14 @@ func Run(ctx context.Context, o Option) error {
 	if err := Extract(ctx, o); err != nil {
 		return err
 	}
-	return Link(ctx, LinkOption{
-		Base: o.Env.podmanBase(),
-		Tag:  tag,
-		Env:  o.Env,
-	})
+	if l.Base == "" {
+		l.Base = o.Env.podmanBase()
+	}
+	if l.Tag == "" {
+		l.Tag = tag
+	}
+	l.Env = o.Env
+	return Link(ctx, l)
 }
 
 func Extract(ctx context.Context, o Option) error {
@@ -154,7 +160,7 @@ func Extract(ctx context.Context, o Option) error {
 	}
 
 	envFile := filepath.Join(o.Env.ConfigHome, "containers/path.env")
-	podmanPath := filepath.Join(o.Env.Home, ".local/containers/bin/podman")
+	podmanPath := filepath.Join(base, "current/usr/local/bin/podman")
 	if err := buildpodman.TransformUserUnitsInDir(
 		filepath.Join(tmpDir, "usr/local/lib/systemd/user"),
 		envFile,

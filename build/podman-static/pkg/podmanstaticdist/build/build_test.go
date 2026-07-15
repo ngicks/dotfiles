@@ -27,7 +27,6 @@ func TestOptionValidate(t *testing.T) {
 	}{
 		{"empty tag", func(o *Option) { o.Tag = "" }},
 		{"nil resource fs", func(o *Option) { o.Resource = nil }},
-		{"empty output path", func(o *Option) { o.OutputPath = "" }},
 		// An empty VM name is rejected rather than silently re-defaulted: the
 		// merged config always seeds vm_name, so "" is a deliberate override.
 		{"empty vm name", func(o *Option) { o.Vm.Name = "" }},
@@ -65,14 +64,21 @@ func TestBuildScript(t *testing.T) {
 	}
 }
 
-func TestDefaultHostWork(t *testing.T) {
-	got := defaultHostWork("/home/u/out/podman.tar.zst")
-	if got != "/home/u/out/.podman-static-build" {
-		t.Errorf("defaultHostWork = %q", got)
+func TestStandardBaseDir(t *testing.T) {
+	t.Setenv("XDG_CACHE_HOME", "/home/u/.cache")
+	got, err := standardBaseDir()
+	if err != nil {
+		t.Fatal(err)
 	}
-	got = defaultHostWork("podman.tar.zst")
-	if got != ".podman-static-build" {
-		t.Errorf("defaultHostWork relative = %q", got)
+	if got != "/home/u/.cache/dotfiles/build/podman-static" {
+		t.Errorf("standardBaseDir = %q", got)
+	}
+}
+
+func TestDefaultOutputPath(t *testing.T) {
+	got := defaultOutputPath("/home/u/.cache/dotfiles/build/podman-static", "v5.8.4")
+	if got != "/home/u/.cache/dotfiles/build/podman-static/out/podman-static-v5.8.4.tar.zst" {
+		t.Errorf("defaultOutputPath = %q", got)
 	}
 }
 

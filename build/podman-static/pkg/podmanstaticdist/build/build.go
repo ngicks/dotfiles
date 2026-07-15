@@ -22,11 +22,13 @@ const repoUrl = "https://github.com/mgoltzsche/podman-static"
 
 // Option configures Run.
 type Option struct {
-	Tag        string      // required: podman-static tag to build (e.g. v5.8.4)
-	Resource   fs.FS       // required: resource tree; its directories are copied over the built tree
-	OutputPath string      // required: destination .tar.zst
+	Tag      string // required: podman-static tag to build (e.g. v5.8.4)
+	Resource fs.FS  // required: resource tree; its directories are copied over the built tree
+	// OutputPath is the destination .tar.zst; empty defaults to
+	// <standard base>/out/podman-static-<tag>.tar.zst.
+	OutputPath string
 	Recreate   bool        // recreate the VM before building
-	Vm         lima.Config // VM config; HostWork defaults next to OutputPath
+	Vm         lima.Config // VM config; HostWork defaults to the standard base dir
 	// Confirm, when set, is asked before provisioning a fresh (slow) VM. A
 	// false return aborts the build.
 	Confirm func(prompt string) (bool, error)
@@ -47,9 +49,6 @@ func (o Option) Validate() error {
 	if o.Resource == nil {
 		return fmt.Errorf("resource fs is required")
 	}
-	if o.OutputPath == "" {
-		return fmt.Errorf("output path is required")
-	}
 	if o.Vm.Name == "" {
 		return fmt.Errorf("vm name is required")
 	}
@@ -62,15 +61,25 @@ func Run(ctx context.Context, o Option) error {
 		return err
 	}
 
+	if o.OutputPath == "" || o.Vm.HostWork == "" {
+		base, err := standardBaseDir()
+		if err != nil {
+			return err
+		}
+		if o.OutputPath == "" {
+			o.OutputPath = defaultOutputPath(base, o.Tag)
+		}
+		if o.Vm.HostWork == "" {
+			o.Vm.HostWork = base
+		}
+	}
+
 	cli, err := lima.FindCliFromPath()
 	if err != nil {
 		return err
 	}
 
 	vm := o.Vm
-	if vm.HostWork == "" {
-		vm.HostWork = defaultHostWork(o.OutputPath)
-	}
 	vm.HostWork, err = filepath.Abs(vm.HostWork)
 	if err != nil {
 		return fmt.Errorf("resolving work dir: %w", err)
@@ -150,6 +159,7 @@ func Run(ctx context.Context, o Option) error {
 	if err := buildpodman.WriteArtifact(assetDir, o.OutputPath); err != nil {
 		return fmt.Errorf("writing artifact: %w", err)
 	}
+	fmt.Fprintf(os.Stderr, "wrote %s\n", o.OutputPath)
 	return nil
 }
 
@@ -177,9 +187,21 @@ make singlearch-tar PLATFORM=linux/amd64
 `, repoPath)
 }
 
-// defaultHostWork places the VM's shared work dir next to the output artifact.
-func defaultHostWork(outputPath string) string {
-	return filepath.Join(filepath.Dir(outputPath), ".podman-static-build")
+// standardBaseDir is the standard host location for build state:
+// <user cache dir>/dotfiles/build/podman-static. The --work default is the dir
+// itself; the -o default lives under out/ beneath it.
+func standardBaseDir() (string, error) {
+	cache, err := os.UserCacheDir()
+	if err != nil {
+		return "", fmt.Errorf("resolving user cache dir: %w", err)
+	}
+	return filepath.Join(cache, "dotfiles", "build", "podman-static"), nil
+}
+
+// defaultOutputPath places the artifact under the standard base dir, named
+// after the built tag so the devenv image build can locate it.
+func defaultOutputPath(base, tag string) string {
+	return filepath.Join(base, "out", "podman-static-"+tag+".tar.zst")
 }
 
 // sameDir reports whether a and b resolve to the same directory.
