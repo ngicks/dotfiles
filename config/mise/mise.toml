@@ -66,7 +66,7 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 "go:github.com/mattn/memo" = { version = "latest", install_env = { CGO_ENABLED = "0" } }
 
 # Own rapidly-evolving prototypes
-"go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist" = { version = "0.0.1", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist" = { version = "0.0.2", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/crabswarm/cmd/crabswarm" = { version = "0.0.11", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/cmdman/cmd/cmdman" = { version = "0.0.15", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers" = { version = "0.0.3", install_env = { CGO_ENABLED = "0" } }
