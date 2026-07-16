@@ -19,6 +19,11 @@ pushd $dir
   ./scripts/homeenv/nix-run-home-manager.sh
 
   echo ""
+  echo "moonbit install"
+  echo ""
+  ./scripts/homeenv/moonbit-install.sh
+
+  echo ""
   echo "mise install"
   echo ""
   ./scripts/homeenv/mise-install.sh
