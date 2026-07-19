@@ -82,7 +82,7 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 [tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]
 version = "0.0.1"
 tag_prefix = "dotfilesmgr/v"
-sandbox = { runtime = "podman", image = "localhost/devenv/moonbit-installer-sandbox:latest", options = [
+sandbox = { runtime = "podman", image = "ghcr.io/ngicks/mise-moon-backend-plugin/moonbit-installer-sandbox:ubuntu-latest", options = [
   "--mount",
   "type=bind,src=/etc/ssl/certs/ca-certificates.crt,dst=/etc/ssl/certs/ca-certificates.crt,ro",
 ] }
