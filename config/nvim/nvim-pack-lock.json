@@ -11,7 +11,7 @@
       "version": ">=0.0.0"
     },
     "base46": {
-      "rev": "cbb71c6cb56f53b30ab1a95a6d277f7e0524025b",
+      "rev": "8d059b82367160cd530253afbbcd20dc4b34129f",
       "src": "https://github.com/nvchad/base46"
     },
     "cmp-async-path": {
@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "e51af76acc83fe728e9c9dae527bee330d90436d",
+      "rev": "424b724e7699730b818466532f0ca42930313273",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -58,7 +58,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "6765f464a60e39afc20775f54f7ba40896bf1b81",
+      "rev": "eae8d9d27eaeffc777699c01bf8f8b8c071908c1",
       "src": "https://github.com/junegunn/fzf",
       "version": ">=0.0.0"
     },
@@ -164,7 +164,7 @@
       "version": ">=0.0.0"
     },
     "nvim-treesitter": {
-      "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
+      "rev": "24977147550d53589e53b874ec75e14e4fbc304e",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -174,7 +174,7 @@
       "version": ">=0.0.0"
     },
     "nvim-web-devicons": {
-      "rev": "09d1324e264c6950262dbe02a9bce2933a6800db",
+      "rev": "0ca28b61a04fe7426cefbdd52c2647ef0e335b5f",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {
@@ -223,7 +223,7 @@
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
-      "rev": "28019401865beffcedc744bb1506d0201b88f2f9",
+      "rev": "222c8cc1ad66076c05b7c9d0695781ebe3799d88",
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
