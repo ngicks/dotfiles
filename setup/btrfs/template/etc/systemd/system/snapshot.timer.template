@@ -1,0 +1,11 @@
+[Unit]
+Description=btrfs snapshot of ${SUBVOL_NAME} (${SNAPSHOT_INTERVAL})
+
+[Timer]
+OnCalendar=${SNAPSHOT_INTERVAL}
+RandomizedDelaySec=${SNAPSHOT_RANDOMIZED_DELAY}
+FixedRandomDelay=true
+Persistent=true
+
+[Install]
+WantedBy=timers.target

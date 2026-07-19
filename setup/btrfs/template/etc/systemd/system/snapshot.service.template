@@ -1,0 +1,7 @@
+[Unit]
+Description=btrfs snapshot of ${SUBVOL_NAME} (${SNAPSHOT_INTERVAL})
+RequiresMountsFor=${ROOT_POOL}
+
+[Service]
+Type=oneshot
+ExecStart=${SNAPSHOT_SCRIPT} ${SNAPSHOT_INTERVAL}

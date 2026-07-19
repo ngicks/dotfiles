@@ -1,0 +1,40 @@
+{
+  "env": {
+    "ROOT_POOL": "/mnt/btrfspool",
+    "DISK_LABEL": "linux-userdata",
+    "FS_COMPRESSION": "zstd:5",
+    "MANAGEMENT_SCRIPT_DIR": "/usr/local/share/btrfs-util",
+    "SNAPSHOT_SCRIPT_DIR": "/usr/local/share/btrfs-util/snapshot"
+  },
+  "subvolume": [
+    {
+      "volname": "${USER}/@gitrepo",
+      "mount-to": "${HOME}/gitrepo",
+      "snapshot": [
+        {
+          "interval": "hourly",
+          "retention": 24
+        },
+        { "interval": "daily" }
+      ]
+    },
+    {
+      "volname": "${USER}/@gnupg",
+      "mount-to": "${HOME}/.gnupg",
+      "snapshot": [
+        {
+          "interval": "daily",
+          "retention": 2
+        },
+        {
+          "interval": "monthly",
+          "retention": 6
+        }
+      ]
+    },
+    {
+      "volname": "${USER}/data/@containers",
+      "mount-to": "${XDG_DATA_HOME}/containers"
+    }
+  ]
+}

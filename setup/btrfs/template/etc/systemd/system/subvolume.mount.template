@@ -1,0 +1,11 @@
+[Unit]
+Description=btrfs ${SUBVOL_NAME}
+
+[Mount]
+What=/dev/disk/by-label/${DISK_LABEL}
+Where=${SUBVOL_MOUNT_PATH}
+Type=btrfs
+Options=subvol=${SUBVOL_PATH},noatime,compress=${SUBVOL_COMPRESSION}
+
+[Install]
+WantedBy=${DISK_SYSTEMD_DEVICE_UNIT_NAME}
