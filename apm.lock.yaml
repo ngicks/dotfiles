@@ -1,6 +1,6 @@
 lockfile_version: '1'
-generated_at: '2026-07-02T12:58:05.647304+00:00'
-apm_version: 0.23.0
+generated_at: '2026-07-20T07:22:07.383503+00:00'
+apm_version: 0.25.0
 dependencies:
 - repo_url: moonbitlang/skills
   name: moonbit-skills
@@ -469,10 +469,10 @@ dependencies:
     .claude/skills/go-review-checklist/SKILL.md: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
   content_hash: sha256:d1f2432180ac2de13a6a23d83bb879f5c1c552218f7cf55aea9af4c6ffe51f92
 - repo_url: ngicks/agents-package
-  name: ngplan
+  name: agents-package
   host: github.com
   resolved_commit: 25aff3c490fad4532b0ba2e8d46a227c8704f07a
-  version: 1.0.0
+  version: unknown
   virtual_path: skills/ngplan
   is_virtual: true
   package_type: claude_skill
@@ -485,7 +485,1823 @@ dependencies:
     .agents/skills/ngplan/SKILL.md: sha256:ec573a5b5d0b6c61e0738c91c8d768953af9d407b86f122113b3d8b9ca07d7a0
     .claude/skills/ngplan/SKILL.md: sha256:ec573a5b5d0b6c61e0738c91c8d768953af9d407b86f122113b3d8b9ca07d7a0
   content_hash: sha256:96a6356649a8569043582fc6d87a18eec5c498b9696013d6965165edee5d0489
+deployments:
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-check-outdated-patterns
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-check-outdated-patterns/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: sha256:0447897fc0bb662776faa0d7455e9104efa19f6284034edd717d7cd679a4b839
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ee7f0a3be1689595c56b3e9ccfb7a1472f89448315f2bbf4c07edd5a7aceeafd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/copy_helper.sh
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:59cd98e7afd501f2d6b6e8d588ae4af86c349e486a58682a566e607d165dcc61
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/cmd/release/main.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:2ed4ac93b6f93084f48b3efd003e424ab7471c9e4614edafe25cf4f5acf68ae6
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/cmd/release/main_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:0adc9e2feb72a31c7f156a9e46f15a3e448aedc9a05e250773c1babbd4349834
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/cmdsignals/signals.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:d82e84daa15be3c56db97aed58aaf1895fbe55154120bd7bb05832b5b1c8e963
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/cmdsignals/signals_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:66bfbf54bec285adf985bb456e2a7d736f87679dda59f7eceb4fcee83e7a857c
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/cmdsignals/signals_unix_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ce7bc788742b255401c06a926ef3de9b8870bbb6838be443362d637e38c2b94b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/loggerfactory/loggerfactory.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:3c2f96965b17431d4571ee3be2bf4a5989a3d64e0af7490d24a8a827610af9c1
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/loggerfactory/loggerfactory_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ab86fcf79ac087242031c4e5cc34cec9f94ef953dc91910af02c5f559a1cece9
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/stdiopipe/stdiopipe.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:21d0ce3299739b34ff662eb2a9aca802a1ae8afc3dee2104d3026e1b11431f52
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/versioninfo/versioninfo.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ed35614b8b5f2826cd2fcf04a9b427187dbc6f4508beeebec8403e62e4a3821d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/helpers/internal/versioninfo/versioninfo_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:13a97e51882aba0594fc7e0d9702af6c1c1041565fc9e0205777d53924b4546e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/reference/command-templates.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:31fd62bf74251e0a7d44f2e58d1f93d15d5d562c649061fac25ef127015531d2
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/reference/config-source.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:c558a0c25adf9c22c1e972010b0fe25d71dee428276cb309e634f5837b879290
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/reference/configuration.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:38941a1dbdff59969bec414b834318b77360fa0f7f6c8bce7cd57726025c9eba
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/reference/layout-and-naming.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:e7af8025a8483651c3fc7e657e63844278e4810efb7e894d532bb8765853777e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/reference/versioning.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:05bc33c9dc8c0fecc9504a64a514fceb96ddbf35379f23307f093f4f08d2c003
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-edit-cobra/reference/workflows.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:b10dfd36c4dc50b6656b18323c3e90bdba6e099e929f745a4e5ac44f924b5282
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-review-checklist
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-review-checklist/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
+- kind: project-relative
+  target: agents
+  value: .agents/skills/kvm-in-podman
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/kvm-in-podman/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:624dc5dc6d5aec3aeddce5812eea08dbd50388a0883d8b23fc957c195d3a9f65
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:61a2b1ab818193c8e42284b69aab806748d1bfcf16f81528ed6dd54a83aae1af
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/references/lifecycle-and-ownership.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:34023a2c3fc198dc02b2dae13273d47668cf08d60ed83b70bf4993682086cd32
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/references/testing-and-documentation.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:d2562441b6c771c245deffdfdbdbe2bbfa2b72112b30914189fd302a65a66755
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/references/vendoring-and-package-setup.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a003dd759aca3c9a5a8761574dd831d62a6c7ec9a4655cf24f782e17a0c48d21
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/README.mbt.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:b0c158eff993e38fa62560d5fe4ab19408ae5833b6cae730d27e86883e40b828
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/api.mbt
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:cb85d0348b344d001138ecffc76daf217294caf57cbb0f21c2ff55bf880308a1
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/ffi.mbt
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:ddbef591e3bd04e83bf0ef25c3d5b12e828a0b771e9505fe94ce804fc3d08f97
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/moon.mod.json
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:12c9987293748d649fb15c2947e0b268c9e507110df66d7f5f3bd0a7ecb6571c
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/moon.pkg
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:44d1c1ec1aa37d446cfd9fa6090efff8f969decc064b09d2fbf6b9e4fb56466a
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/prepare.py
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:d80487aaf5be2615881dcaad62e85065174edf3098f6c14483825324a857932e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/make-moonbit-c-bindings/templates/wrapper.c
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:5b18337cca7239e761fbd25fc679b0e203c7a51abbb0b2ee0320e89b6bc2e37e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:0d85bcad78281a70f6540deb184a1b9398e34acaa5ff6dd3f544d6b21b6f92ca
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/README.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:eb1b649a7203ed9e2b3dd774d1c144343f74d605fa3eda7d733216445b9b6ee6
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/SKILL.mbt.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a42e21dbebf4ed7e0fd920a5871d2a07fc35173b0815ee04a0da336883056b4b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a42e21dbebf4ed7e0fd920a5871d2a07fc35173b0815ee04a0da336883056b4b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/ide.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:56fa73e1b8d472bf5b72e444c862bc54b3311fa2d5c78b853a6557c872289c70
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/references/advanced-moonbit-build.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a7d71b0738b814414edc5cfcbeff66931870da4d515f7aa864e6e51a3e8ed708
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/references/moonbit-language-fundamentals.mbt.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:9d4e3fb88a61916552a8f4d27d9e1383c926fd641fde11032e998c4ffd7d09bd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-agent-guide/references/moonbit-language-fundamentals.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:9d4e3fb88a61916552a8f4d27d9e1383c926fd641fde11032e998c4ffd7d09bd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:d71c8098d32e13abae19c2e453693882f075a6a7cd585508baa6554966a06dd1
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/references/asan-validation.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:e97e1aeb3128d4adadbd984a19f6293d2adec54fd702e0e2adf02211c0d9679b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/references/callbacks.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4e6d069579a15e7ab659b19a78512d10ca20d2cddc2a8d8a156e79b89935b8f0
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/references/including-c-sources.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:f2b1b21b33725c0d1dca0570c89eac03bc47d0ae50ce3aa03ecaf8316352c620
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/references/ownership-and-memory.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:ae9edde76380edd64f1550c034e2ff0cea6a18bceae70d9493dfaefc6df5fcc6
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/scripts/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-c-binding/scripts/run-asan.py
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:82970a5872cc9b0e109de0d52734de4bb925a7dead9c795aececae55184c3977
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-extract-spec-test
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-extract-spec-test/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:84d3fc21ca976d174f0c2eb9f92b1510ce45b3d20d4fbf8660c94e2a3adf973d
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:5ed25d42e486b677511b33d9eef86e15e73be8c0fdc5c7eac57a5e699896124f
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:e42c9cb6bfc4bc1ff80468390fdb7967e9f9775a7dd70e822b74d9760619cbc4
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/answer-shapes.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:cd8b72364251d11c83ecef7263d01bd476d9945565ff16ae79322359bf5ff3ae
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/capabilities-faq.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:8f5bdb29a4725a9f2fe7aab0b0e8f77a5dcafb0a6ae40234c1441f1ee9dbb910
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/diagnostics-playbook.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:265898a388ce9139dbd11d6bd2a1b323385a0272006ad2de4188e8aeed33c1b0
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/idioms.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:332a24c4ce8817bd4475ecff23c57e9c2e11b71dcd2a9d27ee6aba4de80bfcaa
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/lookup-recipes.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a556537456be58b60157909f42d8aea6f17556d52ce512c9d2fbbd36b20e2535
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/mental-models.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:ffeed2efb306266908359cc7a1fd1334666eddb82dbe039b0e1e19fe06d9806c
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/question-routing.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4486fe6739cfe09600cf74bb66f463b904e54d511c07aeb5985b25b8dd5170e7
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/source-map.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:dd469d3eac088d18968a0e3f4dd5f267273f08b462d4dea7369b785c4e6445ec
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-orientation/references/toolchain-map.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:db3fbe3b8821089a788aaf119ff3856459d7f9c8a88b87b8c2f3d3868748d810
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-proof
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-proof/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4d1279ea228784fe3d4eff10b08e376fcbefe2c52b05d387e09dda11ffbeb6e8
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-proof/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:208390f72805d5a96e3f92d82782da33d35a96e5fba340bdbd40073e56300d17
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-refactoring
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-refactoring/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:6d5553ec65b9eccb13e341ee0d5d1eff15ef69c6b1374813f724997bf05d6c23
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-refactoring/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:de37a86b93de4abde41e1e6c4809470cdbbf464827519b95d013c5cf46d5aabe
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-spec-test-development
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-spec-test-development/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:0b060a91c859b596d5398fbd2cd40f85022c71b53834143eaf741e7527844c2b
+- kind: project-relative
+  target: agents
+  value: .agents/skills/moonbit-spec-test-development/references/templates.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4e00df87b9e899236a0c1f9316dc21e6984027ff3edee433c927bd6ac5bfb608
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-command-invoker
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-command-invoker/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:f4048af82a2d5836b9ac77dbcdfd010ced96708476972c122fb55d18f6e16942
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-explorer
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-explorer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:c9c1de9dbee6bfc8a3111bdffd456357c642434ef32a2276e085098eefdbf93e
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-implementer
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-implementer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:74b75a94afee2306386307ce6e5eb8fa73f92c2a9c26e62f275621d848f4a643
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-orchestrator
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-orchestrator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:6b57df58228bad0a6574ca7f1d4668c27bbe12254f0ef6c7a7dccea586a70dbd
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ng-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:226e5af4a8017b7075314e5b92622f33c194e5fe60838dc3f5d2d6c71301297c
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ngplan
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/ngplan
+  active_owner: ngicks/agents-package/skills/ngplan
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ngplan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/ngplan
+  active_owner: ngicks/agents-package/skills/ngplan
+  content_hash: sha256:ec573a5b5d0b6c61e0738c91c8d768953af9d407b86f122113b3d8b9ca07d7a0
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ocaml2moonbit-migration
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ocaml2moonbit-migration/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:63e7d70677eee86f0ceba3a5aed7d9ff0d1597ba39b39808cafdaef21ce276d4
+- kind: project-relative
+  target: agents
+  value: .agents/skills/ocaml2moonbit-migration/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:84496f8f729112384460715b14cfae43c164dd3c4a62c2bbf4c9a7fa0be3c35e
+- kind: project-relative
+  target: claude
+  value: .claude/agents/ng-command-invoker.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:2ebc19b040196a2bdcc1e7185897acf83e4392c3ec02747b72de32030d8185d8
+- kind: project-relative
+  target: claude
+  value: .claude/agents/ng-explorer.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:29095f6a95997443a7e0958045272966ee81b3b5c76252a66e2ac8178599f42c
+- kind: project-relative
+  target: claude
+  value: .claude/agents/ng-implementer.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:90118cdc367dca1c84adbffd5f03f2b796b2694a06f4e366a22b7042edeac189
+- kind: project-relative
+  target: claude
+  value: .claude/agents/ng-reviewer.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:273a02dddf8643c0102d9c16de537517d532563bf4749d2d29599a5ca4009abf
+- kind: project-relative
+  target: claude
+  value: .claude/agents/ng-test-runner.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:2b6b1188560b9749dd3910fd4fe3479398ceac59ee5d993f71a2a070167e250c
+- kind: project-relative
+  target: claude
+  value: .claude/rules/base-env.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/base-env.instructions.md
+  active_owner: ngicks/agents-package/instructions/base-env.instructions.md
+  content_hash: sha256:a8e409d534a453b252382ade30cd392cfcd17eff302616e2551f456d8432854e
+- kind: project-relative
+  target: claude
+  value: .claude/rules/go-basics.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/go/go-basics.instructions.md
+  active_owner: ngicks/agents-package/instructions/go/go-basics.instructions.md
+  content_hash: sha256:feb91c7f9c7fbb752df5390b000d2cc7a15e0397de5e40eaf8cfe37bf2896f34
+- kind: project-relative
+  target: claude
+  value: .claude/rules/go-design-preference.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/go/go-design-preference.instructions.md
+  active_owner: ngicks/agents-package/instructions/go/go-design-preference.instructions.md
+  content_hash: sha256:0a0c45354f94f7333de69d5fe4ff1cb247736155a0ba1645b7db3c101572f773
+- kind: project-relative
+  target: claude
+  value: .claude/rules/local.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:6c3c4bf1755ee502c700a4010ceb06368012f7b8ae61b8b0860e58b329256d8c
+- kind: project-relative
+  target: claude
+  value: .claude/rules/moonbit-basics.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/moonbit/moonbit-basics.instructions.md
+  active_owner: ngicks/agents-package/instructions/moonbit/moonbit-basics.instructions.md
+  content_hash: sha256:0a1189d68d0650aefd1d323b116184202944a16aca4c014fe42b80b5f8b7987d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-check-outdated-patterns
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-check-outdated-patterns/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: sha256:0447897fc0bb662776faa0d7455e9104efa19f6284034edd717d7cd679a4b839
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ee7f0a3be1689595c56b3e9ccfb7a1472f89448315f2bbf4c07edd5a7aceeafd
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/copy_helper.sh
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:59cd98e7afd501f2d6b6e8d588ae4af86c349e486a58682a566e607d165dcc61
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/cmd/release/main.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:2ed4ac93b6f93084f48b3efd003e424ab7471c9e4614edafe25cf4f5acf68ae6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/cmd/release/main_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:0adc9e2feb72a31c7f156a9e46f15a3e448aedc9a05e250773c1babbd4349834
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/cmdsignals/signals.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:d82e84daa15be3c56db97aed58aaf1895fbe55154120bd7bb05832b5b1c8e963
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/cmdsignals/signals_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:66bfbf54bec285adf985bb456e2a7d736f87679dda59f7eceb4fcee83e7a857c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/cmdsignals/signals_unix_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ce7bc788742b255401c06a926ef3de9b8870bbb6838be443362d637e38c2b94b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/loggerfactory/loggerfactory.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:3c2f96965b17431d4571ee3be2bf4a5989a3d64e0af7490d24a8a827610af9c1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/loggerfactory/loggerfactory_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ab86fcf79ac087242031c4e5cc34cec9f94ef953dc91910af02c5f559a1cece9
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/stdiopipe/stdiopipe.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:21d0ce3299739b34ff662eb2a9aca802a1ae8afc3dee2104d3026e1b11431f52
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/versioninfo/versioninfo.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:ed35614b8b5f2826cd2fcf04a9b427187dbc6f4508beeebec8403e62e4a3821d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/helpers/internal/versioninfo/versioninfo_test.go
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:13a97e51882aba0594fc7e0d9702af6c1c1041565fc9e0205777d53924b4546e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/reference/command-templates.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:31fd62bf74251e0a7d44f2e58d1f93d15d5d562c649061fac25ef127015531d2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/reference/config-source.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:c558a0c25adf9c22c1e972010b0fe25d71dee428276cb309e634f5837b879290
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/reference/configuration.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:38941a1dbdff59969bec414b834318b77360fa0f7f6c8bce7cd57726025c9eba
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/reference/layout-and-naming.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:e7af8025a8483651c3fc7e657e63844278e4810efb7e894d532bb8765853777e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/reference/versioning.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:05bc33c9dc8c0fecc9504a64a514fceb96ddbf35379f23307f093f4f08d2c003
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-edit-cobra/reference/workflows.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-edit-cobra
+  active_owner: ngicks/agents-package/skills/go-edit-cobra
+  content_hash: sha256:b10dfd36c4dc50b6656b18323c3e90bdba6e099e929f745a4e5ac44f924b5282
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-review-checklist
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-review-checklist/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
+- kind: project-relative
+  target: claude
+  value: .claude/skills/kvm-in-podman
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/kvm-in-podman/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:624dc5dc6d5aec3aeddce5812eea08dbd50388a0883d8b23fc957c195d3a9f65
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:61a2b1ab818193c8e42284b69aab806748d1bfcf16f81528ed6dd54a83aae1af
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/references/lifecycle-and-ownership.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:34023a2c3fc198dc02b2dae13273d47668cf08d60ed83b70bf4993682086cd32
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/references/testing-and-documentation.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:d2562441b6c771c245deffdfdbdbe2bbfa2b72112b30914189fd302a65a66755
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/references/vendoring-and-package-setup.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a003dd759aca3c9a5a8761574dd831d62a6c7ec9a4655cf24f782e17a0c48d21
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/README.mbt.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:b0c158eff993e38fa62560d5fe4ab19408ae5833b6cae730d27e86883e40b828
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/api.mbt
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:cb85d0348b344d001138ecffc76daf217294caf57cbb0f21c2ff55bf880308a1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/ffi.mbt
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:ddbef591e3bd04e83bf0ef25c3d5b12e828a0b771e9505fe94ce804fc3d08f97
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/moon.mod.json
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:12c9987293748d649fb15c2947e0b268c9e507110df66d7f5f3bd0a7ecb6571c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/moon.pkg
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:44d1c1ec1aa37d446cfd9fa6090efff8f969decc064b09d2fbf6b9e4fb56466a
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/prepare.py
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:d80487aaf5be2615881dcaad62e85065174edf3098f6c14483825324a857932e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/make-moonbit-c-bindings/templates/wrapper.c
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:5b18337cca7239e761fbd25fc679b0e203c7a51abbb0b2ee0320e89b6bc2e37e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:0d85bcad78281a70f6540deb184a1b9398e34acaa5ff6dd3f544d6b21b6f92ca
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/README.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:eb1b649a7203ed9e2b3dd774d1c144343f74d605fa3eda7d733216445b9b6ee6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/SKILL.mbt.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a42e21dbebf4ed7e0fd920a5871d2a07fc35173b0815ee04a0da336883056b4b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a42e21dbebf4ed7e0fd920a5871d2a07fc35173b0815ee04a0da336883056b4b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/ide.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:56fa73e1b8d472bf5b72e444c862bc54b3311fa2d5c78b853a6557c872289c70
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/references/advanced-moonbit-build.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a7d71b0738b814414edc5cfcbeff66931870da4d515f7aa864e6e51a3e8ed708
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/references/moonbit-language-fundamentals.mbt.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:9d4e3fb88a61916552a8f4d27d9e1383c926fd641fde11032e998c4ffd7d09bd
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-agent-guide/references/moonbit-language-fundamentals.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:9d4e3fb88a61916552a8f4d27d9e1383c926fd641fde11032e998c4ffd7d09bd
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:d71c8098d32e13abae19c2e453693882f075a6a7cd585508baa6554966a06dd1
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/references/asan-validation.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:e97e1aeb3128d4adadbd984a19f6293d2adec54fd702e0e2adf02211c0d9679b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/references/callbacks.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4e6d069579a15e7ab659b19a78512d10ca20d2cddc2a8d8a156e79b89935b8f0
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/references/including-c-sources.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:f2b1b21b33725c0d1dca0570c89eac03bc47d0ae50ce3aa03ecaf8316352c620
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/references/ownership-and-memory.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:ae9edde76380edd64f1550c034e2ff0cea6a18bceae70d9493dfaefc6df5fcc6
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/scripts/.gitignore
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:32dae3052f331ee34d628ef535709b301259a45df7c7522c4d35dcf49873f00b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-c-binding/scripts/run-asan.py
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:82970a5872cc9b0e109de0d52734de4bb925a7dead9c795aececae55184c3977
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-extract-spec-test
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-extract-spec-test/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:84d3fc21ca976d174f0c2eb9f92b1510ce45b3d20d4fbf8660c94e2a3adf973d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:5ed25d42e486b677511b33d9eef86e15e73be8c0fdc5c7eac57a5e699896124f
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:e42c9cb6bfc4bc1ff80468390fdb7967e9f9775a7dd70e822b74d9760619cbc4
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/answer-shapes.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:cd8b72364251d11c83ecef7263d01bd476d9945565ff16ae79322359bf5ff3ae
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/capabilities-faq.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:8f5bdb29a4725a9f2fe7aab0b0e8f77a5dcafb0a6ae40234c1441f1ee9dbb910
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/diagnostics-playbook.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:265898a388ce9139dbd11d6bd2a1b323385a0272006ad2de4188e8aeed33c1b0
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/idioms.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:332a24c4ce8817bd4475ecff23c57e9c2e11b71dcd2a9d27ee6aba4de80bfcaa
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/lookup-recipes.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:a556537456be58b60157909f42d8aea6f17556d52ce512c9d2fbbd36b20e2535
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/mental-models.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:ffeed2efb306266908359cc7a1fd1334666eddb82dbe039b0e1e19fe06d9806c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/question-routing.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4486fe6739cfe09600cf74bb66f463b904e54d511c07aeb5985b25b8dd5170e7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/source-map.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:dd469d3eac088d18968a0e3f4dd5f267273f08b462d4dea7369b785c4e6445ec
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-orientation/references/toolchain-map.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:db3fbe3b8821089a788aaf119ff3856459d7f9c8a88b87b8c2f3d3868748d810
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-proof
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-proof/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4d1279ea228784fe3d4eff10b08e376fcbefe2c52b05d387e09dda11ffbeb6e8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-proof/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:208390f72805d5a96e3f92d82782da33d35a96e5fba340bdbd40073e56300d17
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-refactoring
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-refactoring/LICENSE
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:6d5553ec65b9eccb13e341ee0d5d1eff15ef69c6b1374813f724997bf05d6c23
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-refactoring/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:de37a86b93de4abde41e1e6c4809470cdbbf464827519b95d013c5cf46d5aabe
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-spec-test-development
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-spec-test-development/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:0b060a91c859b596d5398fbd2cd40f85022c71b53834143eaf741e7527844c2b
+- kind: project-relative
+  target: claude
+  value: .claude/skills/moonbit-spec-test-development/references/templates.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:4e00df87b9e899236a0c1f9316dc21e6984027ff3edee433c927bd6ac5bfb608
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-command-invoker
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-command-invoker/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:f4048af82a2d5836b9ac77dbcdfd010ced96708476972c122fb55d18f6e16942
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-explorer
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-explorer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:c9c1de9dbee6bfc8a3111bdffd456357c642434ef32a2276e085098eefdbf93e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-implementer
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-implementer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:74b75a94afee2306386307ce6e5eb8fa73f92c2a9c26e62f275621d848f4a643
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-orchestrator
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-orchestrator/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:6b57df58228bad0a6574ca7f1d4668c27bbe12254f0ef6c7a7dccea586a70dbd
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-reviewer
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ng-reviewer/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:226e5af4a8017b7075314e5b92622f33c194e5fe60838dc3f5d2d6c71301297c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ngplan
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/ngplan
+  active_owner: ngicks/agents-package/skills/ngplan
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ngplan/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/ngplan
+  active_owner: ngicks/agents-package/skills/ngplan
+  content_hash: sha256:ec573a5b5d0b6c61e0738c91c8d768953af9d407b86f122113b3d8b9ca07d7a0
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ocaml2moonbit-migration
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ocaml2moonbit-migration/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:63e7d70677eee86f0ceba3a5aed7d9ff0d1597ba39b39808cafdaef21ce276d4
+- kind: project-relative
+  target: claude
+  value: .claude/skills/ocaml2moonbit-migration/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - moonbitlang/skills
+  active_owner: moonbitlang/skills
+  content_hash: sha256:84496f8f729112384460715b14cfae43c164dd3c4a62c2bbf4c9a7fa0be3c35e
+- kind: project-relative
+  target: codex
+  value: .codex/agents/ng-command-invoker.toml
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:71e65ace87b27b4fea573f0ffe84ce99652a33b0cab540b4f65e959b4489ac6b
+- kind: project-relative
+  target: codex
+  value: .codex/agents/ng-explorer.toml
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:9937070e48601b6356021b525856f4e7b95f3fc93b6e239fca5c06091b98279c
+- kind: project-relative
+  target: codex
+  value: .codex/agents/ng-implementer.toml
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:b4e25d1e0bc34c2682409ef73e5c636f332e08c66c29a00422e30da10d349950
+- kind: project-relative
+  target: codex
+  value: .codex/agents/ng-reviewer.toml
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:9d14ee18cc710b34acaa1c44cdbc9c5dbb7ee9897ec0ebf4a82313a16eec325d
+- kind: project-relative
+  target: codex
+  value: .codex/agents/ng-test-runner.toml
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/apm-package/cc-workers
+  active_owner: ngicks/agents-package/apm-package/cc-workers
+  content_hash: sha256:e121ea80d32dfd1c23fb4b17bbeb70a6a1b458d4a840db915a9e6300527ba3c2
 local_deployed_files:
+- .agents/skills/kvm-in-podman
+- .agents/skills/kvm-in-podman/SKILL.md
 - .claude/rules/local.md
+- .claude/skills/kvm-in-podman
+- .claude/skills/kvm-in-podman/SKILL.md
 local_deployed_file_hashes:
-  .claude/rules/local.md: sha256:24ddddab39bd6c359f4cef97535ed53778e9747a483a63a2367fcc8e72d2cb0d
+  .agents/skills/kvm-in-podman/SKILL.md: sha256:624dc5dc6d5aec3aeddce5812eea08dbd50388a0883d8b23fc957c195d3a9f65
+  .claude/rules/local.md: sha256:6c3c4bf1755ee502c700a4010ceb06368012f7b8ae61b8b0860e58b329256d8c
+  .claude/skills/kvm-in-podman/SKILL.md: sha256:624dc5dc6d5aec3aeddce5812eea08dbd50388a0883d8b23fc957c195d3a9f65
