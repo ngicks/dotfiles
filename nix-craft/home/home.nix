@@ -243,6 +243,7 @@ in
     # /dev/kvm and persistent libvirt image storage with DEVENV_KVM=1.
     libvirt        # virsh, libvirtd
     qemu_kvm       # qemu-system-* with KVM support
+    virt-manager   # GUI + virt-install/virt-clone/virt-xml
     # Not gonna use Vagrant because it is HashiCorp's (not an OSS).
     lima           # limactl: QEMU-backed Linux VMs, auto file-share + port-forward
     incus          # LXD fork: system containers + QEMU VMs (needs incusd daemon)
