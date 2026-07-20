@@ -1,0 +1,6 @@
+<disk type='file' device='disk'>
+  <driver name='qemu' type='qcow2'/>
+  <source file='/var/lib/libvirt/images/truenas-data-0.qcow2'/>
+  <target dev='vdb' bus='virtio'/>
+  <serial>TN98772167fb0abbec</serial>
+</disk>
