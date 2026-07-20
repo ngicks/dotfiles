@@ -1,0 +1,8 @@
+abi <abi/4.0>,
+
+include <tunables/global>
+
+# Nix store hashes and package versions change across upgrades/generations.
+profile nix-skopeo /nix/store/*-skopeo-*/bin/skopeo flags=(default_allow) {
+  userns,
+}
