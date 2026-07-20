@@ -26,6 +26,11 @@ if [[ "${dist_dir}" != "0" ]]; then
       [[ -f "${variant}" ]] || continue
       printf "%s\n" "--mount type=bind,src=${variant},dst=/root/.config/containers/$(basename "${variant}"),ro"
     done
+    # Rootful podman (uid 0 inside devenv) never reads ~/.config/containers/storage.conf
+    # (containers.conf it does); point it at the mounted variant explicitly.
+    if [[ -f "${dist_dir}/current/etc/containers/__additional_podman-in-podman/storage.conf" ]]; then
+      printf "%s\n" "--env CONTAINERS_STORAGE_CONF=/root/.config/containers/storage.conf"
+    fi
   else
     echo "[WARNING]: ${dist_dir}/current does not exist (run podman-static-dist install on the host); podman is not wired into the container" >&2
   fi
