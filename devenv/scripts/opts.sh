@@ -9,7 +9,6 @@ opt_scripts=(
   05-kvm.sh
   06-incus.sh
   07-podman.sh
-  08-libvirt-session.sh
   10-core.sh
   15-proxy.sh
   20-gitrepo.sh
