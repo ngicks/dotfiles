@@ -32,7 +32,27 @@ fi
 editor_cmd+=("${scrollback_file}")
 printf -v editor_cmd_str ' %q' "${editor_cmd[@]}"
 
-tmux new-window -n "scrollback" -c "${pane_cwd}" "sh -c '${editor_cmd_str:1}; rm -f ${scrollback_file}' --"
+# tmux >= 3.7 has floating panes (new-pane); older versions fall back to a window
+tmux_version="$(tmux display-message -p '#{version}')"
+version_num="${tmux_version#next-}"
+major="${version_num%%.*}"
+minor="${version_num#*.}"
+minor="${minor%%[^0-9]*}"
+use_floating=0
+if [[ "${major}" =~ ^[0-9]+$ && "${minor}" =~ ^[0-9]+$ ]] \
+  && (( major > 3 || (major == 3 && minor >= 7) )); then
+  use_floating=1
+fi
+
+if (( use_floating )); then
+  # size must be given at creation via -x/-y (undocumented in the 3.7b man
+  # page); resize-pane on a floating pane corrupts the layout underneath in
+  # 3.7b (fixed on master by layout_resize_floating_pane_to)
+  tmux new-pane -c "${pane_cwd}" -x 90% -y 80% -X 5% -Y 5% \
+    "sh -c '${editor_cmd_str:1}; rm -f ${scrollback_file}' --"
+else
+  tmux new-window -n "scrollback" -c "${pane_cwd}" "sh -c '${editor_cmd_str:1}; rm -f ${scrollback_file}' --"
+fi
 
 # return pane to normal mode if we were in copy mode when launching popup
 if [[ "${initial_mode}" =~ ^copy-mode ]]; then
