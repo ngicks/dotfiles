@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 
-FROM docker.io/nixos/nix:2.34.7-${BUILDARCH}
+ARG DEVENV_TAG
+ARG BASE_IMAGE="localhost/devenv/nix-home-manager-env:${DEVENV_TAG}"
+FROM ${BASE_IMAGE}
 
 ARG GIT_TAG=""
 ARG HTTP_PROXY=""
@@ -28,14 +30,6 @@ EOF
 
 WORKDIR /root/.dotfiles
 
-RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
-<<EOF
-    for p in $(nix-env -q); do
-        nix-env --set-flag priority 0 $p
-    done
-    bash ./scripts/homeenv/nix-run-home-manager.sh
-EOF
-
 ENV SHELL="/root/.nix-profile/bin/zsh"
 ENV RUSTUP_HOME="/root/.local/share/rustup"
 
@@ -50,12 +44,6 @@ RUN <<EOF
 
     mkdir -p "${XDG_CACHE_HOME:-/root/.cache}/dotfiles"
     touch "${XDG_CACHE_HOME:-/root/.cache}/dotfiles/.no_update_daily"
-
-    NIX_GLIBC_PATH=$(nix-build '<nixpkgs>' -A glibc --no-out-link)
-    NIX_GLIBC_DEV_PATH=$(nix-build '<nixpkgs>' -A glibc.dev --no-out-link)
-    ln -sfn ${NIX_GLIBC_PATH}/lib /lib
-    ln -sfn ${NIX_GLIBC_PATH}/lib64 /lib64
-    ln -sfn ${NIX_GLIBC_DEV_PATH}/include /usr/include
 
     export CARGO_HOME="/root/.local/share/cargo"
     rustup default stable
