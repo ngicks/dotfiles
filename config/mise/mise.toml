@@ -80,7 +80,7 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 ## (config/containers-quadlet/moonbit-installer-sandbox.build); the image bakes
 ## in no CA bundle, so mount the host's — moon install fetches over TLS.
 [tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]
-version = "0.0.1"
+version = "0.0.2"
 tag_prefix = "dotfilesmgr/v"
 sandbox = { runtime = "podman", image = "ghcr.io/ngicks/mise-moon-backend-plugin/moonbit-installer-sandbox:ubuntu-latest", options = [
   "--mount",

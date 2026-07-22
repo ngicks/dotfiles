@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG DEVENV_TAG
-ARG BASE_IMAGE="localhost/devenv/nix-home-manager-env:${DEVENV_TAG}"
+ARG BASE_IMAGE="localhost/devenv/devenv-home-base:${DEVENV_TAG}"
 FROM ${BASE_IMAGE}
 
 ARG GIT_TAG=""
@@ -17,7 +17,14 @@ ARG NODE_EXTRA_CA_CERTS=${SSL_CERT_FILE}
 ARG DENO_CERT=${SSL_CERT_FILE}
 ARG NIX_SSL_CERT_FILE=${SSL_CERT_FILE}
 
+ENV SHELL="/root/.nix-profile/bin/zsh"
+ENV RUSTUP_HOME="/root/.local/share/rustup"
+ENV LANG=C.UTF-8
+
 WORKDIR /root
+
+# Single RUN so the whole imperative tail is one OCI layer on top of the
+# reusable nix2container base layers.
 RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
     --mount=type=bind,target=/.dotfiles \
 <<EOF
@@ -25,15 +32,8 @@ RUN --mount=type=secret,id=cert,target=/ca-certificates.crt \
       cp -a /.dotfiles .
     else
       git clone --depth 1 --branch v${GIT_TAG} https://github.com/ngicks/dotfiles.git ./.dotfiles
-    fi 
-EOF
+    fi
 
-WORKDIR /root/.dotfiles
-
-ENV SHELL="/root/.nix-profile/bin/zsh"
-ENV RUSTUP_HOME="/root/.local/share/rustup"
-
-RUN <<EOF
     # For sshfs.nvim
     mkdir -p ~/mnt/sshfs
 
@@ -52,9 +52,5 @@ RUN <<EOF
     mkdir -p $MOON_HOME
     curl -fsSL https://cli.moonbitlang.com/install/unix.sh | /root/.nix-profile/bin/bash
 EOF
-
-WORKDIR /root
-
-ENV LANG=C.UTF-8
 
 ENTRYPOINT ["/root/.nix-profile/bin/zsh"]

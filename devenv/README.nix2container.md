@@ -7,42 +7,28 @@ parts of the existing build.
 
 ## Build
 
-First build and load the Home Manager base into Podman. Its tag is derived with
-the same `git describe` rule as the devenv image (`v0.0.82` becomes `0.0.82`):
+`dotfilesmgr` (from `tool/dotfilesmgr`) drives both stages: it loads the Home
+Manager base built by nix2container into Podman, then builds the final image on
+top of it. Both images share a tag derived with the same `git describe` rule as
+before (`v0.0.82` becomes `0.0.82`; experimental builds get an `-exp1` suffix).
 
 ```sh
-./devenv/scripts/load-nix-home-manager-env.sh
+dotfilesmgr standalone devenv build        # release build
+dotfilesmgr standalone devenv build --exp  # working-tree (experimental) build
 ```
 
-Set `DEVENV_TAG` to load an experimental or otherwise explicit matching tag.
-
-Then build the final release-tagged image:
+With a running `dotfilesmgr server serve`, submit the build as a job instead:
 
 ```sh
-devenv_tag=$(git describe --tags --abbrev=0)
-devenv_tag=${devenv_tag#v}
-
-podman buildx build . \
-  --build-arg DEVENV_TAG="${devenv_tag}" \
-  --build-arg GIT_TAG="${devenv_tag}" \
-  --secret id=cert,src="${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}" \
-  -f ./devenv/Containerfile \
-  -t "localhost/devenv/devenv:${devenv_tag}"
+dotfilesmgr client devenv build [--exp] [--wait]
 ```
 
-For a working-tree build, use the same experimental tag for both images:
+To load only the base image (e.g. for inspection), run the underlying command
+directly:
 
 ```sh
-release_tag=$(git describe --tags --abbrev=0)
-devenv_tag=${release_tag#v}-exp1
-DEVENV_TAG="${devenv_tag}" ./devenv/scripts/load-nix-home-manager-env.sh
-
-podman buildx build . \
-  --build-arg DEVENV_TAG="${devenv_tag}" \
-  --build-arg GIT_TAG=exp \
-  --secret id=cert,src="${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}" \
-  -f ./devenv/Containerfile \
-  -t "localhost/devenv/devenv:${devenv_tag}"
+nix run ./nix-craft#devenv-home-base.copyTo -- \
+  "containers-storage:localhost/devenv/devenv-home-base:${tag}"
 ```
 
 Run it through the existing launcher:
@@ -56,7 +42,7 @@ needed:
 
 ```sh
 podman buildx build . \
-  --build-arg BASE_IMAGE=localhost/devenv/nix-home-manager-env:0.0.82 \
+  --build-arg BASE_IMAGE=localhost/devenv/devenv-home-base:0.0.82 \
   --build-arg GIT_TAG=exp \
   --secret id=cert,src="${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}" \
   -f ./devenv/Containerfile
@@ -105,11 +91,10 @@ browsers (~1.1 GB combined).
 Useful inspection commands:
 
 ```sh
-podman history localhost/devenv/nix-home-manager-env:0.0.82
-podman image inspect localhost/devenv/nix-home-manager-env:0.0.82 \
+podman history localhost/devenv/devenv-home-base:0.0.82
+podman image inspect localhost/devenv/devenv-home-base:0.0.82 \
   --format '{{.Size}}'
 nix path-info -Sh ./nix-craft#devenv-home-base
-time ./devenv/scripts/load-nix-home-manager-env.sh
 ```
 
 ## Constraints and next improvements
