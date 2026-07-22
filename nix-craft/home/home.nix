@@ -217,6 +217,7 @@ in
     gawk           # GNU awk
     gnused         # GNU sed
     gnugrep        # GNU grep
+    watch          # periodic command runner (procps)
 
     # Terminal support
     ncurses        # Terminfo database for less/vim/etc
