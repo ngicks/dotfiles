@@ -164,11 +164,11 @@ version = "0.3.0"
 backend = "go:golang.org/x/pkgsite/cmd/pkgsite"
 
 [[tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]]
-version = "0.0.1"
+version = "0.0.2"
 backend = "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"
 
 [[tools."npm:@openai/codex"]]
-version = "0.144.6"
+version = "0.145.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@upstash/context7-mcp"]]
