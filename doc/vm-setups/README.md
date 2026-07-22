@@ -261,8 +261,16 @@ In a container without a distro-standard qemu path, also add
 `<emulator>/abs/path/qemu-system-x86_64</emulator>` under
 `<devices>`.
 
-## generate serial
+## Misc
+
+### generate serial
 
 ```
 head -c 16 /dev/urandom | xxd -p | tr -d '\n'
+```
+
+### generate uuid
+
+```
+cat /proc/sys/kernel/random/uuid
 ```
