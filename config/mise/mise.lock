@@ -187,6 +187,10 @@ backend = "npm:zenn-cli"
 version = "0.26.0"
 backend = "pipx:apm-cli"
 
+[[tools."pipx:huggingface_hub"]]
+version = "1.24.0"
+backend = "pipx:huggingface_hub"
+
 [[tools.ruff]]
 version = "0.15.22"
 backend = "aqua:astral-sh/ruff"

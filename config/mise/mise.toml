@@ -40,6 +40,7 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#refs/tags/0.0.3"
 "npm:difit" = "latest"
 "github:microsoft/waza" = "latest"
 "pipx:apm-cli" = "latest"
+"pipx:huggingface_hub" = "latest"
 ## mcp
 "npm:@upstash/context7-mcp" = "latest"
 
