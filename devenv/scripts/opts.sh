@@ -16,6 +16,7 @@ opt_scripts=(
   40-mise.sh
   45-apm.sh
   50-runtimes.sh
+  55-moonbit.sh
   60-node.sh
   70-go.sh
   90-volumes.sh
