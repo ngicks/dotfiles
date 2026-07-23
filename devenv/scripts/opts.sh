@@ -4,24 +4,16 @@ set -eCu
 
 script_dir=$(cd "$(dirname "$0")" && pwd -P)
 
-opt_scripts=(
-  00-timezone.sh
-  05-kvm.sh
-  06-incus.sh
-  07-podman.sh
-  10-core.sh
-  15-proxy.sh
-  20-gitrepo.sh
-  30-nvim.sh
-  40-mise.sh
-  45-apm.sh
-  50-runtimes.sh
-  55-moonbit.sh
-  60-node.sh
-  70-go.sh
-  90-volumes.sh
-)
+# Scripts listed here are skipped without being removed from opts.d.
+exclude_scripts=()
 
-for opt_script in "${opt_scripts[@]}"; do
-  "${script_dir}/opts.d/${opt_script}"
+for opt_script in "${script_dir}/opts.d/"*.sh; do
+  # ${arr[@]+...} instead of a bare expansion: empty array + set -u errors on
+  # bash 3.x (macOS).
+  for excluded in ${exclude_scripts[@]+"${exclude_scripts[@]}"}; do
+    if [[ "$(basename "$opt_script")" == "$excluded" ]]; then
+      continue 2
+    fi
+  done
+  "$opt_script"
 done
