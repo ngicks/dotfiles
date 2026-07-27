@@ -241,6 +241,8 @@ in
 
     libkrun
   ] ++ lib.optionals stdenv.isLinux [
+    libreoffice    # soffice: office suite / headless document conversion
+
     # KVM/libvirt tooling for devenv containers. The launcher can opt into
     # /dev/kvm and persistent libvirt image storage with DEVENV_KVM=1.
     libvirt        # virsh, libvirtd
