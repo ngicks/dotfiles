@@ -69,6 +69,7 @@ in
   };
 
   imports = [
+    ./devenv-core.nix
     ./cmdman
     ./crabswarm
     ./dotfilesmgr

@@ -20,23 +20,9 @@ let
             {
                 home.username = lib.mkForce "root";
                 home.homeDirectory = lib.mkForce "/root";
-                # The nixos/nix base image used to supply these core
-                # tools through its default profile; nothing else
-                # provides them on the nix2container rootfs, and the
-                # Containerfile depends on mkdir/touch/bash at
-                # /root/.nix-profile/bin.
-                home.packages = with pkgs; [
-                    nix
-                    bashInteractive
-                    coreutils-full
-                    findutils
-                    diffutils
-                    gnutar
-                    gzip
-                    which
-                    less
-                    openssh
-                ];
+                # Core packages for the from-scratch rootfs come from
+                # home/devenv-core.nix (keyed on username == "root") so an
+                # in-container switch keeps them too.
                 systemd.user.startServices = lib.mkForce false;
             }
         ];
@@ -147,6 +133,10 @@ nix2containerLib.buildImage {
             "SHELL=/root/.nix-profile/bin/zsh"
             "SSL_CERT_FILE=/etc/ssl-certs/ca-bundle.crt"
             "NIX_SSL_CERT_FILE=/etc/ssl-certs/ca-bundle.crt"
+            # In-container nix runs as root without the nixbld group and
+            # cannot create build namespaces; keep these relaxations here so
+            # the shared config/nix/nix.conf stays strict on the host.
+            "NIX_CONFIG=build-users-group =\nsandbox = false"
         ];
         labels = {
             "org.opencontainers.image.source" = "https://github.com/ngicks/dotfiles";
