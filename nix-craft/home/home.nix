@@ -31,9 +31,12 @@ in
       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 
-  home.file.".local/bin/pinentry.sh" = {
-    source = ../../scripts/pinentry.sh;
-    executable = true;
+  # Scripts in ./bin ship into ~/.local/bin as-is; recursive linking keeps
+  # the directory itself real so other entries (e.g. .local/bin/override
+  # below) and manually installed binaries can coexist.
+  home.file.".local/bin" = {
+    source = ../../bin;
+    recursive = true;
   };
 
   # golangci-lint v2 must outrank mise's v1/v2 and any stale $GOBIN copy on PATH.
