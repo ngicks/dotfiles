@@ -82,6 +82,22 @@ let
       done
     fi
   '';
+
+  loadEnv = ''
+    # this script may change ''${XDG_CONFIG_HOME}
+    if [[ -f "$HOME/.config/env/.first_rc" ]]; then
+      . "$HOME/.config/env/.first_rc"
+    fi
+
+    local loginscript_func="''${XDG_CONFIG_HOME:-$HOME/.config}/loginscript/func.sh"
+    if [[ -f "$loginscript_func" ]]; then
+      . "$loginscript_func"
+    fi
+
+    ${makeLoader "env"}
+    ${envLoading}
+    ${makeLoader "env-post"}
+  '';
 in
 {
   programs.zsh = {
@@ -96,22 +112,18 @@ in
     };
 
     envExtra = ''
-      # this script may change ''${XDG_CONFIG_HOME}
-      if [[ -f "$HOME/.config/env/.first_rc" ]]; then
-        . "$HOME/.config/env/.first_rc"
+      # Login shells load env in .zprofile instead: home-manager's session vars
+      # (nix-profile PATH, where mise lives) are skipped in .zshenv for login
+      # shells and only set in .zprofile, so loading here would run 00_mise.sh
+      # before mise is on PATH. Non-login shells (ssh host "cmd", zsh -c) never
+      # read .zprofile, so they must load here.
+      if [[ ! -o login ]]; then
+        ${loadEnv}
       fi
-
-      local loginscript_func="''${XDG_CONFIG_HOME:-$HOME/.config}/loginscript/func.sh"
-      if [[ -f "$loginscript_func" ]]; then
-        . "$loginscript_func"
-      fi
-
-      ${makeLoader "env"}
-      ${envLoading}
-      ${makeLoader "env-post"}
     '';
 
     profileExtra = ''
+      ${loadEnv}
       ${makeLoader "login"}
     '';
 
