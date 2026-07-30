@@ -4,6 +4,14 @@ set -eCu
 
 script_dir=$(cd "$(dirname "$0")" && pwd -P)
 
+# crabswarm manages the whole gitrepo tree; resolve its root once here so
+# every opts.d script agrees on it. Fall back to the well-known path when
+# crabswarm is not on PATH.
+if [[ -z "${GITREPO_ROOT:-}" ]]; then
+  GITREPO_ROOT=$(crabswarm config --format '{{.GitRepoBaseDir}}' 2>/dev/null) || GITREPO_ROOT=""
+fi
+export GITREPO_ROOT="${GITREPO_ROOT:-$HOME/gitrepo}"
+
 # Scripts listed here are skipped without being removed from opts.d.
 exclude_scripts=()
 
