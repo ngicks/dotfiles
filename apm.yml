@@ -7,19 +7,38 @@ targets:
   - codex
 dependencies:
   apm:
-    - github.com/moonbitlang/skills
-    - github.com/ngicks/agents-package/apm-package/cc-workers
-    - github.com/ngicks/agents-package/hooks/golangci-lint-fmt-after-edit
-    - github.com/ngicks/agents-package/hooks/golangci-lint-run-after-edit
-    - github.com/ngicks/agents-package/instructions/base-env.instructions.md
-    - github.com/ngicks/agents-package/instructions/base-preference.instructions.md
-    - github.com/ngicks/agents-package/instructions/go/go-basics.instructions.md
-    - github.com/ngicks/agents-package/instructions/go/go-design-preference.instructions.md
-    - github.com/ngicks/agents-package/instructions/moonbit/moonbit-basics.instructions.md
-    - github.com/ngicks/agents-package/skills/go-edit-cobra
-    - github.com/ngicks/agents-package/skills/go-check-outdated-patterns
-    - github.com/ngicks/agents-package/skills/go-review-checklist
-    - github.com/ngicks/agents-package/skills/kvm-in-container
-    - ngicks/agents-package/skills/ngplan
+    - git: github.com/moonbitlang/skills
+    - git: github.com/ngicks/agents-package
+      path: apm-package/cc-workers
+    - git: github.com/ngicks/agents-package
+      path: hooks/go-golangci-lint
+    - git: github.com/ngicks/agents-package
+      path: hooks/go-vet-ngcheckers
+    - git: github.com/ngicks/agents-package
+      path: hooks/python-ruff
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.base.env.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.base.preference.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.go.basics.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.go.design-preference.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.moonbit.basics.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.web.base-preference.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: instructions/ngicks.web.preact-preference.instructions.md
+    - git: github.com/ngicks/agents-package
+      path: skills/go-check-outdated-patterns
+    - git: github.com/ngicks/agents-package
+      path: skills/go-edit-cobra
+    - git: github.com/ngicks/agents-package
+      path: skills/go-review-checklist
+    - git: github.com/ngicks/agents-package
+      path: skills/kvm-in-container
+    - git: github.com/ngicks/agents-package
+      path: skills/ngplan
   mcp: []
 scripts: {}
