@@ -1,0 +1,81 @@
+# Decisions
+
+## D1: Root detection source — window-local cwd (resolved 2026-08-02)
+
+Resolve `vim.fn.getcwd(0)` upward to its worktree root via
+`vim.fs.root(cwd, ".git")`. The user chose this over the recommended
+buffer-file basis: the root stays predictable regardless of which buffer is
+focused (e.g. files from other worktrees opened via go-to-definition don't
+retarget lazygit).
+
+Rejected: current buffer's file as the root source.
+
+## D2: Instance model — one per worktree (resolved 2026-08-02)
+
+One lazygit instance per worktree, keyed naturally by snacks.terminal's
+`cmd+cwd+env` id. Zero extra code; hidden instances costing a buffer +
+process each is acceptable.
+
+Rejected: single global instance killed/reopened on worktree change — extra
+code to locate and close the old terminal, and loses lazygit UI state.
+
+## D3: Scope — lazygit only (resolved 2026-08-02)
+
+Only `<leader>gg` becomes worktree-aware. `<M-h>/<M-v>/<M-f>` shell toggles
+keep starting at nvim's cwd.
+
+Rejected: applying root detection to all terminal toggles.
+
+## D4: No-repo behavior — silent fallback (resolved 2026-08-02)
+
+When the cwd is not under any git repo, open lazygit at the cwd as-is,
+matching today's behavior.
+
+Rejected: `vim.notify` warning and skipping the open.
+
+## D7: Review amendments — canonical paths, warn on empty bare, degrade gracefully (resolved 2026-08-02)
+
+Amendments from the post-implementation review:
+
+- All roots and candidates are canonicalized via `vim.uv.fs_realpath`
+  (falling back to `vim.fs.normalize`) so symlinked paths cannot split one
+  worktree across two snacks terminal ids (D2 would otherwise silently
+  break in the marker-less container branch).
+- A confirmed-bare root with **zero** worktrees warns via `vim.notify` and
+  opens nothing, instead of reusing D4's silent fallback — the fallback
+  target would be the bare dir itself, i.e. the degraded mode D6 exists to
+  avoid. D4's silent cwd fallback remains only for the genuine not-a-repo
+  case.
+- `prunable` (stale) worktree entries are dropped by an existence check on
+  the candidate path.
+- Deleted cwd (`getcwd` → `""`) warns and aborts; a missing `git` binary is
+  caught with `pcall` and degrades to not-bare / no candidates instead of a
+  raw Lua error.
+- Accepted and documented: linked worktrees (`.git` file) run one cheap
+  synchronous `git rev-parse --is-bare-repository` per press; only plain
+  top-level checkouts (`.git` directory) short-circuit it.
+
+## D6: Bare-repo container — worktree picker, auto if single (resolved 2026-08-02)
+
+When the cwd resolves to a bare-repo container (repo cloned to `.bare`,
+worktrees as subdirectories), offer the worktrees via `vim.ui.select` and
+open lazygit at the chosen one; skip the prompt when exactly one worktree
+exists. Detection: resolved root is bare per
+`git rev-parse --is-bare-repository` (container has a `.git` marker file),
+or no root found but immediate children carry `.git` markers (no marker
+file). Cancelling the picker opens nothing.
+
+Rejected:
+- Plain picker without the single-worktree shortcut — needless prompt in the
+  common one-worktree case.
+- Buffer-file rescue (use the current buffer's worktree in this case only) —
+  reintroduces the focus-dependence D1 rejected.
+- Out of scope / keep silent fallback — leaves `<leader>gg` useless (or
+  prompting to init a new repo) in a layout the user actually uses.
+
+## D5: Detection mechanism — `vim.fs.root` over `git rev-parse`
+
+Chose `vim.fs.root(cwd, ".git")` — synchronous, no subprocess, and matches
+the `.git` *file* that marks a linked worktree root. Rejected
+`git rev-parse --show-toplevel` (subprocess + async plumbing) and `:lcd`
+tricks (window state side effects).
