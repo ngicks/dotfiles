@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-08-01T14:47:30.190618+00:00'
+generated_at: '2026-08-01T16:48:10.502162+00:00'
 apm_version: 0.26.0
 dependencies:
 - repo_url: moonbitlang/skills
@@ -220,7 +220,7 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: cc-workers
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 0.0.1
   virtual_path: apm-package/cc-workers
   is_virtual: true
@@ -280,28 +280,28 @@ dependencies:
   content_hash: sha256:1e423938cf391555f3b9439884fb181088525b049e87bd135c77cead5f1ab5fd
   declared_license: MIT
 - repo_url: ngicks/agents-package
-  name: agents-package
+  name: go-golangci-lint
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
-  version: unknown
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
+  version: 1.0.0
   virtual_path: hooks/go-golangci-lint
   is_virtual: true
   package_type: hook_package
   content_hash: sha256:04b3af4816ebdb2028226ad022e82a45464ac298b89af609e45203fd7ab23f3c
 - repo_url: ngicks/agents-package
-  name: agents-package
+  name: go-vet-ngcheckers
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
-  version: unknown
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
+  version: 1.0.0
   virtual_path: hooks/go-vet-ngcheckers
   is_virtual: true
   package_type: hook_package
   content_hash: sha256:55d6da41fbbabb28f30bf4e4831443fe6b37cb970babb0ae86fca508dc488557
 - repo_url: ngicks/agents-package
-  name: agents-package
+  name: python-ruff
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
-  version: unknown
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
+  version: 1.0.0
   virtual_path: hooks/python-ruff
   is_virtual: true
   package_type: hook_package
@@ -309,11 +309,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.base.env
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.base.env.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.base.env.md
   deployed_file_hashes:
@@ -322,11 +321,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.base.preference
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.base.preference.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.base.preference.md
   deployed_file_hashes:
@@ -335,11 +333,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.go.basics
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.go.basics.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.go.basics.md
   deployed_file_hashes:
@@ -348,11 +345,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.go.design-preference
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.go.design-preference.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.go.design-preference.md
   deployed_file_hashes:
@@ -361,11 +357,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.moonbit.basics
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.moonbit.basics.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.moonbit.basics.md
   deployed_file_hashes:
@@ -374,11 +369,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.web.base-preference
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.web.base-preference.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.web.base-preference.md
   deployed_file_hashes:
@@ -387,11 +381,10 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: agents-package-ngicks.web.preact-preference
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: 1.0.0
   virtual_path: instructions/ngicks.web.preact-preference.instructions.md
   is_virtual: true
-  package_type: apm_package
   deployed_files:
   - .claude/rules/ngicks.web.preact-preference.md
   deployed_file_hashes:
@@ -400,7 +393,7 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: go-check-outdated-patterns
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: unknown
   virtual_path: skills/go-check-outdated-patterns
   is_virtual: true
@@ -417,7 +410,7 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: go-edit-cobra
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: unknown
   virtual_path: skills/go-edit-cobra
   is_virtual: true
@@ -498,7 +491,7 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: go-review-checklist
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: unknown
   virtual_path: skills/go-review-checklist
   is_virtual: true
@@ -515,7 +508,7 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: kvm-in-container
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: unknown
   virtual_path: skills/kvm-in-container
   is_virtual: true
@@ -548,7 +541,7 @@ dependencies:
 - repo_url: ngicks/agents-package
   name: ngplan
   host: github.com
-  resolved_commit: d19210aafedd24e15750ebb925261c787c44bc4f
+  resolved_commit: 0b7bb03f904b3293848363f74d8f19238b4bfc65
   version: unknown
   virtual_path: skills/ngplan
   is_virtual: true
@@ -559,9 +552,9 @@ dependencies:
   - .claude/skills/ngplan
   - .claude/skills/ngplan/SKILL.md
   deployed_file_hashes:
-    .agents/skills/ngplan/SKILL.md: sha256:4eeeea6335f18133558cd6548075174076ff7216dc0de5a69baf33eb69359a9d
-    .claude/skills/ngplan/SKILL.md: sha256:4eeeea6335f18133558cd6548075174076ff7216dc0de5a69baf33eb69359a9d
-  content_hash: sha256:5b9783614f96941518ec36f6561150357d39b6fa55b0623177164431420a0e0c
+    .agents/skills/ngplan/SKILL.md: sha256:cfffac857f1caa26c219c1dce0a048c7b9e79090ccb870dc86d27b7bfae7c01f
+    .claude/skills/ngplan/SKILL.md: sha256:cfffac857f1caa26c219c1dce0a048c7b9e79090ccb870dc86d27b7bfae7c01f
+  content_hash: sha256:8db5132d27d9d79fa604c390f06fbde287c12a6f6d86a78eab4dae68236cb33a
 deployments:
 - kind: project-relative
   target: agents
@@ -634,7 +627,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:6c3c4bf1755ee502c700a4010ceb06368012f7b8ae61b8b0860e58b329256d8c
+  content_hash: sha256:dffee1c47d12a9923487efaae1098ae4261f5d451160de2778f8804cc8e8b72d
 - kind: project-relative
   target: claude
   value: .claude/rules/ngicks.base.env.md
@@ -1534,7 +1527,7 @@ deployments:
   owners:
   - ngicks/agents-package/skills/ngplan
   active_owner: ngicks/agents-package/skills/ngplan
-  content_hash: sha256:4eeeea6335f18133558cd6548075174076ff7216dc0de5a69baf33eb69359a9d
+  content_hash: sha256:cfffac857f1caa26c219c1dce0a048c7b9e79090ccb870dc86d27b7bfae7c01f
 - kind: project-relative
   target: claude
   value: .claude/skills/ocaml2moonbit-migration
@@ -2398,7 +2391,7 @@ deployments:
   owners:
   - ngicks/agents-package/skills/ngplan
   active_owner: ngicks/agents-package/skills/ngplan
-  content_hash: sha256:4eeeea6335f18133558cd6548075174076ff7216dc0de5a69baf33eb69359a9d
+  content_hash: sha256:cfffac857f1caa26c219c1dce0a048c7b9e79090ccb870dc86d27b7bfae7c01f
 - kind: project-relative
   target: codex
   value: .agents/skills/ocaml2moonbit-migration
@@ -2477,4 +2470,4 @@ local_deployed_files:
 - .claude/rules/local.md
 local_deployed_file_hashes:
   .agents/skills/kvm-in-podman/SKILL.md: sha256:624dc5dc6d5aec3aeddce5812eea08dbd50388a0883d8b23fc957c195d3a9f65
-  .claude/rules/local.md: sha256:6c3c4bf1755ee502c700a4010ceb06368012f7b8ae61b8b0860e58b329256d8c
+  .claude/rules/local.md: sha256:dffee1c47d12a9923487efaae1098ae4261f5d451160de2778f8804cc8e8b72d
