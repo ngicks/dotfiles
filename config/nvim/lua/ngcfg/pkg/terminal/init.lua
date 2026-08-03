@@ -34,66 +34,34 @@ function M.floating()
   })
 end
 
--- snacks keys terminal instances by the literal cwd string, so every path handed to it
--- must go through the same symlink-resolving spelling vim.fn.getcwd(0) already uses.
----@param path string
----@return string
-local function canonical(path)
-  return vim.fs.normalize(vim.uv.fs_realpath(path) or path)
-end
-
----@param root string
----@return boolean
-local function is_bare_repo(root)
-  local spawned, proc = pcall(vim.system, { "git", "-C", root, "rev-parse", "--is-bare-repository" })
-  if not spawned then
-    return false
-  end
-
-  local result = proc:wait()
-  return result.code == 0 and vim.trim(result.stdout or "") == "true"
-end
-
----@param root string
----@return string[]
-local function worktree_list(root)
-  local spawned, proc = pcall(vim.system, { "git", "-C", root, "worktree", "list", "--porcelain" })
-  if not spawned then
-    return {}
-  end
-
-  local result = proc:wait()
+-- git is assumed installed here; letting a missing binary raise beats degrading into
+-- "not a repository" and silently opening lazygit at the wrong place.
+---@param args string[]
+---@return string? # trimmed stdout on exit 0, nil otherwise
+local function git(args)
+  local result = vim.system(vim.list_extend({ "git" }, args)):wait()
   if result.code ~= 0 then
-    return {}
+    return nil
   end
-
-  local worktrees = {}
-  local added = false
-  for line in vim.gsplit(result.stdout or "", "\n", { plain = true }) do
-    local path = line:match "^worktree (.+)$"
-    if path then
-      -- prunable entries stay listed after their directory is gone.
-      added = vim.fn.isdirectory(path) == 1
-      if added then
-        worktrees[#worktrees + 1] = canonical(path)
-      end
-    elseif line == "bare" and added then
-      -- porcelain marks the container itself with a `bare` line right after its `worktree` line.
-      worktrees[#worktrees] = nil
-      added = false
-    end
-  end
-  return worktrees
+  return vim.trim(result.stdout or "")
 end
 
 ---@param dir string
 ---@return string[]
-local function worktrees_under(dir)
+local function worktree_list(dir)
+  local out = git { "-C", dir, "worktree", "list", "--porcelain" }
+  if not out then
+    return {}
+  end
+
   local worktrees = {}
-  for name in vim.fs.dir(dir) do
-    local path = vim.fs.joinpath(dir, name)
-    if vim.uv.fs_stat(vim.fs.joinpath(path, ".git")) then
-      worktrees[#worktrees + 1] = canonical(path)
+  for stanza in vim.gsplit(out, "\n\n", { plain = true, trimempty = true }) do
+    local path = stanza:match "^worktree ([^\n]+)"
+    -- the container's own `bare` entry is the degraded mode lazygit must not land in, and
+    -- `prunable` entries stay listed after their directory is gone. git refuses to mark a
+    -- *locked* worktree prunable even once it is gone, so existence is still checked here.
+    if path and not stanza:find "\nbare" and not stanza:find "\nprunable" and vim.uv.fs_stat(path) then
+      worktrees[#worktrees + 1] = path
     end
   end
   return worktrees
@@ -115,31 +83,21 @@ end
 ---@param cb fun(root: string)
 local function resolve_git_root(cb)
   local cwd = vim.fn.getcwd(0)
-  if cwd == "" then
-    vim.notify("lazygit: cannot determine the working directory", vim.log.levels.WARN)
+  -- getcwd keeps reporting a directory that has since been removed, and every git call below
+  -- has to chdir into it; without this the failures cascade into opening lazygit at a path
+  -- that no longer exists.
+  if not vim.uv.fs_stat(cwd) then
+    vim.notify("lazygit: working directory does not exist: " .. cwd, vim.log.levels.WARN)
     return
   end
 
-  cwd = canonical(cwd)
-  local root = vim.fs.root(cwd, ".git")
-  if root == nil then
-    -- a bare container without the `gitdir:` marker file is invisible to vim.fs.root,
-    -- which only walks upward; look for worktrees one level down instead.
-    local candidates = worktrees_under(cwd)
-    if #candidates == 0 then
-      return cb(cwd)
-    end
-    return pick_worktree(candidates, cb)
-  end
-
-  root = canonical(root)
-  -- only a plain top-level checkout is ruled out this cheaply; linked worktrees and bare
-  -- containers both carry a `.git` file and still go through the check below.
-  if vim.fn.isdirectory(vim.fs.joinpath(root, ".git")) == 1 then
+  local root = git { "-C", cwd, "rev-parse", "--show-toplevel" }
+  if root then
     return cb(root)
   end
-  if is_bare_repo(root) then
-    local candidates = worktree_list(root)
+
+  if git { "-C", cwd, "rev-parse", "--is-bare-repository" } == "true" then
+    local candidates = worktree_list(cwd)
     if #candidates == 0 then
       -- opening the bare root itself would drop lazygit into degraded bare mode.
       vim.notify("lazygit: bare repository with no worktrees", vim.log.levels.WARN)
@@ -147,7 +105,27 @@ local function resolve_git_root(cb)
     end
     return pick_worktree(candidates, cb)
   end
-  cb(root)
+
+  -- a bare container without the `gitdir:` marker file is invisible to git, which only
+  -- discovers upward; probe the children rather than reading `.git` markers ourselves.
+  local candidates = {}
+  for name in vim.fs.dir(cwd) do
+    local child = vim.fs.joinpath(cwd, name)
+    -- not vim.fs.dir's kind: it reports a symlinked worktree as "link", while fs_stat follows
+    -- the link like git itself does.
+    local stat = vim.uv.fs_stat(child)
+    if stat and stat.type == "directory" then
+      local top = git { "-C", child, "rev-parse", "--show-toplevel" }
+      -- git resolves symlinks in its output, so compare against the resolved child.
+      if top and top == vim.uv.fs_realpath(child) then
+        candidates[#candidates + 1] = top
+      end
+    end
+  end
+  if #candidates == 0 then
+    return cb(cwd)
+  end
+  pick_worktree(candidates, cb)
 end
 
 function M.lazygit()

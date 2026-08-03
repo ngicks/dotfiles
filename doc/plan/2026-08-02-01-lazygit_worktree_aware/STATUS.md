@@ -1,9 +1,10 @@
 # Status
 
-Current state: **revision planned, ready to implement** — round-one
-implementation shipped and verified; the 2026-08-03 revision (git-delegated
-detection D9/D10, snacks picker UI D8) is fully decided with no open
-questions. Next: implementation steps 1–3.
+Current state: **revision implemented and verified (headless)** — the
+2026-08-03 revision (git-delegated detection D9/D10, snacks picker UI D8)
+plus the D11 review-fix round are done; the 14-case smoke suite passes with
+negative controls. Only the interactive picker-rendering check remains
+(cannot be done headless).
 
 ## Checklist
 
@@ -21,12 +22,29 @@ Revision round (2026-08-03):
       superseded; D8 stub added
 - [x] Resolve open question 1: picker UI → D8, snacks picker global
 - [x] Resolve open question 2: marker-less container → D10, per-child probe
-- [ ] Step 1: git-delegating rework of
-      `config/nvim/lua/ngcfg/pkg/terminal/init.lua`
-- [ ] Step 2: enable snacks picker in
+- [x] Step 1: git-delegating rework of
+      `config/nvim/lua/ngcfg/pkg/terminal/init.lua` (git helper,
+      porcelain stanza parsing with bare/prunable filter, D10 per-child
+      probe; `canonical`/`is_bare_repo`/`worktrees_under`/`vim.fs.root`
+      all removed)
+- [x] Step 2: enable snacks picker in
       `github_com--folke--snacks_nvim.lua` (D8)
-- [ ] Step 3: re-run behavior matrix (headless smoke + interactive picker
-      check)
+- [x] Step 3 (headless part): 11-case smoke suite over real git fixtures
+      (scratchpad `lazygit_smoke/run.sh`) — 11/11 passing, incl.
+      prunable exclusion, marker-less probe, symlinked entry, empty-bare
+      warn; negative controls confirm each filter is load-bearing
+- [x] Reviewer pass on the revision diff — request-changes: 2 blocking
+      (symlinked container children skipped by the `kind` filter;
+      locked-then-removed worktrees never marked `prunable` → stale path
+      crashes snacks jobstart) + minors (deleted-cwd crash, `.git`-dir
+      cwd edge, stale D7 doc text). Recorded as D11; one reviewer clause
+      (unrelated repos offered at a plain dir) overruled per D10.
+- [x] Fix round per D11 (fs_stat-typed children, candidate existence
+      check, deleted-cwd guard) + smoke suite extended to 14 cases —
+      all passing; negative controls (fixes reverted in a copy) fail
+      exactly the 3 new cases, reproducing the reported crashes
+- [ ] Step 3 (interactive part): picker renders as a snacks floating
+      picker in a live session (cannot be checked headless)
 
 ## Notes
 
@@ -39,4 +57,6 @@ Revision round (2026-08-03):
 
 ## Next action
 
-Implement steps 1–3 (PLAN.md).
+Interactive sanity check in a live session: `<leader>gg` at a bare
+container with ≥2 worktrees renders a snacks floating picker (not a noice
+message); choosing opens lazygit at the choice; cancelling opens nothing.

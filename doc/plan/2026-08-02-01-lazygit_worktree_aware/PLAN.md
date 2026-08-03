@@ -157,7 +157,13 @@ end
 - Marker-less container: per-child git probe (D10) — `vim.fs.dir` only
   iterates; whether a child is a worktree root is git's answer
   (`--show-toplevel` returning the child itself, compared via
-  `fs_realpath(child)` since git's output is symlink-resolved).
+  `fs_realpath(child)` since git's output is symlink-resolved). Children are
+  typed via symlink-following `vim.uv.fs_stat`, not `vim.fs.dir`'s kind,
+  so symlinked worktree entries are probed too (D11).
+- Two `fs_stat` guards survive delegation because git refuses to answer them
+  (D11): worktree candidates are existence-checked (locked worktrees are
+  exempt from `prunable` marking), and a deleted window cwd warns and aborts
+  (git cannot even chdir there; the old upward walk's recovery is gone).
 - Picker UI (D8): enable the snacks picker globally — add
   `picker = { enabled = true }` to `M.opts` in
   `github_com--folke--snacks_nvim.lua`; snacks then installs
@@ -243,3 +249,7 @@ Manual + headless, against the same fixtures as round one
   unconditionally installed.
 - Bare-container picker reappears on every press (choice not remembered);
   accepted for now, per-tab cache possible later.
+- Accepted edges (D11): a cwd deliberately inside a plain repo's `.git`
+  directory resolves to `.git` itself (the old upward walk found the repo
+  root); a plain directory of unrelated repos offers them all in the picker
+  (shipped semantics, preserved by D10).

@@ -8,6 +8,9 @@ M.opts = {
   lazygit = {
     enabled = true,
   },
+  picker = {
+    enabled = true,
+  },
 }
 
 M.config = true

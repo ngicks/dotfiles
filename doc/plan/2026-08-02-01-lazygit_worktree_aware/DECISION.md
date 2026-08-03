@@ -1,5 +1,39 @@
 # Decisions
 
+## D11: Revision-review amendments — symlinked children, locked-worktree staleness, deleted cwd (resolved 2026-08-03)
+
+Amendments from the reviewer pass on the D9/D10 implementation:
+
+- **Symlinked container children (blocking, regression):** `vim.fs.dir`
+  reports a symlink-to-directory as kind `"link"`, so the per-child probe's
+  `kind == "directory"` filter silently skipped symlinked worktrees that the
+  pre-revision `worktrees_under` (symlink-following `fs_stat`) handled. Fix:
+  type children via `vim.uv.fs_stat(child)` (follows symlinks), then probe.
+- **Locked-worktree staleness (blocking):** git deliberately exempts locked
+  worktrees from `prunable` marking — a locked worktree whose directory was
+  removed shows a `locked` line and **no** `prunable` line, falsifying D9's
+  claim that porcelain `prunable` fully replaces the existence check. A stale
+  path reaching snacks crashes its unwrapped `jobstart` (E475). Fix: keep the
+  `bare`/`prunable` stanza filter and additionally drop candidates failing
+  `vim.uv.fs_stat`. This is a filesystem existence check, not lexical path
+  manipulation — git refuses to answer this particular question.
+- **Deleted window cwd (minor):** the inherited `getcwd(0) == ""` guard is
+  dead code — after the cwd is deleted, `getcwd(0)` keeps returning the last
+  valid path, every git call fails (git must chdir), and resolution fell
+  through to opening lazygit at the nonexistent path (E475). Fix: replace the
+  empty-string guard with an `fs_stat` existence check on the cwd; warn and
+  abort when gone. (The old `vim.fs.root` upward walk recovered here; the
+  git-delegated chain cannot, so abort-with-warning is the honest behavior.)
+
+Accepted without fix (documented edges):
+
+- cwd deliberately placed inside a plain repo's `.git` directory resolves to
+  `.git` itself (pre-revision code found the repo root via the upward walk);
+  requires a deliberate `:lcd` there — nothing in this config auto-chdirs.
+- At a plain directory of unrelated repos, the per-child probe offers them
+  all in the picker — the shipped semantics D10 deliberately preserves, not
+  a defect (the reviewer flagged it; overruled by D10).
+
 ## D9: Detection delegated to git commands (resolved 2026-08-03, supersedes D5)
 
 User directive: assume `git` is present and delegate repo-topology questions
@@ -9,7 +43,9 @@ to it instead of lexical/filesystem manipulation. Concretely:
   any worktree, output symlink-resolved) replaces `vim.fs.root(cwd, ".git")`.
 - Bareness: `git -C <cwd> rev-parse --is-bare-repository` when toplevel fails.
 - Staleness: `prunable` lines in `git worktree list --porcelain` stanzas
-  replace the `isdirectory` existence check.
+  replace the `isdirectory` existence check. (Amended by D11: locked
+  worktrees are exempt from `prunable` marking, so an `fs_stat` existence
+  check on candidates is retained on top of the stanza filter.)
 - Canonicalization: git's own symlink-resolved output replaces the
   `fs_realpath`-based `canonical()` helper (obsoletes that part of D7).
 - The `pcall`/missing-git degradation guards from D7 are dropped; git absent
@@ -107,7 +143,9 @@ Amendments from the post-implementation review:
   the candidate path.
 - Deleted cwd (`getcwd` → `""`) warns and aborts; a missing `git` binary is
   caught with `pcall` and degrades to not-bare / no candidates instead of a
-  raw Lua error.
+  raw Lua error. (Both superseded: the `pcall` guards are removed by D9 —
+  git absent now raises; and the `getcwd == ""` premise is empirically false
+  — D11 replaces it with an `fs_stat` existence check.)
 - Accepted and documented: linked worktrees (`.git` file) run one cheap
   synchronous `git rev-parse --is-bare-repository` per press; only plain
   top-level checkouts (`.git` directory) short-circuit it.
