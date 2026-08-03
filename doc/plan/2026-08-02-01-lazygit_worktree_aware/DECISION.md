@@ -1,5 +1,62 @@
 # Decisions
 
+## D9: Detection delegated to git commands (resolved 2026-08-03, supersedes D5)
+
+User directive: assume `git` is present and delegate repo-topology questions
+to it instead of lexical/filesystem manipulation. Concretely:
+
+- Root: `git -C <cwd> rev-parse --show-toplevel` (succeeds from any subdir of
+  any worktree, output symlink-resolved) replaces `vim.fs.root(cwd, ".git")`.
+- Bareness: `git -C <cwd> rev-parse --is-bare-repository` when toplevel fails.
+- Staleness: `prunable` lines in `git worktree list --porcelain` stanzas
+  replace the `isdirectory` existence check.
+- Canonicalization: git's own symlink-resolved output replaces the
+  `fs_realpath`-based `canonical()` helper (obsoletes that part of D7).
+- The `pcall`/missing-git degradation guards from D7 are dropped; git absent
+  ⇒ loud error is acceptable.
+
+Calls stay synchronous (`vim.system():wait()`), as the bare check already was.
+
+Superseded: D5 (`vim.fs.root` chosen to avoid a subprocess — rationale was
+weak given the code already spawned git synchronously for the bare check).
+
+## D8: Worktree picker UI — snacks picker, enabled globally (resolved 2026-08-03)
+
+`vim.ui.select` had no real implementation in this config; the builtin
+`inputlist()` fallback renders through noice's message/cmdline view and
+displays poorly (noice does not itself provide a select UI). Fix: add
+`picker = { enabled = true }` to `M.opts` in
+`config/nvim/lua/ngcfg/plugins/config/github_com--folke--snacks_nvim.lua` —
+snacks then installs `vim.ui.select = Snacks.picker.select` (`ui_select`
+defaults to true), so the worktree picker and every other `vim.ui.select`
+consumer (LSP code actions, etc.) get a proper floating picker.
+`pick_worktree` keeps calling `vim.ui.select` unchanged.
+
+Rejected:
+- Local `Snacks.picker.select` call in `pick_worktree` — leaves all other
+  `vim.ui.select` consumers on the poor builtin rendering.
+- mini.pick `ui_select` — adds a third picker style beside telescope/snacks.
+- telescope-ui-select — new plugin dependency, heaviest option.
+
+## D10: Marker-less bare container — per-child git probe (resolved 2026-08-03)
+
+With detection delegated to git (D9), the marker-less container (no
+`gitdir: ./.bare` file) is invisible to `git -C <cwd>` since git only
+discovers upward. Chosen: iterate child directories with `vim.fs.dir` and
+accept a child as a candidate when `git -C <child> rev-parse --show-toplevel`
+returns the child itself (compared against `fs_realpath(child)` since git's
+output is symlink-resolved); no candidates → D4 silent fallback. Preserves the
+shipped semantics; the only local logic is directory iteration — worktree-ness
+is git's answer per child. Cost: one git spawn per child dir per press in this
+case, accepted.
+
+Rejected:
+- First-repo-child `worktree list` answers for all — fewer spawns and finds
+  worktrees living elsewhere, but at a dir of unrelated repos it silently
+  picks whichever repo sorts first.
+- Dropping marker-less support (require the marker file) — loses a layout the
+  user actually uses.
+
 ## D1: Root detection source — window-local cwd (resolved 2026-08-02)
 
 Resolve `vim.fn.getcwd(0)` upward to its worktree root via
@@ -33,7 +90,7 @@ matching today's behavior.
 
 Rejected: `vim.notify` warning and skipping the open.
 
-## D7: Review amendments — canonical paths, warn on empty bare, degrade gracefully (resolved 2026-08-02)
+## D7: Review amendments — canonical paths, warn on empty bare, degrade gracefully (resolved 2026-08-02; partially superseded by D9)
 
 Amendments from the post-implementation review:
 
@@ -73,7 +130,7 @@ Rejected:
 - Out of scope / keep silent fallback — leaves `<leader>gg` useless (or
   prompting to init a new repo) in a layout the user actually uses.
 
-## D5: Detection mechanism — `vim.fs.root` over `git rev-parse`
+## D5: Detection mechanism — `vim.fs.root` over `git rev-parse` (SUPERSEDED by D9)
 
 Chose `vim.fs.root(cwd, ".git")` — synchronous, no subprocess, and matches
 the `.git` *file* that marks a linked worktree root. Rejected

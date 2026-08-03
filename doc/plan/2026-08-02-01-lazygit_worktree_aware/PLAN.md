@@ -3,6 +3,12 @@
 Make `<leader>gg` open lazygit rooted at the worktree root of nvim's
 window-local cwd, instead of the raw cwd itself.
 
+**Revision (2026-08-03):** the shipped implementation resolved roots with
+`vim.fs.root` + filesystem checks (D5) and showed the worktree picker via the
+un-overridden `vim.ui.select` (rendered as a noice message popup). This
+revision replaces detection with delegation to git commands (D9) and gives the
+picker a real UI (D8).
+
 ## Goal / success criteria
 
 - When nvim's window-local cwd is inside a git worktree (linked worktree or
@@ -11,175 +17,229 @@ window-local cwd, instead of the raw cwd itself.
 - Toggling still works: pressing `<leader>gg` again from the same worktree
   hides/shows the same lazygit instance; each worktree gets its own instance.
 - When the cwd is a bare-repo container (repo cloned to `.bare`, worktrees as
-  subdirectories), `<leader>gg` offers the worktrees via `vim.ui.select` and
-  opens lazygit at the chosen one — skipping the prompt when exactly one
-  worktree exists.
+  subdirectories), `<leader>gg` offers the worktrees via a picker and opens
+  lazygit at the chosen one — skipping the prompt when exactly one worktree
+  exists.
+- The picker renders as a proper selection UI (not the builtin `inputlist()`
+  prompt routed through noice's message view).
+- All repo-topology questions (root, bareness, worktree enumeration, staleness)
+  are answered by shelling out to `git`; no `.git`-marker walking or manual
+  path canonicalization. `git` is assumed present (D9).
 - When the cwd is outside any git repo, keep today's behavior: lazygit opens
   in nvim's cwd as-is (silent fallback).
 
 ## Scope / non-goals
 
-- Scope: `M.lazygit()` in `config/nvim/lua/ngcfg/pkg/terminal/init.lua` and,
-  only if needed, the mapping in `config/nvim/lua/ngcfg/mappings.lua:100`.
+- Scope: `config/nvim/lua/ngcfg/pkg/terminal/init.lua` (detection helpers and
+  `M.lazygit`) and
+  `config/nvim/lua/ngcfg/plugins/config/github_com--folke--snacks_nvim.lua`
+  (enable the snacks picker, D8).
 - Non-goal: making the generic terminal toggles (`M.horizontal`, `M.vertical`,
-  `M.floating`, `<M-h>/<M-v>/<M-f>`) worktree-aware (open question 3).
+  `M.floating`, `<M-h>/<M-v>/<M-f>`) worktree-aware (D3).
 - Non-goal: changing lazygit's own config (`config/lazygit/config.yml`).
 
 ## Context
 
-- Mapping: `config/nvim/lua/ngcfg/mappings.lua:100`
-  ```lua
-  map("n", "<leader>gg", function()
-    require("ngcfg.pkg.terminal").lazygit()
-  end, { noremap = true, silent = true, desc = "Toggle lazygit floating window" })
-  ```
-- Implementation: `config/nvim/lua/ngcfg/pkg/terminal/init.lua:37` calls
-  `require "snacks.lazygit" { win = { ... } }` with no `cwd`.
-- `snacks.lazygit.open()` forwards opts to `Snacks.terminal(cmd, opts)`.
-  `snacks.terminal` defaults `opts.cwd` to `vim.fn.getcwd(0)` (window-local
-  cwd) and derives the terminal instance id from `cmd + cwd + env + v:count1`.
-  Therefore passing an explicit `cwd` both roots lazygit correctly **and**
-  gives one toggleable instance per worktree for free.
-- Worktree detection: in a linked worktree the root contains a `.git` *file*
-  (not directory). `vim.fs.root(buf, ".git")` matches both file and directory,
-  so it returns the worktree root (not the common gitdir). Available since
-  nvim 0.10; this config runs on nvim 0.12 (native `vim.pack`, plugins under
-  `site/pack/core/opt/`).
-- lazygit itself handles being started inside a linked worktree fine; nothing
-  extra is needed beyond the correct `cwd`.
-- Bare-container layout (verified empirically): with the repo cloned to
-  `<dir>/.bare` and worktrees as subdirectories of `<dir>`,
-  - without a `.git` marker file at `<dir>`, `vim.fs.root` finds nothing
-    (it only walks **up**; `.bare` doesn't match the `.git` marker name) —
-    naive fallback would land lazygit in a non-repo dir where it prompts to
-    init a new repository;
-  - with the conventional `.git` file (`gitdir: ./.bare`), `vim.fs.root`
-    returns `<dir>`, but there `git rev-parse --is-bare-repository` is
-    `true` and `git status` fails with `fatal: this operation must be run in
-    a work tree` — lazygit would open in degraded bare mode at best.
-  - In both variants `git worktree list --porcelain` (run via `-C` against
-    the bare dir or any worktree) lists all worktrees, giving the picker its
-    candidates.
+- Mapping: `config/nvim/lua/ngcfg/mappings.lua:100` calls
+  `require("ngcfg.pkg.terminal").lazygit()`.
+- Current implementation: `config/nvim/lua/ngcfg/pkg/terminal/init.lua` —
+  `resolve_git_root` uses `vim.fs.root(cwd, ".git")`, a `worktrees_under`
+  child scan for `.git` markers, `vim.uv.fs_realpath` canonicalization, and
+  shells out to git only for the bare check and `worktree list`.
+- `snacks.terminal` keys instances by `cmd + cwd + env + v:count1`, so passing
+  an explicit `cwd` gives one toggleable instance per worktree (D2).
+- Picker display problem: nothing in this config overrides `vim.ui.select`,
+  so it falls back to the builtin `inputlist()` prompt, which goes through the
+  message/cmdline UI that noice manages — rendered as an awkward message
+  popup. noice itself does not provide a `vim.ui.select` implementation.
+- The installed snacks.nvim ships `snacks.picker` including
+  `snacks/picker/select.lua`; when the picker is enabled, its `ui_select`
+  option defaults to `true` and replaces `vim.ui.select` globally.
+- git behavior, verified empirically with git 2.55 on a bare-container
+  fixture (`clone --bare src container/.bare` + `git worktree add`):
+  - `git -C <dir> rev-parse --show-toplevel` succeeds from any subdirectory
+    of any worktree (main or linked) and prints the worktree root with
+    symlinks resolved — entering via a symlinked path still yields the real
+    root, so git's output is already canonical for snacks keying (obsoletes
+    most of D7's `fs_realpath` plumbing).
+  - At a marker-carrying bare container (`.git` file → `gitdir: ./.bare`):
+    `--show-toplevel` fails (`fatal: this operation must be run in a work
+    tree`) while `rev-parse --is-bare-repository` prints `true`.
+  - At a marker-less container and outside any repo: both fail with
+    `fatal: not a git repository` (exit 128).
+  - `git worktree list --porcelain` prints one stanza per worktree separated
+    by blank lines; the container's own entry carries a `bare` line, and
+    stale entries carry a `prunable <reason>` line — both filterable from
+    porcelain output alone, no `isdirectory` check needed.
 
 ## Approach
 
-Resolve the window-local cwd upward to its worktree root; when that root is
-a bare-repo container, resolve *downward* via a worktree picker. Because
-`vim.ui.select` is asynchronous, root resolution passes the result to a
-callback that opens lazygit:
+Delegate the entire decision tree to git, synchronously
+(`vim.system(...):wait()` — already how the bare check runs today; latency of
+1–2 trivial git calls per keypress is accepted). `git` is assumed installed;
+no `pcall`/missing-binary degradation (D9 supersedes that part of D7). The
+picker callback structure stays because the picker is asynchronous.
 
 ```lua
+---@param args string[]
+---@return string? # trimmed stdout on exit 0, nil on non-zero exit
+local function git(args)
+  local res = vim.system(vim.list_extend({ "git" }, args)):wait()
+  if res.code ~= 0 then
+    return nil
+  end
+  return vim.trim(res.stdout or "")
+end
+
+---@param dir string
+---@return string[]
+local function worktree_list(dir)
+  local out = git { "-C", dir, "worktree", "list", "--porcelain" }
+  if not out then
+    return {}
+  end
+  local worktrees = {}
+  for stanza in vim.gsplit(out, "\n\n", { plain = true, trimempty = true }) do
+    local path = stanza:match "^worktree (.-)\n"  -- or whole-stanza match
+    -- skip the container's own `bare` entry and stale `prunable` entries
+    if path and not stanza:find "\nbare" and not stanza:find "\nprunable" then
+      worktrees[#worktrees + 1] = path
+    end
+  end
+  return worktrees
+end
+
 ---@param cb fun(root: string)
 local function resolve_git_root(cb)
   local cwd = vim.fn.getcwd(0)
-  local root = vim.fs.root(cwd, ".git")
-  if root == nil then
-    -- setup A: container without a `.git` marker file. Look for worktrees
-    -- one level down; no candidates means "not a repo" -> D4 fallback.
-    local candidates = worktrees_under(cwd) -- children with a `.git` marker
-    return pick_worktree(candidates, cwd, cb)
+  if cwd == "" then
+    vim.notify("lazygit: cannot determine the working directory", vim.log.levels.WARN)
+    return
   end
-  if is_bare(root) then -- `git -C root rev-parse --is-bare-repository`
-    -- setup B: `.git` file pointing at `.bare`
-    return pick_worktree(worktree_list(root), root, cb)
+  local root = git { "-C", cwd, "rev-parse", "--show-toplevel" }
+  if root then
+    return cb(root) -- any worktree, main or linked, from any subdir
   end
-  cb(root)
-end
-
-local function pick_worktree(candidates, fallback, cb)
-  if #candidates == 0 then return cb(fallback) end     -- D4
-  if #candidates == 1 then return cb(candidates[1]) end -- auto if single
-  vim.ui.select(candidates, { prompt = "lazygit worktree" }, function(choice)
-    if choice then cb(choice) end -- cancelled -> do not open
-  end)
-end
-
-function M.lazygit()
-  resolve_git_root(function(root)
-    require "snacks.lazygit" { cwd = root, win = { ...existing... } }
-  end)
+  if git { "-C", cwd, "rev-parse", "--is-bare-repository" } == "true" then
+    local candidates = worktree_list(cwd)
+    if #candidates == 0 then
+      vim.notify("lazygit: bare repository with no worktrees", vim.log.levels.WARN)
+      return
+    end
+    return pick_worktree(candidates, cb)
+  end
+  -- not a repo at all: marker-less bare container, or genuinely outside git.
+  -- git only discovers upward, so probe each child and let git answer (D10).
+  local candidates = {}
+  for name, kind in vim.fs.dir(cwd) do
+    if kind == "directory" then
+      local child = vim.fs.joinpath(cwd, name)
+      local top = git { "-C", child, "rev-parse", "--show-toplevel" }
+      if top == vim.uv.fs_realpath(child) then
+        candidates[#candidates + 1] = top
+      end
+    end
+  end
+  if #candidates == 0 then
+    return cb(cwd) -- D4 silent fallback
+  end
+  pick_worktree(candidates, cb)
 end
 ```
 
-- Root source is the window-local cwd, not the current buffer's file:
-  stable regardless of which buffer happens to be focused (decision D1).
-- One lazygit instance per worktree, keyed naturally by snacks.terminal's
-  `cmd+cwd+env` id (decision D2). This also holds across picker choices:
-  picking worktree A then later worktree B yields two independent toggles.
-- Bare-container case: worktree candidates come from
-  `git -C <root> worktree list --porcelain` (bare entry filtered out) when a
-  bare root was found, or from scanning immediate children for a `.git`
-  marker when no root was found at all (setup A). Picker skipped when
-  exactly one candidate exists (decision D6).
-- Only `<leader>gg` changes; `<M-h>/<M-v>/<M-f>` stay at nvim cwd (D3).
-- Outside a git repo (and no worktree children), fall back to the cwd
-  silently (D4).
-- Review amendments (D7): all roots/candidates canonicalized via
-  `vim.uv.fs_realpath` so symlinks can't split a worktree across two snacks
-  ids; a confirmed-bare root with zero worktrees warns and opens nothing
-  (D4's silent fallback would land in the bare dir); stale `prunable`
-  worktree entries filtered by an existence check; deleted cwd and missing
-  `git` binary degrade gracefully instead of raising.
+- Root source stays the window-local cwd (D1); per-worktree instances keyed by
+  snacks' `cmd+cwd+env` id (D2); silent cwd fallback outside any repo (D4);
+  picker skipped for a single candidate (D6).
+- Paths handed to snacks come straight from git (`--show-toplevel`,
+  `worktree list --porcelain`), which are already symlink-resolved — the
+  `canonical()` helper disappears except (at most) for the non-repo fallback
+  cwd.
+- Marker-less container: per-child git probe (D10) — `vim.fs.dir` only
+  iterates; whether a child is a worktree root is git's answer
+  (`--show-toplevel` returning the child itself, compared via
+  `fs_realpath(child)` since git's output is symlink-resolved).
+- Picker UI (D8): enable the snacks picker globally — add
+  `picker = { enabled = true }` to `M.opts` in
+  `github_com--folke--snacks_nvim.lua`; snacks then installs
+  `vim.ui.select = Snacks.picker.select` (`ui_select` defaults to true), so
+  `pick_worktree`'s `vim.ui.select` call — and every other consumer such as
+  LSP code actions — renders as a proper floating picker instead of a noice
+  message popup. `pick_worktree`'s shape (auto-single, cancel-opens-nothing)
+  is unchanged.
 
-Rejected alternatives:
+Rejected alternatives (this revision):
 
-- Basing detection on the current buffer's file — jumps roots when focusing
-  buffers from other worktrees (e.g. via LSP go-to-definition); user prefers
-  the cwd-anchored, predictable root.
-- `git rev-parse --show-toplevel` via `vim.system` — an extra subprocess and
-  async plumbing for what `vim.fs.root` answers synchronously from the
-  filesystem.
-- Changing nvim's cwd (`:lcd`) before opening — side effects on the window
-  outlive the lazygit toggle.
-- Configuring it via `M.opts.lazygit` in
-  `config/nvim/lua/ngcfg/plugins/config/github_com--folke--snacks_nvim.lua` —
-  `cwd` must be computed per invocation, not once at setup.
-- Single global instance killed/reopened on worktree change — extra code and
-  loses lazygit UI state; per-worktree instances come for free.
+- `vim.fs.root(cwd, ".git")` + `.git`-marker child scanning + manual
+  `fs_realpath` canonicalization (the shipped D5/D7 design) — user directive:
+  repo topology is git's domain; lexical/filesystem reimplementation of git
+  discovery is exactly what drifts (symlinks, prunable entries, future git
+  layouts).
+- Async `vim.system` with callbacks — no user-visible benefit for 1–2 fast
+  local git calls on an interactive keypress; the sync `:wait()` pattern is
+  already in the file.
+- `GIT_DISCOVERY_ACROSS_FILESYSTEM` / config tweaks to make git discover the
+  marker-less container — git fundamentally discovers upward only; no flag
+  makes `rev-parse` look downward.
+- Picker alternatives (D8): local `Snacks.picker.select` call (leaves every
+  other `vim.ui.select` consumer on the poor builtin rendering), mini.pick
+  (third picker style beside telescope/snacks), telescope-ui-select (new
+  plugin dependency).
+- Marker-less alternatives (D10): first-repo-child `worktree list` (fewer
+  spawns but silently picks whichever repo sorts first at a dir of unrelated
+  repos), dropping the marker-less case entirely (loses a layout the user
+  actually uses).
+
+## Open questions
+
+None — all resolved (see DECISION.md).
 
 ## Implementation steps
 
-1. Edit `config/nvim/lua/ngcfg/pkg/terminal/init.lua`: add the local helpers
-   (`resolve_git_root`, `pick_worktree`, `worktree_list`, bare check) and
-   rework `M.lazygit` to open via the resolution callback, passing `cwd`
-   alongside the existing `win` opts.
+1. Rework `config/nvim/lua/ngcfg/pkg/terminal/init.lua`: replace
+   `canonical`, `is_bare_repo`, `worktree_list`, `worktrees_under`, and
+   `resolve_git_root` with the git-delegating versions above (marker-less
+   branch = per-child probe, D10). Drop the `pcall`/missing-git guards.
+   `M.lazygit` itself is unchanged.
    Verify: `:lcd` into a subdirectory of a linked worktree, `<leader>gg`,
    lazygit shows that worktree's branch/status.
-2. Verify toggling: `<leader>gg` twice in the same worktree hides/shows one
-   instance; a window whose cwd is another worktree gets a separate instance
-   rooted there.
-3. Verify the bare-container case: nvim started at a `<dir>` holding `.bare`
-   plus ≥2 worktrees shows the `vim.ui.select` picker (both with and without
-   the `.git` marker file at `<dir>`); with exactly one worktree it opens
-   directly; cancelling the picker opens nothing.
-4. Verify fallback: with cwd outside any git repo, `<leader>gg` behaves as
-   today (lazygit at nvim cwd).
+2. Enable the snacks picker (D8): add `picker = { enabled = true }` to
+   `M.opts` in
+   `config/nvim/lua/ngcfg/plugins/config/github_com--folke--snacks_nvim.lua`.
+   Verify interactively: bare container with ≥2 worktrees → picker renders
+   as a floating snacks picker, not a noice message; choosing opens lazygit
+   at the choice; cancelling opens nothing.
+3. Re-run the behavior matrix (headless smoke suite from the first round,
+   adjusted to stub `vim.system` git calls instead of `vim.fs.root`):
+   main checkout, linked-worktree subdir, marker container, marker-less
+   container per-child probe, single-worktree auto-open, cancel, empty bare
+   warn, non-repo fallback, symlinked-path instance identity.
 
 ## Testing / verification
 
-Manual, inside a repo with a linked worktree (`git worktree add`), plus a
-bare-container fixture (`git clone --bare <src> dir/.bare && cd dir &&
-echo "gitdir: ./.bare" > .git && git worktree add wt1 && ...`):
+Manual + headless, against the same fixtures as round one
+(`git clone --bare <src> dir/.bare`, `echo "gitdir: ./.bare" > dir/.git`,
+`git worktree add`):
 
-- `nvim` with cwd at the main checkout → `<leader>gg` → lazygit at main root.
+- `nvim` at the main checkout → `<leader>gg` → lazygit at main root.
 - `:lcd <worktree>/some/subdir` → `<leader>gg` → lazygit at worktree root.
-- Toggle behavior per step 2 above.
-- Bare container, 2 worktrees → picker; choose one → lazygit rooted there;
-  `<leader>gg` again from the same cwd re-prompts but toggles the existing
-  instance when the same worktree is chosen.
-- Bare container, 1 worktree → opens directly, no prompt.
-- cwd outside any repo → `<leader>gg` → lazygit at cwd (unchanged).
+- Toggle: twice in the same worktree = one instance; different worktree cwd =
+  separate instance. Entering via a symlinked path toggles the same instance
+  (git resolves the path).
+- Bare container, 2 worktrees → picker (proper UI); auto-open with 1;
+  cancel opens nothing; marker-less variant per Q2.
+- Deleted (prunable) worktree absent from candidates — via porcelain
+  `prunable` line, not an existence check.
+- cwd outside any repo → lazygit at cwd (unchanged).
 
 ## Risks
 
 - Multiple simultaneous hidden lazygit instances (one per visited worktree)
-  consume a buffer + process each; accepted in decision D2.
-- The bare check shells out to `git` synchronously on keypress whenever the
-  resolved root's `.git` is not a directory — i.e. also for linked
-  worktrees, the feature's primary scenario, not just bare containers. The
-  command is trivial, so latency is accepted; only plain top-level
-  checkouts short-circuit it.
-- In the bare-container case the picker reappears on every `<leader>gg`
-  (including to hide an already-open instance) since the choice is not
-  remembered; accepted for now — a per-tab cache can be added later if it
-  becomes annoying.
+  consume a buffer + process each; accepted (D2).
+- Every `<leader>gg` now runs 1–2 synchronous git spawns (up from zero for
+  plain checkouts in the shipped version); trivial locally, could stutter on
+  network filesystems. Accepted per D9.
+- If `git` is genuinely absent, the keypress now raises instead of degrading
+  (D9 assumes presence); acceptable in this dotfiles environment where git is
+  unconditionally installed.
+- Bare-container picker reappears on every press (choice not remembered);
+  accepted for now, per-tab cache possible later.
