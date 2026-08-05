@@ -41,8 +41,13 @@ echo ""
 echo "mise lock"
 echo ""
 
+# -g: MISE_GLOBAL_CONFIG_FILE makes /mise/mise.toml the global config, and
+# without -g mise scopes to the project config root and finds no tools to
+# lock. No tool args: mise lock resolves every requested version from the
+# config itself; listing installed versions via mise ls picked the stale
+# inactive install when two versions of a tool were present.
 $run_in_container \
   "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
   --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
   --workdir /mise" \
-  "-lc" "mise lock \$(mise ls --json | jq -r 'to_entries | map(\"\(.key)@\(.value[0].requested_version)\") | join(\" \")')"
+  "-lc" "mise lock -g"

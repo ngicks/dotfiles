@@ -148,11 +148,11 @@ version = "0.0.1"
 backend = "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy"
 
 [[tools."go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses"]]
-version = "0.0.0-20260713114403-6ed9be4a10a5"
+version = "0.0.1"
 backend = "go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses"
 
 [[tools."go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses"]]
-version = "0.0.0-20260713114403-6ed9be4a10a5"
+version = "0.0.1"
 backend = "go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses"
 
 [[tools."go:golang.org/dl/gotip"]]
