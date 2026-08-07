@@ -6,6 +6,7 @@ local nonCustomizedServers = {
   "jsonls",
   "marksman", -- markdown
   "taplo", -- toml
+  "just", -- justfile (just-lsp)
   "pyright",
   "clangd",
   "rust_analyzer",

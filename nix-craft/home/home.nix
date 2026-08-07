@@ -163,6 +163,7 @@ in
     vscode-langservers-extracted  # html, cssls, jsonls
     marksman
     taplo
+    just-lsp
     pyright
     (lib.hiPrio rust-analyzer)    # wins over rustup's proxy binary
     (lib.hiPrio typescript-go)    # ts7 toolchain; its tsc wins over the TypeScript fallback below
