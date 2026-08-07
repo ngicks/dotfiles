@@ -11,6 +11,18 @@ if [[ ! -e /dev/kvm ]]; then
   exit 0
 fi
 
+# Forwarding /dev/kvm doesn't strictly imply use of libvirt
+# This is just my own assumption
+if [[ ! -d /var/lib/libvirt ]]; then
+  echo "[ERROR]: DEVENV_KVM=1 but /var/lib/libvirt does not exist on the host; install libvirt (or create the directory) before enabling KVM" >&2
+  exit 1
+fi
+
+os_image_dir="/var/lib/libvirt/isos"
+if [[ ! -d "${os_image_dir}" ]]; then
+  sudo mkdir "${os_image_dir}"
+fi
+
 printf "%s\n" "--device /dev/kvm"
 printf "%s\n" "--group-add keep-groups"
 # All libvirt state (domain sockets, nvram, scratch disks) is per-container
@@ -24,3 +36,4 @@ printf "%s\n" "--group-add keep-groups"
 # at the same path in-container, so overlay backing references stay valid on
 # both sides.
 printf "%s\n" "--mount type=volume,dst=/var/lib/libvirt"
+printf "%s\n" "--mount type=bind,src=${os_image_dir},dst=/var/lib/libvirt/isos,ro"

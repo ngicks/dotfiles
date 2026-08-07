@@ -26,6 +26,17 @@ if command -v mise > /dev/null 2>&1; then
 
   # `mise up` and `mise prune` breaks PATH for
   # long-lived apps
-  # Adds shims as fallback
-  eval "$(mise activate --shims)"
+  # Adds shims as fallback.
+  # Not using `mise activate --shims`: it prepends, shadowing the
+  # real install paths hook-env injects. Append at tail instead so
+  # shims only resolve when the real path is gone.
+  _mise_shims="${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims"
+  case ":$PATH:" in
+    *":${_mise_shims}:"*)
+      ;;
+    *)
+      export PATH="${PATH}:${_mise_shims}"
+      ;;
+  esac
+  unset _mise_shims
 fi
