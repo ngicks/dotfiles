@@ -24,9 +24,22 @@ check_dir() {
   )
 }
 
-while IFS=$'\t' read -r tool install_path; do
+# Ask mise for each tool's effective bin dirs rather than assuming
+# <install_path>/bin: backends differ (npm's embedded-aube installs since
+# ~2026.7.14 keep bins in node_modules/.bin with no top-level bin/), and
+# `mise bin-paths` runs the backend's own layout resolution.
+check_tool() {
+  local tool="$1" bin_dir
+  while IFS= read -r bin_dir; do
+    [ -n "$bin_dir" ] || continue
+    check_dir "$bin_dir" && return 0
+  done < <(mise bin-paths "$tool" 2>/dev/null)
+  return 1
+}
+
+while IFS= read -r tool; do
   [ -n "$tool" ] || continue
-  if check_dir "$install_path/bin"; then
+  if check_tool "$tool"; then
     echo "ok: $tool"
   else
     echo "reinstalling: $tool"
@@ -42,6 +55,6 @@ done < <(
     | .key as $tool
     | .value[]
     | select(.active == true)
-    | "\($tool)\t\(.install_path // "")"
+    | $tool
   '
 )
