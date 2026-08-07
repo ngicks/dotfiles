@@ -9,7 +9,6 @@ local nonCustomizedServers = {
   "just", -- justfile (just-lsp)
   "pyright",
   "clangd",
-  "rust_analyzer",
   "moonbit-lsp",
 }
 
