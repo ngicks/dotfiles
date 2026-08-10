@@ -6,6 +6,7 @@ M.enable = function()
 end
 
 M.opts = {
+  purge_after_minutes = 120,
   suppressed_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
   -- log_level = 'debug',
 }
