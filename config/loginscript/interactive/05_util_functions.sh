@@ -19,7 +19,7 @@ devenv_prep() {
 }
 
 gcd() {
-  cd "$(crabswarm git list --full-path | fzf --reverse)"
+  cd "$(crabswarm git list --full-path --worktree | fzf --query "${1:-}" --reverse)"
 }
 
 # osc52copy - copy stdin to system clipboard via OSC52 escape sequence.
