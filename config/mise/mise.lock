@@ -146,7 +146,7 @@ version = "0.0.16"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.11"
+version = "0.0.12"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist"]]
