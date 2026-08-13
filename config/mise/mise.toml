@@ -46,6 +46,9 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 # zenn
 "npm:zenn-cli" = "latest"
 
+# Markdown
+"npm:@mermaid-lint/cli" = "latest"
+
 "ruff" = "latest"
 
 # Helm
