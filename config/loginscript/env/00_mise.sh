@@ -30,13 +30,21 @@ if command -v mise > /dev/null 2>&1; then
   # Not using `mise activate --shims`: it prepends, shadowing the
   # real install paths hook-env injects. Append at tail instead so
   # shims only resolve when the real path is gone.
+  # Strip any inherited shims entry before appending: in a nested
+  # shell, hook-env re-inserts install paths after inherited entries
+  # it doesn't manage, which would otherwise leave shims in front of
+  # them, shadowing the real install paths.
   _mise_shims="${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims"
-  case ":$PATH:" in
-    *":${_mise_shims}:"*)
-      ;;
-    *)
-      export PATH="${PATH}:${_mise_shims}"
-      ;;
-  esac
-  unset _mise_shims
+  _mise_new_path=""
+  _mise_rest="${PATH}:"
+  while [ -n "$_mise_rest" ]; do
+    _mise_p="${_mise_rest%%:*}"
+    _mise_rest="${_mise_rest#*:}"
+    if [ -z "$_mise_p" ] || [ "$_mise_p" = "$_mise_shims" ]; then
+      continue
+    fi
+    _mise_new_path="${_mise_new_path:+${_mise_new_path}:}${_mise_p}"
+  done
+  export PATH="${_mise_new_path}:${_mise_shims}"
+  unset _mise_shims _mise_new_path _mise_rest _mise_p
 fi
