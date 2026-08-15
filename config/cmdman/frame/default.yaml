@@ -1,0 +1,4 @@
+frame:
+  - edge: left
+    size: 20%
+    component: switcher
