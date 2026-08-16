@@ -31,4 +31,5 @@ fi
 pushd "${wt}" >/dev/null
 apm install --update -t codex,claude --root ..
 apm compile -t codex --root ..
+cp ../apm.lock.yaml ./apm.lock.yaml
 popd >/dev/null
