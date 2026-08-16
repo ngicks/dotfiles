@@ -7,7 +7,7 @@ if ! command -v git >/dev/null; then
   exit 1
 fi
 
-rm -r ./.agents ./.claude ./.codex
+rm -rf ./.agents ./.claude ./.codex
 
 if [ ! -e ./.bare ]; then
   apm install --update -t codex,claude
