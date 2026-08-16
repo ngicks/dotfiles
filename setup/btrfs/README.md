@@ -4,11 +4,14 @@
 
 #### On Host
 
-Make virtual disk on any target drives.
+Make virtual disk on any target drives. `-Dynamic` makes the VHDX thin
+(dynamically expanding): the file starts small and only allocates as data is
+written. `New-VHD` needs the Hyper-V PowerShell module; without it, use
+`diskpart` with `create vdisk file="..." maximum=512000 type=expandable`.
 
 ```ps1
 mkdir E:\wsl
-New-VHD -Path E:\data\wsl\vhd\linux-userdata-0.vhdx -SizeBytes 500GB -Dynami
+New-VHD -Path E:\data\wsl\vhd\linux-userdata-0.vhdx -SizeBytes 500GB -Dynamic
 # mirror only:
 mkdir D:\wsl
 New-VHD -Path D:\data\wsl\vhd\linux-userdata-1.vhdx -SizeBytes 500GB -Dynamic
@@ -28,6 +31,38 @@ Execute manually
 
 ```ps1
 Start-ScheduledTask "WSL attach data disks"
+```
+
+#### Keeping VHDs thin
+
+A dynamic VHDX only grows; deleting files inside the guest does not shrink it
+by itself. Reclaim space by trimming from Linux, which passes UNMAP through to
+the VHDX.
+
+Check actual on-disk allocation vs. virtual size:
+
+```ps1
+Get-VHD E:\data\wsl\vhd\linux-userdata-0.vhdx | Select-Object Path,FileSize,Size
+```
+
+Trim inside WSL (any mountpoint of the pool works; raid1 trims both devices):
+
+```sh
+sudo fstrim -v /mnt/btrfspool
+```
+
+Re-check `FileSize` afterwards to confirm UNMAP reached the host. For
+continuous reclaim instead of manual trims, add `discard=async` to `Options=`
+in `template/etc/systemd/system/*.mount.template` and regenerate.
+
+If the file is still larger than its content (trim can leave partially-used
+blocks allocated), compact it on the host while detached (needs the Hyper-V
+module, elevated):
+
+```ps1
+wsl --unmount E:\data\wsl\vhd\linux-userdata-0.vhdx
+Optimize-VHD -Path E:\data\wsl\vhd\linux-userdata-0.vhdx -Mode Full
+Start-ScheduledTask "WSL attach data disks"   # reattach
 ```
 
 ### On Linux
