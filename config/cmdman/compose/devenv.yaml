@@ -27,6 +27,8 @@ commands:
         required: false
       - path: .kvm.env
         required: false
+      - path: .gpu.env
+        required: false
     scale: 3
     tty: true
   codex:
@@ -39,6 +41,8 @@ commands:
       - path: .devenv.env
         required: false
       - path: .kvm.env
+        required: false
+      - path: .gpu.env
         required: false
     scale: 3
     tty: true
