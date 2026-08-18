@@ -19,6 +19,10 @@ devenv_prep() {
 }
 
 gcd() {
+  cd "$(crabswarm git list --full-path | fzf --query "${1:-}" --reverse)"
+}
+
+gcdw() {
   cd "$(crabswarm git list --full-path --worktree | fzf --query "${1:-}" --reverse)"
 }
 
