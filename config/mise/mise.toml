@@ -47,11 +47,19 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 "npm:zenn-cli" = "latest"
 
 # Markdown
-"npm:@mermaid-lint/cli" = "latest"
+## https://github.com/cytoscape/cytoscape.js/issues/3511#issuecomment-5282485375
+## > 3.34.2 will be released without source changes with the updated npm publishing workflow
+## Wait for bump
+"npm:@mermaid-lint/cli" = { version = "latest", trust_policy_excludes = [
+  "cytoscape@3.34.1",
+] }
 
 # Slides
 "npm:@marp-team/marp-cli" = "latest"
-"npm:@slidev/cli" = "latest"
+## Same as mermaid-cli
+"npm:@slidev/cli" = { version = "latest", trust_policy_excludes = [
+  "cytoscape@3.34.1",
+] }
 
 "ruff" = "latest"
 
