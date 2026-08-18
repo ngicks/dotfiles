@@ -49,6 +49,10 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 # Markdown
 "npm:@mermaid-lint/cli" = "latest"
 
+# Slides
+"npm:@marp-team/marp-cli" = "latest"
+"npm:@slidev/cli" = "latest"
+
 "ruff" = "latest"
 
 # Helm
