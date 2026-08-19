@@ -39,6 +39,8 @@ dependencies:
     - git: github.com/ngicks/agents-package
       path: skills/kvm-in-container
     - git: github.com/ngicks/agents-package
+      path: skills/ngcommit
+    - git: github.com/ngicks/agents-package
       path: skills/ngplan
   mcp: []
 scripts: {}
