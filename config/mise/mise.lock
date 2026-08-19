@@ -211,10 +211,6 @@ trust_policy_excludes = '["cytoscape@3.34.1"]'
 version = "4.0.2"
 backend = "npm:@upstash/context7-mcp"
 
-[[tools."npm:difit"]]
-version = "5.0.11"
-backend = "npm:difit"
-
 [[tools."npm:zenn-cli"]]
 version = "0.5.2"
 backend = "npm:zenn-cli"

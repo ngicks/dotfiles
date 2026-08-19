@@ -36,7 +36,6 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 # LLM stuff
 ## cli tools
 "npm:@openai/codex" = "latest"
-"npm:difit" = "latest"
 "github:microsoft/waza" = { version = "latest", version_prefix = "v", matching_regex = "^waza-(linux|darwin|windows)-", bin = "waza" }
 "pipx:apm-cli" = "latest"
 "pipx:huggingface_hub" = "latest"
