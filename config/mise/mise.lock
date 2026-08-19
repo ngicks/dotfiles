@@ -146,7 +146,7 @@ version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
 [[tools."go:github.com/ngicks/cmdman/cmd/cmdman"]]
-version = "0.0.20"
+version = "0.0.22"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
@@ -185,13 +185,27 @@ backend = "go:golang.org/x/pkgsite/cmd/pkgsite"
 version = "0.0.2"
 backend = "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"
 
+[[tools."npm:@marp-team/marp-cli"]]
+version = "4.5.0"
+backend = "npm:@marp-team/marp-cli"
+
 [[tools."npm:@mermaid-lint/cli"]]
 version = "0.53.1"
 backend = "npm:@mermaid-lint/cli"
 
+[tools."npm:@mermaid-lint/cli".options]
+trust_policy_excludes = '["cytoscape@3.34.1"]'
+
 [[tools."npm:@openai/codex"]]
-version = "0.147.0"
+version = "0.148.0"
 backend = "npm:@openai/codex"
+
+[[tools."npm:@slidev/cli"]]
+version = "52.19.0"
+backend = "npm:@slidev/cli"
+
+[tools."npm:@slidev/cli".options]
+trust_policy_excludes = '["cytoscape@3.34.1"]'
 
 [[tools."npm:@upstash/context7-mcp"]]
 version = "4.0.2"
