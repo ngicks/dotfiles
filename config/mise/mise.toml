@@ -10,6 +10,7 @@ minimum_release_age_excludes = [
   "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers",
   "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy",
   "go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist",
+  "go:github.com/ngicks/run-in-tmux-popup/cmd/run-in-popup",
   "go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses",
   "go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses",
   "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr",
@@ -86,8 +87,10 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 "go:github.com/ngicks/go-ngcheckers/cmd/ngcheckers" = { version = "0.0.3", install_env = { CGO_ENABLED = "0" } }
 "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy" = { version = "0.0.1", install_env = { CGO_ENABLED = "0" } }
 ## pinentry in tmux/zellij popup; repo is untagged, so pin the pseudo-version.
-"go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses" = { version = "0.0.1", install_env = { CGO_ENABLED = "0" } }
-"go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses" = { version = "0.0.1", install_env = { CGO_ENABLED = "0" } }
+
+"go:github.com/ngicks/run-in-tmux-popup/cmd/run-in-popup" = { version = "0.0.2", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses" = { version = "0.0.2", install_env = { CGO_ENABLED = "0" } }
+"go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses" = { version = "0.0.2", install_env = { CGO_ENABLED = "0" } }
 
 ## moon: backend is my own plugin: see [plugins] above.
 ## The build runs sandboxed in the quadlet-built image
