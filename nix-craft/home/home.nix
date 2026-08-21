@@ -25,9 +25,10 @@ in
         pkgs.stdenv.cc.cc.lib
       ];
 
-      # Point Playwright at the nix-provided browsers (read-only nix store) and
-      # skip the host-requirement check, which fails on non-NixOS/WSL.
-      PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+      # PLAYWRIGHT_BROWSERS_PATH is set by loginscript env/00_playwright.sh
+      # (shared store under gitrepo/__global_storage); setting it here would be
+      # baked into the devenv image and clobber the path run-devenv.sh hands in.
+      # Skip the host-requirement check, which fails on non-NixOS/WSL.
       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 
@@ -179,12 +180,6 @@ in
 
     # DAP
     vscode-js-debug               # js-debug binary for Node.js debugging
-
-    # Frontend / Browser testing
-    # Playwright browsers (chromium/firefox/webkit) for the playwright npm pkg
-    # managed via pnpm. Driver pinned at v${pkgs.playwright-driver.version}; keep the project's
-    # `playwright` dep on the same version or browsers won't be found.
-    playwright-driver.browsers
 
     # Rust Tools
     cargo-binstall # Prebuilt Rust binary installer (used by mise cargo backend)
