@@ -239,7 +239,7 @@ in
     traceroute     # Network path tracing
 
     libkrun
-  ] ++ lib.optionals stdenv.isLinux [
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [
     libreoffice    # soffice: office suite / headless document conversion
 
     # KVM/libvirt tooling for devenv containers. The launcher can opt into
