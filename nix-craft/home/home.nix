@@ -82,7 +82,6 @@ in
     ./lazygit
     ./mise
     ./nvim
-    ./starship
     ./tmux
     ./wezterm
     ./zellij
