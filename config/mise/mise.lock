@@ -79,7 +79,7 @@ url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-tes
 url_api = "https://api.github.com/repos/helm/chart-testing/releases/assets/301945177"
 
 [[tools."cargo:tree-sitter-cli"]]
-version = "0.26.12"
+version = "0.26.13"
 backend = "cargo:tree-sitter-cli"
 
 [[tools."github:microsoft/waza"]]
@@ -201,7 +201,7 @@ backend = "npm:@mermaid-lint/cli"
 trust_policy_excludes = '["cytoscape@3.34.1"]'
 
 [[tools."npm:@openai/codex"]]
-version = "0.149.0"
+version = "0.150.0"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@slidev/cli"]]
