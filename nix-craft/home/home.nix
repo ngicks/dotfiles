@@ -67,18 +67,12 @@ in
     recursive = true;
   };
 
-  xdg.configFile."systemd" = {
-    source = ../../config/systemd;
-    recursive = true;
-  };
-
   imports = [
     ./devenv-core.nix
     ./cmdman
     ./crabswarm
     ./dotfilesmgr
     ./fzf
-    ./forwardproxy
     ./lazygit
     ./mise
     ./nvim
