@@ -6,6 +6,7 @@ SSL_CERT_FILE=${SSL_CERT_FILE:-/etc/ssl/certs/ca-certificates.crt}
 
 printf "%s\n" "--env IN_CONTAINER=1"
 printf "%s\n" "--env TERM=${TERM}"
+printf "%s\n" "--env CMDMAN_CMD_ID"
 
 printf "%s\n" "--env SSL_CERT_FILE=${SSL_CERT_FILE}"
 printf "%s\n" "--mount type=bind,src=${SSL_CERT_FILE},dst=/etc/ssl/certs/ca-certificates.crt,ro"
