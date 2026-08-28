@@ -38,8 +38,8 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 ## cli tools
 "npm:@openai/codex" = "latest"
 "github:microsoft/waza" = { version = "latest", version_prefix = "v", matching_regex = "^waza-(linux|darwin|windows)-", bin = "waza" }
-"pipx:apm-cli" = "latest"
-"pipx:huggingface_hub" = "latest"
+"pipx:apm-cli" = { version = "latest", install_env = { UV_PYTHON_PREFERENCE = "only-managed" } }
+"pipx:huggingface_hub" = { version = "latest", install_env = { UV_PYTHON_PREFERENCE = "only-managed" } }
 ## mcp
 "npm:@upstash/context7-mcp" = "latest"
 
