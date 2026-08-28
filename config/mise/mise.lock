@@ -201,7 +201,7 @@ backend = "npm:@mermaid-lint/cli"
 trust_policy_excludes = '["cytoscape@3.34.1"]'
 
 [[tools."npm:@openai/codex"]]
-version = "0.150.0"
+version = "0.150.1"
 backend = "npm:@openai/codex"
 
 [[tools."npm:@slidev/cli"]]
@@ -216,7 +216,7 @@ version = "4.0.3"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:zenn-cli"]]
-version = "0.5.2"
+version = "0.5.3"
 backend = "npm:zenn-cli"
 
 [[tools."pipx:apm-cli"]]
