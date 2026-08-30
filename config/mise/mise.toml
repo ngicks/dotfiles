@@ -31,7 +31,7 @@ binstall = true
 
 [plugins]
 # Short tag notation requires mise >= 2026.7.8 (https://github.com/jdx/mise/pull/10998)
-moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
+moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.4"
 
 [tools]
 # LLM stuff
@@ -96,6 +96,9 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.3"
 version = "0.0.3"
 tag_prefix = "dotfilesmgr/v"
 sandbox = { runtime = "podman", image = "ghcr.io/ngicks/mise-moon-backend-plugin/moonbit-installer-sandbox:ubuntu-latest", options = [
+  # host networking: pasta needs /dev/net/tun, which is absent when this runs
+  # inside the devenv container (mise up in-container).
+  "--network=host",
   "--mount",
   "type=bind,src=/etc/ssl/certs/ca-certificates.crt,dst=/etc/ssl/certs/ca-certificates.crt,ro",
 ] }
