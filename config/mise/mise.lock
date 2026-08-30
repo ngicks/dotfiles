@@ -186,7 +186,7 @@ version = "0.4.0"
 backend = "go:golang.org/x/pkgsite/cmd/pkgsite"
 
 [[tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]]
-version = "0.0.2"
+version = "0.0.3"
 backend = "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"
 
 [[tools."npm:@marp-team/marp-cli"]]
