@@ -16,6 +16,7 @@ volumes=(
   claude-config
   gemini-config
   codex-config
+  apm-config
   gh-config
   glab-config
 )

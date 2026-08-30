@@ -10,5 +10,6 @@ printf "%s\n" "--mount type=volume,src=codex-config,dst=/root/.codex"
 # codex hardcodes <CODEX_HOME>/logs_2.sqlite and its WAL churn burns the
 # SSD-backed volume; ensure-podman-volume.sh symlinks it under logs-ram.
 printf "%s\n" "--mount type=tmpfs,dst=/root/.codex/logs-ram,tmpfs-size=512m"
+printf "%s\n" "--mount type=volume,src=apm-config,dst=/root/.apm"
 printf "%s\n" "--mount type=volume,src=gh-config,dst=/root/.config/gh"
 printf "%s\n" "--mount type=volume,src=glab-config,dst=/root/.config/glab-cli"
