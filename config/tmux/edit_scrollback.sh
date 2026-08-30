@@ -8,7 +8,9 @@ if [[ -z "${pane_id}" ]]; then
 fi
 initial_mode="$(tmux display-message -p -t "${pane_id}" '#{pane_mode}')"
 
-pane_cwd="$(tmux display-message -p -t "${pane_id}" '#{pane_current_path}')"
+# OSC 7-reported path first (stripping "file://host"; "." matches ":" since a
+# literal colon breaks tmux's modifier parsing), procfs cwd as fallback
+pane_cwd="$(tmux display-message -p -t "${pane_id}" '#{?pane_path,#{s|^file.//[^/]*||:pane_path},#{pane_current_path}}')"
 
 scrollback_file="$(mktemp -t tmux-scrollback.XXXXXX)"
 

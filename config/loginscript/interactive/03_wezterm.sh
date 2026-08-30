@@ -460,7 +460,10 @@ __wezterm_set_user_var() {
 # command provided by wezterm if wezterm is installed, but falls
 # back to a simple printf command otherwise.
 __wezterm_osc7() {
-  if hash wezterm 2>/dev/null ; then
+  # Inside tmux the OSC 7 is consumed by tmux itself (pane_path); tmux does
+  # not percent-decode, and `wezterm set-working-directory` percent-encodes,
+  # so send the raw form there.
+  if [[ -z "${TMUX-}" ]] && hash wezterm 2>/dev/null ; then
     wezterm set-working-directory 2>/dev/null && return 0
     # If the command failed (perhaps the installed wezterm
     # is too old?) then fall back to the simple version below.
