@@ -146,7 +146,7 @@ version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
 [[tools."go:github.com/ngicks/cmdman/cmd/cmdman"]]
-version = "0.0.23"
+version = "0.0.24"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
@@ -168,14 +168,6 @@ backend = "go:github.com/ngicks/oci-image-copy/cmd/oci-image-copy"
 [[tools."go:github.com/ngicks/run-in-tmux-popup/cmd/run-in-popup"]]
 version = "0.0.4"
 backend = "go:github.com/ngicks/run-in-tmux-popup/cmd/run-in-popup"
-
-[[tools."go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses"]]
-version = "0.0.4"
-backend = "go:github.com/ngicks/run-in-tmux-popup/cmd/tmux-popup-pinentry-curses"
-
-[[tools."go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses"]]
-version = "0.0.4"
-backend = "go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses"
 
 [[tools."go:golang.org/dl/gotip"]]
 version = "0.0.0-20260820210006-17229f577778"

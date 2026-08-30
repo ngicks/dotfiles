@@ -16,6 +16,30 @@ Basically everything should be able to work with `linux/amd64`, `linux/arm64`, `
 
 Agent instructions are managed with `apm`: sources live under `.apm/`, and `AGENTS.md`, `.claude/`, `.codex/` and `.agents/` are generated from them — edit `.apm/instructions/*` instead of the generated files.
 
+#### devenv and container-in-container limits
+
+Agent sessions usually run inside the `devenv` container (`devenv_run.sh` →
+`devenv/scripts/run.sh`; per-feature flags come from `devenv/scripts/opts.d/*.sh`).
+It is deliberately unprivileged (no `CAP_SYS_ADMIN`, no `--privileged`), which
+bounds what works inside:
+
+- Nested `podman run` / `podman build` CANNOT work. Rootful-in-rootless nesting
+  needs mount privileges the container lacks; every unprivileged workaround
+  dead-ends (single-mapped userns → devpts `gid=5` EINVAL; `--userns=auto` →
+  storage chown EINVAL; explicit `--uidmap/--gidmap` → crun cannot write
+  `gid_map`). Do not retry these; run container builds on the host instead.
+  Image-level operations (pull, list, host image store via
+  `additionalimagestores`) still work.
+- `/dev/net/tun` is absent → pasta/slirp networking is impossible in any nested
+  container; `/sys/fs/cgroup` is mounted read-only → nested cgroup creation
+  fails. The podman-in-podman config variant
+  (`tool/podman-static-dist/rc/resource/etc/containers/__additional_podman-in-podman/containers.conf`,
+  bind-mounted to `/root/.config/containers` by `opts.d/07-podman.sh`) sets
+  `cgroups = "disabled"` and `netns = "host"` for these, but the mount limit
+  above still blocks nested `run`.
+- Consequence: `mise up` / `mise install` for tools whose build is sandboxed in
+  a container (the `moon:` backend) must run on the host, not in devenv.
+
 #### Repository Summary
 
 ```
