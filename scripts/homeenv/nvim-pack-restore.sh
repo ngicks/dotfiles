@@ -7,7 +7,7 @@ dir=$(cd "$(dirname "$0")/../.." && pwd)
 # During install/upgrade this runs in a shell without mise activation, so
 # mise-managed tools nvim needs at restore time (tree-sitter for
 # nvim-treesitter parser builds) are not on PATH. Shims cover that.
-mise_shims="${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims"
+mise_shims="${MISE_SHIMS_DIR:-${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims}"
 if [ -d "$mise_shims" ]; then
   export PATH="$mise_shims:$PATH"
 fi

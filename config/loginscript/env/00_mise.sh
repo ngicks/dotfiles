@@ -34,7 +34,7 @@ if command -v mise > /dev/null 2>&1; then
   # shell, hook-env re-inserts install paths after inherited entries
   # it doesn't manage, which would otherwise leave shims in front of
   # them, shadowing the real install paths.
-  _mise_shims="${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims"
+  _mise_shims="${MISE_SHIMS_DIR:-${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims}"
   _mise_new_path=""
   _mise_rest="${PATH}:"
   while [ -n "$_mise_rest" ]; do

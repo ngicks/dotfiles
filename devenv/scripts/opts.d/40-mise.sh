@@ -20,5 +20,8 @@ if [[ -n "${ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS:-}" ]]; then
   printf "%s\n" "--env ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS=${ADDITIONAL_MISE_TRUSTED_CONFIG_PATHS}"
 fi
 printf "%s\n" "--mount type=bind,src=${MISE_CONFIG_DIR},dst=/root/.config/mise,ro"
+# The data dir is shared with the host, but shims encode the absolute path of
+# the mise binary that wrote them; keep the container's shims out of the mount.
+printf "%s\n" "--env MISE_SHIMS_DIR=/root/.local/share/mise/shims"
 printf "%s\n" "--env MISE_DATA_DIR=${MISE_DATA_DIR}"
 printf "%s\n" "--mount type=bind,src=${MISE_DATA_DIR},dst=${MISE_DATA_DIR}$(ro)"
