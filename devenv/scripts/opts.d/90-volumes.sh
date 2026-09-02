@@ -11,5 +11,6 @@ printf "%s\n" "--mount type=volume,src=codex-config,dst=/root/.codex"
 # SSD-backed volume; ensure-podman-volume.sh symlinks it under logs-ram.
 printf "%s\n" "--mount type=tmpfs,dst=/root/.codex/logs-ram,tmpfs-size=512m"
 printf "%s\n" "--mount type=volume,src=apm-config,dst=/root/.apm"
+printf "%s\n" "--mount type=volume,src=hf-token,dst=/root/.config/huggingface"
 printf "%s\n" "--mount type=volume,src=gh-config,dst=/root/.config/gh"
 printf "%s\n" "--mount type=volume,src=glab-config,dst=/root/.config/glab-cli"

@@ -17,6 +17,7 @@ volumes=(
   gemini-config
   codex-config
   apm-config
+  hf-token
   gh-config
   glab-config
 )
