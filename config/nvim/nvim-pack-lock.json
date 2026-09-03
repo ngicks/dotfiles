@@ -68,7 +68,7 @@
       "version": ">=0.0.0"
     },
     "indent-blankline.nvim": {
-      "rev": "d28a3f70721c79e3c5f6693057ae929f3d9c0a03",
+      "rev": "3b1ee1854c1067c34cad2423eb78e280d4069e01",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim",
       "version": ">=0.0.0"
     },
@@ -119,7 +119,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap": {
-      "rev": "9e848e09a697ee95302a3ef2dd43fd6eb709e570",
+      "rev": "c9a0738e45f1bd41d792a126941348dce661cf9b",
       "src": "https://github.com/mfussenegger/nvim-dap"
     },
     "nvim-dap-ui": {
