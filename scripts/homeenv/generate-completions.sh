@@ -30,6 +30,7 @@ specs=(
   "ruff|generate-shell-completion zsh"
   # moonbit
   "moon|shell-completion --shell zsh"
+  "bit|completion zsh"
 )
 
 # Resolve a tool to an executable absolute path.
