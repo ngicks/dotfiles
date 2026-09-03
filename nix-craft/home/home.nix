@@ -132,6 +132,7 @@ in
     git-credential-manager # Git Credential Manager (gcm)
     pass                   # Unix password store
     git-lfs                # Git Large File Storage
+    git-bug                # Distributed bug tracker embedded in git (refs/bugs)
 
     # Protobuf
     protobuf       # protoc compiler

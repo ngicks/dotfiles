@@ -19,8 +19,10 @@ mkdir -p "$out_dir"
 
 specs=(
   # cobra-backed (`<tool> completion zsh`)
+  "bd|completion zsh"
   "cmdman|completion zsh"
   "crabswarm|completion zsh"
+  "git-bug|completion zsh"
   "golangci-lint|completion zsh"
   "helm|completion zsh"
   "kubectl|completion zsh"

@@ -44,6 +44,10 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.5"
 ## mcp
 "npm:@upstash/context7-mcp" = "latest"
 
+# Issue tracking (git-bug is in nix: slow-moving, nixpkgs is current)
+## beads: git-native issue tracker for agents; Dolt-backed, syncs via refs/dolt/data
+"github:gastownhall/beads" = { version = "latest", version_prefix = "v", matching_regex = "^beads_.*_(linux|darwin|windows)_", bin = "bd" }
+
 # zenn
 "npm:zenn-cli" = "latest"
 
