@@ -68,6 +68,9 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.5"
 
 "ruff" = "latest"
 
+# Git hooks (jdx/hk, registry maps to aqua:jdx/hk)
+"hk" = "latest"
+
 # Helm
 "aqua:helm/chart-releaser" = "latest"
 "aqua:helm/chart-testing" = "latest"
