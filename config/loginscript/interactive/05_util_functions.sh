@@ -41,7 +41,8 @@ apm-bump() {
   (
     cd "${wt}" || exit 1
     apm install --update -t codex,claude --root .. &&
-      apm compile -t codex --root .. &&
+      apm compile -t codex &&
+      mv AGENTS.md .. &&
       cp ../apm.lock.yaml ./apm.lock.yaml
   )
 }
