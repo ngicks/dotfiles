@@ -4,8 +4,6 @@
 -- device. Refreshed on editor events and, since those alone proved too
 -- sparse in practice, on a periodic timer as well.
 
-local M = {}
-
 -- Refresh interval in milliseconds (override via $HOMEENV_PINENTRY_REFRESH_MS).
 local refresh_ms = tonumber(vim.env.HOMEENV_PINENTRY_REFRESH_MS) or 30000
 
@@ -58,7 +56,7 @@ local function update_zellij()
   vim.env.PINENTRY_USER_DATA = string.format("ZELLIJ_POPUP:%s:%s", zellij_path, session)
 end
 
-function M.update()
+local function update()
   if not enabled() then
     return
   end
@@ -71,12 +69,12 @@ end
 
 if enabled() then
   vim.api.nvim_create_autocmd({ "VimEnter", "VimResume", "FocusGained", "BufWritePost", "TermLeave" }, {
-    callback = M.update,
+    callback = update,
     desc = "Update PINENTRY_USER_DATA on focus gain, resume, file save, or terminal leave",
   })
 
   local timer = vim.uv.new_timer()
-  timer:start(refresh_ms, refresh_ms, vim.schedule_wrap(M.update))
+  timer:start(refresh_ms, refresh_ms, vim.schedule_wrap(update))
   vim.api.nvim_create_autocmd("VimLeavePre", {
     once = true,
     callback = function()
@@ -85,5 +83,3 @@ if enabled() then
     end,
   })
 end
-
-return M
