@@ -16,7 +16,11 @@ apm-bump() {
     return 1
   fi
 
-  rm -rf ./.agents ./.claude ./.codex
+  # I have removed those dirs because apm
+  # got confused and failed to edit settings.json, etc
+  # Now I'm trying to let it handle that.
+  # Turn on this line again if it's not capable
+  # rm -rf ./.agents ./.claude ./.codex
 
   if [ ! -e ./.bare ]; then
     apm install --update -t codex,claude &&
