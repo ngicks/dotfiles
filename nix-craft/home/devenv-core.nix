@@ -51,5 +51,17 @@
       pango
       systemdLibs # libudev
     ]));
+
+    # Playwright's chromium links fontconfig statically, so LD_LIBRARY_PATH
+    # cannot help it: it needs a fonts.conf plus real font files, and the
+    # from-scratch rootfs has no /etc/fonts. Referencing the derivation here
+    # also pulls the fonts into the image closure. CJK fonts are included
+    # because pages under test render CJK text.
+    home.sessionVariables.FONTCONFIG_FILE = pkgs.makeFontsConf {
+      fontDirectories = [
+        pkgs.dejavu_fonts
+        pkgs.noto-fonts-cjk-sans
+      ];
+    };
   };
 }
