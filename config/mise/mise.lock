@@ -201,7 +201,7 @@ version = "0.0.24"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.16"
+version = "0.0.17"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist"]]
@@ -293,7 +293,7 @@ version = "4.0.5"
 backend = "npm:@upstash/context7-mcp"
 
 [[tools."npm:opencode-ai"]]
-version = "1.18.28"
+version = "1.18.29"
 backend = "npm:opencode-ai"
 
 [[tools."npm:zenn-cli"]]
