@@ -10,9 +10,15 @@ pim() {
   popd
 }
 
-apm-bump() {
+# _apm-run NAME [APM_INSTALL_FLAGS...]
+# Shared body of apm-bump / apm-install. NAME is used as the error prefix,
+# the remaining args are passed through to `apm install`.
+_apm-run() {
+  local name=$1
+  shift
+
   if ! command -v git >/dev/null; then
-    echo "apm-bump: git not found" >&2
+    echo "${name}: git not found" >&2
     return 1
   fi
 
@@ -23,7 +29,7 @@ apm-bump() {
   # rm -rf ./.agents ./.claude ./.codex
 
   if [ ! -e ./.bare ]; then
-    apm install --update -t codex,claude &&
+    apm install "$@" -t codex,claude &&
       apm compile -t codex
     return $?
   fi
@@ -39,17 +45,25 @@ apm-bump() {
   elif [ -d ./master ]; then
     wt=./master
   else
-    echo "apm-bump: no worktree dir found (tried '${branch:-<none>}', main, master)" >&2
+    echo "${name}: no worktree dir found (tried '${branch:-<none>}', main, master)" >&2
     return 1
   fi
   (
     cd "${wt}" || exit 1
-    apm install --update -t codex,claude --root .. &&
+    apm install "$@" -t codex,claude --root .. &&
       cp ../apm.lock.yaml ./apm.lock.yaml &&
       cp ./apm.yml ../ &&
       cd .. &&
       apm compile -t codex
   )
+}
+
+apm-bump() {
+  _apm-run apm-bump --update
+}
+
+apm-install() {
+  _apm-run apm-install
 }
 
 devenv() {
