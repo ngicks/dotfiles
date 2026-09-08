@@ -5,6 +5,12 @@ let
     mkdir -p $out/bin
     ln -s ${pkgs.gotools}/bin/goimports $out/bin/goimports
   '';
+  # nixpkgs' typescript (7.x, the former typescript-go) installs the Go
+  # binary only as `tsc`; nvim-lspconfig's tsgo config spawns `tsgo --lsp`.
+  tsgo = pkgs.runCommand "tsgo" { } ''
+    mkdir -p $out/bin
+    ln -s ${pkgs.typescript}/bin/tsc $out/bin/tsgo
+  '';
 in
 {
   home.username = builtins.getEnv "USER";
@@ -161,10 +167,8 @@ in
     just-lsp
     pyright
     (lib.hiPrio rust-analyzer)    # wins over rustup's proxy binary
-    (lib.hiPrio typescript-go)    # ts7 toolchain; its tsc wins over the TypeScript fallback below
-    # kept until tsgo proves itself; remove once it does
-    typescript-language-server
-    typescript                    # peer dep for ts_ls
+    typescript                    # ts7 toolchain (tsc); tsgo below is the LSP entrypoint
+    tsgo
 
     # Formatters / Linters
     kdlfmt
