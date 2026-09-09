@@ -7,7 +7,13 @@ local function virtual_text_document(params)
     return
   end
 
-  local client = clients[1]
+  local client = require("ngcfg.func.ts_library").find_client(actual_path)
+  if not client and #clients == 1 then
+    client = clients[1]
+  end
+  if not client or client.name ~= "denols" then
+    return
+  end
   local method = "deno/virtualTextDocument"
   local req_params = { textDocument = { uri = actual_path } }
   local response = client:request_sync(method, req_params, 2000, 0)
@@ -42,7 +48,7 @@ return {
     local switch = require "ngcfg.func.switch_ts_ls"
     -- npm packages resolved by deno live in its cache as real files, unlike
     -- remote modules which arrive as deno:/ virtual documents above.
-    if switch.attach_origin_client_if_library("denols", bufnr) then
+    if require("ngcfg.func.ts_library").attach_if_library("denols", bufnr) then
       return
     end
     local root = switch.find_deno_root_dir(bufnr)

@@ -21,8 +21,9 @@ M.on_attach = function(_, bufnr)
   map("n", "<leader>ra", require "nvchad.lsp.renamer", opts "NvRenamer")
 end
 
--- disable semanticTokens
+-- Track library navigation and configure semantic tokens.
 M.on_init = function(client, _)
+  require("ngcfg.func.ts_library").track(client)
   if vim.fn.has "nvim-0.11" ~= 1 then
     if client.supports_method "textDocument/semanticTokens" then
       client.server_capabilities.semanticTokensProvider = nil
