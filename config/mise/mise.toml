@@ -15,7 +15,7 @@ minimum_release_age_excludes = [
   "go:github.com/ngicks/run-in-tmux-popup/cmd/zellij-popup-pinentry-curses",
   "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr",
   # codex needs updates for newer models
-  "npm:@openai/codex",
+  "aqua:openai/codex",
 ]
 
 trusted_config_paths = [
@@ -39,8 +39,8 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.5"
 [tools]
 # LLM stuff
 ## cli tools
-"npm:@openai/codex" = "latest"
-"npm:opencode-ai" = "latest"
+"aqua:openai/codex" = "latest"
+"aqua:anomalyco/opencode" = "latest"
 "github:microsoft/waza" = { version = "latest", version_prefix = "v", matching_regex = "^waza-(linux|darwin|windows)-", bin = "waza" }
 "pipx:apm-cli" = { version = "latest", install_env = { UV_PYTHON_PREFERENCE = "only-managed" } }
 "pipx:huggingface_hub" = { version = "latest", install_env = { UV_PYTHON_PREFERENCE = "only-managed" } }
