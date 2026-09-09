@@ -23,6 +23,9 @@ trusted_config_paths = [
   '~/.dotfiles/config/mise/mise.toml',
 ]
 
+[settings.github]
+credential_command = 'gh auth token --hostname "$MISE_CREDENTIAL_HOST"'
+
 [settings.pipx]
 uvx = true
 
