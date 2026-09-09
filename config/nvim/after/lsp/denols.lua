@@ -39,7 +39,13 @@ vim.api.nvim_create_autocmd({ "BufReadCmd" }, {
 
 return {
   root_dir = function(bufnr, on_dir)
-    local root = require("ngcfg.func.switch_ts_ls").find_deno_root_dir(bufnr)
+    local switch = require "ngcfg.func.switch_ts_ls"
+    -- npm packages resolved by deno live in its cache as real files, unlike
+    -- remote modules which arrive as deno:/ virtual documents above.
+    if switch.attach_origin_client_if_library("denols", bufnr) then
+      return
+    end
+    local root = switch.find_deno_root_dir(bufnr)
     if root ~= nil and root ~= "" then
       on_dir(root)
     end
