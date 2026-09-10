@@ -17,7 +17,19 @@ fi
 # podman volume is not ensured on this path, so the printed command may need a
 # real run first; opts.sh's mkdirs still happen.
 if [[ "${DEVENV_DRY_RUN:-}" == "1" ]]; then
-  printf "%s\n" "podman container run -it --rm --init ${container_opts//$'\n'/ } ${arg1} ${image} $*"
+  printf '%s \\\n' 'podman container run -it --rm --init'
+  while IFS= read -r opt; do
+    [[ -n "${opt}" ]] || continue
+    printf '  %s \\\n' "${opt}"
+  done <<< "${container_opts}"
+  if [[ -n "${arg1}" ]]; then
+    printf '  %s \\\n' "${arg1}"
+  fi
+  printf '  %q' "${image}"
+  for arg in "$@"; do
+    printf ' \\\n  %q' "${arg}"
+  done
+  printf '\n'
   exit 0
 fi
 
