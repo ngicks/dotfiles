@@ -2,33 +2,6 @@
 
 set -eCu
 
-ensure_podman_volume() {
-  local name=$1
-
-  if ! podman volume exists "${name}"; then
-    podman volume create "${name}"
-  fi
-}
-
-volumes=(
-  local-bin
-  claude-bin
-  claude-config
-  gemini-config
-  opencode-config
-  opencode-data
-  opencode-state
-  codex-config
-  apm-config
-  hf-token
-  gh-config
-  glab-config
-)
-
-for volume in "${volumes[@]}"; do
-  ensure_podman_volume "${volume}"
-done
-
 # codex offers no way to relocate <CODEX_HOME>/logs_2.sqlite, so route it into
 # the tmpfs that 90-volumes.sh mounts at logs-ram. The plain dir keeps the
 # link resolvable (on disk) in containers started without that mount.

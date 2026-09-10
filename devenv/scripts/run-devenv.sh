@@ -15,7 +15,7 @@ fi
 
 # DEVENV_DRY_RUN=1 prints the assembled command instead of executing it. The
 # podman volume is not ensured on this path, so the printed command may need a
-# real run (or ensure-podman-volume.sh) first; opts.sh's mkdirs still happen.
+# real run first; opts.sh's mkdirs still happen.
 if [[ "${DEVENV_DRY_RUN:-}" == "1" ]]; then
   printf "%s\n" "podman container run -it --rm --init ${container_opts//$'\n'/ } ${arg1} ${image} $*"
   exit 0
