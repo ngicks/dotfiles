@@ -15,6 +15,9 @@ volumes=(
   claude-bin
   claude-config
   gemini-config
+  opencode-config
+  opencode-data
+  opencode-state
   codex-config
   apm-config
   hf-token
