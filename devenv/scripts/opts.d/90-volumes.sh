@@ -2,13 +2,20 @@
 
 set -eCu
 
+existing_volumes=""
+if [[ "${DEVENV_DRY_RUN:-}" != "1" ]]; then
+  # TODO: Add --filter anonymous=false once Podman v6 is installed.
+  existing_volumes=$(podman volume ls -q)
+fi
+
 mount_volume() {
   local name=$1
   local destination=$2
 
   if [[ "${DEVENV_DRY_RUN:-}" != "1" ]]; then
-    if ! podman volume exists "${name}"; then
-      podman volume create "${name}" >&2
+    if [[ $'\n'"${existing_volumes}"$'\n' != *$'\n'"${name}"$'\n'* ]]; then
+      podman volume create --ignore "${name}" >&2
+      existing_volumes+=$'\n'"${name}"
     fi
   fi
 
