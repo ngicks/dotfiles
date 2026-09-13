@@ -22,11 +22,10 @@ _apm-run() {
     return 1
   fi
 
-  # I have removed those dirs because apm
-  # got confused and failed to edit settings.json, etc
-  # Now I'm trying to let it handle that.
-  # Turn on this line again if it's not capable
-  # rm -rf ./.agents ./.claude ./.codex
+  # It does not remove them when packages loose hook defs they have had in 
+  # older versions.
+  # Removing entire file solves this
+  rm -rf ./.agents ./.claude ./.codex
 
   if [ ! -e ./.bare ]; then
     apm install "$@" -t codex,claude &&
