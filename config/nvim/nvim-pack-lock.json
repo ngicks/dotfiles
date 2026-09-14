@@ -54,11 +54,11 @@
       "version": ">=0.0.0"
     },
     "friendly-snippets": {
-      "rev": "a5a73e586521fe5c12d751ad81a0db67649a94ed",
+      "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
-      "rev": "15f64c492a08f0840b81540c7d1de35737448086",
+      "rev": "a140afeb4d733cad3c96a56bf6db7e26853b6757",
       "src": "https://github.com/junegunn/fzf",
       "version": ">=0.0.0"
     },
@@ -119,7 +119,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap": {
-      "rev": "c9a0738e45f1bd41d792a126941348dce661cf9b",
+      "rev": "cfa2d58f4537aca6ca83e2de1a0d9f1491121264",
       "src": "https://github.com/mfussenegger/nvim-dap"
     },
     "nvim-dap-ui": {
@@ -164,7 +164,7 @@
       "version": ">=0.0.0"
     },
     "nvim-treesitter": {
-      "rev": "d4d59cb369da46b95699bd2200efbcffc6dadb3b",
+      "rev": "9a168f6357ed21c3a636e1727bc7d382abc451b8",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
