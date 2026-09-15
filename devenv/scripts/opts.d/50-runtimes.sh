@@ -33,8 +33,15 @@ printf "%s\n" "--mount type=bind,src=${DENO_DIR},dst=${DENO_DIR}"
 printf "%s\n" "--env DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT}"
 printf "%s\n" "--mount type=bind,src=${DENO_INSTALL_ROOT},dst=${DENO_INSTALL_ROOT}"
 
+# UV_HOME is a name local to this script; uv itself does not read it. uv
+# derives its python and tool dirs from XDG_DATA_HOME/HOME, which is /root in
+# the container, so without the explicit vars it never looks at the mount and
+# venvs created inside (project .venv, mise pipx tools) record
+# /root/.local/share/uv/python/..., a path the host does not have.
 printf "%s\n" "--env UV_HOME=${UV_HOME}"
 printf "%s\n" "--mount type=bind,src=${UV_HOME},dst=${UV_HOME}$(ro)"
+printf "%s\n" "--env UV_PYTHON_INSTALL_DIR=${UV_HOME}/python"
+printf "%s\n" "--env UV_TOOL_DIR=${UV_HOME}/tools"
 printf "%s\n" "--env UV_CACHE_DIR=${UV_CACHE_DIR}"
 
 printf "%s\n" "--env CARGO_HOME=${CARGO_HOME}"
