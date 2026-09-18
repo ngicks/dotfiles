@@ -16,28 +16,12 @@ commands:
         required: false
     stop_signal: SIGHUP
     tty: true
-  # Every agent is split into a server and a TUI client. Both halves run in the
-  # same container: each replica is its own podman container with a private
-  # network namespace and a fresh /tmp, so a server started elsewhere would be
-  # unreachable. That isolation also makes fixed socket paths and ports safe
-  # across replicas. The scripts below are one `-lc` argument; compose
-  # interpolates `$var` and `${var}` while loading the file, so shell variables
-  # are written as `$$var` to reach zsh intact.
   claude:
-    env:
-      - CRABSWARM_CLAUDE_CHANNEL=1
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --env CRABSWARM_CLAUDE_CHANNEL
+      - ""
       - -lc
-      # `claude --bg` returns once its own supervisor owns the session, so no
-      # cmdman supervision is needed. It prints
-      # "backgrounded · <id> · <name>" (possibly after a "Starting background
-      # service" line); the id is the third field.
-      - |
-        id=$(claude --bg 2>&1 | tee /dev/stderr | awk '/^backgrounded/{print $3}') \
-          && [ -n "$$id" ] \
-          && claude attach "$$id"
+      - claude
     env_file:
       - path: .devenv.env
         required: false
@@ -47,6 +31,13 @@ commands:
         required: false
     scale: 3
     tty: true
+  # codex and opencode are split into a server and a TUI client. Both halves
+  # run in the same container: each replica is its own podman container with a
+  # private network namespace and a fresh /tmp, so a server started elsewhere
+  # would be unreachable. That isolation also makes fixed socket paths and ports
+  # safe across replicas. The scripts below are one `-lc` argument; compose
+  # interpolates `$var` and `${var}` while loading the file, so shell variables
+  # are written as `$$var` to reach zsh intact.
   codex:
     env:
       - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-app-server.sock
