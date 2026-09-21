@@ -48,7 +48,7 @@ commands:
       # Bound readiness checks so a failed server cannot leave the client waiting.
       - |
         cmdman run --inject-env=false --tty --rm --name codex-server -- codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER" \
-          && crabswarm util poll wait "$$CRABSWARM_CODEX_APP_SERVER" --interval 200ms --retries 50 \
+          && crabswarm util poll wait "$$CRABSWARM_CODEX_APP_SERVER" --interval 200ms --retries 500 \
           && codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
     env:
       - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-app-server.sock
@@ -68,7 +68,7 @@ commands:
       - -lc
       - |
         cmdman run --inject-env=false --tty --rm --name opencode-server -- opencode serve --port 4096 \
-          && crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 50 \
+          && crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 500 \
           && opencode attach "$$CRABSWARM_OPENCODE_SERVER"
     env:
       - CRABSWARM_OPENCODE_SERVER=http://127.0.0.1:4096
