@@ -118,43 +118,43 @@ url = "https://github.com/helm/chart-testing/releases/download/v3.14.0/chart-tes
 url_api = "https://api.github.com/repos/helm/chart-testing/releases/assets/301945177"
 
 [[tools."aqua:openai/codex"]]
-version = "0.155.0"
+version = "0.155.1"
 backend = "aqua:openai/codex"
 
 [tools."aqua:openai/codex"."platforms.linux-arm64"]
-checksum = "sha256:28110b360a635fca2c4501036a8efbe0da5b7fe66153ae1f2f944d3fb4c7b5d2"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346723"
+checksum = "sha256:71857dbc9bea3613410e8a69cfb46b07c0402d6d20fec18843dbaffd757634bd"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353562"
 
 [tools."aqua:openai/codex"."platforms.linux-arm64-musl"]
-checksum = "sha256:28110b360a635fca2c4501036a8efbe0da5b7fe66153ae1f2f944d3fb4c7b5d2"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346723"
+checksum = "sha256:71857dbc9bea3613410e8a69cfb46b07c0402d6d20fec18843dbaffd757634bd"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353562"
 
 [tools."aqua:openai/codex"."platforms.linux-x64"]
-checksum = "sha256:135bfe1af2d8d5954c12f03bee2cf8b40dffb06f76bb0ec3bd6105de5357e009"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346636"
+checksum = "sha256:a65b895c6ac1a73629bbe4b864640c86133e94a43b4d67b3103044e1a306d5a2"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353456"
 
 [tools."aqua:openai/codex"."platforms.linux-x64-musl"]
-checksum = "sha256:135bfe1af2d8d5954c12f03bee2cf8b40dffb06f76bb0ec3bd6105de5357e009"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346636"
+checksum = "sha256:a65b895c6ac1a73629bbe4b864640c86133e94a43b4d67b3103044e1a306d5a2"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353456"
 
 [tools."aqua:openai/codex"."platforms.macos-arm64"]
-checksum = "sha256:b1411ec00ac410467e05cf8fb5b063cf83632613530201cd4724ef8dd0e9c33f"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346771"
+checksum = "sha256:e6e08717da9e35b72332eff753527fe79a9ae876081033c5c6820a8e5f58b943"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353582"
 
 [tools."aqua:openai/codex"."platforms.macos-x64"]
-checksum = "sha256:88df3120417823949cdcdc131dc0c3bbebab197a21fdb5595f53fed227e024ec"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346683"
+checksum = "sha256:be752aebb2ac022c5bfed3fa14f46943d11ddb36a950b553b058794aba22496a"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353601"
 
 [tools."aqua:openai/codex"."platforms.windows-x64"]
-checksum = "sha256:001e355db62e27494cc22e4b21bf9c9fa5e2fa353eae5ddbb7c98be1d7cf2a55"
-url = "https://github.com/openai/codex/releases/download/rust-v0.155.0/codex-package-x86_64-pc-windows-msvc.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/571346655"
+checksum = "sha256:f45c273b7835c192aaa9cef5b93aa9528966ac7301444632de80a565a9bf14e8"
+url = "https://github.com/openai/codex/releases/download/rust-v0.155.1/codex-package-x86_64-pc-windows-msvc.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/573353476"
 
 [[tools."cargo:tree-sitter-cli"]]
 version = "0.27.0"
@@ -275,11 +275,11 @@ version = "0.0.12"
 backend = "go:github.com/nametake/golangci-lint-langserver"
 
 [[tools."go:github.com/ngicks/cmdman/cmd/cmdman"]]
-version = "0.0.25"
+version = "0.0.26"
 backend = "go:github.com/ngicks/cmdman/cmd/cmdman"
 
 [[tools."go:github.com/ngicks/crabswarm/cmd/crabswarm"]]
-version = "0.0.20"
+version = "0.0.21"
 backend = "go:github.com/ngicks/crabswarm/cmd/crabswarm"
 
 [[tools."go:github.com/ngicks/dotfiles-tool/podman-static-dist/cmd/podman-static-dist"]]
@@ -375,7 +375,7 @@ version = "0.29.0"
 backend = "pipx:apm-cli"
 
 [[tools."pipx:huggingface_hub"]]
-version = "1.31.0"
+version = "1.32.0"
 backend = "pipx:huggingface_hub"
 
 [[tools.ruff]]
