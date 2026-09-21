@@ -19,9 +19,11 @@ commands:
   claude:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - ""
+      - --env CRABSWARM_CLAUDE_CHANNEL
       - -lc
-      - claude
+      - claude --dangerously-load-development-channels server:crabswarm-mcp
+    env:
+      - CRABSWARM_CLAUDE_CHANNEL=1
     env_file:
       - path: .devenv.env
         required: false
@@ -39,19 +41,17 @@ commands:
   # interpolates `$var` and `${var}` while loading the file, so shell variables
   # are written as `$$var` to reach zsh intact.
   codex:
-    env:
-      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-app-server.sock
     args:
       - $HOME/.dotfiles/devenv_run.sh
       - --env CRABSWARM_CODEX_APP_SERVER
       - -lc
-      # The readiness poll is bounded so a server that fails to start surfaces
-      # as the client's own connect error instead of a silent hang.
+      # Bound readiness checks so a failed server cannot leave the client waiting.
       - |
-        sock=$${CRABSWARM_CODEX_APP_SERVER#unix://}
-        cmdman run --tty --rm --name codex-server -- codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER" \
-          && for i in {1..50}; do [ -S "$$sock" ] && break; sleep 0.2; done \
+        cmdman run --inject-env=false --tty --rm --name codex-server -- codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER" \
+          && crabswarm util poll wait "$$CRABSWARM_CODEX_APP_SERVER" --interval 200ms --retries 50 \
           && codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
+    env:
+      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-app-server.sock
     env_file:
       - path: .devenv.env
         required: false
@@ -64,14 +64,14 @@ commands:
   opencode:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - ""
+      - --env CRABSWARM_OPENCODE_SERVER
       - -lc
-      # --max-time keeps the poll from blocking on a half-started server.
       - |
-        url=http://127.0.0.1:4096
-        cmdman run --tty --rm --name opencode-server -- opencode serve --port 4096 \
-          && for i in {1..50}; do curl -s -o /dev/null --max-time 2 "$$url/global/health" && break; sleep 0.2; done \
-          && opencode attach "$$url"
+        cmdman run --inject-env=false --tty --rm --name opencode-server -- opencode serve --port 4096 \
+          && crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 50 \
+          && opencode attach "$$CRABSWARM_OPENCODE_SERVER"
+    env:
+      - CRABSWARM_OPENCODE_SERVER=http://127.0.0.1:4096
     env_file:
       - path: .devenv.env
         required: false
