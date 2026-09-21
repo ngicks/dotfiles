@@ -2,7 +2,8 @@
 # Merge settings.base.json into Claude Code's live settings.json
 # ($CLAUDE_CONFIG_DIR/settings.json). Run manually. The live file is not
 # symlinked into the repo: Claude Code rewrites it at runtime and everything
-# outside the base section stays machine-local.
+# outside the base section stays machine-local. The previous live file is
+# kept as settings.json.bak so a bad merge can be reverted.
 
 set -e
 
@@ -15,6 +16,7 @@ mkdir -p "$dir"
 
 merged=$(jq -s '.[0] * .[1]' "$live" "$base")
 printf '%s\n' "$merged" > "$live.tmp.$$"
+cp -p "$live" "$live.bak"
 mv "$live.tmp.$$" "$live"
 
 echo "merged $base into $live"
