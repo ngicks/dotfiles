@@ -25,6 +25,11 @@ mount_volume() {
 mount_volume local-bin /root/.local/bin
 mount_volume claude-bin /root/.local/share/claude
 mount_volume claude-config /root/.config/claude
+# claude treats CLAUDE_CONFIG_DIR as a state dir: every session writes its
+# runtime data to a pid-keyed file under sessions/. Containers share the
+# claude-config volume but have separate pid namespaces, so pids repeat across
+# them and the files collide. Keep sessions/ private to each container.
+printf "%s\n" "--mount type=tmpfs,dst=/root/.config/claude/sessions,tmpfs-size=64m"
 mount_volume gemini-config /root/.gemini
 mount_volume opencode-config /root/.config/opencode
 mount_volume opencode-data /root/.local/share/opencode
