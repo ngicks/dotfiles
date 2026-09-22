@@ -19,11 +19,12 @@ commands:
   claude:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --env CRABSWARM_CLAUDE_CHANNEL
+      - --env CRABSWARM_CLAUDE_CHANNEL --env FAKECHAT_PORT
       - -lc
-      - claude --dangerously-load-development-channels server:crabswarm-mcp
+      - claude --channels plugin:fakechat@claude-plugins-official
     env:
       - CRABSWARM_CLAUDE_CHANNEL=1
+      - FAKECHAT_PORT=9943
     env_file:
       - path: .devenv.env
         required: false
