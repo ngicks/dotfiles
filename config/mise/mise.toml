@@ -45,7 +45,6 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.5"
 "pipx:apm-cli" = { version = "0.29.0", install_env = { UV_PYTHON_PREFERENCE = "only-managed" } }
 "pipx:huggingface_hub" = { version = "latest", install_env = { UV_PYTHON_PREFERENCE = "only-managed" } }
 ## mcp
-"npm:@upstash/context7-mcp" = "latest"
 
 # Issue tracking (git-bug is in nix: slow-moving, nixpkgs is current)
 ## beads: git-native issue tracker for agents; Dolt-backed, syncs via refs/dolt/data
