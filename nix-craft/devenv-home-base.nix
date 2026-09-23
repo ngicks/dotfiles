@@ -71,6 +71,9 @@ let
             "$out/root/.nix-profile"
         cp -a ${containerHome.activationPackage}/home-files/. \
             "$out/root/"
+        # `cp -a dir/.` also copies the store directory modes (0555) onto
+        # $out/root and its subdirectories; zcompile below must write there.
+        chmod -R u+w "$out/root"
 
         # Pre-compile the zsh startup files, the same step
         # scripts/homeenv/zsh-compile-rc.sh runs on the host after a switch.
