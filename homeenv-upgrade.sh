@@ -2,9 +2,9 @@
 
 set -e
 
-dir=$(dirname $0)
+dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
-pushd $dir
+pushd "$dir"
   echo ""
   echo "system package manager update"
   echo ""
