@@ -18,6 +18,10 @@ let
         modules = [
             ./home/home.nix
             {
+                # Empty on purpose: with the real inputs home.nix would link
+                # the flake input trees and the home-manager CLI into the
+                # image and bloat it.
+                _module.args.inputs = { };
                 home.username = lib.mkForce "root";
                 home.homeDirectory = lib.mkForce "/root";
                 # Core packages for the from-scratch rootfs come from

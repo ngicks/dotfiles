@@ -13,7 +13,7 @@
         };
     };
 
-    outputs = { self, nixpkgs, home-manager, nix2container, ... }:
+    outputs = inputs@{ self, nixpkgs, home-manager, nix2container, ... }:
     let
         supportedSystems = [
             "x86_64-linux"
@@ -57,6 +57,8 @@
             home-manager.lib.homeManagerConfiguration {
                 pkgs = pkgsFor builtins.currentSystem;
                 modules = [ ./home/home.nix ];
+                # home.nix links the inputs into the generation so GC keeps them.
+                extraSpecialArgs = { inherit inputs; };
             };
     };
 }

@@ -1,6 +1,27 @@
-{ config, pkgs, ... }:
+# `inputs` arrives through extraSpecialArgs from the host config in flake.nix.
+# devenv-home-base.nix passes an empty set, so nothing gets rooted inside the
+# container image.
+{ config, pkgs, inputs, ... }:
 
 let
+  homeManagerCli = pkgs.lib.optional (inputs ? home-manager)
+    inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.home-manager;
+  # Every locked input, including the ones reached through other inputs.
+  # Names stay flat: a nested name would put a link under a directory that is
+  # itself a symlink into the store, which home-manager's file install
+  # rejects. `follows` edges resolve to the same store path and are dropped.
+  flakeInputPaths =
+    let
+      # Breadth-first, so a top-level input keeps its own name.
+      walk = prefix: attrs:
+        pkgs.lib.mapAttrsToList (name: input: { name = "${prefix}${name}"; path = input.outPath; }) attrs
+        ++ pkgs.lib.concatLists (pkgs.lib.mapAttrsToList
+          (name: input: walk "${prefix}${name}--" (input.inputs or { })) attrs);
+      addUnique = acc: e:
+        if builtins.elem e.path (builtins.attrValues acc) then acc
+        else acc // { ${e.name} = e.path; };
+    in
+    builtins.foldl' addUnique { } (walk "" (removeAttrs inputs [ "self" ]));
   goimports = pkgs.runCommand "goimports" { } ''
     mkdir -p $out/bin
     ln -s ${pkgs.gotools}/bin/goimports $out/bin/goimports
@@ -58,6 +79,15 @@ in
     recursive = true;
   };
 
+  # Neither the fetched flake input trees nor the CLI behind
+  # `nix run .#home-manager` are GC roots on their own, so
+  # `nix-collect-garbage` drops them and the next switch downloads them again.
+  # Linking them into the generation puts them in the profile's closure, which
+  # is rooted. This is not extra disk usage: they sit in the store anyway.
+  xdg.dataFile = pkgs.lib.mapAttrs'
+    (name: path: pkgs.lib.nameValuePair "nix-flake-inputs/${name}" { source = path; })
+    flakeInputPaths;
+
   # Quadlet units live here, NOT in ~/.config/containers: the static podman
   # installer (builder/podman-static-dist/install.sh) replaces ~/.config/containers with
   # a symlink to its bundled etc/containers and aborts if it is a real directory.
@@ -94,7 +124,8 @@ in
     };
   };
 
-  home.packages = with pkgs; [
+  # Same derivation as `nix run .#home-manager`; installing it keeps it rooted.
+  home.packages = homeManagerCli ++ (with pkgs; [
     # core runtimes
     nodejs
     pnpm           # JS package manager (frontend dep management)
@@ -249,5 +280,5 @@ in
     # Not gonna use Vagrant because it is HashiCorp's (not an OSS).
     lima           # limactl: QEMU-backed Linux VMs, auto file-share + port-forward
     incus          # LXD fork: system containers + QEMU VMs (needs incusd daemon)
-  ];
+  ]);
 }
