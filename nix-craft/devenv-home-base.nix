@@ -72,6 +72,24 @@ let
         cp -a ${containerHome.activationPackage}/home-files/. \
             "$out/root/"
 
+        # Pre-compile the zsh startup files, the same step
+        # scripts/homeenv/zsh-compile-rc.sh runs on the host after a switch.
+        # The .zwc must sit beside the path zsh sources (the /root symlinks),
+        # not beside the store target. Store normalization gives the sources
+        # and the .zwc the same mtime, which zsh accepts as "not older".
+        compile_zsh() {
+            ${pkgs.zsh}/bin/zsh -fc 'zcompile -- "$1"' -- "$1"
+        }
+        for f in .zshenv .zprofile .zshrc .zlogin .zlogout; do
+            if [ -f "$out/root/$f" ]; then
+                compile_zsh "$out/root/$f"
+            fi
+        done
+        if [ -d "$out/root/.config/loginscript" ]; then
+            find -L "$out/root/.config/loginscript" -type f -name '*.sh' -print0 \
+                | while IFS= read -r -d "" f; do compile_zsh "$f"; done
+        fi
+
         cat > "$out/etc/passwd" <<'EOF'
         root:x:0:0:root:/root:/root/.nix-profile/bin/zsh
         EOF
