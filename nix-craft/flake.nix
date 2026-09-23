@@ -27,9 +27,7 @@
         pkgsFor = system: import nixpkgs {
             inherit system;
             config.allowUnfreePredicate = pkg:
-                builtins.elem (nixpkgs.lib.getName pkg) [
-                    "zsh-abbr"
-                ];
+                builtins.elem (nixpkgs.lib.getName pkg) [ ];
         };
 
         mkDevenvHomeBase = system: import ./devenv-home-base.nix {

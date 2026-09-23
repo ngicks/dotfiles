@@ -40,3 +40,11 @@ safe_hook_pair() {
 no_proxy() {
     unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy
 }
+
+homeup() {
+    "$HOME/.dotfiles/homeenv-upgrade.sh" "$@"
+}
+
+homesync() {
+    "$HOME/.dotfiles/homeenv-install.sh" "$@"
+}
