@@ -37,6 +37,42 @@ All other prerequisites are installed via `./homeenv-install.sh` via `./scripts/
 
 ## Install Dotfiles
 
+### Install zsh and make it the login shell
+
+The shell config is written for zsh. `./homeenv-install.sh` installs zsh through the system package manager, but it does not change the login shell.
+Do that once by hand, and point it at the system zsh, not the one under `~/.nix-profile`.
+The nix path is not listed in `/etc/shells`, and a login shell that lives inside a nix profile breaks whenever the profile is rebuilt or nix is unavailable.
+The system zsh reads the same `~/.zshenv` / `~/.zprofile` / `~/.zshrc` that home-manager writes, so nothing is lost.
+
+Install zsh if it is missing:
+
+```
+# Debian / Ubuntu
+sudo apt install zsh
+# Fedora / RHEL family
+sudo dnf install zsh
+# Arch
+sudo pacman -S zsh
+# macOS ships zsh as the default shell already
+```
+
+Change the login shell to the system zsh:
+
+```
+zsh_path="$(command -v zsh)"          # expect /usr/bin/zsh or /bin/zsh
+grep -qx "$zsh_path" /etc/shells || echo "$zsh_path" | sudo tee -a /etc/shells
+chsh -s "$zsh_path"
+```
+
+Log out and back in for the change to apply. On WSL, close the terminal and open a new one; `wsl --shutdown` from Windows is not required.
+
+Confirm with:
+
+```
+echo "$SHELL"   # the system zsh path
+zsh --version
+```
+
 ### Install
 
 ```
