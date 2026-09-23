@@ -35,7 +35,7 @@ fi
 
 "${script_dir}/ensure-podman-volume.sh"
 
-podman container run -it --rm --init \
+exec podman container run -it --rm --init \
   ${container_opts} \
   ${arg1} \
   "${image}" \

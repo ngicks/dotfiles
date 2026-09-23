@@ -18,4 +18,4 @@ if [ "$#" -ge 1 ]; then
   shift
 fi
 
-DEVENV_READONLY=1 $runner "${mount_opt} --workdir $(pwd) ${first_arg}" "$@"
+DEVENV_READONLY=1 exec $runner "${mount_opt} --workdir $(pwd) ${first_arg}" "$@"
