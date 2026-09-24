@@ -16,7 +16,30 @@ function fzf-select-history() {
 zle -N fzf-select-history
 bindkey '^r' fzf-select-history
 
-eval "$(zoxide init zsh)"
+# `zoxide init zsh` prints the same script for a given binary, so it is cached
+# under the binary's resolved path: a nix store or mise install path changes
+# on upgrade and invalidates the cache without any mtime check (nix store
+# files carry a 1970 mtime). Sourced at top level because the script assigns
+# globals such as precmd_functions.
+__zoxide_bin="${commands[zoxide]:A}"
+if [[ -n "$__zoxide_bin" ]]; then
+  __zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zoxide-init/${__zoxide_bin//\//%}.zsh"
+  if [[ ! -r "$__zoxide_cache" ]]; then
+    mkdir -p "${__zoxide_cache:h}" 2>/dev/null
+    rm -f "${__zoxide_cache:h}"/*.zsh(N) 2>/dev/null
+    if ! "$__zoxide_bin" init zsh >| "$__zoxide_cache.$$" 2>/dev/null \
+      || ! mv -f "$__zoxide_cache.$$" "$__zoxide_cache" 2>/dev/null; then
+      rm -f "$__zoxide_cache.$$" 2>/dev/null
+      __zoxide_cache=
+    fi
+  fi
+  if [[ -n "$__zoxide_cache" ]]; then
+    . "$__zoxide_cache"
+  else
+    eval "$(zoxide init zsh)"
+  fi
+fi
+unset __zoxide_bin __zoxide_cache
 
 function fzf-zoxide() {
   local selected_dir=$(zoxide query --list | fzf --reverse)
