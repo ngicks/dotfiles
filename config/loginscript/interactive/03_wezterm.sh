@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Took from https://github.com/wezterm/wezterm/blob/3715c8744def1e9bedb038e5ace1d5dfb76e8d3b/assets/shell-integration/wezterm.sh
+# Modified locally: tmux-aware OSC 7, env_* user vars, hook dedup via
+# safe_hook_pair, and fork-free user vars under zsh. Diff against upstream
+# before updating.
 
 # shellcheck shell=bash
 
@@ -443,8 +446,39 @@ fi
 # This function emits an OSC 1337 sequence to set a user var
 # associated with the current terminal pane.
 # It requires the `base64` utility to be available in the path.
+# Pure-zsh base64 into $REPLY. User vars are set on every prompt and command,
+# and piping each value through the base64 binary cost a subshell plus a fork
+# per var.
+__wezterm_b64() {
+  emulate -L zsh
+  # Index and measure bytes, not characters, so non-ASCII input encodes as
+  # its UTF-8 bytes like base64(1) does.
+  setopt no_multibyte
+  local tbl='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  local s=$1 out= c
+  local -i i n=${#s} v rem
+  for (( i = 1; i <= n; i += 3 )); do
+    c=${s[i]}; (( v = (#c & 255) << 16 ))
+    if (( i + 1 <= n )); then c=${s[i+1]}; (( v |= (#c & 255) << 8 )); fi
+    if (( i + 2 <= n )); then c=${s[i+2]}; (( v |= #c & 255 )); fi
+    out+=${tbl[(v >> 18) + 1]}${tbl[((v >> 12) & 63) + 1]}
+    (( rem = n - i + 1 ))
+    if (( rem > 1 )); then out+=${tbl[((v >> 6) & 63) + 1]}; else out+='='; fi
+    if (( rem > 2 )); then out+=${tbl[(v & 63) + 1]}; else out+='='; fi
+  done
+  REPLY=$out
+}
+
 __wezterm_set_user_var() {
-  if hash base64 2>/dev/null ; then
+  if [[ -n "${ZSH_NAME-}" ]] ; then
+    local REPLY
+    __wezterm_b64 "$2"
+    if [[ -z "${TMUX-}" ]] ; then
+      printf "\033]1337;SetUserVar=%s=%s\007" "$1" "$REPLY"
+    else
+      printf "\033Ptmux;\033\033]1337;SetUserVar=%s=%s\007\033\\" "$1" "$REPLY"
+    fi
+  elif hash base64 2>/dev/null ; then
     if [[ -z "${TMUX-}" ]] ; then
       printf "\033]1337;SetUserVar=%s=%s\007" "$1" `echo -n "$2" | base64`
     else
@@ -521,7 +555,14 @@ function __wezterm_semantic_preexec() {
 
 __wezterm_user_vars_precmd() {
   __wezterm_set_user_var "WEZTERM_PROG" ""
-  __wezterm_set_user_var "WEZTERM_USER" "$(id -un)"
+  # These are re-sent on every prompt although they rarely change: a nested
+  # shell (e.g. over ssh) overwrites them and does not restore them on exit.
+  # zsh's $USERNAME and $HOST avoid the id/cat forks.
+  if [[ -n "${ZSH_NAME-}" ]] ; then
+    __wezterm_set_user_var "WEZTERM_USER" "${USERNAME}"
+  else
+    __wezterm_set_user_var "WEZTERM_USER" "$(id -un)"
+  fi
 
   # Indicate whether this pane is running inside tmux or not
   if [[ -n "${TMUX-}" ]] ; then
@@ -533,7 +574,9 @@ __wezterm_user_vars_precmd() {
   # You may set WEZTERM_HOSTNAME to a name you want to use instead
   # of calling out to the hostname executable on every prompt print.
 if [[ -z "${WEZTERM_HOSTNAME}" ]]; then
-  if [[ -r /proc/sys/kernel/hostname ]]; then
+  if [[ -n "${ZSH_NAME-}" ]]; then
+    __wezterm_set_user_var "WEZTERM_HOST" "${HOST}"
+  elif [[ -r /proc/sys/kernel/hostname ]]; then
     __wezterm_set_user_var "WEZTERM_HOST" "$(cat /proc/sys/kernel/hostname)"
   elif hash hostname 2>/dev/null; then
     __wezterm_set_user_var "WEZTERM_HOST" "$(hostname)"
