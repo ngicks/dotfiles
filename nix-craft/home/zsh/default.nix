@@ -111,6 +111,29 @@ let
     ${makeLoader "env"}
     ${envLoading}
     ${makeLoader "env-post"}
+
+    # Set last so a load that fails midway does not mark children as loaded.
+    export __LOGINSCRIPT_ENV_LOADED=1
+  '';
+
+  # A non-interactive child of a shell that already ran loadEnv inherits every
+  # exported variable, so re-running loadEnv only repeats the forks (mise
+  # activate, gpg, ...). Two things do not carry over through the environment:
+  # - mise's tool paths follow the cwd, and the child may start in a different
+  #   directory than the one the parent last resolved. `mise hook-env` reuses
+  #   the inherited __MISE_* session state and is far cheaper than activation.
+  # - hook-env prepends install dirs, so the override dir is moved back to the
+  #   front afterwards.
+  # Interactive shells still run loadEnv because they need the hooks and
+  # functions that loadEnv defines.
+  inheritedEnv = ''
+    if (( $+commands[mise] )); then
+      eval "$(mise hook-env -s zsh)"
+    fi
+    local override_script="''${XDG_CONFIG_HOME:-$HOME/.config}/loginscript/env/99_override.sh"
+    if [[ -f "$override_script" ]]; then
+      . "$override_script"
+    fi
   '';
 in
 {
@@ -125,7 +148,11 @@ in
       # before mise is on PATH. Non-login shells (ssh host "cmd", zsh -c) never
       # read .zprofile, so they must load here.
       if [[ ! -o login ]]; then
-        ${loadEnv}
+        if [[ ! -o interactive && -n "''${__LOGINSCRIPT_ENV_LOADED:-}" ]]; then
+          ${inheritedEnv}
+        else
+          ${loadEnv}
+        fi
       fi
     '';
 
