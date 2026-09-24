@@ -1,5 +1,5 @@
 __update_pane_title() {
-  printf '\033]2;%s\033\\' "$(uname -n)"
+  printf '\033]2;%s\033\\' "${HOST}"
 }
 
 if [[ -z ${NVIM:-} ]]; then

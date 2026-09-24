@@ -7,18 +7,27 @@ if [[ -z "${ZSH_NAME:-}" ]]; then
   return 0
 fi
 
-__prompt_host="$(uname -n)"
+__prompt_host="${HOST}"
 
-# sha256sum is GNU-only; fall back so this stays portable to darwin and
-# minimal environments. cksum prints decimal, so reshape it into hex.
-if (( $+commands[sha256sum] )); then
-  __prompt_hash="$(printf '%s' "$__prompt_host" | sha256sum)"
-elif (( $+commands[shasum] )); then
-  __prompt_hash="$(printf '%s' "$__prompt_host" | shasum -a 256)"
-else
-  __prompt_hash="$(printf '%08x' "$(printf '%s' "$__prompt_host" | cksum | cut -d' ' -f1)")"
+# The hash only depends on the hostname, so it is cached per host to keep the
+# hashing pipeline off every shell start.
+__prompt_hash_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/prompt-host-hash-${__prompt_host}"
+__prompt_hash=
+[[ -r "$__prompt_hash_cache" ]] && read -r __prompt_hash < "$__prompt_hash_cache"
+if [[ ${#__prompt_hash} -lt 6 || "$__prompt_hash" == *[^0-9a-f]* ]]; then
+  # sha256sum is GNU-only; fall back so this stays portable to darwin and
+  # minimal environments. cksum prints decimal, so reshape it into hex.
+  if (( $+commands[sha256sum] )); then
+    __prompt_hash="$(printf '%s' "$__prompt_host" | sha256sum)"
+  elif (( $+commands[shasum] )); then
+    __prompt_hash="$(printf '%s' "$__prompt_host" | shasum -a 256)"
+  else
+    __prompt_hash="$(printf '%08x' "$(printf '%s' "$__prompt_host" | cksum | cut -d' ' -f1)")"
+  fi
+  __prompt_hash="${__prompt_hash%% *}"
+  mkdir -p "${__prompt_hash_cache:h}" 2>/dev/null
+  printf '%s\n' "$__prompt_hash" > "$__prompt_hash_cache" 2>/dev/null
 fi
-__prompt_hash="${__prompt_hash%% *}"
 
 if [ "${#__prompt_host}" -gt 18 ]; then
   __prompt_host="${__prompt_host[1,15]}..."
@@ -72,4 +81,4 @@ PROMPT="$__prompt_ok"
 
 # __prompt_ok/__prompt_fail_pre/__prompt_fail_post/__prompt_ran stay: the
 # precmd hook reads them on every prompt.
-unset __prompt_host __prompt_hash __prompt_r __prompt_g __prompt_b __prompt_fg __prompt_bg __prompt_sep __prompt_shade __prompt_err __prompt_line
+unset __prompt_host __prompt_hash __prompt_hash_cache __prompt_r __prompt_g __prompt_b __prompt_fg __prompt_bg __prompt_sep __prompt_shade __prompt_err __prompt_line
