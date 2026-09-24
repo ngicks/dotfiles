@@ -1,3 +1,9 @@
+# zsh/datetime and zsh/stat replace the date, uname and stat forks that ran on
+# every login shell. zstat is loaded under its builtin name only, so it does
+# not shadow an external `stat`.
+zmodload zsh/datetime 2>/dev/null
+zmodload -F zsh/stat b:zstat 2>/dev/null
+
 dotfiles_should_update() {
   local MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.update_daily"
   local NO_AUTO_UPDATE_MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/.no_update_daily"
@@ -11,23 +17,12 @@ dotfiles_should_update() {
     return 0
   fi
 
-  local CURRENT_TIME
-  CURRENT_TIME=$(date +%s)
+  local -a FILE_TIME
+  if ! zstat -A FILE_TIME +mtime -- "$MARKER_FILE" 2>/dev/null; then
+    FILE_TIME=(0)
+  fi
 
-  local FILE_TIME
-  case "$(uname -s)" in
-    Linux*)
-      FILE_TIME=$(stat -c %Y "$MARKER_FILE" 2>/dev/null || echo 0)
-      ;;
-    Darwin*)
-      FILE_TIME=$(stat -f %m "$MARKER_FILE" 2>/dev/null || echo 0)
-      ;;
-    *)
-      return 0
-      ;;
-  esac
-
-  local TIME_DIFF=$((CURRENT_TIME - FILE_TIME))
+  local TIME_DIFF=$((EPOCHSECONDS - FILE_TIME[1]))
 
   if [[ $TIME_DIFF -gt $INTERVAL ]]; then
     return 0
@@ -51,31 +46,13 @@ dotfiles_next_update_time() {
     return
   fi
 
-  local FILE_TIME
-  case "$(uname -s)" in
-    Linux*)
-      FILE_TIME=$(stat -c %Y "$MARKER_FILE" 2>/dev/null || echo 0)
-      ;;
-    Darwin*)
-      FILE_TIME=$(stat -f %m "$MARKER_FILE" 2>/dev/null || echo 0)
-      ;;
-    *)
-      printf "unknown (unsupported OS)"
-      return
-      ;;
-  esac
+  local -a FILE_TIME
+  if ! zstat -A FILE_TIME +mtime -- "$MARKER_FILE" 2>/dev/null; then
+    FILE_TIME=(0)
+  fi
 
-  local NEXT_TIME=$((FILE_TIME + INTERVAL))
   local NEXT_DATE
-
-  case "$(uname -s)" in
-    Linux*)
-      NEXT_DATE=$(date -d "@$NEXT_TIME" "+%Y-%m-%d %H:%M:%S")
-      ;;
-    Darwin*)
-      NEXT_DATE=$(date -r "$NEXT_TIME" "+%Y-%m-%d %H:%M:%S")
-      ;;
-  esac
+  strftime -s NEXT_DATE "%Y-%m-%d %H:%M:%S" $((FILE_TIME[1] + INTERVAL))
 
   printf "%s" "$NEXT_DATE"
 }
@@ -98,6 +75,8 @@ if [[ -o login ]]; then
     echo "update deferred"
     echo "If you want update to happen again immediately, remove $HOME/.cache/dotfiles/.update_daily"
     echo ""
-    echo "next update occurrs after $(dotfiles_next_update_time)"
+    printf "next update occurrs after "
+    dotfiles_next_update_time
+    echo
   fi
 fi
