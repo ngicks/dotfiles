@@ -5,7 +5,8 @@ fi
 
 if [ -t 0 ]; then
   # Set GPG_TTY so gpg-agent knows where to prompt. See gpg-agent(1)
-  export GPG_TTY="$(tty)"
+  # zsh's $TTY names the same terminal as tty(1) without the fork.
+  export GPG_TTY="${TTY:-$(tty)}"
 fi
 
 # Function to recompute PINENTRY_USER_DATA on each prompt
@@ -16,9 +17,12 @@ __update_pinentry_user_data() {
   fi
 
   if [ -n "${TMUX}" ]; then
-    export PINENTRY_USER_DATA="TMUX_POPUP:$(which tmux):$(tmux display -p '#S'):$(tmux display -p '#{client_tty}'):${TMUX}"
+    # One tmux call for both fields: this runs before every prompt.
+    local session_tty
+    session_tty="$(tmux display -p '#S:#{client_tty}')"
+    export PINENTRY_USER_DATA="TMUX_POPUP:${commands[tmux]}:${session_tty}:${TMUX}"
   elif [ -n "${ZELLIJ}" ]; then
-    export PINENTRY_USER_DATA="ZELLIJ_POPUP:$(which zellij):${ZELLIJ_SESSION_NAME}"
+    export PINENTRY_USER_DATA="ZELLIJ_POPUP:${commands[zellij]}:${ZELLIJ_SESSION_NAME}"
   fi
 }
 
@@ -30,4 +34,5 @@ if [ "${HOMEENV_PREFER_TMUX_PINENTRY:-0}" -eq "1" ]; then
 fi
 
 # Refresh gpg-agent tty in case user switches into an X session
-gpg-connect-agent updatestartuptty /bye > /dev/null
+# Backgrounded: it only notifies the agent and nothing here waits on it.
+gpg-connect-agent updatestartuptty /bye > /dev/null 2>&1 < /dev/null &!
