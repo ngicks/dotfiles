@@ -135,7 +135,7 @@ in
     uv
     ruby
     rustup
-    go
+    go_1_27
 
     # CLI Utilities (not managed by mise/modules)
     ripgrep        # Fast grep (rg)
