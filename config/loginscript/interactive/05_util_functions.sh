@@ -28,7 +28,7 @@ _apm-run() {
   rm -rf ./.agents ./.claude ./.codex
 
   if [ ! -e ./.bare ]; then
-    apm install "$@" -t codex,claude &&
+    apm install "$@" -t codex,claude,opencode &&
       apm compile -t codex
     return $?
   fi
@@ -49,11 +49,17 @@ _apm-run() {
   fi
   (
     cd "${wt}" || exit 1
-    apm install "$@" -t codex,claude --root .. &&
+    apm install "$@" -t codex,claude,opencode --root .. &&
       cp ../apm.lock.yaml ./apm.lock.yaml &&
       cp ./apm.yml ../ &&
+      # compile scans every worktree's .apm under the bare root and keeps the
+      # first same-named primitive in walk order; the root .apm is walked
+      # first, so this copy makes the default branch win.
+      rm -rf ../.apm &&
+      cp -r ./.apm ../ &&
       cd .. &&
-      apm compile -t codex
+      # Default placement would drop scoped AGENTS.md files inside worktrees.
+      apm compile -t codex --single-agents
   )
 }
 
