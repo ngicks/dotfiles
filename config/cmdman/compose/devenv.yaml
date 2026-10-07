@@ -43,8 +43,10 @@ commands:
         --env CRABSWARM_CODEX_APP_SERVER
       - -lc
       - |
-        crabswarm mcp --transport http --listen 127.0.0.1:47300 &
-        rm -f -- "$${CRABSWARM_CODEX_APP_SERVER#unix://}" \
+        crabswarm util supervised --name crabswarm-mcp-shared \
+          --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 200ms --poll-retries 100 \
+          -- crabswarm mcp --transport http --listen 127.0.0.1:47300 \
+          && rm -f -- "$${CRABSWARM_CODEX_APP_SERVER#unix://}" \
           && exec codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER"
     env:
       - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
@@ -109,11 +111,7 @@ commands:
         --mount type=volume,src=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex,dst=/tmp/codex-daemon-0
         --env CRABSWARM_CODEX_APP_SERVER
       - -lc
-      # `after` orders process start only; bound readiness checks so a failed
-      # server cannot leave the client waiting.
-      - |
-        crabswarm util poll wait "$$CRABSWARM_CODEX_APP_SERVER" --interval 200ms --retries 500 \
-          && crabswarm mcp codex-proxy -- codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
+      - crabswarm mcp codex-proxy -- codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
     env:
       - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
     env_file:
@@ -135,20 +133,11 @@ commands:
         --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
         --network-alias opencode-server
       - -lc
-      # Both listeners leave loopback so the TUI replicas reach them on the
-      # network, which only this harness's containers join. opencode serve
-      # connects to its MCP servers while starting, so it waits for the
-      # listener; any HTTP answer will do since crabswarm mcp has no health
-      # route.
       - |
-        crabswarm mcp --transport http --listen 0.0.0.0:47300 &
-        i=0
-        until curl -s -o /dev/null --max-time 1 http://127.0.0.1:47300/mcp; do
-          i=$$((i + 1))
-          [ "$$i" -lt 100 ] || exit 1
-          sleep 0.2
-        done
-        exec opencode serve --hostname 0.0.0.0 --port 4096
+        crabswarm util supervised --name crabswarm-mcp-shared \
+          --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 200ms --poll-retries 100 \
+          -- crabswarm mcp --transport http --listen 0.0.0.0:47300 \
+          && exec opencode serve --hostname 0.0.0.0 --port 4096
     env_file:
       - path: .devenv.env
         required: false
