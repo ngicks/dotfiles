@@ -34,25 +34,20 @@ commands:
         required: false
     scale: 3
     tty: true
-  # codex and opencode are split into a server and a TUI client. Both halves
-  # run in the same container: each replica is its own podman container with a
-  # private network namespace and a fresh /tmp, so a server started elsewhere
-  # would be unreachable. That isolation also makes fixed socket paths and ports
-  # safe across replicas. The scripts below are one `-lc` argument; compose
-  # interpolates `$var` and `${var}` while loading the file, so shell variables
-  # are written as `$$var` to reach zsh intact.
-  codex:
+  codex-server:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --env CRABSWARM_CODEX_APP_SERVER
+      - >-
+        --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+        --mount type=volume,src=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex,dst=/tmp/codex-daemon-0
+        --env CRABSWARM_CODEX_APP_SERVER
       - -lc
-      # Bound readiness checks so a failed server cannot leave the client waiting.
       - |
-        cmdman run --inject-env=false --tty --rm --name codex-server -- codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER" \
-          && crabswarm util poll wait "$$CRABSWARM_CODEX_APP_SERVER" --interval 200ms --retries 500 \
-          && codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
+        crabswarm mcp --transport http --listen 127.0.0.1:47300 &
+        rm -f -- "$${CRABSWARM_CODEX_APP_SERVER#unix://}" \
+          && exec codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER"
     env:
-      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-app-server.sock
+      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
     env_file:
       - path: .devenv.env
         required: false
@@ -60,19 +55,140 @@ commands:
         required: false
       - path: .gpu.env
         required: false
+    hooks:
+      - name: network
+        resource: network
+        start_pre:
+          - sh
+          - -c
+          - |
+            set -eu
+            net=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+            podman network exists "$$net" || podman network create "$$net" >/dev/null
+            echo "$$net"
+        stop_post:
+          args:
+            - sh
+            - -c
+            - |
+              set -eu
+              net=$$CMDMAN_COMPOSE_RESOURCE_VALUE
+              if [ -n "$$net" ] && podman network exists "$$net"; then
+                podman network rm "$$net" >/dev/null
+              fi
+          on_error: continue
+      - name: volume
+        resource: volume
+        start_pre:
+          - sh
+          - -c
+          - |
+            set -eu
+            vol=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+            # codex creates its daemon directory with mode 0700.
+            podman volume exists "$$vol" \
+              || podman volume create --opt type=tmpfs --opt device=tmpfs --opt o=size=16m,mode=0700 "$$vol" >/dev/null
+            echo "$$vol"
+        stop_post:
+          args:
+            - sh
+            - -c
+            - |
+              set -eu
+              vol=$$CMDMAN_COMPOSE_RESOURCE_VALUE
+              if [ -n "$$vol" ] && podman volume exists "$$vol"; then
+                podman volume rm "$$vol" >/dev/null
+              fi
+          on_error: continue
+    tty: true
+  codex:
+    args:
+      - $HOME/.dotfiles/devenv_run.sh
+      - >-
+        --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+        --mount type=volume,src=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex,dst=/tmp/codex-daemon-0
+        --env CRABSWARM_CODEX_APP_SERVER
+      - -lc
+      # `after` orders process start only; bound readiness checks so a failed
+      # server cannot leave the client waiting.
+      - |
+        crabswarm util poll wait "$$CRABSWARM_CODEX_APP_SERVER" --interval 200ms --retries 500 \
+          && crabswarm mcp codex-proxy -- codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
+    env:
+      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
+    env_file:
+      - path: .devenv.env
+        required: false
+      - path: .kvm.env
+        required: false
+      - path: .gpu.env
+        required: false
+    after:
+      codex-server:
+        condition: running
     scale: 3
+    tty: true
+  opencode-server:
+    args:
+      - $HOME/.dotfiles/devenv_run.sh
+      - >-
+        --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
+        --network-alias opencode-server
+      - -lc
+      # Both listeners leave loopback so the TUI replicas reach them on the
+      # network, which only this harness's containers join. opencode serve
+      # connects to its MCP servers while starting, so it waits for the
+      # listener; any HTTP answer will do since crabswarm mcp has no health
+      # route.
+      - |
+        crabswarm mcp --transport http --listen 0.0.0.0:47300 &
+        i=0
+        until curl -s -o /dev/null --max-time 1 http://127.0.0.1:47300/mcp; do
+          i=$$((i + 1))
+          [ "$$i" -lt 100 ] || exit 1
+          sleep 0.2
+        done
+        exec opencode serve --hostname 0.0.0.0 --port 4096
+    env_file:
+      - path: .devenv.env
+        required: false
+      - path: .kvm.env
+        required: false
+      - path: .gpu.env
+        required: false
+    hooks:
+      - name: network
+        resource: network
+        start_pre:
+          - sh
+          - -c
+          - |
+            set -eu
+            net=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
+            podman network exists "$$net" || podman network create "$$net" >/dev/null
+            echo "$$net"
+        stop_post:
+          args:
+            - sh
+            - -c
+            - |
+              set -eu
+              net=$$CMDMAN_COMPOSE_RESOURCE_VALUE
+              if [ -n "$$net" ] && podman network exists "$$net"; then
+                podman network rm "$$net" >/dev/null
+              fi
+          on_error: continue
     tty: true
   opencode:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --env CRABSWARM_OPENCODE_SERVER
+      - --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode --env CRABSWARM_OPENCODE_SERVER
       - -lc
       - |
-        cmdman run --inject-env=false --tty --rm --name opencode-server -- opencode serve --port 4096 \
-          && crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 500 \
+        crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 500 \
           && opencode attach "$$CRABSWARM_OPENCODE_SERVER"
     env:
-      - CRABSWARM_OPENCODE_SERVER=http://127.0.0.1:4096
+      - CRABSWARM_OPENCODE_SERVER=http://opencode-server:4096
     env_file:
       - path: .devenv.env
         required: false
@@ -80,6 +196,9 @@ commands:
         required: false
       - path: .gpu.env
         required: false
+    after:
+      opencode-server:
+        condition: running
     scale: 3
     tty: true
 mux:
