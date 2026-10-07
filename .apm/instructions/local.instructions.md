@@ -78,6 +78,6 @@ bounds what works inside:
 ├── homeenv-upgrade.sh  update env and dotfiles to latest
 ├── nix-craft           nix flake configuration (home-manager home under ./home, container images under ./container)
 ├── scripts             misc scripts (homeenv helper scripts, btrfs home snapshot)
-├── setup               host/machine setup (apparmor-management, btrfs, claude, vm-setups)
+├── setup               host/machine setup (apparmor-management, btrfs, vm-setups)
 └── tool                submodule, edit directly there and the user examines and pushes the change.
 ```
