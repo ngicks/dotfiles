@@ -26,8 +26,39 @@ printf "%s\n" "--mount type=tmpfs,dst=/run,tmpfs-size=64m,tmpfs-mode=0755"
 printf "%s\n" "--env XDG_RUNTIME_DIR=/run/user/1000/"
 printf "%s\n" "--mount type=tmpfs,dst=/run/user/1000/,tmpfs-size=10m"
 
+# Prints the total memory, in bytes, of the system that runs the containers.
+container_host_mem_bytes() {
+  # On Linux podman runs natively (WSL2 included: its VM is this kernel), so
+  # /proc/meminfo is the container host and is cheap enough to read every run.
+  if [[ -r /proc/meminfo ]]; then
+    awk '/^MemTotal:/ { print $2 * 1024; exit }' /proc/meminfo
+    return
+  fi
+
+  # Elsewhere (macOS) containers run inside the podman machine VM. Querying it
+  # costs a round-trip into the VM, so the answer is cached for a day; a day
+  # also bounds staleness after `podman machine set --memory`.
+  local cache=${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles/devenv/container-host-mem-bytes
+  if [[ -s "${cache}" ]] && [[ -n "$(find "${cache}" -mmin -1440 2>/dev/null)" ]]; then
+    cat "${cache}"
+    return
+  fi
+  local mem
+  mem=$(podman info --format '{{.Host.MemTotal}}' 2>/dev/null) || return 1
+  mkdir -p "$(dirname "${cache}")"
+  printf "%s\n" "${mem}" >|"${cache}"
+  printf "%s\n" "${mem}"
+}
+
+# Each devenv container may use half of the container host's memory.
 # --memory-swap equal to --memory gives the container no swap: exceeding the
 # limit is an OOM kill rather than a slowdown. tmpfs pages (the /tmp mount
 # above) are charged against the same limit.
-printf "%s\n" "--memory 4g"
-printf "%s\n" "--memory-swap 4g"
+mem_limit=4g
+if host_mem=$(container_host_mem_bytes) && [[ "${host_mem}" =~ ^[0-9]+$ ]] && ((host_mem > 0)); then
+  mem_limit="$((host_mem / 2 / 1024 / 1024))m"
+else
+  echo "[WARNING]: could not determine container host memory; falling back to --memory ${mem_limit}" >&2
+fi
+printf "%s\n" "--memory ${mem_limit}"
+printf "%s\n" "--memory-swap ${mem_limit}"
