@@ -38,8 +38,8 @@ commands:
     args:
       - $HOME/.dotfiles/devenv_run.sh
       - >-
-        --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
-        --mount type=volume,src=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex,dst=/tmp/codex-daemon-0
+        --network ${CODEX_NETWORK}
+        --mount type=volume,src=${CODEX_VOLUME},dst=/tmp/codex-daemon-0
         --env CRABSWARM_CODEX_APP_SERVER
       - -lc
       - |
@@ -49,6 +49,8 @@ commands:
           && rm -f -- "$${CRABSWARM_CODEX_APP_SERVER#unix://}" \
           && exec codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER"
     env:
+      - CODEX_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+      - CODEX_VOLUME=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
       - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
     env_file:
       - path: .devenv.env
@@ -65,7 +67,7 @@ commands:
           - -c
           - |
             set -eu
-            net=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+            net=${CODEX_NETWORK}
             podman network exists "$$net" || podman network create "$$net" >/dev/null
             echo "$$net"
         stop_post:
@@ -86,7 +88,7 @@ commands:
           - -c
           - |
             set -eu
-            vol=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+            vol=${CODEX_VOLUME}
             # codex creates its daemon directory with mode 0700.
             podman volume exists "$$vol" \
               || podman volume create --opt type=tmpfs --opt device=tmpfs --opt o=size=16m,mode=0700 "$$vol" >/dev/null
@@ -107,12 +109,14 @@ commands:
     args:
       - $HOME/.dotfiles/devenv_run.sh
       - >-
-        --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
-        --mount type=volume,src=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex,dst=/tmp/codex-daemon-0
+        --network ${CODEX_NETWORK}
+        --mount type=volume,src=${CODEX_VOLUME},dst=/tmp/codex-daemon-0
         --env CRABSWARM_CODEX_APP_SERVER
       - -lc
       - crabswarm mcp codex-proxy -- codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
     env:
+      - CODEX_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+      - CODEX_VOLUME=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
       - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
     env_file:
       - path: .devenv.env
@@ -130,7 +134,7 @@ commands:
     args:
       - $HOME/.dotfiles/devenv_run.sh
       - >-
-        --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
+        --network ${OPENCODE_NETWORK}
         --network-alias opencode-server
       - -lc
       - |
@@ -138,6 +142,8 @@ commands:
           --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 200ms --poll-retries 100 \
           -- crabswarm mcp --transport http --listen 0.0.0.0:47300 \
           && exec opencode serve --hostname 0.0.0.0 --port 4096
+    env:
+      - OPENCODE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
     env_file:
       - path: .devenv.env
         required: false
@@ -153,7 +159,7 @@ commands:
           - -c
           - |
             set -eu
-            net=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
+            net=${OPENCODE_NETWORK}
             podman network exists "$$net" || podman network create "$$net" >/dev/null
             echo "$$net"
         stop_post:
@@ -171,12 +177,13 @@ commands:
   opencode:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --network ${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode --env CRABSWARM_OPENCODE_SERVER
+      - --network ${OPENCODE_NETWORK} --env CRABSWARM_OPENCODE_SERVER
       - -lc
       - |
         crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 500 \
           && opencode attach "$$CRABSWARM_OPENCODE_SERVER"
     env:
+      - OPENCODE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
       - CRABSWARM_OPENCODE_SERVER=http://opencode-server:4096
     env_file:
       - path: .devenv.env
