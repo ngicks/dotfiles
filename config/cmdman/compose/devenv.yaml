@@ -16,15 +16,53 @@ commands:
         required: false
     stop_signal: SIGHUP
     tty: true
+  claude-server:
+    args:
+      - $HOME/.dotfiles/devenv_run.sh
+      - >-
+        --network ${CLAUDE_NETWORK}
+        --network-alias claude-server
+      - -lc
+      - exec crabswarm mcp --transport http --listen 0.0.0.0:47300
+    env:
+      - CLAUDE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-claude
+    env_file:
+      - path: .devenv.env
+        required: false
+    hooks:
+      - name: network
+        resource: network
+        start_pre:
+          - sh
+          - -c
+          - |
+            set -eu
+            net=${CLAUDE_NETWORK}
+            podman network exists "$$net" || podman network create "$$net" >/dev/null
+            echo "$$net"
+        stop_post:
+          args:
+            - sh
+            - -c
+            - |
+              set -eu
+              net=$$CMDMAN_COMPOSE_RESOURCE_VALUE
+              if [ -n "$$net" ] && podman network exists "$$net"; then
+                podman network rm "$$net" >/dev/null
+              fi
+          on_error: continue
+    tty: true
   claude:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --env CRABSWARM_CLAUDE_CHANNEL --env FAKECHAT_PORT
+      - --network ${CLAUDE_NETWORK} --env CRABSWARM_CLAUDE_MCP_SERVER
       - -lc
-      - claude --channels plugin:fakechat@claude-plugins-official
+      - |
+        crabswarm util poll wait "$$CRABSWARM_CLAUDE_MCP_SERVER" --status 400 --interval 200ms --retries 500 \
+          && exec claude
     env:
-      - CRABSWARM_CLAUDE_CHANNEL=1
-      - FAKECHAT_PORT=9943
+      - CLAUDE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-claude
+      - CRABSWARM_CLAUDE_MCP_SERVER=http://claude-server:47300/mcp
     env_file:
       - path: .devenv.env
         required: false
@@ -32,6 +70,9 @@ commands:
         required: false
       - path: .gpu.env
         required: false
+    after:
+      claude-server:
+        condition: running
     scale: 3
     tty: true
   codex-server:
