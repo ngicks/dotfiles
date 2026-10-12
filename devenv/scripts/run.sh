@@ -18,12 +18,11 @@ if [ "$#" -ge 1 ]; then
   shift
 fi
 
-# cmdman sets CMDMAN_* (e.g. CMDMAN_CMD_NAME) only in the environment of the
-# running command, after it has interpolated the compose file. Expanding them
-# here lets the compose file put them in the options. Every other $ stays
-# literal so options typed by hand keep their meaning.
+# Expanding environment variables here lets a caller that runs without a shell
+# put values known only at run time in the options. envsubst instead of eval
+# expands variables and nothing else.
 if [[ "${first_arg}" == *'$'* ]]; then
-  first_arg=$(printf "%s" "${first_arg}" | envsubst "$(printf '${%s} ' ${!CMDMAN_@})")
+  first_arg=$(printf "%s" "${first_arg}" | envsubst)
 fi
 
 DEVENV_READONLY=1 exec $runner "${mount_opt} --workdir $(pwd) ${first_arg}" "$@"
