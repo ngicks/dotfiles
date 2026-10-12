@@ -18,4 +18,12 @@ if [ "$#" -ge 1 ]; then
   shift
 fi
 
+# cmdman sets CMDMAN_* (e.g. CMDMAN_CMD_NAME) only in the environment of the
+# running command, after it has interpolated the compose file. Expanding them
+# here lets the compose file put them in the options. Every other $ stays
+# literal so options typed by hand keep their meaning.
+if [[ "${first_arg}" == *'$'* ]]; then
+  first_arg=$(printf "%s" "${first_arg}" | envsubst "$(printf '${%s} ' ${!CMDMAN_@})")
+fi
+
 DEVENV_READONLY=1 exec $runner "${mount_opt} --workdir $(pwd) ${first_arg}" "$@"
