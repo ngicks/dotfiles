@@ -247,6 +247,9 @@ in
     gnused         # GNU sed
     gnugrep        # GNU grep
     watch          # periodic command runner (procps)
+    # envsubst. GNU's, not nixpkgs' `envsubst` (a8m): only GNU's takes a
+    # SHELL-FORMAT argument that limits which variables get substituted.
+    gettext
 
     # Terminal support
     ncurses        # Terminfo database for less/vim/etc
