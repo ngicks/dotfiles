@@ -67,7 +67,7 @@ commands:
       - --name $${CMDMAN_CMD_NAME} --replace --network ${CLAUDE_NETWORK} --env CRABSWARM_CLAUDE_MCP_SERVER
       - -lc
       - |
-        crabswarm util poll wait "$$CRABSWARM_CLAUDE_MCP_SERVER" --status 400 --interval 200ms --retries 500 \
+        crabswarm util poll wait "$$CRABSWARM_CLAUDE_MCP_SERVER" --status 400 --interval 500ms --retries 500 \
           && exec claude
     env_file: &agent_env_file
       - path: .kvm.env
@@ -92,7 +92,7 @@ commands:
       - -lc
       - |
         crabswarm util supervised --name crabswarm-mcp-shared \
-          --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 200ms --poll-retries 100 \
+          --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 500ms --poll-retries 500 \
           -- crabswarm mcp --transport http --listen 127.0.0.1:47300 \
           && rm -f -- "$${CRABSWARM_CODEX_APP_SERVER#unix://}" \
           && exec codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER"
@@ -150,7 +150,7 @@ commands:
       - -lc
       - |
         crabswarm util supervised --name crabswarm-mcp-shared \
-          --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 200ms --poll-retries 100 \
+          --poll http://127.0.0.1:47300/mcp --poll-status 400 --poll-interval 500ms --poll-retries 500 \
           -- crabswarm mcp --transport http --listen 0.0.0.0:47300 \
           && exec opencode serve --hostname 0.0.0.0 --port 4096
     env:
@@ -170,7 +170,7 @@ commands:
         --env CRABSWARM_OPENCODE_SERVER
       - -lc
       - |
-        crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 500 \
+        crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 500ms --retries 500 \
           && opencode attach "$$CRABSWARM_OPENCODE_SERVER"
     env_file: *agent_env_file
     after:
