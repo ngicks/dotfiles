@@ -1,43 +1,48 @@
 name: devenv
+env:
+  - CLAUDE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-claude
+  - CODEX_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+  - CODEX_VOLUME=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
+  - OPENCODE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
+  - CRABSWARM_CLAUDE_MCP_SERVER=http://claude-server:47300/mcp
+  - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
+  - CRABSWARM_OPENCODE_SERVER=http://opencode-server:4096
+env_file:
+  - path: .devenv.env
+    required: false
 commands:
   nvim:
-    args: 
+    args:
       - nvim
-    env_file:
-      - path: .devenv.env
-        required: false
     tty: true
   shell:
-    args: 
+    args:
       - $HOME/.nix-profile/bin/zsh
       - -l
-    env_file:
-      - path: .devenv.env
-        required: false
     stop_signal: SIGHUP
     tty: true
   claude-server:
     args:
       - $HOME/.dotfiles/devenv_run.sh
       - >-
+        --name $${CMDMAN_CMD_NAME}
+        --replace
         --network ${CLAUDE_NETWORK}
         --network-alias claude-server
       - -lc
       - exec crabswarm mcp --transport http --listen 0.0.0.0:47300
     env:
-      - CLAUDE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-claude
-    env_file:
-      - path: .devenv.env
-        required: false
+      - DEVENV_NETWORK=${CLAUDE_NETWORK}
     hooks:
-      - name: network
+      - &network_hook
+        name: network
         resource: network
         start_pre:
           - sh
           - -c
           - |
             set -eu
-            net=${CLAUDE_NETWORK}
+            net=${DEVENV_NETWORK}
             podman network exists "$$net" || podman network create "$$net" >/dev/null
             echo "$$net"
         stop_post:
@@ -51,21 +56,20 @@ commands:
                 podman network rm "$$net" >/dev/null
               fi
           on_error: continue
+    stop: &stop_container
+      - sh
+      - -c
+      - podman stop --ignore --time 5 "$$CMDMAN_CMD_NAME" >/dev/null
     tty: true
   claude:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --network ${CLAUDE_NETWORK} --env CRABSWARM_CLAUDE_MCP_SERVER
+      - --name $${CMDMAN_CMD_NAME} --replace --network ${CLAUDE_NETWORK} --env CRABSWARM_CLAUDE_MCP_SERVER
       - -lc
       - |
         crabswarm util poll wait "$$CRABSWARM_CLAUDE_MCP_SERVER" --status 400 --interval 200ms --retries 500 \
           && exec claude
-    env:
-      - CLAUDE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-claude
-      - CRABSWARM_CLAUDE_MCP_SERVER=http://claude-server:47300/mcp
-    env_file:
-      - path: .devenv.env
-        required: false
+    env_file: &agent_env_file
       - path: .kvm.env
         required: false
       - path: .gpu.env
@@ -74,11 +78,14 @@ commands:
       claude-server:
         condition: running
     scale: 3
+    stop: *stop_container
     tty: true
   codex-server:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - >-
+      - &codex_run_opts >-
+        --name $${CMDMAN_CMD_NAME}
+        --replace
         --network ${CODEX_NETWORK}
         --mount type=volume,src=${CODEX_VOLUME},dst=/tmp/codex-daemon-0
         --env CRABSWARM_CODEX_APP_SERVER
@@ -90,38 +97,10 @@ commands:
           && rm -f -- "$${CRABSWARM_CODEX_APP_SERVER#unix://}" \
           && exec codex app-server --listen "$$CRABSWARM_CODEX_APP_SERVER"
     env:
-      - CODEX_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
-      - CODEX_VOLUME=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
-      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
-    env_file:
-      - path: .devenv.env
-        required: false
-      - path: .kvm.env
-        required: false
-      - path: .gpu.env
-        required: false
+      - DEVENV_NETWORK=${CODEX_NETWORK}
+    env_file: *agent_env_file
     hooks:
-      - name: network
-        resource: network
-        start_pre:
-          - sh
-          - -c
-          - |
-            set -eu
-            net=${CODEX_NETWORK}
-            podman network exists "$$net" || podman network create "$$net" >/dev/null
-            echo "$$net"
-        stop_post:
-          args:
-            - sh
-            - -c
-            - |
-              set -eu
-              net=$$CMDMAN_COMPOSE_RESOURCE_VALUE
-              if [ -n "$$net" ] && podman network exists "$$net"; then
-                podman network rm "$$net" >/dev/null
-              fi
-          on_error: continue
+      - *network_hook
       - name: volume
         resource: volume
         start_pre:
@@ -145,36 +124,27 @@ commands:
                 podman volume rm "$$vol" >/dev/null
               fi
           on_error: continue
+    stop: *stop_container
     tty: true
   codex:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - >-
-        --network ${CODEX_NETWORK}
-        --mount type=volume,src=${CODEX_VOLUME},dst=/tmp/codex-daemon-0
-        --env CRABSWARM_CODEX_APP_SERVER
+      - *codex_run_opts
       - -lc
       - crabswarm mcp codex-proxy -- codex --remote "$$CRABSWARM_CODEX_APP_SERVER"
-    env:
-      - CODEX_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
-      - CODEX_VOLUME=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-codex
-      - CRABSWARM_CODEX_APP_SERVER=unix:///tmp/codex-daemon-0/app-server.sock
-    env_file:
-      - path: .devenv.env
-        required: false
-      - path: .kvm.env
-        required: false
-      - path: .gpu.env
-        required: false
+    env_file: *agent_env_file
     after:
       codex-server:
         condition: running
     scale: 3
+    stop: *stop_container
     tty: true
   opencode-server:
     args:
       - $HOME/.dotfiles/devenv_run.sh
       - >-
+        --name $${CMDMAN_CMD_NAME}
+        --replace
         --network ${OPENCODE_NETWORK}
         --network-alias opencode-server
       - -lc
@@ -184,59 +154,30 @@ commands:
           -- crabswarm mcp --transport http --listen 0.0.0.0:47300 \
           && exec opencode serve --hostname 0.0.0.0 --port 4096
     env:
-      - OPENCODE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
-    env_file:
-      - path: .devenv.env
-        required: false
-      - path: .kvm.env
-        required: false
-      - path: .gpu.env
-        required: false
+      - DEVENV_NETWORK=${OPENCODE_NETWORK}
+    env_file: *agent_env_file
     hooks:
-      - name: network
-        resource: network
-        start_pre:
-          - sh
-          - -c
-          - |
-            set -eu
-            net=${OPENCODE_NETWORK}
-            podman network exists "$$net" || podman network create "$$net" >/dev/null
-            echo "$$net"
-        stop_post:
-          args:
-            - sh
-            - -c
-            - |
-              set -eu
-              net=$$CMDMAN_COMPOSE_RESOURCE_VALUE
-              if [ -n "$$net" ] && podman network exists "$$net"; then
-                podman network rm "$$net" >/dev/null
-              fi
-          on_error: continue
+      - *network_hook
+    stop: *stop_container
     tty: true
   opencode:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --network ${OPENCODE_NETWORK} --env CRABSWARM_OPENCODE_SERVER
+      - >- 
+        --name $${CMDMAN_CMD_NAME}
+        --replace
+        --network ${OPENCODE_NETWORK}
+        --env CRABSWARM_OPENCODE_SERVER
       - -lc
       - |
         crabswarm util poll wait "$$CRABSWARM_OPENCODE_SERVER/global/health" --interval 200ms --retries 500 \
           && opencode attach "$$CRABSWARM_OPENCODE_SERVER"
-    env:
-      - OPENCODE_NETWORK=${CMDMAN_COMPOSE_WORK_DIR_HASH}-${CMDMAN_COMPOSE_PROJECT}-opencode
-      - CRABSWARM_OPENCODE_SERVER=http://opencode-server:4096
-    env_file:
-      - path: .devenv.env
-        required: false
-      - path: .kvm.env
-        required: false
-      - path: .gpu.env
-        required: false
+    env_file: *agent_env_file
     after:
       opencode-server:
         condition: running
     scale: 3
+    stop: *stop_container
     tty: true
 mux:
   layouts:
@@ -309,7 +250,7 @@ mux:
         dir: v
         splits: [50%, 50%]
         panes:
-          - command: codex 
+          - command: codex
             focus: true
           - dir: h
             splits: [1, 20%]
