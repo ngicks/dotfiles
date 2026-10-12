@@ -64,11 +64,17 @@ commands:
   claude:
     args:
       - $HOME/.dotfiles/devenv_run.sh
-      - --name $${CMDMAN_CMD_NAME} --replace --network ${CLAUDE_NETWORK} --env CRABSWARM_CLAUDE_MCP_SERVER
+      - >-
+        --name $${CMDMAN_CMD_NAME} --replace
+        --network ${CLAUDE_NETWORK}
+        --env CRABSWARM_CLAUDE_MCP_SERVER
+        --env CRABSWARM_NUDGE
       - -lc
       - |
         crabswarm util poll wait "$$CRABSWARM_CLAUDE_MCP_SERVER" --status 400 --interval 500ms --retries 500 \
           && exec claude
+    env:
+      - CRABSWARM_NUDGE=none
     env_file: &agent_env_file
       - path: .kvm.env
         required: false
