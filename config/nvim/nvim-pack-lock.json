@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "e3f3091b15ce01e01e6fb4be15574aca7ce5c562",
+      "rev": "5ec4af8064924259f72c27f7d1e051a5bd643edf",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
