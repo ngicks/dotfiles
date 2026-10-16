@@ -78,7 +78,7 @@ character limit in the scope rules applies to comma-joined scopes.
 | scope     | covers                                                                                                                                                      |
 | :-------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `<name>`  | each config entry under `config/<name>` except `loginscript`                                                                                                |
-| `devenv`  | `devenv/`, `devenv_run.sh`, `devenv_install_myenv.sh`                                                                                                       |
+| `devenv`  | `devenv/`, `devenv_run.sh`, `apm-install-global.sh`                                                                                                         |
 | `doc`     | `doc/`, including this document                                                                                                                             |
 | `homeenv` | `homeenv-install.sh`, `homeenv-upgrade.sh`, `scripts/homeenv/`, `config/loginscript`                                                                        |
 | `tool`    | nix, mise and `tool` submodule pointer. Changes to tool config under `./confing` may also be scoped as `tool` when changes were consequence of tool change. |
