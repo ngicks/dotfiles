@@ -56,10 +56,13 @@ commands:
                 podman network rm "$$net" >/dev/null
               fi
           on_error: continue
-    stop: &stop_container
-      - sh
-      - -c
-      - podman stop --ignore --time 5 "$$CMDMAN_CMD_NAME" >/dev/null
+    <<: &stop_container
+      stop:
+        - sh
+        - -c
+        - podman stop --ignore --time 90 "$$CMDMAN_CMD_NAME" >/dev/null
+      # Must stay longer than podman's --time so podman, not cmdman, performs the SIGKILL.
+      stop_grace_period: 120s
     tty: true
   claude:
     args:
@@ -84,7 +87,7 @@ commands:
       claude-server:
         condition: running
     scale: 3
-    stop: *stop_container
+    <<: *stop_container
     tty: true
   codex-server:
     args:
@@ -130,7 +133,7 @@ commands:
                 podman volume rm "$$vol" >/dev/null
               fi
           on_error: continue
-    stop: *stop_container
+    <<: *stop_container
     tty: true
   codex:
     args:
@@ -143,7 +146,7 @@ commands:
       codex-server:
         condition: running
     scale: 3
-    stop: *stop_container
+    <<: *stop_container
     tty: true
   opencode-server:
     args:
@@ -164,7 +167,7 @@ commands:
     env_file: *agent_env_file
     hooks:
       - *network_hook
-    stop: *stop_container
+    <<: *stop_container
     tty: true
   opencode:
     args:
@@ -183,7 +186,7 @@ commands:
       opencode-server:
         condition: running
     scale: 3
-    stop: *stop_container
+    <<: *stop_container
     tty: true
 mux:
   layouts:
