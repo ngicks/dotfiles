@@ -10,9 +10,10 @@ pim() {
   popd
 }
 
-# _apm-run NAME [APM_INSTALL_FLAGS...]
+# _apm-run NAME APM_SUBCOMMAND [FLAGS...]
 # Shared body of apm-bump / apm-install. NAME is used as the error prefix,
-# the remaining args are passed through to `apm install`.
+# the remaining args form the `apm` invocation that resolves and deploys
+# dependencies (`install` or `update --yes`).
 _apm-run() {
   local name=$1
   shift
@@ -22,13 +23,13 @@ _apm-run() {
     return 1
   fi
 
-  # It does not remove them when packages loose hook defs they have had in 
+  # It does not remove them when packages loose hook defs they have had in
   # older versions.
   # Removing entire file solves this
   rm -rf ./.agents ./.claude ./.codex
 
   if [ ! -e ./.bare ]; then
-    apm install "$@" -t codex,claude,opencode &&
+    apm "$@" -t codex,claude,opencode &&
       apm compile -t codex
     return $?
   fi
@@ -49,26 +50,34 @@ _apm-run() {
   fi
   (
     cd "${wt}" || exit 1
-    apm install "$@" -t codex,claude,opencode --root .. &&
-      cp ../apm.lock.yaml ./apm.lock.yaml &&
-      cp ./apm.yml ../ &&
-      # compile scans every worktree's .apm under the bare root and keeps the
-      # first same-named primitive in walk order; the root .apm is walked
-      # first, so this copy makes the default branch win.
-      rm -rf ../.apm &&
+    # compile scans every worktree's .apm under the bare root and keeps the
+    # first same-named primitive in walk order; the root .apm is walked
+    # first, so this copy makes the default branch win.
+    rm -rf ../.apm &&
       cp -r ./.apm ../ &&
-      cd .. &&
+      cp ./apm.yml ../ || exit 1
+    if [ "$1" = update ]; then
+      # `apm update` has no --root. The bare root already mirrors the project
+      # (apm.yml, apm_modules/, apm.lock.yaml), so run it there and pull the
+      # refreshed lock back into the default branch.
+      (cd .. && apm "$@" -t codex,claude,opencode) &&
+        cp ../apm.lock.yaml ./apm.lock.yaml || exit 1
+    else
+      apm "$@" -t codex,claude,opencode --root .. &&
+        cp ../apm.lock.yaml ./apm.lock.yaml || exit 1
+    fi
+    cd .. &&
       # Default placement would drop scoped AGENTS.md files inside worktrees.
       apm compile -t codex --single-agents
   )
 }
 
 apm-bump() {
-  _apm-run apm-bump --update
+  _apm-run apm-bump update --yes
 }
 
 apm-install() {
-  _apm-run apm-install
+  _apm-run apm-install install
 }
 
 devenv() {
