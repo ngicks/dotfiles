@@ -11,7 +11,7 @@
       "version": ">=0.0.0"
     },
     "base46": {
-      "rev": "7df2bd89295db00b649cbc49bdf6fe5a1cc5df3b",
+      "rev": "19023074b28ef5554909d27d934353603df256f0",
       "src": "https://github.com/nvchad/base46"
     },
     "cmp-async-path": {
@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "5ec4af8064924259f72c27f7d1e051a5bd643edf",
+      "rev": "2a2d89a07f5d5d3cef7f542b99c3e28050ca205c",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -128,7 +128,7 @@
       "version": ">=0.0.0"
     },
     "nvim-dap-view": {
-      "rev": "e766b3d8acef97e7e8b29f7f421aa4977b9978e1",
+      "rev": "b4486a6e83c45db4712849c09a76ef95b41a2133",
       "src": "https://github.com/igorlfs/nvim-dap-view"
     },
     "nvim-dap-virtual-text": {
@@ -155,7 +155,7 @@
       "version": ">=0.0.0"
     },
     "nvim-scrollbar": {
-      "rev": "f8e87b96cd6362ef8579be456afee3b38fd7e2a8",
+      "rev": "00fe857e7cd97ee5e556de643ee920b003a96b03",
       "src": "https://github.com/petertriho/nvim-scrollbar"
     },
     "nvim-tree.lua": {
@@ -164,7 +164,7 @@
       "version": ">=0.0.0"
     },
     "nvim-treesitter": {
-      "rev": "1a4f47b03dfe92d28de7d5654c67327ef008c9e6",
+      "rev": "29212d826054bb2948fa9d3a99eca9bf6a050eb2",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -174,7 +174,7 @@
       "version": ">=0.0.0"
     },
     "nvim-web-devicons": {
-      "rev": "58447c1fca354bbf184425e4a8d01deecbd6f3c4",
+      "rev": "ec309a0eaff6ea967e58c275996155ab5c16938d",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {
@@ -223,7 +223,7 @@
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
-      "rev": "6ced1135d2d1f87ae01fe0995977372eef42cd03",
+      "rev": "78c96eee08ad8eb73e39f7aeff8d978be40b3f91",
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
