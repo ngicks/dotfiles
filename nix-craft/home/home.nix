@@ -282,6 +282,7 @@ in
     passt          # user-mode networking backend with <portForward> support
     # Not gonna use Vagrant because it is HashiCorp's (not an OSS).
     lima           # limactl: QEMU-backed Linux VMs, auto file-share + port-forward
+    virtiofsd      # host-side virtio-fs daemon for lima/libvirt guest mounts
     incus          # LXD fork: system containers + QEMU VMs (needs incusd daemon)
   ]);
 }
