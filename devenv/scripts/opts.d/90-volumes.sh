@@ -29,7 +29,7 @@ mount_volume claude-config /root/.config/claude
 # runtime data to a pid-keyed file under sessions/. Containers share the
 # claude-config volume but have separate pid namespaces, so pids repeat across
 # them and the files collide. Keep sessions/ private to each container.
-printf "%s\n" "--mount type=tmpfs,dst=/root/.config/claude/sessions,tmpfs-size=64m"
+printf "%s\n" "--mount type=tmpfs,dst=/root/.config/claude/sessions,tmpfs-size=64m,notmpcopyup"
 mount_volume gemini-config /root/.gemini
 mount_volume opencode-config /root/.config/opencode
 mount_volume opencode-data /root/.local/share/opencode
@@ -37,7 +37,7 @@ mount_volume opencode-state /root/.local/state/opencode
 mount_volume codex-config /root/.codex
 # codex hardcodes <CODEX_HOME>/logs_2.sqlite and its WAL churn burns the
 # SSD-backed volume; ensure-podman-volume.sh symlinks it under logs-ram.
-printf "%s\n" "--mount type=tmpfs,dst=/root/.codex/logs-ram,tmpfs-size=512m"
+printf "%s\n" "--mount type=tmpfs,dst=/root/.codex/logs-ram,tmpfs-size=512m,notmpcopyup"
 mount_volume apm-config /root/.apm
 mount_volume hf-token /root/.config/huggingface
 mount_volume gh-config /root/.config/gh

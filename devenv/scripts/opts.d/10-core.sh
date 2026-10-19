@@ -20,11 +20,15 @@ printf "%s\n" "--mount type=bind,src=${env_config_dir},dst=/root/.config/env,ro"
 # Fresh tmpfs regardless of image content: image-layer /tmp already broke
 # once (nix store normalization made it 0555, killing conmon -t inside the
 # container), and per-run scratch should not leak between instances anyway.
-printf "%s\n" "--mount type=tmpfs,dst=/tmp,tmpfs-size=1g,tmpfs-mode=1777"
-printf "%s\n" "--mount type=tmpfs,dst=/run,tmpfs-size=64m,tmpfs-mode=0755"
+#
+# notmpcopyup on every tmpfs: podman otherwise copies the image's directory
+# contents into the fresh tmpfs, which defeats "fresh regardless of image
+# content" and wastes the size budget on whatever the image happens to hold.
+printf "%s\n" "--mount type=tmpfs,dst=/tmp,tmpfs-size=1g,tmpfs-mode=1777,notmpcopyup"
+printf "%s\n" "--mount type=tmpfs,dst=/run,tmpfs-size=64m,tmpfs-mode=0755,notmpcopyup"
 
 printf "%s\n" "--env XDG_RUNTIME_DIR=/run/user/1000/"
-printf "%s\n" "--mount type=tmpfs,dst=/run/user/1000/,tmpfs-size=10m"
+printf "%s\n" "--mount type=tmpfs,dst=/run/user/1000/,tmpfs-size=10m,notmpcopyup"
 
 # Prints the total memory, in bytes, of the system that runs the containers.
 container_host_mem_bytes() {
