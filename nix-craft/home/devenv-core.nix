@@ -1,5 +1,41 @@
 { pkgs, lib, config, ... }:
 
+let
+  # limactl refuses to run as root, and the from-scratch rootfs has no su/sudo
+  # (no PAM, no setuid bits). Root holds CAP_SETUID/CAP_SETGID in the container,
+  # so setpriv is enough to drop to the `lima` user that
+  # ../devenv-home-base.nix writes into /etc/passwd.
+  #
+  # --keep-groups is deliberate: /dev/kvm is reachable only through the host
+  # kvm gid that `--group-add keep-groups` leaves on the process as an unmapped
+  # supplementary group. setgroups() cannot re-add an unmapped gid inside the
+  # user namespace, so --init-groups or --groups would lose KVM. The cost is
+  # that gid 0 also stays in the supplementary set.
+  asLima = pkgs.writeShellScriptBin "as-lima" ''
+    set -eu
+
+    if [ "$#" -eq 0 ]; then
+      echo "usage: as-lima <command> [args...]" >&2
+      exit 2
+    fi
+
+    if [ "$(${pkgs.coreutils-full}/bin/id -u)" != "0" ]; then
+      exec "$@"
+    fi
+
+    # Only the identity-bound variables change; PATH and the rest of the
+    # session carry over so the nix profile and mise shims stay reachable.
+    # XDG_*_HOME are cleared rather than rewritten so the usual $HOME-relative
+    # defaults apply under /home/lima.
+    exec ${pkgs.util-linux}/bin/setpriv --reuid=lima --regid=lima --keep-groups -- \
+      ${pkgs.coreutils-full}/bin/env \
+        -u XDG_CONFIG_HOME -u XDG_DATA_HOME -u XDG_CACHE_HOME -u XDG_STATE_HOME \
+        HOME=/home/lima USER=lima LOGNAME=lima \
+        LIMA_HOME=/home/lima/.local/share/lima \
+        XDG_RUNTIME_DIR=/run/user/1000 \
+        "$@"
+  '';
+in
 {
   # Core tools the nix2container devenv rootfs cannot get from a base image;
   # the host user gets them from the distro, so they are added only when the
@@ -18,6 +54,7 @@
       which
       less
       openssh
+      asLima
     ];
 
     # Runtime libraries for playwright-downloaded chromium (store configured in

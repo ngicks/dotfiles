@@ -42,6 +42,7 @@ let
             "$out/dev" \
             "$out/etc" \
             "$out/home" \
+            "$out/home/lima" \
             "$out/media" \
             "$out/mnt" \
             "$out/opt" \
@@ -97,11 +98,17 @@ let
                 | while IFS= read -r -d "" f; do compile_zsh "$f"; done
         fi
 
+        # limactl refuses to run as root, so the image carries an unprivileged
+        # `lima` user; home/devenv-core.nix ships `as-lima` to switch to it.
+        # uid 1000 matches the /run/user/1000 XDG_RUNTIME_DIR tmpfs that the
+        # launcher (devenv/scripts/opts.d/10-core.sh) already mounts.
         cat > "$out/etc/passwd" <<'EOF'
         root:x:0:0:root:/root:/root/.nix-profile/bin/zsh
+        lima:x:1000:1000:lima:/home/lima:/bin/sh
         EOF
         cat > "$out/etc/group" <<'EOF'
         root:x:0:
+        lima:x:1000:
         EOF
         cat > "$out/etc/nsswitch.conf" <<'EOF'
         hosts: files dns
@@ -141,6 +148,17 @@ nix2containerLib.buildImage {
             path = rootfs;
             regex = "^${rootfs}/(bin|dev|etc|home|media|mnt|opt|proc|run|srv|sys|usr(/bin)?|var(/(cache|lib|log|spool))?)$";
             mode = "0755";
+        }
+        # Ownership cannot be expressed in the store either; the lima home
+        # gets its uid/gid here so limactl can write LIMA_HOME under it.
+        {
+            path = rootfs;
+            regex = "^${rootfs}/home/lima$";
+            mode = "0750";
+            uid = 1000;
+            gid = 1000;
+            uname = "lima";
+            gname = "lima";
         }
     ];
     layers = [ homePackagesLayer ];

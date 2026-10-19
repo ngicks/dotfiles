@@ -54,8 +54,9 @@ The nix2container base provides:
 
 - the Home Manager package closure and `/root/.nix-profile`;
 - the Home Manager-managed files under `/root`;
-- the shell, CA certificates, glibc compatibility links, user metadata, and
-  other minimal root filesystem contents required by the Containerfile.
+- the shell, CA certificates, glibc compatibility links, user metadata (`root`
+  and the unprivileged `lima` user with `/home/lima`), and other minimal root
+  filesystem contents required by the Containerfile.
 
 The Containerfile still:
 

@@ -39,6 +39,12 @@ bounds what works inside:
   above still blocks nested `run`.
 - Consequence: `mise up` / `mise install` for tools whose build is sandboxed in
   a container (the `moon:` backend) must run on the host, not in devenv.
+- `limactl` refuses to run as root. Run it through `as-lima` (e.g.
+  `as-lima limactl start template://ubuntu`), which switches to the
+  unprivileged `lima` user (uid 1000, home `/home/lima`) while keeping the
+  `/dev/kvm` group. Lima state lives under `/home/lima` (an anonymous volume
+  from `opts.d/09-lima.sh`) and dies with the container. The `lima` user cannot write root-owned paths such as the mounted
+  working tree, so `chmod` what the guest must write to.
 
 #### Repository Summary
 
