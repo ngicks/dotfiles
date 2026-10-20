@@ -223,7 +223,8 @@ return {
   },
   {
     src = "https://github.com/petertriho/nvim-scrollbar",
-    version = "",
+    -- v2 replaces v1 on main on 2026-11-16; drop this pin after that date.
+    version = "refactor/v2",
   },
   { -- display breadcrumb list at top of the buffer.
     src = "https://github.com/Bekaboo/dropbar.nvim",

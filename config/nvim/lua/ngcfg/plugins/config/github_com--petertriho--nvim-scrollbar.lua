@@ -2,8 +2,9 @@
 local M = {}
 
 M.config = function()
-  require("scrollbar").setup()
-  require("scrollbar.handlers.gitsigns").setup()
+  require("scrollbar").setup({
+    providers = { gitsigns = true },
+  })
 end
 
 return M
