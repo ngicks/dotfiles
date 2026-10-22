@@ -28,10 +28,8 @@ XDG_CACHE_HOME="${XDG_CACHE_HOME:-/tmp/nvim-cache}" \
 XDG_STATE_HOME="${XDG_STATE_HOME:-/tmp/nvim-state}" \
 nvim --headless \
   "+PackLockPruneOrphans" \
-  "+PackLockPruneDesync" \
   "+lua vim.pack.add(require(\"ngpack\").list_pack(), { confirm = false })" \
-  "+lua vim.pack.update(nil, { target = 'lockfile' })" \
-  "+write" \
+  "+lua vim.pack.update(nil, { target = 'lockfile', force = true })" \
   "+quitall"
 
 XDG_CONFIG_HOME="$dir/config" \

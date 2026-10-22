@@ -102,7 +102,7 @@ local function delete_pack_data(name)
   local target_path = packs[1].path
 
   local ok = vim.fn.delete(target_path, "rf") == 0
-  if ok ~= 0 then
+  if not ok then
     vim.notify(("removal failed: %s for pack name %q"):format(target_path, name), vim.log.levels.ERROR)
     return false
   end
