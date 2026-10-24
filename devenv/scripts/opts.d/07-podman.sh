@@ -41,7 +41,15 @@ if [[ "${DEVENV_PODMAN_IMAGE_STORE:-1}" == "1" ]]; then
   if [[ -n "${graphroot}" && -d "${graphroot}" ]]; then
     # Referenced as an additionalimagestores entry by the
     # __additional_podman-in-podman storage.conf variant.
-    printf "%s\n" "--mount type=bind,src=${graphroot},dst=/root/.local/share/containers/host-graphroot,ro"
+    # Only the image store parts are mounted: the rest of graphroot holds
+    # secrets, libpod's db, volumes and per-container configs.
+    # bind-nonrecursive because podman (6.1.2) has no recursive read-only
+    # bind (ro=recursive is accepted but yields a rw mount), and a recursive
+    # bind carries host podman's rw self-mount of overlay/ and the merged
+    # rootfs of running containers in as writable.
+    for sub in overlay overlay-images overlay-layers; do
+      printf "%s\n" "--mount type=bind,src=${graphroot}/${sub},dst=/root/.local/share/containers/host-graphroot/${sub},ro,bind-nonrecursive"
+    done
   elif [[ -n "${DEVENV_PODMAN_IMAGE_STORE:-}" ]]; then
     echo "[WARNING]: DEVENV_PODMAN_IMAGE_STORE=1 but host graphroot could not be resolved (podman info) or does not exist; host image store is not mounted" >&2
   fi
