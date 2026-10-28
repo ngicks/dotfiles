@@ -2,8 +2,8 @@
 local M = {}
 
 M.opts = {
-  indent = { char = "│", highlight = "IblChar" },
-  scope = { char = "│", highlight = "IblScopeChar" },
+  indent = { char = "│" },
+  scope = { char = "│" },
 }
 
 M.config = function(_, opts)
