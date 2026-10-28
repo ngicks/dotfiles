@@ -11,7 +11,7 @@
       "version": ">=0.0.0"
     },
     "base46": {
-      "rev": "19023074b28ef5554909d27d934353603df256f0",
+      "rev": "d870ec89a7b2f28c4accce515f97b7bcc5b9d200",
       "src": "https://github.com/nvchad/base46"
     },
     "cmp-async-path": {
@@ -45,7 +45,7 @@
       "version": ">=0.0.0"
     },
     "diffview.nvim": {
-      "rev": "2a2d89a07f5d5d3cef7f542b99c3e28050ca205c",
+      "rev": "b297353e82c0390a2ca0c549b1c1acb6802e0c4c",
       "src": "https://github.com/dlyongemallo/diffview.nvim"
     },
     "dropbar.nvim": {
@@ -54,7 +54,7 @@
       "version": ">=0.0.0"
     },
     "friendly-snippets": {
-      "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
+      "rev": "b2ea5c41a150ba72fb656eedb4ed0a86d138d945",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf": {
@@ -155,17 +155,17 @@
       "version": ">=0.0.0"
     },
     "nvim-scrollbar": {
-      "rev": "f813a6cfc993d705a7f7574fa475b0590230c901",
+      "rev": "d6d5031e92b26d3a5b1343a3bcddee4e26612abc",
       "src": "https://github.com/petertriho/nvim-scrollbar",
       "version": "'refactor/v2'"
     },
     "nvim-tree.lua": {
-      "rev": "531b807b8f0d6f75016a0ee1e0cd5ce2086e9d95",
+      "rev": "9a2e0006d42f292eb3ade7dfdff201a7429a780c",
       "src": "https://github.com/nvim-tree/nvim-tree.lua",
       "version": ">=0.0.0"
     },
     "nvim-treesitter": {
-      "rev": "29212d826054bb2948fa9d3a99eca9bf6a050eb2",
+      "rev": "a2f694478be07f89c2d03cc17858a8745a400c4b",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -224,7 +224,7 @@
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
-      "rev": "78c96eee08ad8eb73e39f7aeff8d978be40b3f91",
+      "rev": "07a2554e58fa982e2dcf8dd346291cefef00ca33",
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
@@ -232,7 +232,7 @@
       "src": "https://github.com/tpope/vim-dadbod"
     },
     "vim-dadbod-completion": {
-      "rev": "a8dac0b3cf6132c80dc9b18bef36d4cf7a9e1fe6",
+      "rev": "8c65c6b02e8434e5360fc78097e489c05e899697",
       "src": "https://github.com/kristijanhusak/vim-dadbod-completion"
     },
     "vim-dadbod-ui": {
@@ -240,7 +240,7 @@
       "src": "https://github.com/kristijanhusak/vim-dadbod-ui"
     },
     "volt": {
-      "rev": "620de1321f275ec9d80028c68d1b88b409c0c8b1",
+      "rev": "4351c5cd790a0d39491c4d5c75dd62d7db3d3414",
       "src": "https://github.com/nvzone/volt"
     },
     "which-key.nvim": {
