@@ -73,7 +73,27 @@ local function pick_worktree(candidates, cb)
   if #candidates == 1 then
     return cb(candidates[1])
   end
-  vim.ui.select(candidates, { prompt = "lazygit worktree" }, function(choice)
+  vim.ui.select(candidates, {
+    prompt = "lazygit worktree",
+    -- worktrees share a long common prefix and differ at the tail, so a right-truncated
+    -- row hides exactly the part that tells them apart. snacks' left truncation only
+    -- exists in its file formatter; a `resolve` chunk gets the remaining width instead.
+    -- The finder calls this without `supports_chunks` to build the match text, which keeps
+    -- matching on the full path.
+    format_item = function(path, supports_chunks)
+      if not supports_chunks then
+        return path
+      end
+      return {
+        {
+          "",
+          resolve = function(max_width)
+            return { { Snacks.picker.util.truncate(path, max_width, true) } }
+          end,
+        },
+      }
+    end,
+  }, function(choice)
     if choice then
       cb(choice)
     end
