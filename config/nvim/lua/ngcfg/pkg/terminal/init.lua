@@ -87,8 +87,10 @@ local function pick_worktree(candidates, cb)
       return {
         {
           "",
+          -- the list hands `resolve` the whole window width, but then prepends the
+          -- one-column selection marker outside of it; take that column back.
           resolve = function(max_width)
-            return { { Snacks.picker.util.truncate(path, max_width, true) } }
+            return { { Snacks.picker.util.truncate(path, max_width - 1, true) } }
           end,
         },
       }
