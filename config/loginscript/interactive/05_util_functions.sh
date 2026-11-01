@@ -53,9 +53,13 @@ _apm-run() {
     # compile scans every worktree's .apm under the bare root and keeps the
     # first same-named primitive in walk order; the root .apm is walked
     # first, so this copy makes the default branch win.
-    rm -rf ../.apm &&
-      cp -r ./.apm ../ &&
-      cp ./apm.yml ../ || exit 1
+    # Projects that only consume dependencies have no local .apm; the stale
+    # root copy is still removed so it cannot shadow the dependencies.
+    rm -rf ../.apm || exit 1
+    if [ -d ./.apm ]; then
+      cp -r ./.apm ../ || exit 1
+    fi
+    cp ./apm.yml ../ || exit 1
     if [ "$1" = update ]; then
       # `apm update` has no --root. The bare root already mirrors the project
       # (apm.yml, apm_modules/, apm.lock.yaml), so run it there and pull the
