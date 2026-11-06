@@ -51,7 +51,7 @@ done < <(
     | select(.key | startswith("npm:")
                  or startswith("go:")
                  or startswith("cargo:")
-                 or startswith("pipx:"))
+                 or startswith("pypi:"))
     | .key as $tool
     | .value[]
     | select(.active == true)
