@@ -9,6 +9,16 @@ if [ -t 0 ]; then
   export GPG_TTY="${TTY:-$(tty)}"
 fi
 
+# pinentry.sh runs as a child of gpg-agent and never sees this shell's
+# SSH_CONNECTION. PINENTRY_USER_DATA is the only hint gpg forwards to it, and
+# updatestartuptty below copies the hint into the agent defaults that
+# ssh-agent requests use. Without the hint an SSH login falls through to
+# pinentry-qt, which draws on a display the SSH user cannot see.
+# The popup hint set below takes precedence when it applies.
+if [ -n "${SSH_CONNECTION-}" ]; then
+  export PINENTRY_USER_DATA="TTY"
+fi
+
 # Function to recompute PINENTRY_USER_DATA on each prompt
 # Enables correct pinentry context when attaching to tmux from different devices
 __update_pinentry_user_data() {
