@@ -415,6 +415,18 @@ backend = "pipx:huggingface_hub"
 specifiers = ["latest"]
 uv = { path = ".mise/locks/pipx-huggingface-hub/2.4.0", digest = "sha256:2a1818852285be175a981ddd170ed5fa5b911bc77ab3fed8a1678852c6d98728" }
 
+[[tools."pypi:apm-cli"]]
+version = "0.35.0"
+backend = "pypi:apm-cli"
+specifiers = ["latest"]
+uv = { path = ".mise/locks/pypi-apm-cli/0.35.0", digest = "sha256:e4f81457346743a7ef5e7ef36ebd1945631d106122a2e5f33d0047b7963cedd4" }
+
+[[tools."pypi:huggingface_hub"]]
+version = "2.4.0"
+backend = "pypi:huggingface_hub"
+specifiers = ["latest"]
+uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0", digest = "sha256:3c9c733d6f4bbca328c91fc6c9734c8071f322db9c70c09ee87ecca8988effbd" }
+
 [[tools.ruff]]
 version = "0.17.3"
 backend = "aqua:astral-sh/ruff"
