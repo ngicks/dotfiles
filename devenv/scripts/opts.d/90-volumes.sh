@@ -38,6 +38,10 @@ mount_volume codex-config /root/.codex
 # codex hardcodes <CODEX_HOME>/logs_2.sqlite and its WAL churn burns the
 # SSD-backed volume; ensure-podman-volume.sh symlinks it under logs-ram.
 printf "%s\n" "--mount type=tmpfs,dst=/root/.codex/logs-ram,tmpfs-size=512m,notmpcopyup"
+# dsh keeps config and state together under DSH_HOME (default ~/.dsh); move it
+# to the XDG config dir.
+mount_volume dsh-home /root/.config/dsh
+printf "%s\n" "--env DSH_HOME=/root/.config/dsh"
 mount_volume apm-config /root/.apm
 mount_volume hf-token /root/.config/huggingface
 mount_volume gh-config /root/.config/gh
