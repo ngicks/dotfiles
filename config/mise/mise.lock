@@ -403,18 +403,6 @@ aube = { path = ".mise/locks/npm-zenn-cli/0.5.13", digest = "sha256:5dcc0e717c6a
 backend = "npm:zenn-cli"
 specifiers = ["latest"]
 
-[[tools."pipx:apm-cli"]]
-version = "0.35.0"
-backend = "pipx:apm-cli"
-specifiers = ["latest"]
-uv = { path = ".mise/locks/pipx-apm-cli/0.35.0", digest = "sha256:9ce173b275e590c5d35023004b33af8625355a8f6dd0e060ee28759ba370cb5a" }
-
-[[tools."pipx:huggingface_hub"]]
-version = "2.4.0"
-backend = "pipx:huggingface_hub"
-specifiers = ["latest"]
-uv = { path = ".mise/locks/pipx-huggingface-hub/2.4.0", digest = "sha256:2a1818852285be175a981ddd170ed5fa5b911bc77ab3fed8a1678852c6d98728" }
-
 [[tools."pypi:apm-cli"]]
 version = "0.35.0"
 backend = "pypi:apm-cli"
