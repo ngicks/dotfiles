@@ -45,7 +45,6 @@ moon = "https://github.com/ngicks/mise-moon-backend-plugin#0.0.5"
 # python pins a mise-managed interpreter under MISE_DATA_DIR. Without it, mise
 # binds the venv to the first python on PATH (the nix profile), whose path
 # differs between the host and devenv, which share the install dir.
-python = "3.15"
 "pypi:apm-cli" = { version = "latest", python = "3.15" }
 "pypi:huggingface_hub" = { version = "latest", python = "3.15" }
 ## mcp
