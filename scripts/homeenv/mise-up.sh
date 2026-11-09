@@ -7,6 +7,7 @@ repo_root=$(cd $(dirname $0)/../../ && pwd -P)
 run_in_container=$repo_root/devenv/scripts/run-devenv.sh
 
 mise_install_f=$(cd $(dirname $0) && pwd -P)/mise-install-f-if-missing.sh
+uv_python_install=$(cd $(dirname $0) && pwd -P)/uv-python-install-for-mise.sh
 
 # Installs often fail midway; commit each step's config/mise changes right away
 # so a later failure does not leave the bumps uncommitted. The pathspec keeps
@@ -19,6 +20,15 @@ commit_mise_config() {
   git -C "$repo_root" add -A -- config/mise &&
     git -C "$repo_root" commit -m "$message" -- config/mise
 }
+
+echo ""
+echo "uv python install for mise"
+echo ""
+
+# mise up and mise lock both update the lockfile, which runs `uv lock` for pypi
+# tools. The container mounts the host's uv python dir, so installing on the
+# host covers both.
+$uv_python_install
 
 echo ""
 echo "mise up"
