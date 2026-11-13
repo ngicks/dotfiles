@@ -87,9 +87,10 @@ done < <(
                  or startswith("go:")
                  or startswith("cargo:")
                  or startswith("pypi:"))
-    | .key as $tool
-    | .value[]
-    | select(.active == true)
-    | $tool
+    # Select by config source, not by .active: mise reports a requested tool
+    # whose install is missing as active=false, and those are the ones this
+    # script exists for. Leftover installs no config requests have no source.
+    | select(any(.value[]; .source != null))
+    | .key
   '
 )
