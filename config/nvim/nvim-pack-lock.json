@@ -165,7 +165,7 @@
       "version": ">=0.0.0"
     },
     "nvim-treesitter": {
-      "rev": "19bdfc04f40ed2ccb3340591d125f759b0406875",
+      "rev": "60c0f468de3e636fa660a419d537e8033aca4e39",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
@@ -224,7 +224,7 @@
       "src": "https://github.com/folke/trouble.nvim"
     },
     "ui": {
-      "rev": "8cbf0dc1883b20a1df114149c187d250f0af0853",
+      "rev": "efb7edef6789548fd02ac88b8d47b3e344031c53",
       "src": "https://github.com/nvchad/ui"
     },
     "vim-dadbod": {
