@@ -25,6 +25,13 @@ fi
 
 printf "%s\n" "--device /dev/kvm"
 printf "%s\n" "--group-add keep-groups"
+# virtiofsd shares guest RAM with qemu, so the guest memory has to be a shared
+# mapping; lima and libvirt's file/shm memory backing place it under /dev/shm.
+# Podman's 64m default cannot hold a guest. /dev/shm is tmpfs and allocates
+# lazily, so the limit only caps usage; half of host RAM matches the kernel's
+# own tmpfs default.
+shm_size="${DEVENV_KVM_SHM_SIZE:-$(awk '/^MemTotal:/ { printf "%dk", $2 / 2 }' /proc/meminfo)}"
+printf "%s\n" "--shm-size ${shm_size}"
 # All libvirt state (domain sockets, nvram, scratch disks) is per-container
 # and dies with it: sharing it between containers would let one reach into
 # another's VM monitor/agent sockets. Nothing is host-shared here; on request
