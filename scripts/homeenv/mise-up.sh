@@ -7,6 +7,7 @@ repo_root=$(cd $(dirname $0)/../../ && pwd -P)
 run_in_container=$repo_root/devenv/scripts/run-devenv.sh
 
 mise_install_f=$(cd $(dirname $0) && pwd -P)/mise-install-f-if-missing.sh
+mise_lock_bump_each=$(cd $(dirname $0) && pwd -P)/mise-lock-bump-each.sh
 uv_python_install=$(cd $(dirname $0) && pwd -P)/uv-python-install-for-mise.sh
 
 # Installs often fail midway; commit each step's config/mise changes right away
@@ -41,6 +42,22 @@ $run_in_container \
   "-lc" "mise up"
 
 commit_mise_config "👷: mise up"
+
+echo ""
+echo "mise lock --bump each"
+echo ""
+
+# mise up leaves the lockfile untouched when any tool fails. Bump per tool so
+# the tools that do resolve still get locked; the install step below then
+# installs whatever the lockfile now names.
+$run_in_container \
+  "--mount type=bind,src=$HOME/.dotfiles/config/mise/,dst=/mise \
+  --mount type=bind,src=$mise_lock_bump_each,dst=/mise-lock-bump-each.sh,ro \
+  --env MISE_GLOBAL_CONFIG_FILE=/mise/mise.toml \
+  --workdir /mise" \
+  "-lc" "/mise-lock-bump-each.sh"
+
+commit_mise_config "👷: mise lock bump"
 
 echo ""
 echo "mise install -f if missing"
