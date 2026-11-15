@@ -1,3 +1,7 @@
 [submodule "tool"]
 	path = tool
 	url = https://github.com/ngicks/dotfiles-tool.git
+[submodule "agents-package"]
+	path = agents-package
+	url = https://github.com/ngicks/agents-package.git
+	branch = main
