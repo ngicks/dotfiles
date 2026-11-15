@@ -13,20 +13,3 @@ if [ ! -L "${codex_mp}/logs_2.sqlite" ]; then
     ln -sfn logs-ram/logs_2.sqlite "$1/logs_2.sqlite"
   ' _ "${codex_mp}"
 fi
-
-# 90-volumes.sh mounts config/ and local/ of apm-config as subpaths, which
-# podman requires to exist. The volume used to be mounted whole at ~/.apm, so
-# anything else at its top level is that old content and belongs in config/.
-apm_mp=$(podman volume inspect apm-config --format '{{.Mountpoint}}')
-if [ ! -d "${apm_mp}/config" ] || [ ! -d "${apm_mp}/local" ]; then
-  podman unshare sh -c '
-    mkdir -p "$1/config" "$1/local"
-    for entry in "$1"/* "$1"/.[!.]*; do
-      [ -e "${entry}" ] || [ -L "${entry}" ] || continue
-      case "${entry##*/}" in
-        config | local) ;;
-        *) mv "${entry}" "$1/config/" ;;
-      esac
-    done
-  ' _ "${apm_mp}"
-fi
