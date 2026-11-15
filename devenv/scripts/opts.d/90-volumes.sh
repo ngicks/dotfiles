@@ -11,6 +11,7 @@ fi
 mount_volume() {
   local name=$1
   local destination=$2
+  local subpath=${3:-}
 
   if [[ "${DEVENV_DRY_RUN:-}" != "1" ]]; then
     if [[ $'\n'"${existing_volumes}"$'\n' != *$'\n'"${name}"$'\n'* ]]; then
@@ -19,7 +20,7 @@ mount_volume() {
     fi
   fi
 
-  printf "%s\n" "--mount type=volume,src=${name},dst=${destination}"
+  printf "%s\n" "--mount type=volume,src=${name},dst=${destination}${subpath:+,subpath=${subpath}}"
 }
 
 mount_volume local-bin /root/.local/bin
@@ -42,7 +43,16 @@ printf "%s\n" "--mount type=tmpfs,dst=/root/.codex/logs-ram,tmpfs-size=512m,notm
 # to the XDG config dir.
 mount_volume dsh-home /root/.config/dsh
 printf "%s\n" "--env DSH_HOME=/root/.config/dsh"
-mount_volume apm-config /root/.apm
+# apm hardcodes ~/.apm (config, lockfile, deployment receipts) and
+# ~/.apm-local/installation (the identity those receipts are bound to), and it
+# refuses symlinked components on both, so neither can be redirected into
+# ~/.config/apm. Without the identity apm ignores its receipts and refuses to
+# overwrite the skills it deployed into the persistent agent config volumes.
+# Both live in one volume and are mounted as subpaths at the hardcoded places;
+# ensure-podman-volume.sh creates the subpaths.
+mount_volume apm-config /root/.config/apm
+mount_volume apm-config /root/.apm config
+mount_volume apm-config /root/.apm-local local
 mount_volume hf-token /root/.config/huggingface
 mount_volume gh-config /root/.config/gh
 mount_volume glab-config /root/.config/glab-cli
