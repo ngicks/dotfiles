@@ -49,6 +49,8 @@ mount_volume apm-config /root/.apm
 # apm hardcodes both paths and rejects symlinks on them, so the identity gets
 # its own volume.
 mount_volume apm-local /root/.apm-local
+# apm deploys user-scope codex skills to ~/.agents/skills, outside codex-config.
+mount_volume agents-config /root/.agents
 mount_volume hf-token /root/.config/huggingface
 mount_volume gh-config /root/.config/gh
 mount_volume glab-config /root/.config/glab-cli
