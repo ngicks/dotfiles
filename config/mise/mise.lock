@@ -369,31 +369,31 @@ specifiers = ["0.0.3"]
 
 [[tools."npm:@marp-team/marp-cli"]]
 version = "4.5.1"
-aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:10a24b3ff4166d4b72256c078dfeb7d1546d0927afa8341bcdacb7a6d33dd4d9" }
+aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:6481169fe49570217fa12bb52935c3412c83cfd9e56ae39e7e69680f52761ff1" }
 backend = "npm:@marp-team/marp-cli"
 specifiers = ["latest"]
 
 [[tools."npm:@mermaid-lint/cli"]]
 version = "0.53.1"
-aube = { path = ".mise/locks/npm-mermaid-lint-cli/0.53.1", digest = "sha256:52a14d3fa0feea4f054faf5d00e98329671343dabc43c9b66b5ca598f04f5f35" }
+aube = { path = ".mise/locks/npm-mermaid-lint-cli/0.53.1", digest = "sha256:e5b25c071138c506a1b91868d9998692e70d86b05dd17718adc4802421fa0021" }
 backend = "npm:@mermaid-lint/cli"
 specifiers = ["latest"]
 
 [[tools."npm:@slidev/cli"]]
 version = "53.1.0"
-aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:a9ff6c1ef5b1fc4fae71d034539f44ad086d779f938016468b21ca96893dee3c" }
+aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:230f2c5513d008dfa185f1ea7755f317cb07fb3e8d7c7e4be9dab9b9a9fcb9e5" }
 backend = "npm:@slidev/cli"
 specifiers = ["latest"]
 
 [[tools."npm:difit"]]
 version = "5.0.12"
-aube = { path = ".mise/locks/npm-difit/5.0.12", digest = "sha256:6c2e7938539e24c6eb87d57f9870225a7e375705bd96361249579428cb02b204" }
+aube = { path = ".mise/locks/npm-difit/5.0.12", digest = "sha256:cd4636cc53f8178a0d71fe828663ac1dc8335fd420c8abadc9e3c3a0c3cd0fc8" }
 backend = "npm:difit"
 specifiers = ["latest"]
 
 [[tools."npm:zenn-cli"]]
 version = "0.5.15"
-aube = { path = ".mise/locks/npm-zenn-cli/0.5.15", digest = "sha256:6f49609de7a31a4ecd767be5ab80c74ae4e6f03a5267655ec799334a898f8731" }
+aube = { path = ".mise/locks/npm-zenn-cli/0.5.15", digest = "sha256:3252783c64b94b519fb65ce79f12f3e566ab8ed6d73445ec2f8f5db1f707fff6" }
 backend = "npm:zenn-cli"
 specifiers = ["latest"]
 
@@ -401,7 +401,7 @@ specifiers = ["latest"]
 version = "0.36.1"
 backend = "pypi:apm-cli"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-apm-cli/0.36.1~741068e7", digest = "sha256:0a656357a6e190466e1bb66e42eb7451ffb1a9a83c8c0341524feb6ac719f84e" }
+uv = { path = ".mise/locks/pypi-apm-cli/0.36.1~741068e7", digest = "sha256:6c7c9038a8c35e57868f4fd2fbdf1866084d1c307b061fa6bcadfcf5d7949cf6" }
 
 [tools."pypi:apm-cli".options]
 python = "3.14"
@@ -410,7 +410,7 @@ python = "3.14"
 version = "2.4.0"
 backend = "pypi:huggingface_hub"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:c4b34c101fc03f22436aea533e91eda5132486ddfbe7dccde7e41ef7b927438c" }
+uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:e586d0a9c074043f215e9bc4efe98e5cbc8536253c277267e510a2e7eb5a9b84" }
 
 [tools."pypi:huggingface_hub".options]
 python = "3.14"
