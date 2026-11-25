@@ -376,31 +376,31 @@ specifiers = ["0.0.3"]
 
 [[tools."npm:@marp-team/marp-cli"]]
 version = "4.5.1"
-aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:dec842d0fa702776efdf9df4fd0a1bd3110cc6c566b7569c488d0d1ce50d7dd7" }
+aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:9b128eac1214ca33801730b28d3bd12601ff846e46cf9996fae1a69378edbe24" }
 backend = "npm:@marp-team/marp-cli"
 specifiers = ["latest"]
 
 [[tools."npm:@mermaid-lint/cli"]]
 version = "0.53.1"
-aube = { path = ".mise/locks/npm-mermaid-lint-cli/0.53.1", digest = "sha256:e5b25c071138c506a1b91868d9998692e70d86b05dd17718adc4802421fa0021" }
+aube = { path = ".mise/locks/npm-mermaid-lint-cli/0.53.1", digest = "sha256:3f58780318bb7db8c94f926bfc277619710cdbf145753f1acfee482a3437327d" }
 backend = "npm:@mermaid-lint/cli"
 specifiers = ["latest"]
 
 [[tools."npm:@slidev/cli"]]
 version = "53.1.0"
-aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:bc15aa01080f12b0e2f9607dc1ee0b04b7197b20733c98330ff96234446507c6" }
+aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:212bc0e623df6f87b279a29c20206dfecdda026aba9cecb173e074308a12001b" }
 backend = "npm:@slidev/cli"
 specifiers = ["latest"]
 
 [[tools."npm:difit"]]
 version = "5.0.12"
-aube = { path = ".mise/locks/npm-difit/5.0.12", digest = "sha256:4da67c762f6ff68adf9bf321e8e1596e694658cc0d1093f4c7d9719c529309ab" }
+aube = { path = ".mise/locks/npm-difit/5.0.12", digest = "sha256:92150c406e7c3b16ef8935ea43c9db99cb6b7c07bb93a750fd7cebbe976277a5" }
 backend = "npm:difit"
 specifiers = ["latest"]
 
 [[tools."npm:zenn-cli"]]
 version = "0.5.15"
-aube = { path = ".mise/locks/npm-zenn-cli/0.5.15", digest = "sha256:328021f00b1cb214a7d38a14c3b419614e8632f5e3eeb8d56f19ec947ec7d40f" }
+aube = { path = ".mise/locks/npm-zenn-cli/0.5.15", digest = "sha256:85314b2413836a5634875e91d34307325a5229118562eff6a9b03de430c62cff" }
 backend = "npm:zenn-cli"
 specifiers = ["latest"]
 
@@ -408,7 +408,7 @@ specifiers = ["latest"]
 version = "0.38.1"
 backend = "pypi:apm-cli"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-apm-cli/0.38.1~741068e7", digest = "sha256:7647000132fc09ac1239c76184eddadcb2e99ce946c7e2751c74de7c8e20a6a9" }
+uv = { path = ".mise/locks/pypi-apm-cli/0.38.1~741068e7", digest = "sha256:41a6cce35737c640bd2afbeb408644a10cbd73bb7a65449741802dc45616a85e" }
 
 [tools."pypi:apm-cli".options]
 python = "3.14"
@@ -417,7 +417,7 @@ python = "3.14"
 version = "2.4.0"
 backend = "pypi:huggingface_hub"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:47769b779285c2e54447a7e2b1f94572da05d6ba6697da730f491707374d6482" }
+uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:9e3392dac63c400519463cc4fbc4bda99efeafdda89ecb4bab31e224a82f5dab" }
 
 [tools."pypi:huggingface_hub".options]
 python = "3.14"
@@ -428,38 +428,38 @@ backend = "core:python"
 specifiers = ["3.14"]
 
 [tools.python."platforms.linux-arm64"]
-checksum = "sha256:38fd50f07170adc29d481913d1c30b17ecb538fbe290315fe1f83d84fdd5b694"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
+checksum = "sha256:2f5df923b202f9054b665c4b4c6ee3fc08bf1ec46cc640bb68ec52aecc658d30"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-arm64-musl"]
-checksum = "sha256:75c04e5fa8105d95f8c84cca05a32b122d000dbbeb4cb4a81a1da5009636a42d"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-aarch64-unknown-linux-musl-install_only_stripped.tar.gz"
+checksum = "sha256:802d7af9b1cc34dd7c244fd779f942766fc5bc4b0552dce04761a182b8b46d95"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-aarch64-unknown-linux-musl-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-x64"]
-checksum = "sha256:c2ff2e97422f5d3896a16e0317fd212ba977bbf2688d93a6f7a03d817506bd30"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
+checksum = "sha256:73ee0629c19e9f87077f318cd50d7e703137c274479ce8e8fd5723e75c86c9bc"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.linux-x64-musl"]
-checksum = "sha256:eff469445ef67410c1bea2370c9d3032dcacb639e9711c891d92b846a7dc5ec3"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
+checksum = "sha256:2a72041fae1fad4084e976a86ea64c0afec3d3b8ef76042d7e98c99d11032710"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-x86_64-unknown-linux-musl-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.macos-arm64"]
-checksum = "sha256:f15ec3d15460dd66c2eb88639b152cd9040e7d1ece11e38bf89e8f53f0171e02"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-aarch64-apple-darwin-install_only_stripped.tar.gz"
+checksum = "sha256:81fca81fcc8a715288fd12286b66bbdaaf4a0db6818bc91826ddbcffae2ac2cf"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-aarch64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.macos-x64"]
-checksum = "sha256:85f8e54798e8e6aa58d2253f013d815c5616343cc0d15cbea882fca78bdfeae2"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-x86_64-apple-darwin-install_only_stripped.tar.gz"
+checksum = "sha256:8198777467d9d3900417dc1cfd9d512956deaebabe293d08aea5cfa5c70d6957"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-x86_64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [tools.python."platforms.windows-x64"]
-checksum = "sha256:32b6cf90a03e2bc15fda8d2ab7ff78c4870f138887d612932650ce764efaab8f"
-url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261110/cpython-3.14.10+20261110-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
+checksum = "sha256:72d45d2d16c509293999550c684003b0411ab9ec6e473675d1df2af5be050790"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261124/cpython-3.14.10+20261124-x86_64-pc-windows-msvc-install_only_stripped.tar.gz"
 provenance = "github-attestations"
 
 [[tools.ruff]]
