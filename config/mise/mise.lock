@@ -123,44 +123,44 @@ url = "https://github.com/helm/chart-testing/releases/download/v3.15.0/chart-tes
 url_api = "https://api.github.com/repos/helm/chart-testing/releases/assets/614959708"
 
 [[tools."aqua:openai/codex"]]
-version = "0.171.0"
+version = "0.172.0"
 backend = "aqua:openai/codex"
 specifiers = ["latest"]
 
 [tools."aqua:openai/codex"."platforms.linux-arm64"]
-checksum = "sha256:d8c43bee6cf11b01eb18b95f4d7961092bc40228180808859e70dabb7784c1c9"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769865205"
+checksum = "sha256:faf17b8071927f33346a805dc8cb45de4e08c0d75cf0e5e68cecddca28b8861e"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785025241"
 
 [tools."aqua:openai/codex"."platforms.linux-arm64-musl"]
-checksum = "sha256:d8c43bee6cf11b01eb18b95f4d7961092bc40228180808859e70dabb7784c1c9"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769865205"
+checksum = "sha256:faf17b8071927f33346a805dc8cb45de4e08c0d75cf0e5e68cecddca28b8861e"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785025241"
 
 [tools."aqua:openai/codex"."platforms.linux-x64"]
-checksum = "sha256:8391d67757496bfd14893eca6cbf0c96994bf2627566ff1f018f70600c9ef6b3"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769869089"
+checksum = "sha256:63e3b00065ed7f62166d0522e17f663cb866a31d80d03e63365482ed34a1d991"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785031494"
 
 [tools."aqua:openai/codex"."platforms.linux-x64-musl"]
-checksum = "sha256:8391d67757496bfd14893eca6cbf0c96994bf2627566ff1f018f70600c9ef6b3"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769869089"
+checksum = "sha256:63e3b00065ed7f62166d0522e17f663cb866a31d80d03e63365482ed34a1d991"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785031494"
 
 [tools."aqua:openai/codex"."platforms.macos-arm64"]
-checksum = "sha256:58c88032ec446e72922d911d8f03773102da20c16a6059cf21f6744bce57f210"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769863147"
+checksum = "sha256:0970016d48209a09c4039139629ed79b4a31c5e3d864e792c043419d98fa6466"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785021808"
 
 [tools."aqua:openai/codex"."platforms.macos-x64"]
-checksum = "sha256:dd130ea3217b4e6fe4454c99949e0b28e2e8a9ad8da8c3a75f0c7265fab7153b"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769866856"
+checksum = "sha256:b5e94828f45171f13d81de2b96cae05c0b7e6a7f2f7d3c9d4e748be3d3906c02"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785027569"
 
 [tools."aqua:openai/codex"."platforms.windows-x64"]
-checksum = "sha256:669941eff23dd8470fbf85d919a03d80c4e3d35b441e3fcd361c0f8630945be8"
-url = "https://github.com/openai/codex/releases/download/rust-v0.171.0/codex-package-x86_64-pc-windows-msvc.tar.gz"
-url_api = "https://api.github.com/repos/openai/codex/releases/assets/769868206"
+checksum = "sha256:b723674d7caf26a3f55121a02d6cad8f3ac8ddf5860747a6edde1c904cf593af"
+url = "https://github.com/openai/codex/releases/download/rust-v0.172.0/codex-package-x86_64-pc-windows-msvc.tar.gz"
+url_api = "https://api.github.com/repos/openai/codex/releases/assets/785029625"
 
 [[tools."cargo:tree-sitter-cli"]]
 version = "0.27.2"
@@ -219,7 +219,7 @@ url_api = "https://api.github.com/repos/gastownhall/beads/releases/assets/708951
 provenance = "github-attestations"
 
 [[tools."github:microsoft/waza"]]
-version = "0.41.0"
+version = "0.42.0"
 backend = "github:microsoft/waza"
 specifiers = ["latest"]
 
@@ -228,39 +228,46 @@ matching_regex = "^waza-(linux|darwin|windows)-"
 version_prefix = "v"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64"]
-checksum = "sha256:a6437f4687d70f3b3fd438639d4b3c754dc478e692767abd3a67baa8734f0487"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492622"
+checksum = "sha256:c799144b16d1dbebb3cd065501a320517a229bf90f23a92cde19633448666647"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-linux-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879828"
+provenance = "github-attestations"
 
 [tools."github:microsoft/waza"."platforms.linux-arm64-musl"]
-checksum = "sha256:a6437f4687d70f3b3fd438639d4b3c754dc478e692767abd3a67baa8734f0487"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-linux-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492622"
+checksum = "sha256:c799144b16d1dbebb3cd065501a320517a229bf90f23a92cde19633448666647"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-linux-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879828"
+provenance = "github-attestations"
 
 [tools."github:microsoft/waza"."platforms.linux-x64"]
-checksum = "sha256:9c7397d8d28127d7c99ec6ad1fab730cbd438174a3960afbc82c3a60dacccb74"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492545"
+checksum = "sha256:9865ce51080d005e34db343bda2d63280de864a30f9a95d6c986bf026935b40f"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-linux-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879788"
+provenance = "github-attestations"
 
 [tools."github:microsoft/waza"."platforms.linux-x64-musl"]
-checksum = "sha256:9c7397d8d28127d7c99ec6ad1fab730cbd438174a3960afbc82c3a60dacccb74"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-linux-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492545"
+checksum = "sha256:9865ce51080d005e34db343bda2d63280de864a30f9a95d6c986bf026935b40f"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-linux-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879788"
+provenance = "github-attestations"
 
 [tools."github:microsoft/waza"."platforms.macos-arm64"]
-checksum = "sha256:8ea238f6d539c23a6116cd59710075f341ffb305c5674c34cb4e7998d3459abd"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-darwin-arm64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492489"
+checksum = "sha256:4bf97aff186753b945ac16f7101ae22be791e5b4cd040dad69a3b88211c1cfe9"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-darwin-arm64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879739"
+provenance = "github-attestations"
 
 [tools."github:microsoft/waza"."platforms.macos-x64"]
-checksum = "sha256:5f08f8488dce72576a652203d9cad2ed8e19b49c62b08c98e544690d2190f921"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-darwin-amd64"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492479"
+checksum = "sha256:716d6653b4d62c69cc7f5a4b272a381cd6ec7476a56fafde8dfad6d74592e66a"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-darwin-amd64"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879706"
+provenance = "github-attestations"
 
 [tools."github:microsoft/waza"."platforms.windows-x64"]
-checksum = "sha256:1c4e61f53e2db782f403f1ef566ab4f112282c71ddc3640d3ffe8cba503d02f4"
-url = "https://github.com/microsoft/waza/releases/download/v0.41.0/waza-windows-amd64.exe"
-url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/743492709"
+checksum = "sha256:33bba90738e82fd7bfdc707ee8cfbf1f078b861c4d9488f8e972a6f4de4d9844"
+url = "https://github.com/microsoft/waza/releases/download/v0.42.0/waza-windows-amd64.exe"
+url_api = "https://api.github.com/repos/microsoft/waza/releases/assets/777879975"
+provenance = "github-attestations"
 
 [[tools."go:github.com/chrishrb/go-grip"]]
 version = "0.11.0"
@@ -328,38 +335,38 @@ backend = "go:golang.org/x/pkgsite/cmd/pkgsite"
 specifiers = ["latest"]
 
 [[tools.hk]]
-version = "2.13.0"
+version = "2.14.0"
 backend = "packslip:github.com/jdx/hk"
 specifiers = ["latest"]
 
 [tools.hk."platforms.linux-arm64"]
-checksum = "sha256:490196a4e638991c671f42941d72ade4d00b14750145f34fc64377b49fc070bb"
-url = "https://github.com/jdx/hk/releases/download/v2.13.0/hk-aarch64-unknown-linux-gnu.tar.gz"
+checksum = "sha256:a5503bc4a6cef77697aed92c966f7b444b3fdea4b62b63d9fb0b2b1af7f08c83"
+url = "https://github.com/jdx/hk/releases/download/v2.14.0/hk-aarch64-unknown-linux-gnu.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [tools.hk."platforms.linux-arm64-musl"]
-checksum = "sha256:cff2d433a82104ace7084a23970ff05b0bf3ca529e00c61da20780104106a3dd"
-url = "https://github.com/jdx/hk/releases/download/v2.13.0/hk-aarch64-unknown-linux-musl.tar.gz"
+checksum = "sha256:d9e0cca380e87a175fa2b18738af3e03cbd4109f9105e1ede60ebb3238d09a16"
+url = "https://github.com/jdx/hk/releases/download/v2.14.0/hk-aarch64-unknown-linux-musl.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [tools.hk."platforms.linux-x64"]
-checksum = "sha256:8ff0b29c9925d73df9b14af7fc43ace86de03db73eafa3046750fce5c39e1955"
-url = "https://github.com/jdx/hk/releases/download/v2.13.0/hk-x86_64-unknown-linux-gnu.tar.gz"
+checksum = "sha256:230e89eaa3bf78aea23ac1584c8de9dd49141487f6067083003d8bdb38fa6c34"
+url = "https://github.com/jdx/hk/releases/download/v2.14.0/hk-x86_64-unknown-linux-gnu.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [tools.hk."platforms.linux-x64-musl"]
-checksum = "sha256:3d5ae62e2befe95fa6fc7ffd63a0876c3efe3409634fbd6561b8bb0be787eeae"
-url = "https://github.com/jdx/hk/releases/download/v2.13.0/hk-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:49b9238317fa6f047f66b93cc1a150efaeb9790063ae44aa5de9cc3d59d709c1"
+url = "https://github.com/jdx/hk/releases/download/v2.14.0/hk-x86_64-unknown-linux-musl.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [tools.hk."platforms.macos-arm64"]
-checksum = "sha256:64efc441dc0858a175909fd6253ddd6c540da80e7d1bd2a2ad0ec9c0cdab3d97"
-url = "https://github.com/jdx/hk/releases/download/v2.13.0/hk-aarch64-apple-darwin.tar.gz"
+checksum = "sha256:82a6ceb4a69bcf9667502f5bdf487a7d1a3aa5078197e981cf0538086d90b778"
+url = "https://github.com/jdx/hk/releases/download/v2.14.0/hk-aarch64-apple-darwin.tar.gz"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [tools.hk."platforms.windows-x64"]
-checksum = "sha256:2908de6281368b8128f1d4d7a03905d3ab0eb86a82641d6055be88806bf9ffac"
-url = "https://github.com/jdx/hk/releases/download/v2.13.0/hk-x86_64-pc-windows-msvc.zip"
+checksum = "sha256:750e1ccaca97b4c33f9b709e4beea9da5de98c7bb3f175cbbe59c05b5a6e365b"
+url = "https://github.com/jdx/hk/releases/download/v2.14.0/hk-x86_64-pc-windows-msvc.zip"
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [[tools."moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"]]
@@ -398,10 +405,10 @@ backend = "npm:zenn-cli"
 specifiers = ["latest"]
 
 [[tools."pypi:apm-cli"]]
-version = "0.37.0"
+version = "0.38.1"
 backend = "pypi:apm-cli"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-apm-cli/0.37.0~741068e7", digest = "sha256:ac6549e24b0e3eaf5de987da4b553944ce23fec68707390da277749bc289bd7a" }
+uv = { path = ".mise/locks/pypi-apm-cli/0.38.1~741068e7", digest = "sha256:7647000132fc09ac1239c76184eddadcb2e99ce946c7e2751c74de7c8e20a6a9" }
 
 [tools."pypi:apm-cli".options]
 python = "3.14"
