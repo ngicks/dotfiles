@@ -374,6 +374,11 @@ version = "0.0.3"
 backend = "moon:https://github.com/ngicks/dotfiles-tool#dotfilesmgr"
 specifiers = ["0.0.3"]
 
+[[tools."npm:@informalsystems/quint-language-server"]]
+version = "0.21.0"
+backend = "npm:@informalsystems/quint-language-server"
+specifiers = ["latest"]
+
 [[tools."npm:@marp-team/marp-cli"]]
 version = "4.5.1"
 aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:9b128eac1214ca33801730b28d3bd12601ff846e46cf9996fae1a69378edbe24" }

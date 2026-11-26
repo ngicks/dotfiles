@@ -77,6 +77,11 @@
       "src": "https://github.com/folke/lazydev.nvim",
       "version": ">=0.0.0"
     },
+    "lean.nvim": {
+      "rev": "b7b330a9dd324c0d9d57bb7d9dcbaf871403d3ed",
+      "src": "https://github.com/Julian/lean.nvim",
+      "version": ">=0.0.0"
+    },
     "memolist.vim": {
       "rev": "8090f7a973f266a600c2ea84ec6941346414300a",
       "src": "https://github.com/glidenote/memolist.vim"
@@ -226,6 +231,10 @@
     "ui": {
       "rev": "efb7edef6789548fd02ac88b8d47b3e344031c53",
       "src": "https://github.com/nvchad/ui"
+    },
+    "vim-alloy": {
+      "rev": "5bd57c4890be39e221dd3e1f6735457dce454bbd",
+      "src": "https://github.com/runoshun/vim-alloy"
     },
     "vim-dadbod": {
       "rev": "6d1d41da4873a445c5605f2005ad2c68c99d8770",

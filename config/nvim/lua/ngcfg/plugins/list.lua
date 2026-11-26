@@ -120,6 +120,17 @@ return {
     phase = "core",
     version = "",
   },
+  -- formal methods
+  { -- syntax, LSP and infoview for Lean 4
+    src = "https://github.com/Julian/lean.nvim",
+    phase = "core",
+  },
+  { -- syntax and indent for Alloy; no tree-sitter grammar in nvim-treesitter
+    src = "https://github.com/runoshun/vim-alloy",
+    phase = "core",
+    -- no tags at all, so the default `*` range has nothing to resolve.
+    version = "",
+  },
   -- ui
   {
     src = "https://github.com/nvzone/volt",
