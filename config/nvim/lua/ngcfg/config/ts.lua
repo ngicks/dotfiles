@@ -20,7 +20,6 @@ M.languages = {
   "python",
   "rust",
   "sql",
-  "tmux",
   "toml",
   "typescript",
   "vim",
