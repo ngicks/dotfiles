@@ -388,7 +388,7 @@ specifiers = ["latest"]
 
 [[tools."npm:@slidev/cli"]]
 version = "53.1.0"
-aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:212bc0e623df6f87b279a29c20206dfecdda026aba9cecb173e074308a12001b" }
+aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:d13b713697534d510b6fc965c4c8f8dac84e6a37d4ba054f1bb9b22c9a7f1772" }
 backend = "npm:@slidev/cli"
 specifiers = ["latest"]
 
@@ -408,7 +408,7 @@ specifiers = ["latest"]
 version = "0.38.1"
 backend = "pypi:apm-cli"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-apm-cli/0.38.1~741068e7", digest = "sha256:41a6cce35737c640bd2afbeb408644a10cbd73bb7a65449741802dc45616a85e" }
+uv = { path = ".mise/locks/pypi-apm-cli/0.38.1~741068e7", digest = "sha256:80676c75ca294580ffe6a3c31e702b51d5c3afc945207b9c56542a7a4513c522" }
 
 [tools."pypi:apm-cli".options]
 python = "3.14"
@@ -417,7 +417,7 @@ python = "3.14"
 version = "2.4.0"
 backend = "pypi:huggingface_hub"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:9e3392dac63c400519463cc4fbc4bda99efeafdda89ecb4bab31e224a82f5dab" }
+uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:d9419b2aa7fef4c5842f3d4c442ab63ce783910ecc4d0a438f1708f3702cc80f" }
 
 [tools."pypi:huggingface_hub".options]
 python = "3.14"
