@@ -13,6 +13,7 @@ CARGO_HOME=${CARGO_HOME:-$HOME/.cargo}
 DENO_DIR=${DENO_DIR:-$HOME/.cache/deno}
 DENO_INSTALL_ROOT=${DENO_INSTALL_ROOT:-$HOME/.deno/bin}
 UV_HOME=${XDG_DATA_HOME:-$HOME/.local/share}/uv
+ELAN_HOME=${ELAN_HOME:-$HOME/.elan}
 
 # Resolve the shared cache from the host's uv (UV_CACHE_DIR is configured in
 # the loginscript env). It lives under gitrepo, which 20-gitrepo.sh mounts at
@@ -26,7 +27,7 @@ fi
 
 # A bind mount with a missing src fails the whole `podman run`; these only
 # appear once their runtime has been used, so create them.
-mkdir -p "${CARGO_HOME}" "${DENO_DIR}" "${DENO_INSTALL_ROOT}" "${UV_HOME}"
+mkdir -p "${CARGO_HOME}" "${DENO_DIR}" "${DENO_INSTALL_ROOT}" "${UV_HOME}" "${ELAN_HOME}"
 
 printf "%s\n" "--env DENO_DIR=${DENO_DIR}"
 printf "%s\n" "--mount type=bind,src=${DENO_DIR},dst=${DENO_DIR}"
@@ -46,3 +47,13 @@ printf "%s\n" "--env UV_CACHE_DIR=${UV_CACHE_DIR}"
 
 printf "%s\n" "--env CARGO_HOME=${CARGO_HOME}"
 printf "%s\n" "--mount type=bind,src=${CARGO_HOME},dst=${CARGO_HOME}$(ro)"
+
+# elan keeps downloaded Lean toolchains here, about 3 GiB each. The image is
+# from-scratch and /root is not persistent, so without the mount every new
+# container would download them again.
+# nixpkgs' elan patches each toolchain's ELF interpreter to its own glibc store
+# path at install time. A toolchain therefore runs only where that path exists:
+# reinstall it when the host and the image are built from different nixpkgs
+# revisions, or after a GC drops that glibc.
+printf "%s\n" "--env ELAN_HOME=${ELAN_HOME}"
+printf "%s\n" "--mount type=bind,src=${ELAN_HOME},dst=${ELAN_HOME}$(ro)"

@@ -225,6 +225,14 @@ in
     impl
     iferr
 
+    # Formal Methods
+    tlaplus18      # tlc, tlasany, pcal, tlatex, tlarepl (TLA+ tools 1.8)
+    quint          # Quint CLI; bundles Apalache for `quint verify`
+    alloy6         # Alloy 6 analyzer (GUI + `alloy6 exec` CLI)
+    # Lean toolchain manager, not nixpkgs' lean4: Lean projects pin an exact
+    # version in `lean-toolchain` and mathlib builds only with the pinned one.
+    elan
+
     # System/Build Tools
     gnupg          # GPG encryption
     pinentry-qt    # Qt pinentry for GPG (also bundles a bin/pinentry-curses)
