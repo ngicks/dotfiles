@@ -1,0 +1,7 @@
+{
+  "name": "mise-npm-install",
+  "private": true,
+  "dependencies": {
+    "@informalsystems/quint-language-server": "0.21.0"
+  }
+}

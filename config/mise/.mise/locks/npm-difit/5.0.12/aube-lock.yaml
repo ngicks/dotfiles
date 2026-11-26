@@ -10,7 +10,7 @@ importers:
     dependencies:
       difit:
         specifier: 5.0.12
-        version: 5.0.12(@types/react@19.3.1)
+        version: 5.0.12(@types/react@19.3.2)
 
 packages:
 
@@ -246,8 +246,8 @@ packages:
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
 
-  '@types/estree@1.0.10':
-    resolution: {integrity: sha512-lTyOMnOcmRBzdCv6/4zUZCrEhV0xrqQiUZBZtVcbmLHBXKLnN8q89v/wKRF/Q0HbwVsqbIG3o5HDoFl9sduM+g==}
+  '@types/estree@1.0.11':
+    resolution: {integrity: sha512-YBdNe5JcjYR0sPhJW1QIeRCmI11YhYvaRuGCs9+WCeTTb+Yhb2BE2XMe5/wAqF10FK5g3+q1PDhQABfT7aX0gg==}
 
   '@types/geojson@7946.0.16':
     resolution: {integrity: sha512-6C8nqWur3j98U6+lXDfTUWIfgvZU+EumvpHKcYjujKH7woYyLj2sUmff0tRhrqM7BohUw7Pz3ZB1jj2gW9Fvmg==}
@@ -264,8 +264,8 @@ packages:
   '@types/prismjs@1.26.6':
     resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
 
-  '@types/react@19.3.1':
-    resolution: {integrity: sha512-HNTkBIm8zmHX8LUXX2vtZ/ONzehrV1J3abl2fUIiZ5qxTYRCj/z+rDeFwOltqCLl9lRdUTKWT41OLtYuFV/Arg==}
+  '@types/react@19.3.2':
+    resolution: {integrity: sha512-0QJbb58RxWJL3VAa5tvk7QhJamz0S+MpFL2xDuF/+THRR+kldyhPjRZ1iwvK45AEHZ1BVGS3otPsl7QlNVRizQ==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -781,8 +781,8 @@ packages:
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
 
-  lucide-react@1.79.0:
-    resolution: {integrity: sha512-MDHKxzUobPRyQgt4hHO1z+pUQJKYMvenh8qw+ndWQE0Wg+Hbjli/ZrkZXBGmRBrMvvqDRjkmQj0Z5RbeL/ogNw==}
+  lucide-react@1.80.0:
+    resolution: {integrity: sha512-f9cQkUMFp2ZrOek9FucpRqQVI67gT09clXcHs3yCvdhJnsK4RW4og/rqoC0YAHd6FV/GPkeiIR3Rdxr2pPRwHA==}
     peerDependencies:
       '@types/react': '*'
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -1462,9 +1462,9 @@ snapshots:
 
   '@types/estree-jsx@1.0.5':
     dependencies:
-      '@types/estree': 1.0.10
+      '@types/estree': 1.0.11
 
-  '@types/estree@1.0.10': {}
+  '@types/estree@1.0.11': {}
 
   '@types/geojson@7946.0.16': {}
 
@@ -1480,7 +1480,7 @@ snapshots:
 
   '@types/prismjs@1.26.6': {}
 
-  '@types/react@19.3.1':
+  '@types/react@19.3.2':
     dependencies:
       csstype: 3.2.4
 
@@ -1795,7 +1795,7 @@ snapshots:
 
   diff@9.0.0: {}
 
-  difit@5.0.12(@types/react@19.3.1):
+  difit@5.0.12(@types/react@19.3.2):
     dependencies:
       '@floating-ui/react': 0.27.20(react@19.3.1)(react-dom@19.3.1(react@19.3.1))
       '@parcel/watcher': 2.6.0
@@ -1803,7 +1803,7 @@ snapshots:
       diff: 9.0.0
       express: 5.3.0
       js-yaml: 4.3.2
-      lucide-react: 1.79.0(react@19.3.1)
+      lucide-react: 1.80.0(react@19.3.1)
       mermaid: 11.17.2
       open: 11.0.4
       prism-react-renderer: 2.4.1(react@19.3.1)
@@ -1812,7 +1812,7 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       react-hotkeys-hook: 5.4.0(react@19.3.1)(react-dom@19.3.1(react@19.3.1))
-      react-markdown: 10.1.0(@types/react@19.3.1)(react@19.3.1)
+      react-markdown: 10.1.0(@types/react@19.3.2)(react@19.3.1)
       remark-breaks: 4.0.0
       remark-gfm: 4.0.1
       simple-git: 3.36.0
@@ -1938,7 +1938,7 @@ snapshots:
 
   hast-util-to-jsx-runtime@2.3.7:
     dependencies:
-      '@types/estree': 1.0.10
+      '@types/estree': 1.0.11
       '@types/hast': 3.0.5
       '@types/unist': 3.0.3
       comma-separated-tokens: 2.0.3
@@ -2041,7 +2041,7 @@ snapshots:
 
   longest-streak@3.1.0: {}
 
-  lucide-react@1.79.0(react@19.3.1):
+  lucide-react@1.80.0(react@19.3.1):
     dependencies:
       react: 19.3.1
 
@@ -2542,11 +2542,11 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  react-markdown@10.1.0(@types/react@19.3.1)(react@19.3.1):
+  react-markdown@10.1.0(@types/react@19.3.2)(react@19.3.1):
     dependencies:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      '@types/react': 19.3.1
+      '@types/react': 19.3.2
       devlop: 1.1.0
       hast-util-to-jsx-runtime: 2.3.7
       html-url-attributes: 3.0.1

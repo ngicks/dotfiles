@@ -376,12 +376,13 @@ specifiers = ["0.0.3"]
 
 [[tools."npm:@informalsystems/quint-language-server"]]
 version = "0.21.0"
+aube = { path = ".mise/locks/npm-informalsystems-quint-language-server/0.21.0", digest = "sha256:d8b322ec26b620459d85466c491c466cfd066b4833f76d0198024ed20d2125bf" }
 backend = "npm:@informalsystems/quint-language-server"
 specifiers = ["latest"]
 
 [[tools."npm:@marp-team/marp-cli"]]
 version = "4.5.1"
-aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:9b128eac1214ca33801730b28d3bd12601ff846e46cf9996fae1a69378edbe24" }
+aube = { path = ".mise/locks/npm-marp-team-marp-cli/4.5.1", digest = "sha256:1f62d571c4a0c66ad99b79a38cd0c4113c376bc3483f94f3b25d19ff342638a0" }
 backend = "npm:@marp-team/marp-cli"
 specifiers = ["latest"]
 
@@ -393,13 +394,13 @@ specifiers = ["latest"]
 
 [[tools."npm:@slidev/cli"]]
 version = "53.1.0"
-aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:d13b713697534d510b6fc965c4c8f8dac84e6a37d4ba054f1bb9b22c9a7f1772" }
+aube = { path = ".mise/locks/npm-slidev-cli/53.1.0", digest = "sha256:75ad67abd8040b1b063df4982574e0c4076330c042b3bb9419b6efac9d67e58c" }
 backend = "npm:@slidev/cli"
 specifiers = ["latest"]
 
 [[tools."npm:difit"]]
 version = "5.0.12"
-aube = { path = ".mise/locks/npm-difit/5.0.12", digest = "sha256:92150c406e7c3b16ef8935ea43c9db99cb6b7c07bb93a750fd7cebbe976277a5" }
+aube = { path = ".mise/locks/npm-difit/5.0.12", digest = "sha256:c8ea81dd0eee67ae36341b6778475635d6122995aa140b160675d0b79f7926be" }
 backend = "npm:difit"
 specifiers = ["latest"]
 
@@ -413,7 +414,7 @@ specifiers = ["latest"]
 version = "0.39.0"
 backend = "pypi:apm-cli"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-apm-cli/0.39.0~741068e7", digest = "sha256:aaeccdfbe1a992535008e74479c3ca2ddacb2b286b6152a14d4c111e3e6bb960" }
+uv = { path = ".mise/locks/pypi-apm-cli/0.39.0~741068e7", digest = "sha256:8f253aeb0df799297fd1cedb5bc9b71cce495388eff719bc81506ffb613dbda2" }
 
 [tools."pypi:apm-cli".options]
 python = "3.14"
@@ -422,7 +423,7 @@ python = "3.14"
 version = "2.4.0"
 backend = "pypi:huggingface_hub"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:d9419b2aa7fef4c5842f3d4c442ab63ce783910ecc4d0a438f1708f3702cc80f" }
+uv = { path = ".mise/locks/pypi-huggingface-hub/2.4.0~2b5d816f", digest = "sha256:4d27df6bad07ca7f4b2fa01c2bbccee71d71d76eaf7135fc3b6884b6cd173a17" }
 
 [tools."pypi:huggingface_hub".options]
 python = "3.14"
