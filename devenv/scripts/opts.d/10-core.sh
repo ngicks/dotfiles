@@ -54,13 +54,22 @@ container_host_mem_bytes() {
   printf "%s\n" "${mem}"
 }
 
-# Each devenv container may use half of the container host's memory.
+# Each devenv container may use half of the container host's memory, or 80% of
+# it when KVM is forwarded: guest RAM is charged to the container, so half
+# leaves too little for VMs next to the usual workload.
+# The KVM test repeats the one in 05-kvm.sh because opts.d scripts are separate
+# processes. It checks /dev/kvm as well, so a stale DEVENV_KVM=1 on a KVM-less
+# host does not raise the limit.
 # --memory-swap equal to --memory gives the container no swap: exceeding the
 # limit is an OOM kill rather than a slowdown. tmpfs pages (the /tmp mount
-# above) are charged against the same limit.
+# above, and /dev/shm) are charged against the same limit.
+mem_percent=50
+if [[ "${DEVENV_KVM:-}" == "1" ]] && [[ -e /dev/kvm ]]; then
+  mem_percent=80
+fi
 mem_limit=4g
 if host_mem=$(container_host_mem_bytes) && [[ "${host_mem}" =~ ^[0-9]+$ ]] && ((host_mem > 0)); then
-  mem_limit="$((host_mem / 2 / 1024 / 1024))m"
+  mem_limit="$((host_mem / 1024 / 1024 * mem_percent / 100))m"
 else
   echo "[WARNING]: could not determine container host memory; falling back to --memory ${mem_limit}" >&2
 fi
