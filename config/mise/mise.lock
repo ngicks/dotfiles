@@ -410,10 +410,10 @@ backend = "npm:zenn-cli"
 specifiers = ["latest"]
 
 [[tools."pypi:apm-cli"]]
-version = "0.38.1"
+version = "0.39.0"
 backend = "pypi:apm-cli"
 specifiers = ["latest"]
-uv = { path = ".mise/locks/pypi-apm-cli/0.38.1~741068e7", digest = "sha256:80676c75ca294580ffe6a3c31e702b51d5c3afc945207b9c56542a7a4513c522" }
+uv = { path = ".mise/locks/pypi-apm-cli/0.39.0~741068e7", digest = "sha256:aaeccdfbe1a992535008e74479c3ca2ddacb2b286b6152a14d4c111e3e6bb960" }
 
 [tools."pypi:apm-cli".options]
 python = "3.14"
